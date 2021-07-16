@@ -121,11 +121,7 @@ end;
 
 procedure TdjAbstractConfig.Add(const Key: string; const Value: string);
 begin
-  {$IFDEF FPC}
-  if FParams.IndexOf(Key) > -1 then
-  {$ELSE}
   if FParams.ContainsKey(Key) then
-  {$ENDIF}
     raise EWebComponentException.
       CreateFmt('Duplicate key %s in configuration', [Key]);
 
@@ -134,34 +130,19 @@ end;
 
 function TdjAbstractConfig.GetInitParameter(const Key: string): string;
 begin
-  {$IFDEF FPC}
-  Result := FParams.KeyData[Key];
-  {$ELSE}
   FParams.TryGetValue(Key, Result);
-  {$ENDIF}
 end;
 
 function TdjAbstractConfig.GetInitParameterNames: TdjStrings;
 var
-  {$IFDEF FPC}
-  I: Integer;
-  {$ELSE}
   S: string;
-  {$ENDIF}
 begin
   Result := TdjStrings.Create;
 
-  {$IFDEF FPC}
-  for I := 0 to FParams.Count - 1 do
-  begin
-    Result.Add(FParams.Keys[I]);
-  end;
-  {$ELSE}
   for S in FParams.Keys do
   begin
     Result.Add(S);
   end;
-  {$ENDIF}
 end;
 
 procedure TdjAbstractConfig.SetContext(const Context: IContext);

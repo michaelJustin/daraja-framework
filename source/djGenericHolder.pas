@@ -40,7 +40,7 @@ type
   (**
    * Holds a reference to a web component class and its instance.
    *)
-  TdjGenericHolder<T{$IFNDEF FPC}: TInterfacedObject{$ENDIF}> = class(TdjLifeCycle)
+  TdjGenericHolder<T: TInterfacedObject> = class(TdjLifeCycle)
   private
     FName: string;
 

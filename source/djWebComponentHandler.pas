@@ -184,9 +184,7 @@ uses
   djStacktrace, JclDebug,
 {$ENDIF}
 {$ENDIF}
-{$IFNDEF FPC}
   Generics.Defaults,
-{$ENDIF}
   SysUtils, Classes;
 
 { TdjWebComponentHandler }
@@ -200,13 +198,8 @@ begin
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponentHandler.ClassName);
 {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF FPC}
-  FWebComponentHolders := TdjWebComponentHolders.Create;
-  FMappings := TdjWebComponentMappings.Create;
-{$ELSE}
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
   FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-{$ENDIF}
 
   PathMap := TdjPathMap.Create;
 
@@ -214,11 +207,6 @@ begin
 end;
 
 destructor TdjWebComponentHandler.Destroy;
-{$IFDEF FPC}
-var
-  Holder: TdjWebComponentHolder;
-  Mapping: TdjWebComponentMapping;
-{$ENDIF}
 begin
 {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
 
@@ -229,20 +217,8 @@ begin
 
   PathMap.Free;
 
-  {$IFDEF FPC}
-  for Holder in FWebComponentHolders do
-  begin
-    Holder.Free;
-  end;
-  {$ENDIF}
   FWebComponentHolders.Free;
 
-  {$IFDEF FPC}
-  for Mapping in FMappings do
-  begin
-    Mapping.Free;
-  end;
-  {$ENDIF}
   FMappings.Free;
 
   inherited;

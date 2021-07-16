@@ -33,18 +33,13 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF};
+  Generics.Collections;
 
 type
   (**
    * Initialization parameters.
    *)
-  TdjInitParameters =
-  {$IFDEF FPC}
-    class(TFPGMap<string, string>)
-  {$ELSE}
-    class(TDictionary<string, string>)
-  {$ENDIF}
+  TdjInitParameters = class(TDictionary<string, string>)
 
   end;
 

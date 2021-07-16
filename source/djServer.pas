@@ -40,10 +40,8 @@ uses
 {$ENDIF DARAJA_LOGGING}
 {$IFDEF FPC}
   LazUTF8,
-  fgl
-{$ELSE}
-  Generics.Collections
-{$ENDIF};
+{$ENDIF}
+  Generics.Collections;
 
 const
   DEFAULT_BINDING_PORT = 80;
@@ -90,11 +88,7 @@ type
     FDefaultHost: string;
     FDefaultPort: Integer;
 
-{$IFDEF FPC}
-    ConnectorMap: TFPGMap<string, IConnector>;
-{$ELSE}
     ConnectorMap: TObjectDictionary<string, IConnector>;
-{$ENDIF}
 
     ConnectorList: TdjStrings;
 
@@ -180,8 +174,7 @@ type
 implementation
 
 uses
-{$IFDEF FPC}{$ELSE}Generics.Defaults, {$ENDIF}
-  SysUtils, Classes;
+  Generics.Defaults, SysUtils, Classes;
 
 { TdjServer }
 
@@ -197,11 +190,7 @@ begin
   FDefaultHost := DEFAULT_BINDING_IP;
   FDefaultPort := DEFAULT_BINDING_PORT;
 
-{$IFDEF FPC}
-  ConnectorMap := TFPGMap<string, IConnector>.Create;
-{$ELSE}
   ConnectorMap := TObjectDictionary<string, IConnector>.Create;
-{$ENDIF}
 
   ConnectorList := TdjStrings.Create;
 
@@ -298,38 +287,13 @@ var
 begin
   for ConnectorName in ConnectorList do
   begin
-{$IFDEF FPC}
-    Connector := ConnectorMap.KeyData[ConnectorName];
-{$ELSE}
     Connector := ConnectorMap[ConnectorName];
-{$ENDIF}
-
     Connector.Start;
     Trace(Format('Connector %s started', [ConnectorName]));
   end;
 
   Trace('All connectors started');
 end;
-
-{$IFDEF FPC}
-
-procedure TdjServer.StopConnectors;
-var
-  ConnectorName: string;
-  Connector: IConnector;
-  I: Integer;
-begin
-  for I := ConnectorList.Count - 1 downto 0 do
-  begin
-    ConnectorName := ConnectorList[I];
-    Connector := ConnectorMap.KeyData[ConnectorName];
-    Connector.Stop;
-    Trace(Format('Connector %s stopped', [ConnectorName]));
-  end;
-  Trace('All connectors stopped');
-end;
-
-{$ELSE}
 
 procedure TdjServer.StopConnectors;
 var
@@ -354,8 +318,6 @@ begin
   end;
   Trace('All connectors stopped');
 end;
-
-{$ENDIF}
 
 procedure TdjServer.Trace(const S: string);
 begin

@@ -34,17 +34,13 @@ interface
 
 uses
   djWebComponentContextHandler,
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF};
+  Generics.Collections;
 
 type
   (**
    * A TContextMap holds a list of context names and their handlers.
    *)
-{$IFDEF FPC}
-  TdjContextMap = class(TFPGMap<string, TdjWebComponentContextHandler>);
-{$ELSE}
   TdjContextMap = class(TObjectDictionary<string, TdjWebComponentContextHandler>);
-{$ENDIF}
 
 implementation
 
