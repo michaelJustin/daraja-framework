@@ -23,6 +23,7 @@ var annotated_dup =
     [ "TdjHandlerWrapper", "classTdjHandlerWrapper.html", "classTdjHandlerWrapper" ],
     [ "TdjHTTPConnector", "classTdjHTTPConnector.html", "classTdjHTTPConnector" ],
     [ "TdjHTTPServer", "classTdjHTTPServer.html", "classTdjHTTPServer" ],
+    [ "TdjInitParameters", "classTdjInitParameters.html", null ],
     [ "TdjLifeCycle", "classTdjLifeCycle.html", "classTdjLifeCycle" ],
     [ "TdjPathMap", "classTdjPathMap.html", "classTdjPathMap" ],
     [ "TdjRequest", "classTdjRequest.html", null ],

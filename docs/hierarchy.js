@@ -56,6 +56,12 @@ var hierarchy =
     [ "IWebComponentConfig", "interfaceIWebComponentConfig.html", [
       [ "TdjWebComponentConfig", "classTdjWebComponentConfig.html", null ]
     ] ],
+    [ "string", null, [
+      [ "TdjInitParameters", "classTdjInitParameters.html", null ]
+    ] ],
+    [ "TDictionary", null, [
+      [ "TdjInitParameters", "classTdjInitParameters.html", null ]
+    ] ],
     [ "TdjRequest", "classTdjRequest.html", null ],
     [ "TdjResponse", "classTdjResponse.html", null ],
     [ "TIdCustomHTTPServer", null, [

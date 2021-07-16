@@ -34,7 +34,7 @@ interface
 
 uses
   djWebComponentMapping,
-{$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF};
+  Generics.Collections;
 
 type
   (**
@@ -44,11 +44,7 @@ type
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
   // for a workaround
   // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-{$IFDEF FPC}
-  TdjWebComponentMappings = class(TFPGList<TdjWebComponentMapping>);
-{$ELSE}
   TdjWebComponentMappings = class(TObjectList<TdjWebComponentMapping>);
-{$ENDIF}
 
 implementation
 

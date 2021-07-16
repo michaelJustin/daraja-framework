@@ -34,8 +34,7 @@ interface
 
 uses
   djServerContext, djTypes,
-  SysUtils,
-  {$IFDEF FPC}fgl{$ELSE}Generics.Collections{$ENDIF};
+  SysUtils, Generics.Collections;
 
 type
   (**
@@ -68,11 +67,7 @@ type
       TdjRequest; Response: TdjResponse);
   end;
 
-  {$IFDEF FPC}
-  TdjHandlers = TFPGList<IHandler>;
-  {$ELSE}
   TdjHandlers = TList<IHandler>;
-  {$ENDIF}
 
   (**
    * \interface IHandlerContainer
@@ -89,11 +84,7 @@ type
 
   IContextConfig = interface;
 
-  {$IFDEF FPC}
-  TdjStrings = TFPGList<string>;
-  {$ELSE}
   TdjStrings = TList<string>;
-  {$ENDIF}
 
   (**
    * \interface IContext

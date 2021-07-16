@@ -35,7 +35,7 @@
         <PackageName Value="LazUtils"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="5">
       <Unit0>
         <Filename Value="BootstrapDemo.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -56,10 +56,6 @@
         <Filename Value="..\common\ShutdownHelper.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
-      <Unit5>
-        <Filename Value="..\common\lazutf8helper.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
