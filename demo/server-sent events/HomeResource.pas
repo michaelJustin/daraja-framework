@@ -47,21 +47,31 @@ uses
 
 procedure THomeResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
-    Response.ContentText :=
-      '<!DOCTYPE html>' + #13
-    + '<html lang="en">' + #13
-    + '  <head>' + #13
-    + '    <meta charset="utf-8">' + #13
-    + '    <title>Form based login example</title>' + #13
-    + '  </head>' + #13
-    + '  <body>' + #13
-    + '    <form method="post">' + #13
-    + '     <input type="text" name="username" required>' +#13
-    + '     <input type="password" name="password" required>' + #13
-    + '     <input type="submit" name="submit" value="Login">' + #13
-    + '    </form>' + #13
-    + '  </body>' + #13
-    + '</html>';
+    Response.ContentText := '<!DOCTYPE html>'
+                            + #10 + '<html>'
+                            + #10 + '    <head>'
+                            + #10 + '        <title>SSE example</title>'
+                            + #10 + '    </head>'
+                            + #10 + '    <body>'
+                            + #10 + '        <script>'
+                            + #10 + '        const evtSource = new EventSource("ping");'
+                            + #10 + '         '
+                            + #10 + '        evtSource.addEventListener("ping", (event) => {'
+                            + #10 + '  const newElement = document.createElement("li");'
+                            + #10 + '  const eventList = document.getElementById("list");'
+                            + #10 + '  const time = JSON.parse(event.data).time;'
+                            + #10 + '  const peer = JSON.parse(event.data).peer;'
+                            + #10 + '  newElement.textContent = `ping at ${time} from ${peer}`;'
+                            + #10 + '  eventList.appendChild(newElement);'
+                            + #10 + '});'
+                            + #10 + ' '
+                            + #10 + '        </script>'
+                            + #10 + '        <ul id="list">'
+                            + #10 + ' '
+                            + #10 + '        </ul>'
+                            + #10 + '    </body>'
+                            + #10 + '</html>';
+
   Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
 end;

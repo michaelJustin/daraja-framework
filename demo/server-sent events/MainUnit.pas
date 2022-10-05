@@ -35,7 +35,7 @@ procedure Demo;
 implementation
 
 uses
-  HomeResource,
+  HomeResource, PingResource,
   djServer, djWebAppContext;
 
 procedure Demo;
@@ -47,6 +47,7 @@ begin
   try
     Context := TdjWebAppContext.Create('');
     Context.Add(THomeResource, '/');
+    Context.Add(TPingResource, '/ping');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://localhost/');

@@ -32,6 +32,7 @@ program EventSendingServer;
 
 uses
   HomeResource in 'HomeResource.pas',
+  PingResource in 'PingResource.pas',
   MainUnit in 'MainUnit.pas';
 
 begin
