@@ -29,8 +29,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "IHandlerContainer", "interfaceIHandlerContainer.html", [
-      [ "TdjAbstractHandlerContainer", "classTdjAbstractHandlerContainer.html", null ],
-      [ "TdjServerBase", "classTdjServerBase.html", null ]
+      [ "TdjAbstractHandlerContainer", "classTdjAbstractHandlerContainer.html", null ]
     ] ],
     [ "ILifeCycle", "interfaceILifeCycle.html", [
       [ "IConnector", "classIConnector.html", [

@@ -1,6 +1,5 @@
 var classTdjHandlerWrapper =
 [
-    [ "TdjHandlerWrapper", "classTdjHandlerWrapper.html#a8950f83eb21f3e1c20d979e24d488c72", null ],
     [ "AddHandler", "classTdjHandlerWrapper.html#aa8e3ba2c9a14250093d53ebd772c8a8d", null ],
     [ "DoStart", "classTdjHandlerWrapper.html#a9835f704fd66edc94b5ac99c10a5d9ba", null ],
     [ "DoStop", "classTdjHandlerWrapper.html#a03d742e63e25be06214f16f60f0a2b5e", null ],

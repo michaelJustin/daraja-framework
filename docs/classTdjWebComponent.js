@@ -1,7 +1,5 @@
 var classTdjWebComponent =
 [
-    [ "TdjWebComponent", "classTdjWebComponent.html#ae2e78b344ea091f8da70d93d47883358", null ],
-    [ "~TdjWebComponent", "classTdjWebComponent.html#ab6ae51db61b6f237120a090208e66dcb", null ],
     [ "OnDelete", "classTdjWebComponent.html#afefd640137aedc94b022c1e382b1c133", null ],
     [ "OnGet", "classTdjWebComponent.html#a6b988b1421c7d330b8120cf2ba261b0f", null ],
     [ "OnGetLastModified", "classTdjWebComponent.html#a70994d564c63005c2d7f6dbab261b405", null ],
