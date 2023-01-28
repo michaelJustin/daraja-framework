@@ -262,6 +262,10 @@ begin
       begin
         OnDelete(Request, Response);
       end;
+    hcPATCH:
+      begin
+        OnPatch(Request, Response);
+      end;
     hcPUT:
       begin
         OnPut(Request, Response);
@@ -276,16 +280,9 @@ begin
       end;
   else
     begin
-      if Request.Command = 'PATCH' then
-      begin
-        OnPatch(Request, Response);
-      end
-      else
-      begin
 {$IFDEF DARAJA_LOGGING}
         Logger.Error('Unknown HTTP method');
 {$ENDIF DARAJA_LOGGING}
-      end;
     end;
   end;
 end;
