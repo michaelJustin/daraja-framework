@@ -1,7 +1,6 @@
 var classTdjLifeCycle =
 [
     [ "TdjLifeCycle", "classTdjLifeCycle.html#a047b6943fefc2b90daf1930064ed0eff", null ],
-    [ "~TdjLifeCycle", "classTdjLifeCycle.html#aba520f0e89ace303c4392cdde1b013e6", null ],
     [ "CheckStarted", "classTdjLifeCycle.html#a09563ff22a3b44475251f04ea87304b2", null ],
     [ "CheckStopped", "classTdjLifeCycle.html#a936932dc35e04571cfbd48ab41f2569e", null ],
     [ "DoStart", "classTdjLifeCycle.html#a0c62a8c787952f30c634d32ca85220e2", null ],
