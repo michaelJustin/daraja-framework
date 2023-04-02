@@ -38,7 +38,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="10">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -67,6 +67,21 @@
         <Filename Value="..\..\source\djTypes.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="djwebfiltertests.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djWebFilterTests"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\source\djgenericwebfilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djGenericWebFilter"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\source\djwebfilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djWebFilter"/>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

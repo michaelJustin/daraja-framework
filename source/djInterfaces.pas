@@ -143,6 +143,27 @@ type
     property Config: IWebComponentConfig read GetWebComponentConfig;
   end;
 
+  (**
+   * \interface IWebFilter
+   *
+   * Web Filter interface.
+   * A filter is an object that performs filtering tasks on either the request
+   * to a resource (a servlet or static content), or on the response from a resource, or both.
+   *)
+  IWebFilter = interface
+    ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
+    // Called to indicate to a filter that it is being placed into service.
+    // procedure Init(const Config: IWebFilterConfig);
+    (* The DoFilter method of the filter is called each
+     * time a request/response pair is passed through the chain due to a
+     * client request for a resource at the end of the chain. *)
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse (*; Chain: IWebFilterChain *));
+    // Called to indicate to a filter that it is being taken out of service.
+    procedure DestroyFilter;
+  end;
+
+
 implementation
 
 end.

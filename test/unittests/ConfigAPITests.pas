@@ -102,6 +102,8 @@ type
     // (since 1.2.10)
     procedure TestCachedGetRequest;
 
+    procedure TestFilter;
+
   end;
 
 implementation
@@ -110,7 +112,7 @@ uses
   djWebAppContext, djInterfaces, djWebComponent, djWebComponentHolder,
   djWebComponentContextHandler, djServer, djDefaultHandler, djStatisticsHandler,
   djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
-  djAbstractHandler, djServerContext,
+  djAbstractHandler, djServerContext, djWebFilter,
   IdServerInterceptLogFile, IdSchedulerOfThreadPool, IdGlobal, IdException,
   IdResourceStrings,
   SysUtils, Classes;
@@ -1020,6 +1022,52 @@ begin
 
     // set "If-Modified-Since" header to Now to get "304 resource not modified"
     CheckCachedGETResponseIs304(Now, '/cached/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+type
+
+  { TTestFilter }
+
+  TTestFilter = class(TdjWebFilter)
+  public
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse (*; Chain: IWebFilterChain *)); override;
+
+    procedure DestroyFilter;
+
+  end;
+
+{ TTestFilter }
+
+procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse);
+begin
+   //
+end;
+
+procedure TTestFilter.DestroyFilter;
+begin
+   //
+end;
+
+procedure TAPIConfigTests.TestFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.html');
+    Context.AddWebFilter(TTestFilter, '');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example', '/web/index.html');
 
   finally
     Server.Free;

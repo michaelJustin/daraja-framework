@@ -34,7 +34,7 @@ interface
 
 uses
   djContextHandler, djWebComponentHandler, djServerContext,
-  djWebComponentHolder, djWebComponent, djInterfaces,
+  djWebComponentHolder, djWebComponent, djWebFilter, djInterfaces,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
 {$ENDIF DARAJA_LOGGING}
@@ -44,6 +44,9 @@ type
   (**
    * Context Handler for Web Components.
    *)
+
+  { TdjWebComponentContextHandler }
+
   TdjWebComponentContextHandler = class(TdjContextHandler)
   private
 {$IFDEF DARAJA_LOGGING}
@@ -111,6 +114,17 @@ type
      * \throws EWebComponentException if the Web Component can not be added
      *)
     procedure AddWebComponent(const Holder: TdjWebComponentHolder;
+      const PathSpec: string); overload;
+
+    (**
+     * Add a Web Filter.
+     *
+     * \param FilterClass WebFilter class
+     * \param PathSpec path specification
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(const FilterClass: TdjWebFilterClass;
       const PathSpec: string); overload;
 
     // IHandler interface
@@ -261,6 +275,12 @@ begin
   Holder.SetContext(Self.GetCurrentContext);
 
   WebComponentHandler.AddWithMapping(Holder, PathSpec);
+end;
+
+procedure TdjWebComponentContextHandler.AddWebFilter(
+  const FilterClass: TdjWebFilterClass; const PathSpec: string);
+begin
+
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;

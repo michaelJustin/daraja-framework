@@ -50,6 +50,7 @@ uses
   djWebAppContextTests,
   djWebComponentHandlerTests,
   djWebComponentHolderTests,
+  djWebFilterTests,
   djGlobal,
   TestSessions,
   djLogOverSimpleLogger,
@@ -80,6 +81,7 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHandlerTests));
   Tests.AddTest(TTestSuite.Create(TdjWebAppContextTests));
   Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
+  Tests.AddTest(TTestSuite.Create(TdjWebFilterTests));
 
   if not UseConsoleTestRunner then
   begin
