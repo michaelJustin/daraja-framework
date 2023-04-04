@@ -37,7 +37,7 @@ uses
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  IdCustomHTTPServer, Classes;
+  Classes;
 
 type
 

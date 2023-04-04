@@ -45,7 +45,6 @@ uses
   HttpsTests,
   TestHelper,
   TestSessions,
-  IdGlobal,
   testregistry,
   fpcunit,
   GuiTestRunner,

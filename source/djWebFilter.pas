@@ -33,11 +33,11 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djGenericWebFilter, djServerContext,
+  djGenericWebFilter
   {$IFDEF DARAJA_LOGGING}
-  djLogAPI, djLoggerFactory,
+  , djLogAPI, djLoggerFactory
   {$ENDIF DARAJA_LOGGING}
-  djTypes;
+  ;
 
 type
   (**

@@ -34,10 +34,13 @@ interface
 
 uses
   djInterfaces, djWebComponentConfig, djServerContext, djTypes,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
-  IdCustomHTTPServer, Classes;
+  {$ENDIF DARAJA_LOGGING}
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdCustomHTTPServer,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  Classes;
 
 type
   (**
@@ -45,9 +48,9 @@ type
    *)
   TdjGenericWebComponent = class(TInterfacedObject, IWebComponent)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FConfig: IWebComponentConfig;
 
@@ -67,8 +70,8 @@ type
      * \param Response HTTP response
      * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *)
-    procedure Service(Context: TdjServerContext; Request: TdjRequest;
-      Response: TdjResponse); virtual;
+    procedure Service({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse); virtual;
 
   public
     (**

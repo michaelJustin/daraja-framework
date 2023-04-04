@@ -208,8 +208,8 @@ type
      *
      * \sa IHandler
      *)
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
+    procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
+      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
 
     // properties
 

@@ -37,7 +37,9 @@ function GetTickCount: Cardinal;
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 function GetTickCount: Cardinal;
 begin

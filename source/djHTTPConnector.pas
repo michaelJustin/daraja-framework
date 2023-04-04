@@ -34,10 +34,13 @@ interface
 
 uses
   djAbstractConnector, djHTTPServer, djInterfaces, djServerContext,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
-  djTypes, IdContext;
+  {$ENDIF DARAJA_LOGGING}
+  djTypes,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdContext;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
   (**
@@ -47,9 +50,9 @@ type
    *)
   TdjHTTPConnector = class(TdjAbstractConnector)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FHTTPServer: TdjHTTPServer;
     HostAndPort: string;
@@ -95,7 +98,9 @@ type
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdSocketHandle, IdIOHandler, IdGlobal, IdException,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 { TdjHTTPConnector }

@@ -34,9 +34,9 @@ interface
 
 uses
   djGenericWebComponent, djServerContext,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
@@ -52,9 +52,9 @@ type
    *)
   TdjWebComponent = class(TdjGenericWebComponent)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+   {$ENDIF DARAJA_LOGGING}
 
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -142,7 +142,9 @@ type
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomHTTPServer, IdGlobalProtocols,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 const

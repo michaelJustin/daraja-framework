@@ -113,8 +113,10 @@ uses
   djWebComponentContextHandler, djServer, djDefaultHandler, djStatisticsHandler,
   djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
   djAbstractHandler, djServerContext, djWebFilter,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdServerInterceptLogFile, IdSchedulerOfThreadPool, IdGlobal, IdException,
   IdResourceStrings,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 type
