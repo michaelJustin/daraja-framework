@@ -277,8 +277,8 @@ begin
   WebComponentHandler.AddWithMapping(Holder, PathSpec);
 end;
 
-procedure TdjWebComponentContextHandler.AddWebFilter(
-  const FilterClass: TdjWebFilterClass; const PathSpec: string);
+procedure TdjWebComponentContextHandler.AddWebFilter(const FilterClass: TdjWebFilterClass;
+  const PathSpec: string);
 begin
 
 end;

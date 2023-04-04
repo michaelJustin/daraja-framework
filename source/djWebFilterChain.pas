@@ -26,39 +26,64 @@
 
 *)
 
-unit djWebFilter;
+unit djWebFilterChain;
 
 interface
 
-{$i IdCompilerDefines.inc}
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 uses
-  djGenericWebFilter, djServerContext,
+  djInterfaces, djWebComponentConfig, djServerContext, djTypes,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  djTypes;
+  IdCustomHTTPServer, Classes;
 
 type
-  (**
-   * A base class which can be subclassed to create a HTTP filter component
-   * for a Web site.
-   *)
-  TdjWebFilter = class(TdjGenericWebFilter)
+
+  { TdjWebFilterChain }
+
+  TdjWebFilterChain = class(TInterfacedObject, IWebFilterChain)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
+    procedure Trace(const S: string);
   public
+    (**
+     * Constructor.
+     *)
+    constructor Create;
 
   end;
 
-  (**
-   * Class reference to TdjWebFilter
-   *)
-  TdjWebFilterClass = class of TdjWebFilter;
+implementation
 
-  implementation
+{ TdjWebFilterChain }
+
+constructor TdjWebFilterChain.Create;
+begin
+  inherited;
+
+  // logging -----------------------------------------------------------------
+  {$IFDEF DARAJA_LOGGING}
+  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterChain.ClassName);
+  {$ENDIF DARAJA_LOGGING}
+
+  {$IFDEF LOG_CREATE}
+  Trace('Created');
+  {$ENDIF}
+end;
+
+procedure TdjWebFilterChain.Trace(const S: string);
+begin
+  {$IFDEF DARAJA_LOGGING}
+  if Logger.IsTraceEnabled then
+  begin
+    Logger.Trace(S);
+  end;
+  {$ENDIF DARAJA_LOGGING}
+end;
 
 end.
 

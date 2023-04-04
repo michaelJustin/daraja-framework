@@ -144,6 +144,17 @@ type
   end;
 
   (**
+   * \interface IWebFilterChain
+   *
+   * Web Filter Chain interface.
+   *)
+  IWebFilterChain = interface
+    ['{56337AF8-89D6-45AC-B0BD-94977BB2CE40}']
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
+  end;
+
+  (**
    * \interface IWebFilter
    *
    * Web Filter interface.
@@ -154,12 +165,8 @@ type
     ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
     // Called to indicate to a filter that it is being placed into service.
     // procedure Init(const Config: IWebFilterConfig);
-    (* The DoFilter method of the filter is called each
-     * time a request/response pair is passed through the chain due to a
-     * client request for a resource at the end of the chain. *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse (*; Chain: IWebFilterChain *));
-    // Called to indicate to a filter that it is being taken out of service.
+      TdjResponse; const Chain: IWebFilterChain);
     procedure DestroyFilter;
   end;
 
