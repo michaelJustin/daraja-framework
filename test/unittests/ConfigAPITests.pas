@@ -127,7 +127,7 @@ type
 type
   TExamplePage = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { TExamplePage }
@@ -296,7 +296,7 @@ end;
 type
   TCmpReturnsInitParams = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 procedure TCmpReturnsInitParams.OnGet(Request: TdjRequest; Response: TdjResponse);
@@ -331,8 +331,8 @@ end;
 type
   THelloHandler = class(TdjAbstractHandler)
   public
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
+    procedure Handle(const {%H-}Target: string; {%H-}Context: TdjServerContext;
+      {%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { THelloHandler }
@@ -537,8 +537,8 @@ end;
 type
   TExceptionComponent = class(TdjWebComponent)
   public
-    procedure Service(Context: TdjServerContext; Request: TdjRequest;
-      Response: TdjResponse); override;
+    procedure Service({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse); override;
   end;
 
 { TExceptionComponent }
@@ -574,7 +574,7 @@ end;
 type
   TGetComponent = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse);  override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);  override;
   end;
 
 { TGetComponent }
@@ -588,8 +588,8 @@ end;
 type
   TCachedGetComponent = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse);  override;
-    function OnGetLastModified(Request: TdjRequest): TDateTime; override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);  override;
+    function OnGetLastModified({%H-}Request: TdjRequest): TDateTime; override;
   end;
 
 { TCachedGetComponent }
@@ -649,7 +649,7 @@ end;
 type
   TPostComponent = class(TdjWebComponent)
   public
-    procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnPost({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { TPostComponent }
@@ -683,7 +683,7 @@ end;
 type
   THello2WebComponent = class(TdjWebComponent)
   public
-    procedure Service(Context: TdjServerContext; Request: TdjRequest;
+    procedure Service({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
       Response: TdjResponse); override;
   end;
 
@@ -758,7 +758,7 @@ end;
 type
   TLogComponent = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { TLogComponent }
@@ -869,7 +869,7 @@ end;
 type
   TContextInitParamComponent = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { TContextInitParamComponent }
@@ -948,7 +948,7 @@ end;
 type
   TCharSetComponent = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse);
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);
       override;
   end;
 
@@ -1034,17 +1034,16 @@ type
 
   TTestFilter = class(TdjWebFilter)
   public
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse (*; Chain: IWebFilterChain *)); override;
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
 
     procedure DestroyFilter;
-
   end;
 
 { TTestFilter }
 
 procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
-  Response: TdjResponse);
+  Response: TdjResponse; const Chain: IWebFilterChain);
 begin
    //
 end;

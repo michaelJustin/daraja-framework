@@ -52,7 +52,7 @@ type
   TTestFilter = class(TdjWebFilter)
   public
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse (*; Chain: IWebFilterChain *)); virtual;
+      TdjResponse; const Chain: IWebFilterChain); virtual;
 
     procedure DestroyFilter;
 
@@ -61,7 +61,7 @@ type
 { TTestFilter }
 
 procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
-  Response: TdjResponse);
+  Response: TdjResponse; const Chain: IWebFilterChain);
 begin
    //
 end;
