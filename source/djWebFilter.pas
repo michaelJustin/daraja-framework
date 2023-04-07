@@ -47,7 +47,7 @@ type
   TdjWebFilter = class(TdjGenericWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
-    Logger: ILogger;
+    {%H-}Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
   public
 

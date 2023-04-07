@@ -109,7 +109,7 @@
     </Linking>
     <Other>
       <CompilerMessages>
-        <IgnoredMessages idx6058="True" idx5071="True" idx5062="True" idx4046="True"/>
+        <IgnoredMessages idx6058="True" idx5071="True" idx5062="True" idx5024="True" idx4046="True"/>
       </CompilerMessages>
       <CustomOptions Value="-dDARAJA_LOGGING
 -dDARAJA_TEST_HTTPS_"/>
