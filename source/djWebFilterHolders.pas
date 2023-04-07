@@ -26,48 +26,23 @@
 
 *)
 
-unit djGlobal;
+unit djWebFilterHolders;
 
 interface
 
 {$i IdCompilerDefines.inc}
 
-const
-  DWF_SERVER_VERSION = '2.5';
-  DWF_SERVER_FULL_NAME = 'Daraja HTTP Framework ' + DWF_SERVER_VERSION;
-  DWF_SERVER_COPYRIGHT = 'Copyright (C) Michael Justin';
+uses
+  djWebFilterHolder,
+  Generics.Collections;
 
-function HTMLEncode(const AData: string): string;
+type
+  // note Delphi 2009 AVs if it is a TObjectList<>
+  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
+  // for a workaround
+  // use  TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>);
 
 implementation
-
-// http://stackoverflow.com/a/2971923/80901
-function HTMLEncode(const AData: string): string;
-var
-  Pos, I: Integer;
-
-  procedure Encode(const AStr: string);
-  begin
-    Move(AStr[1], Result[Pos], Length(AStr) * SizeOf(Char));
-    Inc(Pos, Length(AStr));
-  end;
-
-begin
-  SetLength(Result{%H-}, Length(AData) * 6);
-  Pos := 1;
-  for I := 1 to length(AData) do
-  begin
-    case AData[I] of
-      '<': Encode('&lt;');
-      '>': Encode('&gt;');
-      '&': Encode('&amp;');
-      '"': Encode('&quot;');
-    else
-      Result[Pos] := AData[I];
-      Inc(Pos);
-    end;
-  end;
-  SetLength(Result, Pos - 1);
-end;
 
 end.

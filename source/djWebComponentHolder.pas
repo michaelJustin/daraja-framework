@@ -98,12 +98,12 @@ type
     procedure SetInitParameter(const Key: string; const Value: string);
 
     (**
-     * Start the handler.
+     * Start the component.
      *)
     procedure DoStart; override;
 
     (**
-     * Stop the handler.
+     * Stop the component.
      *)
      procedure DoStop; override;
 

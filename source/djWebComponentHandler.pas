@@ -36,9 +36,10 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djWebComponentMappings, djPathMap,
-{$IFDEF DARAJA_LOGGING}
+  djWebFilterHolder, djWebFilterHolders,
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
@@ -50,15 +51,19 @@ type
    * It holds a list of web components and their path mappings,
    * and passes incoming requests to the matching web component.
    *)
+
+  { TdjWebComponentHandler }
+
   TdjWebComponentHandler = class(TdjAbstractHandler)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FWebComponentContext: IContext;
     PathMap: TdjPathMap;
     FWebComponentHolders: TdjWebComponentHolders;
+    FWebFilterHolders: TdjWebFilterHolders;
     FMappings: TdjWebComponentMappings;
 
     procedure Trace(const S: string);
@@ -117,6 +122,15 @@ type
       const PathSpec: string);
 
     (**
+     * Add a Web Filter holder with mapping.
+     *
+     * \param Holder a Web Filter holder
+     * \param PathSpec a path spec
+     *)
+    procedure AddFilterWithMapping(const Holder: TdjWebFilterHolder;
+      const PathSpec: string);
+
+    (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
      *
      * \param WebComponentClass the Web Component class
@@ -170,6 +184,8 @@ type
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
 
+    property WebFilterHolders: TdjWebFilterHolders read FWebFilterHolders;
+
   end;
 
 implementation
@@ -199,6 +215,7 @@ begin
 {$ENDIF DARAJA_LOGGING}
 
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
+  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
 
   PathMap := TdjPathMap.Create;
@@ -397,6 +414,12 @@ begin
   begin
     Holder.Start;
   end;
+end;
+
+procedure TdjWebComponentHandler.AddFilterWithMapping(
+  const Holder: TdjWebFilterHolder; const PathSpec: string);
+begin
+
 end;
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
