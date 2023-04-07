@@ -33,7 +33,8 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djInterfaces, djWebComponentConfig, djServerContext, djTypes,
+  djInterfaces, djWebComponentConfig, djWebFilterConfig,
+  djServerContext, djTypes,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -54,6 +55,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
+    FConfig: IWebFilterConfig;
     procedure Trace(const S: string);
   public
     (**
@@ -65,6 +67,8 @@ type
      * Destructor.
      *)
     destructor Destroy; override;
+
+    procedure Init(const Config: IWebFilterConfig);
 
     (**
      * The doFilter method of the Filter is called by the container each time a request/response pair is passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed in to this method allows the Filter to pass on the request and response to the next entity in the chain.
@@ -104,6 +108,17 @@ begin
   Trace('Destroy');
   {$ENDIF}
   inherited;
+end;
+
+procedure TdjGenericWebFilter.Init(const Config: IWebFilterConfig);
+begin
+  Trace('Init');
+
+  Assert(Assigned(Config));
+  Assert(Assigned(Config.GetContext));
+  Assert(not Assigned(FConfig));
+
+  FConfig := TdjWebFilterConfig.Create(Config);
 end;
 
 procedure TdjGenericWebFilter.Trace(const S: string);

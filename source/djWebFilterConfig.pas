@@ -1,4 +1,5 @@
 (*
+
     Daraja HTTP Framework
     Copyright (C) Michael Justin
 
@@ -15,6 +16,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
     You can be released from the requirements of the license by purchasing
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
@@ -24,65 +26,65 @@
 
 *)
 
-unit djWebFilterTests;
-
-{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
+unit djWebFilterConfig;
 
 interface
 
+{$i IdCompilerDefines.inc}
+
 uses
-  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
+  djInterfaces, djAbstractConfig;
 
 type
-  TdjWebFilterTests = class(TTestCase)
-  published
-     procedure TestCreate;
+  (**
+   * Web Filter configuration.
+   *)
 
+  { TdjWebFilterConfig }
+
+  TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
+  public
+    (**
+     * "Copy" constructor.
+     *)
+    constructor Create(const Config: IWebFilterConfig); overload;
+
+    function GetFilterName: string;
   end;
 
 implementation
 
-uses
-  djWebFilter, djWebAppContext, djServerContext, djTypes, djInterfaces;
+{ TdjWebFilterConfig }
 
-type
-
-  { TTestFilter }
-
-  TTestFilter = class(TdjWebFilter)
-  public
-    procedure {%H-}DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
-      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
-
-    procedure DestroyFilter;
-
-  end;
-
-{ TTestFilter }
-
-procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
-  Response: TdjResponse; const Chain: IWebFilterChain);
-begin
-   //
-end;
-
-procedure TTestFilter.DestroyFilter;
-begin
-   //
-end;
-
-procedure TdjWebFilterTests.TestCreate;
+constructor TdjWebFilterConfig.Create(const Config: IWebFilterConfig);
 var
-  Context: TdjWebAppContext;
-  // Filter: IWebFilter;
+  L: TdjStrings;
+  S: string;
 begin
-  Context := TdjWebAppContext.Create('x-ctx');
-  try
-    (* Filter := *) TTestFilter.Create;
-  finally
-    Context.Free;
+  Create;
+
+  Assert(Config <> nil);
+
+  Assert(Config.GetContext <> nil);
+
+  // copy from IConfig argument to self:
+
+  // Context:
+  FContext := Config.GetContext;
+  // Params:
+  L := Config.GetInitParameterNames;
+  for S in L do
+  begin
+    FParams.Add(S, Config.GetInitParameter(S));
   end;
+  L.Free;
+end;
+
+function TdjWebFilterConfig.GetFilterName: string;
+begin
+  Result := ''; // TODO
 end;
 
 end.
+
 

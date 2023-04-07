@@ -155,6 +155,19 @@ type
   end;
 
   (**
+   * \interface IWebFilterConfig
+   *
+   * Web Filter configuration interface.
+   *)
+  IWebFilterConfig = interface
+    ['{86823762-EE7A-4523-80FE-32DD714C11DF}']
+    function GetFilterName: string;
+    function GetInitParameterNames: TdjStrings;
+    function GetInitParameter(const Key: string): string;
+    function GetContext: IContext;
+  end;
+
+  (**
    * \interface IWebFilter
    *
    * Web Filter interface.
@@ -163,8 +176,7 @@ type
    *)
   IWebFilter = interface
     ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
-    // Called to indicate to a filter that it is being placed into service.
-    // procedure Init(const Config: IWebFilterConfig);
+    procedure Init(const Config: IWebFilterConfig);
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain);
     procedure DestroyFilter;

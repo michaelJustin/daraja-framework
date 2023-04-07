@@ -33,7 +33,7 @@ interface
 {$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 uses
-  djInterfaces, djWebComponentConfig, djServerContext, djTypes,
+  djInterfaces, djWebFilterHolder, djServerContext, djTypes,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -49,30 +49,43 @@ type
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
     procedure Trace(const S: string);
+  private
+    FChain: IWebFilterChain;
+    FHolder: TdjWebFilterHolder;
   public
-    (**
-     * Constructor.
-     *)
-    constructor Create;
+    constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
 
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
   end;
 
 implementation
 
 { TdjWebFilterChain }
 
-constructor TdjWebFilterChain.Create;
+constructor TdjWebFilterChain.Create(Holder: TdjWebFilterHolder;
+  const FilterChain: IWebFilterChain);
 begin
-  inherited;
+  inherited Create;
 
   // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterChain.ClassName);
   {$ENDIF DARAJA_LOGGING}
 
+  FHolder := Holder;
+  FChain := FilterChain;
+
   {$IFDEF LOG_CREATE}
   Trace('Created');
   {$ENDIF}
+end;
+
+procedure TdjWebFilterChain.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse);
+begin
+  Trace('DoFilter');
+  FHolder.DoFilter(Context, Request, Response, FChain);
 end;
 
 procedure TdjWebFilterChain.Trace(const S: string);

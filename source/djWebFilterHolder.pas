@@ -33,7 +33,8 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebFilter, djGenericHolder, djServerContext, djTypes, djInterfaces,
+  djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,
+  djTypes, djInterfaces,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -55,6 +56,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
+    FConfig: TdjWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
@@ -62,6 +64,7 @@ type
     function GetWebFilter: TdjWebFilter;
   public
     constructor Create(const WebFilterClass: TdjWebFilterClass);
+    destructor Destroy; override;
 
     (**
      * Start the filter.
@@ -95,12 +98,25 @@ uses
 constructor TdjWebFilterHolder.Create(const WebFilterClass: TdjWebFilterClass);
 begin
   inherited Create(WebFilterClass);
+
+  FConfig := TdjWebFilterConfig.Create;
   FClass := WebFilterClass;
 
   // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterHolder.ClassName);
   {$ENDIF DARAJA_LOGGING}
+
+  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+end;
+
+destructor TdjWebFilterHolder.Destroy;
+begin
+  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+
+  FConfig.Free;
+
+  inherited Destroy;
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
@@ -136,7 +152,7 @@ begin
 
   try
     Trace('Init Web Filter "' + Name + '"');
-    // ... WebFilter.Init(FConfig);
+    WebFilter.Init(FConfig);
   except
     on E: Exception do
     begin

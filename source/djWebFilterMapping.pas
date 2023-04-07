@@ -1,4 +1,5 @@
 (*
+
     Daraja HTTP Framework
     Copyright (C) Michael Justin
 
@@ -15,73 +16,65 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
     You can be released from the requirements of the license by purchasing
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja
+    include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
 *)
 
-unit djWebFilterTests;
-
-{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
+unit djWebFilterMapping;
 
 interface
 
+{$i IdCompilerDefines.inc}
+
 uses
-  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
+  djWebFilterHolder,
+  Classes;
 
 type
-  TdjWebFilterTests = class(TTestCase)
-  published
-     procedure TestCreate;
+  (**
+   * Web Filter Mapping
+   *)
+  TdjWebFilterMapping = class(TInterfacedObject)
+  private
+    FWebFilterName: string;
+    FPathSpecs: TStrings;
+    FFilterHolder: TdjWebFilterHolder;
+  public
+    (**
+     * Constructor.
+     *)
+    constructor Create;
+    (**
+     * Destructor.
+     *)
+    destructor Destroy; override;
 
+    // properties
+    property WebFilterHolder: TdjWebFilterHolder read FFilterHolder write FFilterHolder;
+    property WebFilterName: string read FWebFilterName write FWebFilterName;
+    property PathSpecs: TStrings read FPathSpecs;
   end;
 
 implementation
 
-uses
-  djWebFilter, djWebAppContext, djServerContext, djTypes, djInterfaces;
+{ TdjWebFilterMapping }
 
-type
-
-  { TTestFilter }
-
-  TTestFilter = class(TdjWebFilter)
-  public
-    procedure {%H-}DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
-      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
-
-    procedure DestroyFilter;
-
-  end;
-
-{ TTestFilter }
-
-procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
-  Response: TdjResponse; const Chain: IWebFilterChain);
+constructor TdjWebFilterMapping.Create;
 begin
-   //
+  FPathSpecs := TStringList.Create;
 end;
 
-procedure TTestFilter.DestroyFilter;
+destructor TdjWebFilterMapping.Destroy;
 begin
-   //
-end;
+  FPathSpecs.Free;
 
-procedure TdjWebFilterTests.TestCreate;
-var
-  Context: TdjWebAppContext;
-  // Filter: IWebFilter;
-begin
-  Context := TdjWebAppContext.Create('x-ctx');
-  try
-    (* Filter := *) TTestFilter.Create;
-  finally
-    Context.Free;
-  end;
+  inherited;
 end;
 
 end.

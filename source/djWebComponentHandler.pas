@@ -36,11 +36,12 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djWebComponentMappings, djPathMap,
-  djWebFilterHolder, djWebFilterHolders,
+  djWebFilterHolder, djWebFilterHolders, djWebFilterMapping,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  djTypes;
+  djTypes,
+  Generics.Collections;
 
 type
   (**
@@ -62,9 +63,11 @@ type
 
     FWebComponentContext: IContext;
     PathMap: TdjPathMap;
+
     FWebComponentHolders: TdjWebComponentHolders;
-    FWebFilterHolders: TdjWebFilterHolders;
     FMappings: TdjWebComponentMappings;
+    FWebFilterHolders: TdjWebFilterHolders;
+    FWebFilterMappings: TObjectList<TdjWebFilterMapping>;
 
     procedure Trace(const S: string);
 
@@ -84,6 +87,11 @@ type
       const Holder: TdjWebComponentHolder);
 
     function FindMapping(const WebComponentName: string): TdjWebComponentMapping;
+
+    function GetFilterChain(const PathInContext: string; Request: TdjRequest;
+      Holder: TdjWebComponentHolder): IWebFilterChain;
+
+    function NewFilterChain(Holder: TdjWebFilterHolder; Chain: IWebFilterChain): IWebFilterChain;
 
   protected
     (**
@@ -184,24 +192,52 @@ type
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
 
-    property WebFilterHolders: TdjWebFilterHolders read FWebFilterHolders;
+    property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
 
   end;
 
 implementation
 
 uses
-  djContextHandler, djGlobal, djHTTPConstants,
-{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-{$IFDEF DARAJA_MADEXCEPT}
+  djContextHandler, djGlobal, djHTTPConstants, djWebFilterChain,
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  {$IFDEF DARAJA_MADEXCEPT}
   djStacktrace, madStackTrace,
-{$ENDIF}
-{$IFDEF DARAJA_JCLDEBUG}
+  {$ENDIF}
+  {$IFDEF DARAJA_JCLDEBUG}
   djStacktrace, JclDebug,
-{$ENDIF}
-{$ENDIF}
+  {$ENDIF}
+  {$ENDIF}
   Generics.Defaults,
   SysUtils, Classes;
+
+type
+
+  { TChainEnd }
+
+  TChainEnd = class(TInterfacedObject, IWebFilterChain)
+  private
+    FH: TdjWebComponentHolder;
+  public
+    constructor Create(Holder: TdjWebComponentHolder);
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
+  end;
+
+{ TChainEnd }
+
+constructor TChainEnd.Create(Holder: TdjWebComponentHolder);
+begin
+  inherited Create;
+
+  FH := Holder;
+end;
+
+procedure TChainEnd.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse);
+begin
+  // ;
+end;
 
 { TdjWebComponentHandler }
 
@@ -215,8 +251,10 @@ begin
 {$ENDIF DARAJA_LOGGING}
 
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
-  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
+
+  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  FWebFilterMappings := TObjectList<TdjWebFilterMapping>.Create(TComparer<TdjWebFilterMapping>.Default);
 
   PathMap := TdjPathMap.Create;
 
@@ -235,6 +273,7 @@ begin
   PathMap.Free;
 
   FWebComponentHolders.Free;
+  FWebFilterMappings.Free;
 
   FMappings.Free;
 
@@ -263,8 +302,14 @@ end;
 
 procedure TdjWebComponentHandler.DoStop;
 var
+  F: TdjWebFilterHolder;
   H: TdjWebComponentHolder;
 begin
+  for F in WebFilters do
+  begin
+    F.Stop;
+  end;
+
   for H in WebComponents do
   begin
     H.Stop;
@@ -582,26 +627,64 @@ procedure TdjWebComponentHandler.Handle(const Target: string; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 var
   Holder: TdjWebComponentHolder;
+  Chain: IWebFilterChain;
 begin
   Holder := FindComponent(Target);
+  Chain := nil;
 
-  if Assigned(Holder) then
+  if (Holder <> nil) and (FWebFilterMappings.Count > 0) then
+  begin
+    Chain := GetFilterChain(Target, Request, Holder);
+  end;
+
+  if Holder <> nil then
   begin
     Response.ResponseNo := HTTP_OK;
     try
-      InvokeService(Holder.WebComponent, Context, Request, Response);
+      if Chain <> nil then begin
+        Chain.DoFilter(Context, Request, Response);
+      end else begin
+        InvokeService(Holder.WebComponent, Context, Request, Response);
+      end;
     except
       on E: Exception do
       begin
         Response.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
-
-{$IFDEF DARAJA_LOGGING}
+        {$IFDEF DARAJA_LOGGING}
         // InvokeService already logged the exception
-{$ENDIF DARAJA_LOGGING}
-
+        {$ENDIF DARAJA_LOGGING}
       end;
     end;
   end;
+end;
+
+function TdjWebComponentHandler.GetFilterChain(const PathInContext: string;
+  Request: TdjRequest; Holder: TdjWebComponentHolder): IWebFilterChain;
+var
+  Chain: IWebFilterChain;
+  FM: TdjWebFilterMapping;
+  ChainEnd: TChainEnd;
+begin
+  Chain := nil;
+
+  for FM in FWebFilterMappings do
+  begin
+     if Chain = nil then
+     begin
+       ChainEnd := TChainEnd.Create(Holder);
+       Chain := NewFilterChain(FM.WebFilterHolder, ChainEnd);
+     end else begin
+       Chain := NewFilterChain(FM.WebFilterHolder, Chain);
+     end;
+  end;
+
+  Result := Chain;
+end;
+
+function TdjWebComponentHandler.NewFilterChain(Holder: TdjWebFilterHolder;
+  Chain: IWebFilterChain): IWebFilterChain;
+begin
+  Result := TdjWebFilterChain.Create(Holder, Chain);
 end;
 
 end.
