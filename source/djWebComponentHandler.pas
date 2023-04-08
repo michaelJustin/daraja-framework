@@ -36,7 +36,7 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djWebComponentMappings, djPathMap,
-  djWebFilterHolder, djWebFilterHolders, djWebFilterMapping,
+  djWebFilterHolder, djWebFilterMapping,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -63,12 +63,12 @@ type
 
     FWebComponentContext: IContext;
     PathMap: TdjPathMap;
-
     FWebComponentHolders: TdjWebComponentHolders;
     FMappings: TdjWebComponentMappings;
     FWebFilterHolders: TdjWebFilterHolders;
     FWebFilterMappings: TObjectList<TdjWebFilterMapping>;
 
+    procedure SetFilters(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
 
     function StripContext(const Doc: string): string;
@@ -135,8 +135,8 @@ type
      * \param Holder a Web Filter holder
      * \param PathSpec a path spec
      *)
-    procedure AddFilterWithMapping(const Holder: TdjWebFilterHolder;
-      const PathSpec: string);
+    procedure AddFilterWithNameMapping(WebFilterHolder: TdjWebFilterHolder;
+      const ComponentName: string);
 
     (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
@@ -290,9 +290,15 @@ end;
 
 procedure TdjWebComponentHandler.DoStart;
 var
+  FH: TdjWebFilterHolder;
   H: TdjWebComponentHolder;
 begin
   inherited;
+
+  for FH in WebFilters do
+  begin
+    FH.Start;
+  end;
 
   for H in WebComponents do
   begin
@@ -461,10 +467,31 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandler.AddFilterWithMapping(
-  const Holder: TdjWebFilterHolder; const PathSpec: string);
+procedure TdjWebComponentHandler.AddFilterWithNameMapping(
+  WebFilterHolder: TdjWebFilterHolder; const ComponentName: string);
+var
+  Holders: TdjWebFilterHolders;
+  Mapping: TdjWebFilterMapping;
 begin
+  Holders := FWebFilterHolders;
+  if not Holders.Contains(WebFilterHolder) then
+  begin
+    Holders.Add(WebFilterHolder);
+    SetFilters(Holders);
+  end;
 
+  Mapping := TdjWebFilterMapping.Create;
+  Mapping.WebFilterHolder := WebFilterHolder;
+  Mapping.WebFilterName := WebFilterHolder.WebFilterClass.ClassName;
+
+  FWebFilterMappings.Add(Mapping);
+end;
+
+procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
+begin
+  //InitializeHolders(Holders); // set context etc.
+  // UpdateNameMappings;
+  // InvalidateChainsCache
 end;
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
@@ -480,12 +507,12 @@ end;
 
 procedure TdjWebComponentHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjWebComponentHandler.ValidateMappingPathSpec(const PathSpec: string;

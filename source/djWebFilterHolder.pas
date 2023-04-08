@@ -38,7 +38,7 @@ uses
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  Classes;
+  Classes, Generics.Collections;
 
 type
   (**
@@ -67,6 +67,26 @@ type
     destructor Destroy; override;
 
     (**
+     * Get the context.
+     *)
+    function GetContext: IContext;
+
+    (**
+     * Set the context.
+     *
+     * \param Context the context
+     *)
+    procedure SetContext(const Context: IContext);
+
+    (**
+     * Set initialization parameter.
+     *
+     * \param Key init parameter name
+     * \param Value init parameter value
+     *)
+    procedure SetInitParameter(const Key: string; const Value: string);
+
+    (**
      * Start the filter.
      *)
     procedure DoStart; override;
@@ -86,6 +106,12 @@ type
      *)
     property WebFilter: TdjWebFilter read GetWebFilter;
   end;
+
+  // note Delphi 2009 AVs if it is a TObjectList<>
+  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
+  // for a workaround
+  // use  TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>);
 
 implementation
 
@@ -119,6 +145,22 @@ begin
   inherited Destroy;
 end;
 
+function TdjWebFilterHolder.GetContext: IContext;
+begin
+  Result := FConfig.GetContext;
+end;
+
+procedure TdjWebFilterHolder.SetContext(const Context: IContext);
+begin
+  FConfig.SetContext(Context);
+end;
+
+procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
+  const Value: string);
+begin
+  // TODO
+end;
+
 procedure TdjWebFilterHolder.Trace(const S: string);
 begin
   {$IFDEF DARAJA_LOGGING}
@@ -141,11 +183,12 @@ end;
 
 procedure TdjWebFilterHolder.DoStart;
 begin
-  inherited DoStart;
+  inherited;
 
   CheckStarted;
 
-  // ... config
+  Assert(FConfig <> nil);
+  Assert(FConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;
@@ -191,7 +234,7 @@ end;
 procedure TdjWebFilterHolder.DoFilter(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
 begin
-  CheckStopped;
+  // CheckStopped;
 
   WebFilter.DoFilter(Context, Request, Response, Chain);
 end;

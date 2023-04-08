@@ -36,9 +36,9 @@ uses
   djContextHandler, djWebComponentHandler, djServerContext,
   djWebComponentHolder, djWebComponent, djWebFilterHolder, djWebFilter,
   djInterfaces,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
@@ -50,14 +50,14 @@ type
 
   TdjWebComponentContextHandler = class(TdjContextHandler)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
-
+    {$ENDIF DARAJA_LOGGING}
     WebComponentHandler: TdjWebComponentHandler;
     AutoStartSession: Boolean;
 
     procedure Trace(const S: string);
+    procedure AddWebFilter(Holder: TdjWebFilterHolder; const WebComponentName: string); overload;
 
   protected
     (**
@@ -117,8 +117,6 @@ type
     procedure AddWebComponent(const Holder: TdjWebComponentHolder;
       const PathSpec: string); overload;
 
-    procedure AddWebFilter(const Holder: TdjWebFilterHolder;
-      const PathSpec: string); overload;
 
     (**
      * Add a Web Filter.
@@ -129,7 +127,7 @@ type
      * \throws Exception if the Web Filter can not be added
      *)
     procedure AddWebFilter(const FilterClass: TdjWebFilterClass;
-      const PathSpec: string); overload;
+      const ComponentName: string); overload;
 
     // IHandler interface
 
@@ -282,14 +280,13 @@ begin
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(const FilterClass: TdjWebFilterClass;
-  const PathSpec: string);
+  const ComponentName: string);
 var
   Holder: TdjWebFilterHolder;
 begin
   Holder := TdjWebFilterHolder.Create(FilterClass);
-
   try
-    AddWebFilter(Holder, PathSpec);
+    AddWebFilter(Holder, ComponentName);
   except
     on E: EWebComponentException do
     begin
@@ -299,23 +296,13 @@ begin
   end;
 end;
 
-procedure TdjWebComponentContextHandler.AddWebFilter(
-  const Holder: TdjWebFilterHolder; const PathSpec: string);
-begin
-  // Holder can not be reused.
-  // Create a new Holder if a Web Component should handle other PathSpecs.
-  (* if Holder.GetContext <> nil then
-  begin
-    raise EWebFilterException.CreateFmt(
-      'Web Filter %s is already installed in context %s',
-      [Holder.WebCFilterClass.ClassName, Holder.GetContext.GetContextPath]
-      );
-  end;
+procedure TdjWebComponentContextHandler.AddWebFilter(Holder: TdjWebFilterHolder;
+  const WebComponentName: string);
+begin 
+  // set context of Holder to propagate it to WebFilterConfig
+  Holder.SetContext(Self.GetCurrentContext);
 
-  // set context of Holder to propagate it to WebComponentConfig
-  Holder.SetContext(Self.GetCurrentContext); *)
-
-  WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
+  WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;

@@ -50,10 +50,9 @@ type
    *)
   TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
-
+    {$ENDIF DARAJA_LOGGING}
     FConfig: TdjWebComponentConfig;
     FClass: TdjWebComponentClass;
     FWebComponent: TdjWebComponent;

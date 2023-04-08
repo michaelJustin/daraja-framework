@@ -38,26 +38,22 @@ uses
 
 type
   (**
-   * Web Filter Mapping
+   * Web Filter Mapping.
    *)
-  TdjWebFilterMapping = class(TInterfacedObject)
+  TdjWebFilterMapping = class(TObject)
   private
     FWebFilterName: string;
     FPathSpecs: TStrings;
+    FWebComponentNames: TStrings;
     FFilterHolder: TdjWebFilterHolder;
   public
-    (**
-     * Constructor.
-     *)
     constructor Create;
-    (**
-     * Destructor.
-     *)
     destructor Destroy; override;
 
     // properties
     property WebFilterHolder: TdjWebFilterHolder read FFilterHolder write FFilterHolder;
     property WebFilterName: string read FWebFilterName write FWebFilterName;
+    property WebComponentNames: TStrings read FWebComponentNames;
     property PathSpecs: TStrings read FPathSpecs;
   end;
 
@@ -67,11 +63,15 @@ implementation
 
 constructor TdjWebFilterMapping.Create;
 begin
+  inherited;
+
   FPathSpecs := TStringList.Create;
+  FWebComponentNames := TStringList.Create;
 end;
 
 destructor TdjWebFilterMapping.Destroy;
 begin
+  FWebComponentNames.Free;
   FPathSpecs.Free;
 
   inherited;
