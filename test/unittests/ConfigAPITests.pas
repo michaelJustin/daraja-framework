@@ -40,6 +40,9 @@ type
   { TAPIConfigTests }
 
   TAPIConfigTests = class(THTTPTestCase)
+  private
+
+
   published
     procedure ConfigOneContext;
 
@@ -103,6 +106,8 @@ type
     procedure TestCachedGetRequest;
 
     procedure TestFilter;
+    procedure TestTwoFilters;
+    procedure TestTwoFiltersReversed;
 
   end;
 
@@ -1040,6 +1045,22 @@ type
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
 
+  { TTestFilterA }
+
+  TTestFilterA = class(TdjWebFilter)
+  public
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
+  { TTestFilterB }
+
+  TTestFilterB = class(TdjWebFilter)
+  public
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
 { TTestFilter }
 
 procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -1047,6 +1068,24 @@ procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
 begin
    Chain.DoFilter(Context, Request, Response);
    Response.ContentText := Response.ContentText + ' (filtered)';
+end;
+
+{ TTestFilterA }
+
+procedure TTestFilterA.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+  Response.ContentText := Response.ContentText + ' (A)';
+end;
+
+{ TTestFilterB }
+
+procedure TTestFilterB.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+  Response.ContentText := Response.ContentText + ' (B)';
 end;
 
 procedure TAPIConfigTests.TestFilter;
@@ -1063,6 +1102,48 @@ begin
     Server.Start;
 
     CheckGETResponseEquals('example (filtered)', '/web/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestTwoFilters;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.html');
+    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilterB, TExamplePage.ClassName);
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (A) (B)', '/web/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestTwoFiltersReversed;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.html');
+    Context.AddWebFilter(TTestFilterB, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (B) (A)', '/web/index.html');
 
   finally
     Server.Free;
