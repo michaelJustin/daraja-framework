@@ -38,7 +38,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="10">
+    <Units Count="12">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -79,6 +79,16 @@
         <Filename Value="..\..\source\djWebFilterChain.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
+      <Unit10>
+        <Filename Value="..\..\source\djmultimap.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djMultiMap"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\source\djabstractholder.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djAbstractHolder"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

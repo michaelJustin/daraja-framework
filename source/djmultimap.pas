@@ -21,32 +21,63 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
 
-unit djWebComponentMappings;
+unit djMultiMap;
+
+{$mode Delphi}
 
 interface
 
-{$i IdCompilerDefines.inc}
-
 uses
-  djWebComponentMapping,
   Generics.Collections;
 
 type
-  (**
-   * Web Component Mappings
-   *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+  { TdjMultiMap }
+
+  TdjMultiMap<T: TObject> = class(TObjectDictionary<string, TObjectList<T>>)
+  public
+    procedure Add(const Key: string; Value: T);
+    function GetValues(const Key: string): TObjectList<T>;
+  end;
 
 implementation
+
+uses
+  Generics.Defaults;
+
+{ TdjMultiMap }
+
+procedure TdjMultiMap<T>.Add(const Key: string; Value: T);
+var
+  L: TObjectList<T>;
+begin
+  if Value = nil then
+  begin
+    inherited Add(Key, nil);
+  end
+  else
+  begin
+    L := TObjectList<T>.Create(TComparer<T>.Default);
+    L.Add(Value);
+    inherited Add(Key, L);
+  end;
+end;
+
+function TdjMultiMap<T>.GetValues(const Key: string): TObjectList<T>;
+var
+  Found: Boolean;
+begin
+  Found := inherited TryGetValue(Key, Result);
+
+  if (not Found) or (Result.Count = 0) then
+  begin
+    Result := nil;
+  end;
+end;
 
 end.
 

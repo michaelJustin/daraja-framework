@@ -33,14 +33,17 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djLifeCycle,
+  djAbstractHolder,
   Classes;
 
 type
   (**
    * Holds a reference to a web component or web filter instance.
    *)
-  TdjGenericHolder<T: TInterfacedObject> = class(TdjLifeCycle)
+
+  { TdjGenericHolder }
+
+  TdjGenericHolder<T: TInterfacedObject> = class(TdjAbstractHolder<T>)
   private
     FName: string;
   public
@@ -48,7 +51,6 @@ type
 
     // properties
     property Name: string read FName write FName;
-
   end;
 
 implementation

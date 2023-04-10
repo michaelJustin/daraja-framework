@@ -130,8 +130,7 @@ uses
 
 { TdjWebComponentHolder }
 
-constructor TdjWebComponentHolder.Create(
-  const WebComponentClass: TdjWebComponentClass);
+constructor TdjWebComponentHolder.Create(const WebComponentClass: TdjWebComponentClass);
 begin
   inherited Create(WebComponentClass);
 

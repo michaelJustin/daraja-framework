@@ -34,7 +34,7 @@ interface
 
 uses
   djWebFilterHolder,
-  Classes;
+  Classes, Generics.Collections;
 
 type
   (**
@@ -56,6 +56,8 @@ type
     property WebComponentNames: TStrings read FWebComponentNames;
     property PathSpecs: TStrings read FPathSpecs;
   end;
+
+  TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
 
 implementation
 
