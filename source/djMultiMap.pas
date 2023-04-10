@@ -28,8 +28,6 @@
 
 unit djMultiMap;
 
-{$mode Delphi}
-
 interface
 
 uses
@@ -38,7 +36,7 @@ uses
 type
   { TdjMultiMap }
 
-  TdjMultiMap<T: TObject> = class(TObjectDictionary<string, TObjectList<T>>)
+  TdjMultiMap<T: class> = class(TObjectDictionary<string, TObjectList<T>>)
   public
     procedure Add(const Key: string; Value: T);
     function GetValues(const Key: string): TObjectList<T>;

@@ -460,6 +460,7 @@ begin
   Mapping := TdjWebFilterMapping.Create;
   Mapping.WebFilterHolder := WebFilterHolder;
   Mapping.WebFilterName := WebFilterHolder.WebFilterClass.ClassName;
+  Mapping.WebComponentNames.Add(ComponentName);
 
   FWebFilterMappings.Add(Mapping);
 end;
