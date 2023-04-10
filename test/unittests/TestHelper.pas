@@ -30,7 +30,8 @@ unit TestHelper;
 
 interface
 
-const LOG_LEVEL = 'info';
+const
+  LOG_LEVEL = 'trace';
 
 function UseConsoleTestRunner: Boolean;
 

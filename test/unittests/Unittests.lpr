@@ -41,7 +41,6 @@ uses
   djWebComponentHolderTests,
   djWebComponentHandlerTests,
   djDefaultWebComponentTests,
-  djWebFilterHolder,
   ConfigAPITests,
   HttpsTests,
   TestHelper,

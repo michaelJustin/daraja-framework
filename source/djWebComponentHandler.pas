@@ -217,7 +217,7 @@ type
 
   TChainEnd = class(TInterfacedObject, IWebFilterChain)
   private
-    FH: TdjWebComponentHolder;
+    FWebComponentHolder: TdjWebComponentHolder;
   public
     constructor Create(Holder: TdjWebComponentHolder);
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
@@ -230,13 +230,13 @@ constructor TChainEnd.Create(Holder: TdjWebComponentHolder);
 begin
   inherited Create;
 
-  FH := Holder;
+  FWebComponentHolder := Holder;
 end;
 
 procedure TChainEnd.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse);
 begin
-  // ;
+  FWebComponentHolder.Handle(Context, Request, Response);
 end;
 
 { TdjWebComponentHandler }

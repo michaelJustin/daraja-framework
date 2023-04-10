@@ -1038,8 +1038,6 @@ type
   public
     procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
-
-    procedure DestroyFilter;
   end;
 
 { TTestFilter }
@@ -1047,12 +1045,8 @@ type
 procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 begin
-   //
-end;
-
-procedure TTestFilter.DestroyFilter;
-begin
-   //
+   Chain.DoFilter(Context, Request, Response);
+   Response.ContentText := Response.ContentText + ' (filtered)';
 end;
 
 procedure TAPIConfigTests.TestFilter;
@@ -1064,11 +1058,11 @@ begin
   try
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilter, '');
+    Context.AddWebFilter(TTestFilter, TExamplePage.ClassName);
     Server.Add(Context);
     Server.Start;
 
-    CheckGETResponseEquals('example', '/web/index.html');
+    CheckGETResponseEquals('example (filtered)', '/web/index.html');
 
   finally
     Server.Free;
