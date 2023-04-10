@@ -234,7 +234,7 @@ end;
 procedure TdjWebFilterHolder.DoFilter(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
 begin
-  // CheckStopped;
+  CheckStopped;
 
   WebFilter.DoFilter(Context, Request, Response, Chain);
 end;

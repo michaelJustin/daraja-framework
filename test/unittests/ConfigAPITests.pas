@@ -43,6 +43,7 @@ type
   private
 
 
+
   published
     procedure ConfigOneContext;
 
@@ -108,6 +109,7 @@ type
     procedure TestFilter;
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
+    procedure TestTwoFiltersAndTwoWebComponents;
 
   end;
 
@@ -1144,6 +1146,29 @@ begin
     Server.Start;
 
     CheckGETResponseEquals('example (B) (A)', '/web/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestTwoFiltersAndTwoWebComponents;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.filterA');
+    Context.AddWebComponent(TGetComponent, '*.filterB');
+    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilterB, TGetComponent.ClassName);
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (A)', '/web/page.filterA');
+    CheckGETResponseEquals('Hello (B)', '/web/page.filterB');
 
   finally
     Server.Free;
