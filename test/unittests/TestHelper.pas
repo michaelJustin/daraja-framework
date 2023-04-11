@@ -31,7 +31,7 @@ unit TestHelper;
 interface
 
 const
-  LOG_LEVEL = 'trace';
+  LOG_LEVEL = 'debug';
 
 function UseConsoleTestRunner: Boolean;
 
