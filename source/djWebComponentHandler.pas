@@ -35,7 +35,7 @@ interface
 uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
-  djWebComponentMapping, djWebComponentMappings, djPathMap,
+  djWebComponentMapping, djPathMap,
   djWebFilterHolder, djWebFilterMapping, djMultiMap,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
