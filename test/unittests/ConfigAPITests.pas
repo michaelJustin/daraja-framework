@@ -1099,7 +1099,7 @@ begin
   try
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilter, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilter, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
@@ -1119,8 +1119,8 @@ begin
   try
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
-    Context.AddWebFilter(TTestFilterB, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilterA, TExamplePage);
+    Context.AddWebFilter(TTestFilterB, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
@@ -1140,8 +1140,8 @@ begin
   try
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilterB, TExamplePage.ClassName);
-    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
+    Context.AddWebFilter(TTestFilterB, TExamplePage);
+    Context.AddWebFilter(TTestFilterA, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
@@ -1162,8 +1162,8 @@ begin
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.filterA');
     Context.AddWebComponent(TGetComponent, '*.filterB');
-    Context.AddWebFilter(TTestFilterA, TExamplePage.ClassName);
-    Context.AddWebFilter(TTestFilterB, TGetComponent.ClassName);
+    Context.AddWebFilter(TTestFilterA, TExamplePage);
+    Context.AddWebFilter(TTestFilterB, TGetComponent);
     Server.Add(Context);
     Server.Start;
 

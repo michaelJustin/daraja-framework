@@ -121,6 +121,17 @@ type
      * Add a Web Filter.
      *
      * \param FilterClass WebFilter class
+     * \param WebComponent class
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      WebComponentClass: TdjWebComponentClass); overload;
+
+    (**
+     * Add a Web Filter.
+     *
+     * \param FilterClass WebFilter class
      * \param WebComponentName name of the WebComponent
      *
      * \throws Exception if the Web Filter can not be added
@@ -276,6 +287,12 @@ begin
   Holder.SetContext(Self.GetCurrentContext);
 
   WebComponentHandler.AddWithMapping(Holder, PathSpec);
+end;
+
+procedure TdjWebComponentContextHandler.AddWebFilter(
+  FilterClass: TdjWebFilterClass; WebComponentClass: TdjWebComponentClass);
+begin
+  AddWebFilter(FilterClass, WebComponentClass.ClassName);
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
