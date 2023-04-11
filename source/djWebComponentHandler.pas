@@ -94,15 +94,14 @@ type
 
   protected
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
+    procedure AddMapping(Mapping: TdjWebComponentMapping);
+
+    property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
+    property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
 
   public
     constructor Create; override;
     destructor Destroy; override;
-
-    (**
-     * Add a mapping
-     *)
-    procedure AddMapping(const Mapping: TdjWebComponentMapping);
 
     (**
      * Add a Web Component holder with mapping.
@@ -163,8 +162,8 @@ type
     // properties
     property WebComponentContext: IContext read FWebComponentContext;
     property WebComponentMappings: TdjWebComponentMappings read FMappings;
-    property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
-    property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
+
+
 
   end;
 
@@ -407,8 +406,7 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandler.AddMapping(const Mapping:
-  TdjWebComponentMapping);
+procedure TdjWebComponentHandler.AddMapping(Mapping: TdjWebComponentMapping);
 begin
   WebComponentMappings.Add(Mapping);
 end;
@@ -451,14 +449,12 @@ end;
 procedure TdjWebComponentHandler.AddFilterWithNameMapping(
   WebFilterHolder: TdjWebFilterHolder; const ComponentName: string);
 var
-  Holders: TdjWebFilterHolders;
   Mapping: TdjWebFilterMapping;
 begin
-  Holders := FWebFilterHolders;
-  if not Holders.Contains(WebFilterHolder) then
+  if not WebFilters.Contains(WebFilterHolder) then
   begin
-    Holders.Add(WebFilterHolder);
-    SetFilters(Holders);
+    WebFilters.Add(WebFilterHolder);
+    SetFilters(WebFilters);
   end;
 
   Mapping := TdjWebFilterMapping.Create;
@@ -706,7 +702,7 @@ var
 begin
   FilterNameMap.Clear;
 
-  for WebFilterHolder in FWebFilterHolders do
+  for WebFilterHolder in WebFilters do
   begin
      FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
      WebFilterHolder.WebComponentHandler := Self;
@@ -720,7 +716,6 @@ var
   WebComponentNames: TStrings;
   WebComponentName: string;
 begin
-  // FWebFilterPathMappings := ...
   FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
 
   for FilterMapping in FWebFilterMappings do
@@ -738,9 +733,6 @@ begin
       end;
     end;
   end;
-
-  // Reverse FWebFilterNameMappings
-  // FWebFilterNameMappings.
 end;
 
 end.
