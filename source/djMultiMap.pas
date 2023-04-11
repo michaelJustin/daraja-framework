@@ -53,16 +53,12 @@ procedure TdjMultiMap<T>.Add(const Key: string; Value: T);
 var
   L: TObjectList<T>;
 begin
-  if Value = nil then
-  begin
-    inherited Add(Key, nil);
-  end
-  else
+  if not TryGetValue(Key, L) then
   begin
     L := TObjectList<T>.Create(TComparer<T>.Default);
-    L.Add(Value);
     inherited Add(Key, L);
   end;
+  L.Add(Value);
 end;
 
 function TdjMultiMap<T>.GetValues(const Key: string): TObjectList<T>;
