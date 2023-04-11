@@ -45,11 +45,10 @@ uses
   HttpsTests,
   TestHelper,
   TestSessions,
-  IdGlobal,
   testregistry,
   fpcunit,
   GuiTestRunner,
-  consoletestrunner;
+  consoletestrunner, djMultiMap, djAbstractHolder;
 
 {$R *.res}
 

@@ -34,7 +34,9 @@ interface
 
 uses
   djHandlerWrapper, djServerContext, djTypes,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdThreadSafe;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
   (**
@@ -111,7 +113,9 @@ implementation
 
 uses
   djPlatform,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal, // GetTickDiff64
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 { TdjStatisticsHandler }

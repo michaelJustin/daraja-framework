@@ -21,32 +21,44 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
 
-unit djWebComponentMappings;
+unit djWebFilter;
 
 interface
 
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebComponentMapping,
-  Generics.Collections;
+  djGenericWebFilter
+  {$IFDEF DARAJA_LOGGING}
+  , djLogAPI, djLoggerFactory
+  {$ENDIF DARAJA_LOGGING}
+  ;
 
 type
   (**
-   * Web Component Mappings
+   * A base class which can be subclassed to create a HTTP filter component
+   * for a Web site.
    *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+  TdjWebFilter = class(TdjGenericWebFilter)
+  private
+    {$IFDEF DARAJA_LOGGING}
+    {%H-}Logger: ILogger;
+    {$ENDIF DARAJA_LOGGING}
+  public
 
-implementation
+  end;
+
+  (**
+   * Class reference to TdjWebFilter
+   *)
+  TdjWebFilterClass = class of TdjWebFilter;
+
+  implementation
 
 end.
 

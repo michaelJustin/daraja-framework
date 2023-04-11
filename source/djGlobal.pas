@@ -53,7 +53,7 @@ var
   end;
 
 begin
-  SetLength(Result, Length(AData) * 6);
+  SetLength(Result{%H-}, Length(AData) * 6);
   Pos := 1;
   for I := 1 to length(AData) do
   begin

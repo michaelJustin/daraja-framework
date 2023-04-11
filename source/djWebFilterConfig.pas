@@ -21,32 +21,70 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
 
-unit djWebComponentMappings;
+unit djWebFilterConfig;
 
 interface
 
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebComponentMapping,
-  Generics.Collections;
+  djInterfaces, djAbstractConfig;
 
 type
   (**
-   * Web Component Mappings
+   * Web Filter configuration.
    *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+
+  { TdjWebFilterConfig }
+
+  TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
+  public
+    (**
+     * "Copy" constructor.
+     *)
+    constructor Create(const Config: IWebFilterConfig); overload;
+
+    function GetFilterName: string;
+  end;
 
 implementation
 
+{ TdjWebFilterConfig }
+
+constructor TdjWebFilterConfig.Create(const Config: IWebFilterConfig);
+var
+  L: TdjStrings;
+  S: string;
+begin
+  Create;
+
+  Assert(Config <> nil);
+
+  Assert(Config.GetContext <> nil);
+
+  // copy from IConfig argument to self:
+
+  // Context:
+  FContext := Config.GetContext;
+  // Params:
+  L := Config.GetInitParameterNames;
+  for S in L do
+  begin
+    FParams.Add(S, Config.GetInitParameter(S));
+  end;
+  L.Free;
+end;
+
+function TdjWebFilterConfig.GetFilterName: string;
+begin
+  Result := ''; // TODO
+end;
+
 end.
+
 

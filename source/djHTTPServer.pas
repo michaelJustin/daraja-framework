@@ -33,10 +33,12 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomHTTPServer, IdCustomTCPServer, IdIOHandler, IdContext,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 const
@@ -53,9 +55,9 @@ type
 
   TdjHTTPServer = class(TIdCustomHTTPServer)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     // Exceptions
     procedure MyOnException(AContext: TIdContext; AException: Exception);
@@ -90,7 +92,9 @@ implementation
 
 uses
   djServerContext,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdException, IdExceptionCore;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 { TdjHTTPServer }
 

@@ -29,7 +29,10 @@ unit TestClient;
 interface
 
 uses
-  IdHTTP, IdGlobal, SysUtils;
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdHTTP, IdGlobal,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  SysUtils;
 
 type
   TdjHTTPClient = class(TIdHTTP)

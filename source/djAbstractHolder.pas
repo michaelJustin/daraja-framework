@@ -21,30 +21,31 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
 
-unit djWebComponentMappings;
-
-interface
+unit djAbstractHolder;
 
 {$i IdCompilerDefines.inc}
 
+interface
+
 uses
-  djWebComponentMapping,
-  Generics.Collections;
+  djAbstractHandler, djLifeCycle,
+  Classes;
 
 type
-  (**
-   * Web Component Mappings
-   *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+
+  { TdjAbstractHolder }
+
+  TdjAbstractHolder<T: TInterfacedObject> = class(TdjLifeCycle)
+  private
+    FWebComponentHandler: TdjAbstractHandler;
+  public
+    property WebComponentHandler: TdjAbstractHandler read FWebComponentHandler write FWebComponentHandler;
+  end;
 
 implementation
 

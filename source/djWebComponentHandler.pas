@@ -36,12 +36,15 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djWebComponentMappings, djPathMap,
-{$IFDEF DARAJA_LOGGING}
+  djWebFilterHolder, djWebFilterMapping, djMultiMap,
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
-  djTypes;
+  {$ENDIF DARAJA_LOGGING}
+  djTypes,
+  Generics.Collections;
 
 type
+
   (**
    * Web Component handler.
    *
@@ -50,62 +53,55 @@ type
    * It holds a list of web components and their path mappings,
    * and passes incoming requests to the matching web component.
    *)
+
+  { TdjWebComponentHandler }
+
   TdjWebComponentHandler = class(TdjAbstractHandler)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FWebComponentContext: IContext;
     PathMap: TdjPathMap;
+
     FWebComponentHolders: TdjWebComponentHolders;
     FMappings: TdjWebComponentMappings;
 
+    FWebFilterHolders: TdjWebFilterHolders;
+    FWebFilterMappings: TdjWebFilterMappings;
+    FilterNameMap: TObjectDictionary<string, TdjWebFilterHolder>;
+    FWebFilterNameMappings: TdjMultiMap<TdjWebFilterMapping>;
+
+    procedure SetFilters(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
-
     function StripContext(const Doc: string): string;
-
     procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
-
     procedure CheckStoreContext(const Context: IContext);
-
     procedure CheckUniqueName(const Holder: TdjWebComponentHolder);
-
     procedure CreateOrUpdateMapping(const PathSpec: string; const Holder:
       TdjWebComponentHolder);
-
     procedure ValidateMappingPathSpec(const PathSpec: string;
       const Holder: TdjWebComponentHolder);
-
     function FindMapping(const WebComponentName: string): TdjWebComponentMapping;
+    function GetFilterChain(const PathInContext: string; Request: TdjRequest;
+      Holder: TdjWebComponentHolder): IWebFilterChain;
+    function NewFilterChain(Holder: TdjWebFilterHolder;
+      Chain: IWebFilterChain): IWebFilterChain;
+    procedure UpdateNameMappings;
+    procedure UpdateMappings;
 
   protected
-    (**
-     * Find matching component.
-     *
-     * \param ATarget the URL document path.
-     *)
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
+    procedure AddMapping(Mapping: TdjWebComponentMapping);
+
+    property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
+    property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
 
   public
-    (**
-     * Create a ContextHandler.
-     *
-     * Use a ContextConfig (required argument) to configure the
-     * route mappings.
-     *)
     constructor Create; override;
-
-    (**
-     * Destructor.
-     *)
     destructor Destroy; override;
-
-    (**
-     * Add a mapping
-     *)
-    procedure AddMapping(const Mapping: TdjWebComponentMapping);
 
     (**
      * Add a Web Component holder with mapping.
@@ -115,6 +111,15 @@ type
      *)
     procedure AddWithMapping(const Holder: TdjWebComponentHolder;
       const PathSpec: string);
+
+    (**
+     * Add a Web Filter holder with mapping.
+     *
+     * \param Holder a Web Filter holder
+     * \param PathSpec a path spec
+     *)
+    procedure AddFilterWithNameMapping(WebFilterHolder: TdjWebFilterHolder;
+      const ComponentName: string);
 
     (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
@@ -151,41 +156,59 @@ type
       TdjRequest; Response: TdjResponse); override;
 
     // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
     procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
     procedure DoStop; override;
 
     // properties
-
     property WebComponentContext: IContext read FWebComponentContext;
-
     property WebComponentMappings: TdjWebComponentMappings read FMappings;
 
-    property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
+
 
   end;
 
 implementation
 
 uses
-  djContextHandler, djGlobal, djHTTPConstants,
-{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-{$IFDEF DARAJA_MADEXCEPT}
+  djContextHandler, djGlobal, djHTTPConstants, djWebFilterChain,
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  {$IFDEF DARAJA_MADEXCEPT}
   djStacktrace, madStackTrace,
-{$ENDIF}
-{$IFDEF DARAJA_JCLDEBUG}
+  {$ENDIF}
+  {$IFDEF DARAJA_JCLDEBUG}
   djStacktrace, JclDebug,
-{$ENDIF}
-{$ENDIF}
+  {$ENDIF}
+  {$ENDIF}
   Generics.Defaults,
   SysUtils, Classes;
+
+type
+
+  { TChainEnd }
+
+  TChainEnd = class(TInterfacedObject, IWebFilterChain)
+  private
+    FWebComponentHolder: TdjWebComponentHolder;
+  public
+    constructor Create(Holder: TdjWebComponentHolder);
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
+  end;
+
+{ TChainEnd }
+
+constructor TChainEnd.Create(Holder: TdjWebComponentHolder);
+begin
+  inherited Create;
+
+  FWebComponentHolder := Holder;
+end;
+
+procedure TChainEnd.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse);
+begin
+  FWebComponentHolder.Handle(Context, Request, Response);
+end;
 
 { TdjWebComponentHandler }
 
@@ -194,21 +217,26 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponentHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
   FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
 
+  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
+
+  FilterNameMap := TObjectDictionary<string, TdjWebFilterHolder>.Create;
+
   PathMap := TdjPathMap.Create;
 
-{$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
 end;
 
 destructor TdjWebComponentHandler.Destroy;
 begin
-{$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
 
   if IsStarted then
   begin
@@ -218,8 +246,13 @@ begin
   PathMap.Free;
 
   FWebComponentHolders.Free;
-
   FMappings.Free;
+
+  FWebFilterHolders.Free;
+  FWebFilterMappings.Free;
+
+  FilterNameMap.Free;
+  FWebFilterNameMappings.Free;
 
   inherited;
 end;
@@ -234,9 +267,18 @@ end;
 
 procedure TdjWebComponentHandler.DoStart;
 var
+  FH: TdjWebFilterHolder;
   H: TdjWebComponentHolder;
 begin
   inherited;
+
+  UpdateNameMappings;
+  UpdateMappings;
+
+  for FH in WebFilters do
+  begin
+    FH.Start;
+  end;
 
   for H in WebComponents do
   begin
@@ -246,8 +288,14 @@ end;
 
 procedure TdjWebComponentHandler.DoStop;
 var
+  F: TdjWebFilterHolder;
   H: TdjWebComponentHolder;
 begin
+  for F in WebFilters do
+  begin
+    F.Stop;
+  end;
+
   for H in WebComponents do
   begin
     H.Stop;
@@ -358,8 +406,7 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandler.AddMapping(const Mapping:
-  TdjWebComponentMapping);
+procedure TdjWebComponentHandler.AddMapping(Mapping: TdjWebComponentMapping);
 begin
   WebComponentMappings.Add(Mapping);
 end;
@@ -399,6 +446,31 @@ begin
   end;
 end;
 
+procedure TdjWebComponentHandler.AddFilterWithNameMapping(
+  WebFilterHolder: TdjWebFilterHolder; const ComponentName: string);
+var
+  Mapping: TdjWebFilterMapping;
+begin
+  if not WebFilters.Contains(WebFilterHolder) then
+  begin
+    WebFilters.Add(WebFilterHolder);
+    SetFilters(WebFilters);
+  end;
+
+  Mapping := TdjWebFilterMapping.Create;
+  Mapping.WebFilterHolder := WebFilterHolder;
+  Mapping.WebFilterName := WebFilterHolder.WebFilterClass.ClassName;
+  Mapping.WebComponentNames.Add(ComponentName);
+
+  FWebFilterMappings.Add(Mapping);
+end;
+
+procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
+begin
+  //InitializeHolders(Holders); // set context etc.
+  UpdateNameMappings;
+end;
+
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
 begin
   if WebComponentContext.GetContextPath = ROOT_CONTEXT then
@@ -406,18 +478,18 @@ begin
   else
   begin
     // strip leading slash
-    Result := Copy(Doc, Length(WebComponentContext.GetContextPath) + 2, MAXINT);
+    Result := Copy(Doc, Length(WebComponentContext.GetContextPath) + 2);
   end;
 end;
 
 procedure TdjWebComponentHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjWebComponentHandler.ValidateMappingPathSpec(const PathSpec: string;
@@ -467,8 +539,7 @@ begin
   end;
 end;
 
-function TdjWebComponentHandler.FindHolder(
-  const WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
+function TdjWebComponentHandler.FindHolder(const WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
 var
   I: Integer;
 begin
@@ -559,23 +630,106 @@ procedure TdjWebComponentHandler.Handle(const Target: string; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 var
   Holder: TdjWebComponentHolder;
+  Chain: IWebFilterChain;
 begin
   Holder := FindComponent(Target);
+  Chain := nil;
 
-  if Assigned(Holder) then
+  if (Holder <> nil) and (FWebFilterMappings.Count > 0) then
+  begin
+    Chain := GetFilterChain(Target, Request, Holder);
+  end;
+
+  if Holder <> nil then
   begin
     Response.ResponseNo := HTTP_OK;
     try
-      InvokeService(Holder.WebComponent, Context, Request, Response);
+      if Chain <> nil then begin
+        Chain.DoFilter(Context, Request, Response);
+      end else begin
+        InvokeService(Holder.WebComponent, Context, Request, Response);
+      end;
     except
       on E: Exception do
       begin
         Response.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
-
-{$IFDEF DARAJA_LOGGING}
+        {$IFDEF DARAJA_LOGGING}
         // InvokeService already logged the exception
-{$ENDIF DARAJA_LOGGING}
+        {$ENDIF DARAJA_LOGGING}
+      end;
+    end;
+  end;
+end;
 
+function TdjWebComponentHandler.GetFilterChain(const PathInContext: string;
+  Request: TdjRequest; Holder: TdjWebComponentHolder): IWebFilterChain;
+var
+  Chain: IWebFilterChain;
+  FilterMapping: TdjWebFilterMapping;
+  ChainEnd: TChainEnd;
+  NameMappings: TdjWebFilterMappings;
+begin
+  Chain := nil;
+
+  if (FWebFilterNameMappings <> nil) and (FWebFilterNameMappings.Count > 0) then
+  begin
+    NameMappings := FWebFilterNameMappings.GetValues(Holder.Name);
+
+    for FilterMapping in NameMappings do
+    begin
+       if Chain = nil then
+       begin
+         ChainEnd := TChainEnd.Create(Holder);
+         Chain := NewFilterChain(FilterMapping.WebFilterHolder, ChainEnd);
+       end else begin
+         Chain := NewFilterChain(FilterMapping.WebFilterHolder, Chain);
+       end;
+    end;
+  end;
+
+  Result := Chain;
+end;
+
+function TdjWebComponentHandler.NewFilterChain(Holder: TdjWebFilterHolder;
+  Chain: IWebFilterChain): IWebFilterChain;
+begin
+  Result := TdjWebFilterChain.Create(Holder, Chain);
+end;
+
+procedure TdjWebComponentHandler.UpdateNameMappings;
+var
+  WebFilterHolder: TdjWebFilterHolder;
+begin
+  FilterNameMap.Clear;
+
+  for WebFilterHolder in WebFilters do
+  begin
+     FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
+     WebFilterHolder.WebComponentHandler := Self;
+  end;
+end;
+
+procedure TdjWebComponentHandler.UpdateMappings;
+var
+  FilterMapping: TdjWebFilterMapping;
+  WebFilterHolder: TdjWebFilterHolder;
+  WebComponentNames: TStrings;
+  WebComponentName: string;
+begin
+  FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
+
+  for FilterMapping in FWebFilterMappings do
+  begin
+    WebFilterHolder := FilterMapping.WebFilterHolder;
+    // if = nil ...
+    FilterMapping.WebFilterHolder := WebFilterHolder;
+
+    WebComponentNames := FilterMapping.WebComponentNames;
+    if WebComponentNames.Count > 0 then
+    begin
+      for WebComponentName in WebComponentNames do
+      begin
+         FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
       end;
     end;
   end;

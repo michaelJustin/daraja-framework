@@ -34,10 +34,12 @@ interface
 
 uses
   djHandlerWrapper, djServerContext, djTypes,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomHTTPServer,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 type
@@ -50,9 +52,9 @@ type
    *)
   TdjNCSALogHandler = class(TdjHandlerWrapper)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FS: TFormatSettings;
 
@@ -78,7 +80,10 @@ type
 implementation
 
 uses
-  IdGlobal{$IFNDEF FPC}, Windows{$ENDIF};
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdGlobal
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  {$IFNDEF FPC}, Windows{$ENDIF};
 
 function DateTimeToNCSATime(const AValue: TDateTime; const AFS:
   TFormatSettings): string;

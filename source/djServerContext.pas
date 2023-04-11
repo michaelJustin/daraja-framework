@@ -33,7 +33,9 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomTCPServer;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
   (**

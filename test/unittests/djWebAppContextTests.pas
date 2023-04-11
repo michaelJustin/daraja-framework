@@ -62,7 +62,7 @@ uses
 type
   TExamplePage = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse);
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);
       override;
   end;
 

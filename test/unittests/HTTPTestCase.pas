@@ -34,7 +34,9 @@ interface
 
 uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF},
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal, IdHTTP;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
 

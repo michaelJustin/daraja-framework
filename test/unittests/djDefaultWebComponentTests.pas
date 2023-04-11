@@ -53,13 +53,15 @@ implementation
 uses
   djWebAppContext, djWebComponentHolder, djServer, djTypes, djWebComponent,
   djDefaultWebComponent,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP, IdGlobal,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 type
   TExamplePage = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse);
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);
       override;
   end;
 

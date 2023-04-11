@@ -143,6 +143,46 @@ type
     property Config: IWebComponentConfig read GetWebComponentConfig;
   end;
 
+  (**
+   * \interface IWebFilterChain
+   *
+   * Web Filter Chain interface.
+   *)
+  IWebFilterChain = interface
+    ['{56337AF8-89D6-45AC-B0BD-94977BB2CE40}']
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
+  end;
+
+  (**
+   * \interface IWebFilterConfig
+   *
+   * Web Filter configuration interface.
+   *)
+  IWebFilterConfig = interface
+    ['{86823762-EE7A-4523-80FE-32DD714C11DF}']
+    function GetFilterName: string;
+    function GetInitParameterNames: TdjStrings;
+    function GetInitParameter(const Key: string): string;
+    function GetContext: IContext;
+  end;
+
+  (**
+   * \interface IWebFilter
+   *
+   * Web Filter interface.
+   * A filter is an object that performs filtering tasks on either the request
+   * to a resource (a servlet or static content), or on the response from a resource, or both.
+   *)
+  IWebFilter = interface
+    ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
+    procedure Init(const Config: IWebFilterConfig);
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse; const Chain: IWebFilterChain);
+    procedure DestroyFilter;
+  end;
+
+
 implementation
 
 end.

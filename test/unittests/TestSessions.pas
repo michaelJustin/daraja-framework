@@ -64,7 +64,7 @@ uses
 type
   TExamplePage = class(TdjWebComponent)
   public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
   end;
 
   TSessionDetector = class(TdjHandlerWrapper)

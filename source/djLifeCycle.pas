@@ -59,7 +59,6 @@ type
     procedure SetStarted(const Value: Boolean);
     procedure SetStopped(const Value: Boolean);
 
-
   protected
     (**
      * Execute the custom start code.
@@ -82,11 +81,7 @@ type
     procedure CheckStopped;
 
   public
-    (**
-     * Constructor.
-     *)
     constructor Create; virtual;
-
     destructor Destroy; override;
 
     // ILifeCycle interface
@@ -239,7 +234,8 @@ begin
       on E: Exception do
       begin
         {$IFDEF DARAJA_LOGGING}
-        Logger.Error('Start failed', E);
+        Logger.Error('Start failed: %s %s in %s',
+          [E.Message, E.ClassName, Self.ClassName]);
         {$ENDIF DARAJA_LOGGING}
         raise;
       end;

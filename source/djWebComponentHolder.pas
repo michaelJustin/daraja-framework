@@ -34,7 +34,7 @@ interface
 
 uses
   djWebComponent, djGenericHolder, djLifeCycle, djInterfaces,
-  djWebComponentConfig,
+  djWebComponentConfig, djServerContext, djTypes,
 {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
 {$ENDIF DARAJA_LOGGING}
@@ -48,20 +48,20 @@ type
    * when the WebComponent property is accessed.
    * (lazy instantiation).
    *)
+
+  { TdjWebComponentHolder }
+
   TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
-
+    {$ENDIF DARAJA_LOGGING}
     FConfig: TdjWebComponentConfig;
     FClass: TdjWebComponentClass;
     FWebComponent: TdjWebComponent;
 
     procedure Trace(const S: string);
-
     function GetWebComponent: TdjWebComponent;
-
     function GetClass: TdjWebComponentClass;
 
   public
@@ -70,7 +70,7 @@ type
      *
      * \param WebComponentClass the Web Component class
      *)
-    constructor Create(const WebComponentClass: TdjWebComponentClass);
+    constructor Create(const WebComponentClass: TdjWebComponentClass); overload;
 
     (**
      * Destructor.
@@ -98,14 +98,17 @@ type
     procedure SetInitParameter(const Key: string; const Value: string);
 
     (**
-     * Start the handler.
+     * Start the component.
      *)
     procedure DoStart; override;
 
     (**
-     * Stop the handler.
+     * Stop the component.
      *)
      procedure DoStop; override;
+
+     procedure Handle(Context: TdjServerContext; {%H-}Request: TdjRequest;
+       {%H-}Response: TdjResponse);
 
     // properties
 
@@ -127,8 +130,7 @@ uses
 
 { TdjWebComponentHolder }
 
-constructor TdjWebComponentHolder.Create(
-  const WebComponentClass: TdjWebComponentClass);
+constructor TdjWebComponentHolder.Create(const WebComponentClass: TdjWebComponentClass);
 begin
   inherited Create(WebComponentClass);
 
@@ -182,7 +184,8 @@ begin
   FConfig.SetContext(Context);
 end;
 
-procedure TdjWebComponentHolder.SetInitParameter(const Key, Value: string);
+procedure TdjWebComponentHolder.SetInitParameter(const Key: string;
+  const Value: string);
 begin
   FConfig.Add(Key, Value);
 end;
@@ -227,14 +230,20 @@ begin
   except
     on E: Exception do
     begin
-{$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
       Logger.Warn('TdjWebComponentHolder.Stop: ' + E.Message, E);
-{$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_LOGGING}
       // TODO raise ?;
     end;
   end;
 
   inherited;
+end;
+
+procedure TdjWebComponentHolder.Handle(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse);
+begin
+  WebComponent.Service(Context, Request, Response);
 end;
 
 end.

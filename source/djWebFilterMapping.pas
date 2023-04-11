@@ -26,27 +26,58 @@
 
 *)
 
-unit djWebComponentMappings;
+unit djWebFilterMapping;
 
 interface
 
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebComponentMapping,
-  Generics.Collections;
+  djWebFilterHolder,
+  Classes, Generics.Collections;
 
 type
   (**
-   * Web Component Mappings
+   * Web Filter Mapping.
    *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+  TdjWebFilterMapping = class(TObject)
+  private
+    FWebFilterName: string;
+    FPathSpecs: TStrings;
+    FWebComponentNames: TStrings;
+    FFilterHolder: TdjWebFilterHolder;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    // properties
+    property WebFilterHolder: TdjWebFilterHolder read FFilterHolder write FFilterHolder;
+    property WebFilterName: string read FWebFilterName write FWebFilterName;
+    property WebComponentNames: TStrings read FWebComponentNames;
+    property PathSpecs: TStrings read FPathSpecs;
+  end;
+
+  TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
 
 implementation
+
+{ TdjWebFilterMapping }
+
+constructor TdjWebFilterMapping.Create;
+begin
+  inherited;
+
+  FPathSpecs := TStringList.Create;
+  FWebComponentNames := TStringList.Create;
+end;
+
+destructor TdjWebFilterMapping.Destroy;
+begin
+  FWebComponentNames.Free;
+  FPathSpecs.Free;
+
+  inherited;
+end;
 
 end.
 

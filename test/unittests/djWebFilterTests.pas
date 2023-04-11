@@ -1,5 +1,4 @@
 (*
-
     Daraja HTTP Framework
     Copyright (C) Michael Justin
 
@@ -16,37 +15,74 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
     You can be released from the requirements of the license by purchasing
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
 
-unit djWebComponentMappings;
+unit djWebFilterTests;
+
+{$IFDEF FPC}{$MODE DELPHI}{$ENDIF}
 
 interface
 
-{$i IdCompilerDefines.inc}
-
 uses
-  djWebComponentMapping,
-  Generics.Collections;
+  {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
 
 type
-  (**
-   * Web Component Mappings
-   *)
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+  TdjWebFilterTests = class(TTestCase)
+  published
+     procedure TestCreate;
+
+  end;
 
 implementation
+
+uses
+  djWebFilter, djWebAppContext, djServerContext, djTypes, djInterfaces;
+
+type
+
+  { TTestFilter }
+
+  TTestFilter = class(TdjWebFilter)
+  public
+    procedure {%H-}DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+
+    procedure DestroyFilter;
+
+  end;
+
+{ TTestFilter }
+
+procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+   //
+end;
+
+procedure TTestFilter.DestroyFilter;
+begin
+   //
+end;
+
+procedure TdjWebFilterTests.TestCreate;
+var
+  Context: TdjWebAppContext;
+  // Filter: IWebFilter;
+begin
+  Context := TdjWebAppContext.Create('x-ctx');
+  try
+    (* Filter := *) TTestFilter.Create;
+  finally
+    Context.Free;
+  end;
+end;
 
 end.
 

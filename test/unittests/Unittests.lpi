@@ -38,7 +38,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="12">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -67,6 +67,26 @@
         <Filename Value="..\..\source\djTypes.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="djWebFilterTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="..\..\source\djWebFilter.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="..\..\source\djWebFilterChain.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="..\..\source\djMultiMap.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="..\..\source\djAbstractHolder.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -96,6 +116,9 @@
       </Debugging>
     </Linking>
     <Other>
+      <CompilerMessages>
+        <IgnoredMessages idx6058="True" idx5071="True" idx5062="True" idx5024="True" idx4046="True"/>
+      </CompilerMessages>
       <CustomOptions Value="-dDARAJA_LOGGING
 -dDARAJA_TEST_HTTPS_"/>
     </Other>

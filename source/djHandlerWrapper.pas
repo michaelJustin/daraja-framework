@@ -34,11 +34,13 @@ interface
 
 uses
   djAbstractHandlerContainer, djServerContext, djInterfaces,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes,
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomHTTPServer;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 (**
  * A HandlerWrapper acts as a IHandler but delegates the handle method
@@ -125,7 +127,9 @@ type
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCustomTCPServer,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 { TdjHandlerWrapper }
