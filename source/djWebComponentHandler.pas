@@ -716,6 +716,7 @@ var
   WebComponentNames: TStrings;
   WebComponentName: string;
 begin
+  FWebFilterNameMappings.Free;
   FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
 
   for FilterMapping in FWebFilterMappings do
