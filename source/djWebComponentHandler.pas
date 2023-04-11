@@ -247,9 +247,13 @@ begin
   PathMap.Free;
 
   FWebComponentHolders.Free;
+  FMappings.Free;
+
+  FWebFilterHolders.Free;
   FWebFilterMappings.Free;
 
-  FMappings.Free;
+  FilterNameMap.Free;
+  FWebFilterNameMappings.Free;
 
   inherited;
 end;
