@@ -79,11 +79,11 @@ type
     procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
     procedure CheckStoreContext(const Context: IContext);
-    procedure CheckUniqueName(const Holder: TdjWebComponentHolder);
-    procedure CreateOrUpdateMapping(const PathSpec: string; const Holder:
+    procedure CheckUniqueName(Holder: TdjWebComponentHolder);
+    procedure CreateOrUpdateMapping(const PathSpec: string; Holder:
       TdjWebComponentHolder);
     procedure ValidateMappingPathSpec(const PathSpec: string;
-      const Holder: TdjWebComponentHolder);
+      Holder: TdjWebComponentHolder);
     function FindMapping(const WebComponentName: string): TdjWebComponentMapping;
     function GetFilterChain(const PathInContext: string; Request: TdjRequest;
       Holder: TdjWebComponentHolder): IWebFilterChain;
@@ -109,8 +109,7 @@ type
      * \param Holder a Web Component holder
      * \param PathSpec a path spec
      *)
-    procedure AddWithMapping(const Holder: TdjWebComponentHolder;
-      const PathSpec: string);
+    procedure AddWithMapping(Holder: TdjWebComponentHolder; const PathSpec: string);
 
     (**
      * Add a Web Filter holder with mapping.
@@ -127,7 +126,7 @@ type
      * \param WebComponentClass the Web Component class
      * \return a TdjWebComponentHolder with the WebComponentClass.
      *)
-    function CreateHolder(const WebComponentClass: TdjWebComponentClass):
+    function CreateHolder(WebComponentClass: TdjWebComponentClass):
       TdjWebComponentHolder;
 
     (**
@@ -137,7 +136,7 @@ type
      * \return a TdjWebComponentHolder with the WebComponentClass or nil
      *         if the WebComponentClass is not registered
      *)
-    function FindHolder(const WebComponentClass: TdjWebComponentClass):
+    function FindHolder(WebComponentClass: TdjWebComponentClass):
       TdjWebComponentHolder;
 
     // IHandler interface
@@ -162,8 +161,6 @@ type
     // properties
     property WebComponentContext: IContext read FWebComponentContext;
     property WebComponentMappings: TdjWebComponentMappings read FMappings;
-
-
 
   end;
 
@@ -257,8 +254,8 @@ begin
   inherited;
 end;
 
-function TdjWebComponentHandler.CreateHolder(
-  const WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
+function TdjWebComponentHandler.CreateHolder(WebComponentClass:
+  TdjWebComponentClass): TdjWebComponentHolder;
 begin
   Result := TdjWebComponentHolder.Create(WebComponentClass);
 end;
@@ -320,7 +317,7 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandler.CreateOrUpdateMapping(const PathSpec: string; const
+procedure TdjWebComponentHandler.CreateOrUpdateMapping(const PathSpec: string;
   Holder: TdjWebComponentHolder);
 var
   Mapping: TdjWebComponentMapping;
@@ -356,7 +353,7 @@ begin
   Mapping.PathSpecs.Add(PathSpec);
 end;
 
-procedure TdjWebComponentHandler.CheckUniqueName(const Holder: TdjWebComponentHolder);
+procedure TdjWebComponentHandler.CheckUniqueName(Holder: TdjWebComponentHolder);
 var
   I: Integer;
   Msg: string;
@@ -411,8 +408,8 @@ begin
   WebComponentMappings.Add(Mapping);
 end;
 
-procedure TdjWebComponentHandler.AddWithMapping(
-  const Holder: TdjWebComponentHolder; const PathSpec: string);
+procedure TdjWebComponentHandler.AddWithMapping(Holder: TdjWebComponentHolder;
+  const PathSpec: string);
 begin
   try
     PathMap.CheckExists(PathSpec);
@@ -493,13 +490,12 @@ begin
 end;
 
 procedure TdjWebComponentHandler.ValidateMappingPathSpec(const PathSpec: string;
-      const Holder: TdjWebComponentHolder);
+  Holder: TdjWebComponentHolder);
 begin
   if TdjPathMap.GetSpecType(PathSpec) = stUnknown then
   begin
     raise EWebComponentException.CreateFmt(
-      'Invalid mapping "%s" for Web Component "%s"', [PathSpec,
-      Holder.Name]);
+      'Invalid mapping "%s" for Web Component "%s"', [PathSpec, Holder.Name]);
   end;
 end;
 
@@ -539,7 +535,7 @@ begin
   end;
 end;
 
-function TdjWebComponentHandler.FindHolder(const WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
+function TdjWebComponentHandler.FindHolder(WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
 var
   I: Integer;
 begin
