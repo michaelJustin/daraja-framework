@@ -68,7 +68,6 @@ uses
   djWebComponentHolder in '..\..\source\djWebComponentHolder.pas',
   djWebComponentHolders in '..\..\source\djWebComponentHolders.pas',
   djWebComponentMapping in '..\..\source\djWebComponentMapping.pas',
-  djWebComponentMappings in '..\..\source\djWebComponentMappings.pas',
   ConfigAPITests in 'ConfigAPITests.pas',
   HttpsTests in 'HttpsTests.pas',
   djDefaultWebComponentTests in 'djDefaultWebComponentTests.pas',
