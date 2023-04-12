@@ -53,20 +53,12 @@ type
   public
     procedure {%H-}DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
-
-    procedure DestroyFilter;
-
   end;
 
 { TTestFilter }
 
 procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
-begin
-   //
-end;
-
-procedure TTestFilter.DestroyFilter;
 begin
    //
 end;

@@ -57,7 +57,19 @@ type
     AutoStartSession: Boolean;
 
     procedure Trace(const S: string);
-    procedure AddWebFilter(Holder: TdjWebFilterHolder; const WebComponentName: string); overload;
+
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
+      const WebComponentName: string); overload;
+    (**
+     * Add a Web Filter.
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponentName name of the WebComponent
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    function AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebComponentName: string): TdjWebFilterHolder; overload;
 
   protected
     (**
@@ -125,19 +137,8 @@ type
      *
      * \throws Exception if the Web Filter can not be added
      *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      WebComponentClass: TdjWebComponentClass); overload;
-
-    (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponentName name of the WebComponent
-     *
-     * \throws Exception if the Web Filter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebComponentName: string); overload;
+    function AddWebFilter(FilterClass: TdjWebFilterClass;
+      WebComponentClass: TdjWebComponentClass): TdjWebFilterHolder; overload;
 
     // IHandler interface
 
@@ -289,14 +290,14 @@ begin
   WebComponentHandler.AddWithMapping(Holder, PathSpec);
 end;
 
-procedure TdjWebComponentContextHandler.AddWebFilter(
-  FilterClass: TdjWebFilterClass; WebComponentClass: TdjWebComponentClass);
+function TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
+  WebComponentClass: TdjWebComponentClass): TdjWebFilterHolder;
 begin
-  AddWebFilter(FilterClass, WebComponentClass.ClassName);
+  Result := AddWebFilter(FilterClass, WebComponentClass.ClassName);
 end;
 
-procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
-  const WebComponentName: string);
+function TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
+  const WebComponentName: string): TdjWebFilterHolder;
 var
   Holder: TdjWebFilterHolder;
 begin
@@ -310,6 +311,7 @@ begin
       raise;
     end;
   end;
+  Result := Holder;
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(Holder: TdjWebFilterHolder;

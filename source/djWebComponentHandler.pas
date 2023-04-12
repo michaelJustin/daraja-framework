@@ -74,6 +74,7 @@ type
     FWebFilterNameMappings: TdjMultiMap<TdjWebFilterMapping>;
 
     procedure SetFilters(Holders: TdjWebFilterHolders);
+    // procedure InitializeHolders(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
     function StripContext(const Doc: string): string;
     procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
@@ -464,9 +465,21 @@ end;
 
 procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
 begin
-  //InitializeHolders(Holders); // set context etc.
+  // InitializeHolders(Holders);
   UpdateNameMappings;
 end;
+
+(*
+procedure TdjWebComponentHandler.InitializeHolders(Holders: TdjWebFilterHolders);
+var
+  Holder: TdjWebFilterHolder;
+begin
+  for Holder in Holders do
+  begin
+    // Holder.SetContext(Self.WebComponentContext);
+  end;
+end;
+*)
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
 begin

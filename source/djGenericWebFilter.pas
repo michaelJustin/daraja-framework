@@ -68,7 +68,7 @@ type
      *)
     destructor Destroy; override;
 
-    procedure Init(const Config: IWebFilterConfig);
+    procedure Init(const Config: IWebFilterConfig); virtual;
 
     (**
      * The doFilter method of the Filter is called by the container each time a request/response pair is passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed in to this method allows the Filter to pass on the request and response to the next entity in the chain.
@@ -76,7 +76,7 @@ type
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); virtual;
 
-    procedure DestroyFilter;
+    procedure DestroyFilter; virtual;
   end;
 
 implementation
