@@ -33,36 +33,40 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  Classes;
+  Classes,
+  Generics.Collections;
 
 type
   (**
-   * Web Component Mapping
+   * Web Component Mapping.
    *)
-  TdjWebComponentMapping = class(TInterfacedObject)
+  TdjWebComponentMapping = class(TObject)
   private
-    FWebComponentName: string;
+    FName: string;
     FPathSpecs: TStrings;
-
   public
     (**
      * Constructor.
      *)
     constructor Create;
-
     (**
      * Destructor.
      *)
     destructor Destroy; override;
 
     // properties
-
-    property WebComponentName: string read FWebComponentName write
-      FWebComponentName;
-
+    property WebComponentName: string read FName write FName;
     property PathSpecs: TStrings read FPathSpecs;
-
   end;
+
+  (**
+   * Web Component Mappings.
+   *)
+  // note Delphi 2009 AVs if it is a TObjectList<>
+  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
+  // for a workaround
+  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
+  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
 
 implementation
 

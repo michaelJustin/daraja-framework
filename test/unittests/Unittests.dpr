@@ -68,7 +68,6 @@ uses
   djWebComponentHolder in '..\..\source\djWebComponentHolder.pas',
   djWebComponentHolders in '..\..\source\djWebComponentHolders.pas',
   djWebComponentMapping in '..\..\source\djWebComponentMapping.pas',
-  djWebComponentMappings in '..\..\source\djWebComponentMappings.pas',
   ConfigAPITests in 'ConfigAPITests.pas',
   HttpsTests in 'HttpsTests.pas',
   djDefaultWebComponentTests in 'djDefaultWebComponentTests.pas',
@@ -83,9 +82,7 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  SysUtils,
-  djWebFilter in '..\..\source\djWebFilter.pas',
-  djGenericwebFilter in '..\..\source\djGenericwebFilter.pas';
+  SysUtils;
 
 begin
   ConfigureLogging;

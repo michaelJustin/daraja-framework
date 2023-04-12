@@ -42,8 +42,6 @@ type
   TAPIConfigTests = class(THTTPTestCase)
   private
 
-
-
   published
     procedure ConfigOneContext;
 
@@ -110,6 +108,10 @@ type
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
+    {$IFDEF FPC}
+    procedure TestMapFilterTwiceToSameWebComponentRaisesException;
+    {$ENDIF}
+    procedure TestWebFilterHolderInit;
 
   end;
 
@@ -119,7 +121,7 @@ uses
   djWebAppContext, djInterfaces, djWebComponent, djWebComponentHolder,
   djWebComponentContextHandler, djServer, djDefaultHandler, djStatisticsHandler,
   djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
-  djAbstractHandler, djServerContext, djWebFilter,
+  djAbstractHandler, djServerContext, djWebFilter, djWebFilterHolder,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdServerInterceptLogFile, IdSchedulerOfThreadPool, IdGlobal, IdException,
   IdResourceStrings,
@@ -1047,6 +1049,17 @@ type
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
 
+  { TTestFilterWithInit }
+
+  TTestFilterWithInit = class(TdjWebFilter)
+  private
+    FInitParam: string;
+  public
+    procedure Init(const Config: IWebFilterConfig); override;
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
   { TTestFilterA }
 
   TTestFilterA = class(TdjWebFilter)
@@ -1070,6 +1083,20 @@ procedure TTestFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
 begin
    Chain.DoFilter(Context, Request, Response);
    Response.ContentText := Response.ContentText + ' (filtered)';
+end;
+
+{ TTestFilterWithInit }
+
+procedure TTestFilterWithInit.Init(const Config: IWebFilterConfig);
+begin
+  FInitParam := Config.GetInitParameter('key');
+end;
+
+procedure TTestFilterWithInit.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+  Response.ContentText := 'Filter received init param key=' + FInitParam;
 end;
 
 { TTestFilterA }
@@ -1170,6 +1197,40 @@ begin
     CheckGETResponseEquals('example (A)', '/web/page.filterA');
     CheckGETResponseEquals('Hello (B)', '/web/page.filterB');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+{$IFDEF FPC}
+procedure TAPIConfigTests.TestMapFilterTwiceToSameWebComponentRaisesException;
+var
+  Context: TdjWebAppContext;
+begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Context.AddWebFilter(TTestFilter, TExamplePage);
+  ExpectException(EListError, '');
+  Context.AddWebFilter(TTestFilter, TGetComponent);
+end;
+{$ENDIF}
+
+procedure TAPIConfigTests.TestWebFilterHolderInit;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebFilterHolder;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.html');
+    Holder := Context.AddWebFilter(TTestFilterWithInit, TExamplePage);
+    Holder.SetInitParameter('key', 'value');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('Filter received init param key=value', '/web/init.html');
   finally
     Server.Free;
   end;

@@ -158,7 +158,7 @@ end;
 procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
   const Value: string);
 begin
-  // TODO
+  FConfig.Add(Key, Value);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);

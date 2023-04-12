@@ -42,21 +42,24 @@ type
    *)
   TdjWebFilterMapping = class(TObject)
   private
-    FWebFilterName: string;
+    FName: string;
     FPathSpecs: TStrings;
     FWebComponentNames: TStrings;
-    FFilterHolder: TdjWebFilterHolder;
+    FHolder: TdjWebFilterHolder;
   public
     constructor Create;
     destructor Destroy; override;
 
     // properties
-    property WebFilterHolder: TdjWebFilterHolder read FFilterHolder write FFilterHolder;
-    property WebFilterName: string read FWebFilterName write FWebFilterName;
+    property WebFilterHolder: TdjWebFilterHolder read FHolder write FHolder;
+    property WebFilterName: string read FName write FName;
     property WebComponentNames: TStrings read FWebComponentNames;
     property PathSpecs: TStrings read FPathSpecs;
   end;
 
+  (**
+   * Web Filter Mappings.
+   *)
   TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
 
 implementation

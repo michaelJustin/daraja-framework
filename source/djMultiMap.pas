@@ -38,6 +38,7 @@ type
 
   TdjMultiMap<T: class> = class(TObjectDictionary<string, TObjectList<T>>)
   public
+    destructor Destroy; override;
     procedure Add(const Key: string; Value: T);
     function GetValues(const Key: string): TObjectList<T>;
   end;
@@ -49,13 +50,30 @@ uses
 
 { TdjMultiMap }
 
+destructor TdjMultiMap<T>.Destroy;
+var
+  Key: String;
+  L: TObjectList<T>;
+begin
+  for Key in Self.Keys do
+  begin
+     if TryGetValue(Key, L) then
+     begin
+       // L.OwnsObjects := False;
+       L.Free;
+     end;
+  end;
+
+  inherited;
+end;
+
 procedure TdjMultiMap<T>.Add(const Key: string; Value: T);
 var
   L: TObjectList<T>;
 begin
   if not TryGetValue(Key, L) then
   begin
-    L := TObjectList<T>.Create(TComparer<T>.Default);
+    L := TObjectList<T>.Create(TComparer<T>.Default, False);
     inherited Add(Key, L);
   end;
   L.Add(Value);
@@ -65,7 +83,7 @@ function TdjMultiMap<T>.GetValues(const Key: string): TObjectList<T>;
 var
   Found: Boolean;
 begin
-  Found := inherited TryGetValue(Key, Result);
+  Found := TryGetValue(Key, Result);
 
   if (not Found) or (Result.Count = 0) then
   begin
