@@ -164,18 +164,6 @@ type
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
 
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
-
   end;
 
 implementation
@@ -224,18 +212,6 @@ begin
     Logger.Trace(S);
   end;
 {$ENDIF DARAJA_LOGGING}
-end;
-
-procedure TdjWebComponentContextHandler.DoStart;
-begin
-  inherited;
-
-end;
-
-procedure TdjWebComponentContextHandler.DoStop;
-begin
-
-  inherited;
 end;
 
 procedure TdjWebComponentContextHandler.Add(const ComponentClass: TdjWebComponentClass;
