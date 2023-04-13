@@ -108,6 +108,7 @@ type
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
+    // procedure TestOneFilterAndTwoWebComponents;
     {$IFDEF FPC}
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
     procedure TestMapFilterWithUnknownComponentNameRaisesException;
@@ -1179,6 +1180,32 @@ begin
     Server.Free;
   end;
 end;
+
+// fails bc of TdjWebComponentHandler.UpdateNameMappings;
+(*
+procedure TAPIConfigTests.TestOneFilterAndTwoWebComponents;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.c1');
+    Context.AddWebComponent(TGetComponent, '*.c2');
+    Context.AddWebFilter(TTestFilterA, TExamplePage);
+    Context.AddWebFilter(TTestFilterA, TGetComponent);
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (A)', '/web/page.c1');
+    CheckGETResponseEquals('Hello (A)', '/web/page.c2');
+
+  finally
+    Server.Free;
+  end;
+end;
+*)
 
 procedure TAPIConfigTests.TestTwoFiltersAndTwoWebComponents;
 var
