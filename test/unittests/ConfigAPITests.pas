@@ -1212,7 +1212,7 @@ begin
   Context.AddWebComponent(TExamplePage, '*.html');
   Context.AddWebFilter(TTestFilter, TExamplePage);
   ExpectException(EListError, '');
-  Context.AddWebFilter(TTestFilter, TGetComponent);
+  Context.AddWebFilter(TTestFilter, TExamplePage);
 end;
 
 procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
