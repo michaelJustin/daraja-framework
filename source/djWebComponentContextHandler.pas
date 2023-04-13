@@ -58,8 +58,6 @@ type
 
     procedure Trace(const S: string);
 
-    procedure AddWebFilter(Holder: TdjWebFilterHolder;
-      const WebComponentName: string); overload;
     (**
      * Add a Web Filter.
      *
@@ -125,9 +123,8 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure AddWebComponent(const Holder: TdjWebComponentHolder;
+    procedure AddWebComponent(Holder: TdjWebComponentHolder;
       const PathSpec: string); overload;
-
 
     (**
      * Add a Web Filter.
@@ -135,10 +132,21 @@ type
      * \param FilterClass WebFilter class
      * \param WebComponent class
      *
-     * \throws Exception if the Web Filter can not be added
+     * \throws Exception if the WebFilter can not be added
      *)
     function AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass): TdjWebFilterHolder; overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilter holder instance
+     * and the mapped WebComponent name.
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent name
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(Holder: TdjWebFilterHolder; const WebComponentName: string); overload;
 
     // IHandler interface
 
@@ -271,7 +279,7 @@ begin
   end;
 end;
 
-procedure TdjWebComponentContextHandler.AddWebComponent(const Holder: TdjWebComponentHolder;
+procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
   const PathSpec: string);
 begin
   // Holder can not be reused.

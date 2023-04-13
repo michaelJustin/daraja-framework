@@ -110,6 +110,7 @@ type
     procedure TestTwoFiltersAndTwoWebComponents;
     {$IFDEF FPC}
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
+    procedure TestMapFilterWithUnknownComponentNameRaisesException;
     {$ENDIF}
     procedure TestWebFilterHolderInit;
 
@@ -1213,6 +1214,18 @@ begin
   ExpectException(EListError, '');
   Context.AddWebFilter(TTestFilter, TGetComponent);
 end;
+
+procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
+var
+  Context: TdjWebAppContext;
+  Holder: TdjWebFilterHolder;
+begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Holder := TdjWebFilterHolder.Create(TTestFilter);
+  ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
+  Context.AddWebFilter(Holder, 'Invalid WebComponent name');
+end;
 {$ENDIF}
 
 procedure TAPIConfigTests.TestWebFilterHolderInit;
@@ -1225,8 +1238,10 @@ begin
   try
     Context := TdjWebAppContext.Create('web');
     Context.AddWebComponent(TExamplePage, '*.html');
-    Holder := Context.AddWebFilter(TTestFilterWithInit, TExamplePage);
+    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
     Holder.SetInitParameter('key', 'value');
+    Context.AddWebFilter(Holder, TExamplePage.ClassName);
+
     Server.Add(Context);
     Server.Start;
 

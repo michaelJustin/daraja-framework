@@ -105,13 +105,12 @@ type
     (**
      * Stop the component.
      *)
-     procedure DoStop; override;
+    procedure DoStop; override;
 
-     procedure Handle(Context: TdjServerContext; {%H-}Request: TdjRequest;
+    procedure Handle(Context: TdjServerContext; {%H-}Request: TdjRequest;
        {%H-}Response: TdjResponse);
 
     // properties
-
     (**
      * The Web Component Class.
      *)

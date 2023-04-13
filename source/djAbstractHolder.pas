@@ -33,18 +33,15 @@ unit djAbstractHolder;
 interface
 
 uses
-  djAbstractHandler, djLifeCycle,
+  djLifeCycle,
   Classes;
 
 type
 
-  { TdjAbstractHolder }
+  { TdjAbstractHolder } // todo remove
 
   TdjAbstractHolder<T: TInterfacedObject> = class(TdjLifeCycle)
-  private
-    FWebComponentHandler: TdjAbstractHandler;
-  public
-    property WebComponentHandler: TdjAbstractHandler read FWebComponentHandler write FWebComponentHandler;
+
   end;
 
 implementation

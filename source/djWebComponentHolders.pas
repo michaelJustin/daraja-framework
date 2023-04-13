@@ -41,8 +41,31 @@ type
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
   // for a workaround
   // use  TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
-  TdjWebComponentHolders = class(TObjectList<TdjWebComponentHolder>);
+
+  { TdjWebComponentHolders }
+
+  TdjWebComponentHolders = class(TObjectList<TdjWebComponentHolder>)
+  public
+    function Contains(WebComponentName: string): Boolean;
+  end;
 
 implementation
+
+{ TdjWebComponentHolders }
+
+function TdjWebComponentHolders.Contains(WebComponentName: string): Boolean;
+var
+  Holder: TdjWebComponentHolder;
+begin
+  Result := False;
+  for Holder in Self do
+  begin
+    if Holder.Name = WebComponentName then
+    begin
+      Result := True;
+      Exit;
+    end;
+  end;
+end;
 
 end.
