@@ -58,17 +58,6 @@ type
 
     procedure Trace(const S: string);
 
-    (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponentName name of the WebComponent
-     *
-     * \throws Exception if the Web Filter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebComponentName: string); overload;
-
   protected
     (**
      * \param Target Request target
@@ -101,7 +90,7 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure AddWebComponent(const ComponentClass: TdjWebComponentClass;
+    procedure AddWebComponent(ComponentClass: TdjWebComponentClass;
       const PathSpec: string); overload;
 
     (**
@@ -112,8 +101,7 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure Add(const ComponentClass: TdjWebComponentClass; const PathSpec:
-      string);
+    procedure Add(ComponentClass: TdjWebComponentClass; const PathSpec: string);
 
     (**
      * Add a Web Component.
@@ -138,7 +126,30 @@ type
       WebComponentClass: TdjWebComponentClass); overload;
 
     (**
-     * Add a Web Filter, specifying a WebFilter holder instance
+     * Add a Web Filter.
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent class
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebFilterName: string;
+      WebComponentClass: TdjWebComponentClass); overload;
+
+    (**
+     * Add a Web Filter.
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponentName name of the WebComponent
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebComponentName: string); overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilterHolder
      * and the mapped WebComponent name.
      *
      * \param FilterClass WebFilter class
@@ -146,7 +157,8 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddWebFilter(Holder: TdjWebFilterHolder; const WebComponentName: string); overload;
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
+      const WebComponentName: string); overload;
 
     // IHandler interface
 
@@ -206,15 +218,15 @@ end;
 
 procedure TdjWebComponentContextHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
-procedure TdjWebComponentContextHandler.Add(const ComponentClass: TdjWebComponentClass;
+procedure TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
   const PathSpec: string);
 var
   Holder: TdjWebComponentHolder;
@@ -237,7 +249,7 @@ begin
   end;
 end;
 
-procedure TdjWebComponentContextHandler.AddWebComponent(const ComponentClass: TdjWebComponentClass;
+procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
   const PathSpec: string);
 var
   Holder: TdjWebComponentHolder;
@@ -278,6 +290,25 @@ procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterCl
   WebComponentClass: TdjWebComponentClass);
 begin
   AddWebFilter(FilterClass, WebComponentClass.ClassName);
+end;
+
+procedure TdjWebComponentContextHandler.AddWebFilter(
+  FilterClass: TdjWebFilterClass; const WebFilterName: string;
+  WebComponentClass: TdjWebComponentClass);
+var
+  Holder: TdjWebFilterHolder;
+begin
+  Holder := TdjWebFilterHolder.Create(FilterClass);
+  try
+    Holder.Name := WebFilterName;
+    AddWebFilter(Holder, WebComponentClass.ClassName);
+  except
+    on E: EWebComponentException do
+    begin
+      Holder.Free;
+      raise;
+    end;
+  end;
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;

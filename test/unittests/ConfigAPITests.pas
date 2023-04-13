@@ -108,12 +108,13 @@ type
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
-    // procedure TestOneFilterAndTwoWebComponents;
+    procedure TestOneFilterAndTwoWebComponents;
     {$IFDEF FPC}
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
     procedure TestMapFilterWithUnknownComponentNameRaisesException;
     {$ENDIF}
     procedure TestWebFilterHolderInit;
+    procedure TestWebFilterHolderInitHavingTwoInstances;
 
   end;
 
@@ -1098,7 +1099,11 @@ procedure TTestFilterWithInit.DoFilter(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
 begin
   Chain.DoFilter(Context, Request, Response);
-  Response.ContentText := 'Filter received init param key=' + FInitParam;
+
+  if Response.ContentText <> '' then
+    Response.ContentText := Response.ContentText + ', ';
+
+  Response.ContentText := Response.ContentText + 'Param key=' + FInitParam;
 end;
 
 { TTestFilterA }
@@ -1181,8 +1186,6 @@ begin
   end;
 end;
 
-// fails bc of TdjWebComponentHandler.UpdateNameMappings;
-(*
 procedure TAPIConfigTests.TestOneFilterAndTwoWebComponents;
 var
   Server: TdjServer;
@@ -1191,10 +1194,13 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('web');
+
     Context.AddWebComponent(TExamplePage, '*.c1');
     Context.AddWebComponent(TGetComponent, '*.c2');
-    Context.AddWebFilter(TTestFilterA, TExamplePage);
-    Context.AddWebFilter(TTestFilterA, TGetComponent);
+    // filter must have unique name
+    Context.AddWebFilter(TTestFilterA, 'Filter A.1', TExamplePage);
+    Context.AddWebFilter(TTestFilterA, 'Filter A.2', TGetComponent);
+
     Server.Add(Context);
     Server.Start;
 
@@ -1205,7 +1211,6 @@ begin
     Server.Free;
   end;
 end;
-*)
 
 procedure TAPIConfigTests.TestTwoFiltersAndTwoWebComponents;
 var
@@ -1272,7 +1277,43 @@ begin
     Server.Add(Context);
     Server.Start;
 
-    CheckGETResponseEquals('Filter received init param key=value', '/web/init.html');
+    CheckGETResponseEquals('example, Param key=value', '/web/init.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestWebFilterHolderInitHavingTwoInstances;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebFilterHolder;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+
+    Context.AddWebComponent(TExamplePage, '*.html');
+
+    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+    Holder.SetInitParameter('key', 'value A');
+    // filter must have unique name
+    Holder.Name := 'Instance A';
+
+    Context.AddWebFilter(Holder, 'TExamplePage');
+
+    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+    Holder.SetInitParameter('key', 'value B');
+    // filter must have unique name
+    Holder.Name := 'Instance B';
+
+    Context.AddWebFilter(Holder, 'TExamplePage');
+
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example, Param key=value A, Param key=value B', '/web/page.html');
+
   finally
     Server.Free;
   end;

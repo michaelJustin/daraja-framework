@@ -473,7 +473,7 @@ begin
 
   Mapping := TdjWebFilterMapping.Create;
   Mapping.WebFilterHolder := WebFilterHolder;
-  Mapping.WebFilterName := WebFilterHolder.WebFilterClass.ClassName;
+  Mapping.WebFilterName := WebFilterHolder.Name;
   Mapping.WebComponentNames.Add(ComponentName);
 
   FWebFilterMappings.Add(Mapping);
@@ -729,8 +729,7 @@ begin
 
   for WebFilterHolder in WebFilters do
   begin
-     FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
-     // WebFilterHolder.Handler := Self;
+    FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
   end;
 end;
 
@@ -746,7 +745,7 @@ begin
 
   for FilterMapping in FWebFilterMappings do
   begin
-    WebFilterHolder := FilterMapping.WebFilterHolder;
+    WebFilterHolder := FilterNameMap[FilterMapping.WebFilterName];
     // if = nil ...
     FilterMapping.WebFilterHolder := WebFilterHolder;
 
@@ -755,7 +754,7 @@ begin
     begin
       for WebComponentName in WebComponentNames do
       begin
-         FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
+        FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
       end;
     end;
   end;
