@@ -55,6 +55,10 @@ var
   Key: String;
   L: TObjectList<T>;
 begin
+  (* for L in Self.Values do
+  begin
+     L.Free;
+  end; *)
   for Key in Self.Keys do
   begin
      if TryGetValue(Key, L) then

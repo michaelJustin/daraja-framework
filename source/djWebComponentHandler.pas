@@ -113,10 +113,13 @@ type
     procedure AddWithMapping(Holder: TdjWebComponentHolder; const PathSpec: string);
 
     (**
-     * Add a Web Filter holder with mapping.
+     * Add a Web Filter, specifying a WebFilter holder instance
+     * and the mapped WebComponent name.
      *
-     * \param Holder a Web Filter holder
-     * \param PathSpec a path spec
+     * \param FilterClass WebFilter class
+     * \param WebComponent name
+     *
+     * \throws Exception if the WebFilter can not be added
      *)
     procedure AddFilterWithNameMapping(WebFilterHolder: TdjWebFilterHolder;
       const ComponentName: string);
@@ -425,6 +428,12 @@ begin
   // validate and store context
   CheckStoreContext(Holder.GetContext);
 
+  // Assign name (if empty)
+  //if Holder.Name = '' then
+  //begin
+  //  Holder.Name := Holder.WebComponentClass.ClassName;
+  //end;
+
   // add the Web Component to list unless it is already there
   if WebComponents.IndexOf(Holder) = -1 then
   begin
@@ -449,6 +458,13 @@ procedure TdjWebComponentHandler.AddFilterWithNameMapping(
 var
   Mapping: TdjWebFilterMapping;
 begin
+  if not WebComponents.Contains(ComponentName) then
+  begin
+    raise EWebComponentException.CreateFmt(
+      'Invalid Web Component name mapping "%s" for Web Filter "%s"',
+      [ComponentName, WebFilterHolder.Name]);
+  end;
+
   if not WebFilters.Contains(WebFilterHolder) then
   begin
     WebFilters.Add(WebFilterHolder);
@@ -457,7 +473,7 @@ begin
 
   Mapping := TdjWebFilterMapping.Create;
   Mapping.WebFilterHolder := WebFilterHolder;
-  Mapping.WebFilterName := WebFilterHolder.WebFilterClass.ClassName;
+  Mapping.WebFilterName := WebFilterHolder.Name;
   Mapping.WebComponentNames.Add(ComponentName);
 
   FWebFilterMappings.Add(Mapping);
@@ -713,8 +729,7 @@ begin
 
   for WebFilterHolder in WebFilters do
   begin
-     FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
-     WebFilterHolder.WebComponentHandler := Self;
+    FilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
   end;
 end;
 
@@ -730,7 +745,7 @@ begin
 
   for FilterMapping in FWebFilterMappings do
   begin
-    WebFilterHolder := FilterMapping.WebFilterHolder;
+    WebFilterHolder := FilterNameMap[FilterMapping.WebFilterName];
     // if = nil ...
     FilterMapping.WebFilterHolder := WebFilterHolder;
 
@@ -739,7 +754,7 @@ begin
     begin
       for WebComponentName in WebComponentNames do
       begin
-         FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
+        FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
       end;
     end;
   end;
