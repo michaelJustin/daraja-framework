@@ -40,6 +40,9 @@ type
   (**
    * Web Filter Mapping.
    *)
+
+  { TdjWebFilterMapping }
+
   TdjWebFilterMapping = class(TObject)
   private
     FName: string;
@@ -49,6 +52,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+
+    function AppliesTo(const PathInContext: string): Boolean;
 
     // properties
     property WebFilterHolder: TdjWebFilterHolder read FHolder write FHolder;
@@ -63,6 +68,9 @@ type
   TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
 
 implementation
+
+uses
+  djPathMap;
 
 { TdjWebFilterMapping }
 
@@ -80,6 +88,22 @@ begin
   FPathSpecs.Free;
 
   inherited;
+end;
+
+function TdjWebFilterMapping.AppliesTo(const PathInContext: string): Boolean;
+var
+  PathSpec: string;
+begin
+  Result := False;
+  if FPathSpecs.Count = 0 then Exit;
+  for PathSpec in PathSpecs do
+  begin
+    if TdjPathMap.Matches(PathInContext, PathSpec) then
+    begin
+      Result := True;
+    end;
+    Exit;
+  end;
 end;
 
 end.

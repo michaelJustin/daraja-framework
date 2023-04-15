@@ -115,6 +115,7 @@ type
     {$ENDIF}
     procedure TestWebFilterHolderInit;
     procedure TestWebFilterHolderInitHavingTwoInstances;
+    procedure TestCatchAllWebFilter;
 
   end;
 
@@ -1314,6 +1315,26 @@ begin
 
     CheckGETResponseEquals('example, Param key=value A, Param key=value B', '/web/page.html');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestCatchAllWebFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('web');
+    Context.AddWebComponent(TExamplePage, '*.txt');
+    Context.MapFilterToPaths(TTestFilter, '/*');
+
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (filtered)', '/web/anypage.txt');
   finally
     Server.Free;
   end;

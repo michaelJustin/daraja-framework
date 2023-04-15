@@ -160,6 +160,8 @@ type
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const WebComponentName: string); overload;
 
+    procedure MapFilterToPaths(FilterClass: TdjWebFilterClass; const PathSpec: string);
+
     // IHandler interface
 
     (**
@@ -249,6 +251,33 @@ begin
   end;
 end;
 
+(*
+procedure TdjWebComponentContextHandler.Add(FilterClass: TdjWebFilterClass;
+  const PathSpec: string);
+var
+  M: TdjWebFilterMapping;
+begin
+  M := WebComponentHandler.FindMapping(FilterClass.ClassName);
+
+  if M = nil then
+  begin
+    // create new holder
+    Trace(Format('Add new holder for Web Filter %s',
+      [FilterClass.ClassName]));
+    AddWebFilter(FilterClass, PathSpec);
+  end
+  else
+  begin
+    // add the PathSpec
+    Trace(Format('Holder found for Web Filter %s, add PathSpec %s',
+      [FilterClass.ClassName, PathSpec]));
+    M.PathSpecs.Add(PathSpec);
+    // Holder.
+  end;
+  WebComponentHandler.AddWithMapping(M.WebFilterHolder, PathSpec);
+end;
+*)
+
 procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
   const PathSpec: string);
 var
@@ -335,6 +364,25 @@ begin
   Holder.SetContext(Self.GetCurrentContext);
 
   WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
+end;
+
+procedure TdjWebComponentContextHandler.MapFilterToPaths(
+  FilterClass: TdjWebFilterClass; const PathSpec: string);
+var
+  Holder: TdjWebFilterHolder;
+begin
+  Holder := TdjWebFilterHolder.Create(FilterClass);
+  try
+    // set context of Holder to propagate it to WebFilterConfig
+    Holder.SetContext(Self.GetCurrentContext);
+    WebComponentHandler.AddFilterWithPathMapping(Holder, PathSpec);
+  except
+    on E: EWebComponentException do
+    begin
+      Holder.Free;
+      raise;
+    end;
+  end;
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
