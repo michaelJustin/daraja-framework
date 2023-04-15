@@ -183,6 +183,25 @@ uses
   Generics.Defaults,
   SysUtils, Classes;
 
+resourcestring
+  rsContextIsNotAssigned = 'Context is not assigned';
+  rsCreateMappingForWebComponent = 'Create mapping for Web Component "%s" ->'
+    +' %s';
+  rsExecutionOfMethodSServiceCausedAnExceptionOfTyp = 'Execution of method %s.'
+    +'Service caused an exception of type "%s". The exception message was "%s".';
+  rsInvalidMappingSForWebComponentS = 'Invalid mapping "%s" for Web Component '
+    +'"%s"';
+  rsInvalidWebComponentNameMappingSForWebFilterS = 'Invalid Web Component name'
+    +' mapping "%s" for Web Filter "%s"';
+  rsNoPathMapMatchFoundFor = 'No path map match found for ';
+  rsTheWebComponentSCanNotBeAddedBecauseClassSIsAlr = 'The Web Component "%s" '
+    +'can not be added because class "%s" is already registered with the same '
+    +'name';
+  rsUpdateMappingForWebComponent = 'Update mapping for Web Component "%s" -'
+    +'> %s,%s';
+  rsWebComponentsMustBelongToTheSameContext = 'Web Components must belong to '
+    +'the same context';
+
 type
 
   { TChainEnd }
@@ -337,7 +356,7 @@ begin
   if Assigned(Mapping) then
   begin
     // already mapped
-    Trace(Format('Update mapping for Web Component "%s" -> %s,%s',
+    Trace(Format(rsUpdateMappingForWebComponent,
       [WebComponentName, Trim(Mapping.PathSpecs.CommaText), PathSpec]));
   end
   else
@@ -348,7 +367,7 @@ begin
 
     AddMapping(Mapping);
 
-    Trace(Format('Create mapping for Web Component "%s" -> %s',
+    Trace(Format(rsCreateMappingForWebComponent,
     [Mapping.WebComponentName,
     Trim(PathSpec)]));
   end;
@@ -368,8 +387,7 @@ begin
     if (WebComponents[I].Name = Holder.Name) then
     begin
       Msg := Format(
-        'The Web Component "%s" can not be added because '
-        + 'class "%s" is already registered with the same name',
+        rsTheWebComponentSCanNotBeAddedBecauseClassSIsAlr,
         [Holder.Name, WebComponents[I].WebComponentClass.ClassName]);
       Trace(Msg);
 
@@ -384,7 +402,7 @@ var
 begin
   if Context = nil then
   begin
-    Msg := 'Context is not assigned';
+    Msg := rsContextIsNotAssigned;
     Trace(Msg);
     raise EWebComponentException.Create(Msg);
   end;
@@ -399,7 +417,7 @@ begin
     // all components must be in the same context
     if WebComponentContext <> Context then
     begin
-      Msg := 'Web Components must belong to the same context';
+      Msg := rsWebComponentsMustBelongToTheSameContext;
       Trace(Msg);
 
       raise EWebComponentException.Create(Msg);
@@ -461,7 +479,7 @@ begin
   if not WebComponents.Contains(ComponentName) then
   begin
     raise EWebComponentException.CreateFmt(
-      'Invalid Web Component name mapping "%s" for Web Filter "%s"',
+      rsInvalidWebComponentNameMappingSForWebFilterS,
       [ComponentName, WebFilterHolder.Name]);
   end;
 
@@ -524,7 +542,7 @@ begin
   if TdjPathMap.GetSpecType(PathSpec) = stUnknown then
   begin
     raise EWebComponentException.CreateFmt(
-      'Invalid mapping "%s" for Web Component "%s"', [PathSpec, Holder.Name]);
+      rsInvalidMappingSForWebComponentS, [PathSpec, Holder.Name]);
   end;
 end;
 
@@ -543,7 +561,7 @@ begin
   try
     if Matches.Count = 0 then
     begin
-      Trace('No path map match found for ' + ATarget);
+      Trace(rsNoPathMapMatchFoundFor + ATarget);
     end
     else
     begin
@@ -596,9 +614,7 @@ begin
     on E: Exception do
     begin
       Msg :=
-        Format('Execution of method %s.Service caused an exception '
-        + 'of type "%s". '
-        + 'The exception message was "%s".',
+        Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
         [Comp.ClassName, E.ClassName, E.Message]);
 
 {$IFDEF DARAJA_LOGGING}
