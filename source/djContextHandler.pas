@@ -358,6 +358,7 @@ end;
 
 function TdjContextHandler.GetCurrentContext: IContext;
 begin
+  Assert(FContext <> nil);
   Result := FContext;
 end;
 
