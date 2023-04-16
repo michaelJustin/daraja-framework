@@ -1325,12 +1325,14 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.txt');
+  Context.AddFilterWithMapping(TTestFilter, '/*');
+
+  // run
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.txt');
-    Context.MapFilterToPaths(TTestFilter, '/*');
-
     Server.Add(Context);
     Server.Start;
 
