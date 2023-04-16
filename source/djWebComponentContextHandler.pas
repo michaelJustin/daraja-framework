@@ -90,11 +90,11 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure AddWebComponent(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string); overload;
+    function AddWebComponent(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
-     * Convenience method to add a Web Component.
+     * Add a Web Component.
      *
      * \param ComponentClass WebComponent class
      * \param PathSpec path specification
@@ -160,7 +160,8 @@ type
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const WebComponentName: string); overload;
 
-    procedure MapFilterToPaths(FilterClass: TdjWebFilterClass; const PathSpec: string);
+    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
+      const PathSpec: string): TdjWebFilterHolder;
 
     // IHandler interface
 
@@ -193,14 +194,15 @@ begin
   inherited Create(ContextPath);
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
-  Logger := TdjLoggerFactory.GetLogger('dj.' +
-    TdjWebComponentContextHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
+  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponentContextHandler.ClassName);
+  {$ENDIF DARAJA_LOGGING}
 
   Self.AutoStartSession := Sessions;
 
   WebComponentHandler := TdjWebComponentHandler.Create;
+
+  WebComponentHandler.SetContext(Self.GetCurrentContext);
 
   inherited AddHandler(WebComponentHandler);
 
@@ -251,49 +253,12 @@ begin
   end;
 end;
 
-(*
-procedure TdjWebComponentContextHandler.Add(FilterClass: TdjWebFilterClass;
-  const PathSpec: string);
-var
-  M: TdjWebFilterMapping;
+function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string): TdjWebComponentHolder;
 begin
-  M := WebComponentHandler.FindMapping(FilterClass.ClassName);
-
-  if M = nil then
-  begin
-    // create new holder
-    Trace(Format('Add new holder for Web Filter %s',
-      [FilterClass.ClassName]));
-    AddWebFilter(FilterClass, PathSpec);
-  end
-  else
-  begin
-    // add the PathSpec
-    Trace(Format('Holder found for Web Filter %s, add PathSpec %s',
-      [FilterClass.ClassName, PathSpec]));
-    M.PathSpecs.Add(PathSpec);
-    // Holder.
-  end;
-  WebComponentHandler.AddWithMapping(M.WebFilterHolder, PathSpec);
-end;
-*)
-
-procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string);
-var
-  Holder: TdjWebComponentHolder;
-begin
-  Holder := TdjWebComponentHolder.Create(ComponentClass);
-
-  try
-    AddWebComponent(Holder, PathSpec);
-  except
-    on E: EWebComponentException do
-    begin
-      Holder.Free;
-      raise;
-    end;
-  end;
+  Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
+  // set context of Holder to propagate it to WebComponentConfig
+  Result.SetContext(GetCurrentContext);
 end;
 
 procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
@@ -366,23 +331,10 @@ begin
   WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
 end;
 
-procedure TdjWebComponentContextHandler.MapFilterToPaths(
-  FilterClass: TdjWebFilterClass; const PathSpec: string);
-var
-  Holder: TdjWebFilterHolder;
+function TdjWebComponentContextHandler.AddFilterWithMapping(
+  FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
 begin
-  Holder := TdjWebFilterHolder.Create(FilterClass);
-  try
-    // set context of Holder to propagate it to WebFilterConfig
-    Holder.SetContext(Self.GetCurrentContext);
-    WebComponentHandler.AddFilterWithPathMapping(Holder, PathSpec);
-  except
-    on E: EWebComponentException do
-    begin
-      Holder.Free;
-      raise;
-    end;
-  end;
+  Result := WebComponentHandler.AddFilterWithMapping(FilterClass, PathSpec);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;

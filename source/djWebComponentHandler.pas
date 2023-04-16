@@ -36,7 +36,7 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djPathMap,
-  djWebFilterHolder, djWebFilterMapping, djMultiMap,
+  djWebFilter, djWebFilterHolder, djWebFilterMapping, djMultiMap,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -75,12 +75,12 @@ type
     FWebFilterPathMappings: TdjWebFilterMappings;
 
     procedure SetFilters(Holders: TdjWebFilterHolders);
-    // procedure InitializeHolders(Holders: TdjWebFilterHolders);
+    procedure InitializeHolders(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
     function StripContext(const Doc: string): string;
     procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
-    procedure CheckStoreContext(const Context: IContext);
+    // procedure CheckStoreContext(const Context: IContext);
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
     procedure CreateOrUpdateMapping(const PathSpec: string; Holder:
       TdjWebComponentHolder);
@@ -104,6 +104,19 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
+
+    procedure SetContext(const Context: IContext);
+
+    (**
+     * Add a Web Component.
+     *
+     * \param ComponentClass WebComponent class
+     * \param PathSpec path specification
+     *
+     * \throws EWebComponentException if the Web Component can not be added
+     *)
+    function AddWebComponent(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
      * Add a Web Component holder with mapping.
@@ -133,8 +146,29 @@ type
     procedure AddFilterWithNameMapping(Holder: TdjWebFilterHolder;
       const ComponentName: string);
 
-    procedure AddFilterWithPathMapping(Holder: TdjWebFilterHolder;
-      const PathSpec: string);
+    (**
+     * Add a Web Filter, specifying a WebFilter class
+     * and the mapped path.
+     *
+     * \param FilterClass WebFilter class
+     * \param PathSpec mapped path
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddFilterWithMapping(Holder: TdjWebFilterHolder;
+      const PathSpec: string); overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilter holder instance
+     * and the mapped path.
+     *
+     * \param FilterClass WebFilter class
+     * \param PathSpec mapped path
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
+      const PathSpec: string): TdjWebFilterHolder; overload;
 
     (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
@@ -279,6 +313,19 @@ begin
   inherited;
 end;
 
+procedure TdjWebComponentHandler.SetContext(const Context: IContext);
+begin
+  Assert(Context <> nil) ;
+  FWebComponentContext := Context;
+end;
+
+function TdjWebComponentHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string): TdjWebComponentHolder;
+begin
+  Result := TdjWebComponentHolder.Create(ComponentClass);
+  AddWithMapping(Result, PathSpec);
+end;
+
 function TdjWebComponentHandler.CreateHolder(WebComponentClass:
   TdjWebComponentClass): TdjWebComponentHolder;
 begin
@@ -399,6 +446,7 @@ begin
   end;
 end;
 
+(*
 procedure TdjWebComponentHandler.CheckStoreContext(const Context: IContext);
 var
   Msg: string;
@@ -427,6 +475,7 @@ begin
     end;
   end;
 end;
+*)
 
 procedure TdjWebComponentHandler.AddMapping(Mapping: TdjWebComponentMapping);
 begin
@@ -447,7 +496,11 @@ begin
   end;
 
   // validate and store context
-  CheckStoreContext(Holder.GetContext);
+  // CheckStoreContext(Holder.GetContext);
+
+  Holder.SetContext(Self.WebComponentContext);
+
+  Assert(Holder.GetContext <> nil);
 
   // Assign name (if empty)
   //if Holder.Name = '' then
@@ -516,7 +569,7 @@ begin
   FWebFilterMappings.Add(Mapping);
 end;
 
-procedure TdjWebComponentHandler.AddFilterWithPathMapping(
+procedure TdjWebComponentHandler.AddFilterWithMapping(
   Holder: TdjWebFilterHolder; const PathSpec: string);
 var
   Mapping: TdjWebFilterMapping;
@@ -535,23 +588,28 @@ begin
   FWebFilterMappings.Add(Mapping);
 end;
 
+function TdjWebComponentHandler.AddFilterWithMapping(
+  FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
+begin
+  Result := TdjWebFilterHolder.Create(FilterClass);
+  AddFilterWithMapping(Result, PathSpec);
+end;
+
 procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
 begin
-  // InitializeHolders(Holders);
+  InitializeHolders(Holders);
   UpdateNameMappings;
 end;
 
-(*
 procedure TdjWebComponentHandler.InitializeHolders(Holders: TdjWebFilterHolders);
 var
   Holder: TdjWebFilterHolder;
 begin
   for Holder in Holders do
   begin
-    // Holder.SetContext(Self.WebComponentContext);
+    Holder.SetContext(WebComponentContext);
   end;
 end;
-*)
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
 begin

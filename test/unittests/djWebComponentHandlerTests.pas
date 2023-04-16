@@ -95,6 +95,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       CheckTrue(Handler.Stopped);
       Handler.Start;
 
@@ -143,6 +145,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       H1 := Handler.CreateHolder(TExamplePage);
       H1.SetContext(Context.GetCurrentContext);
 
@@ -170,6 +174,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       H1 := TdjWebComponentHolder.Create(TExamplePage);
       H1.SetContext(Context.GetCurrentContext);
 
@@ -202,6 +208,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       H1 := TdjWebComponentHolder.Create(TExamplePage);
       H1.SetContext(Context.GetCurrentContext);
 
@@ -241,6 +249,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       H1 := Handler.CreateHolder(TExamplePage);
       H1.SetContext(Context.GetCurrentContext);
       H1.Name := 'SameNameFails';
@@ -283,6 +293,9 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+
+      Handler.SetContext(C1.GetCurrentContext);
+
       H1 := Handler.CreateHolder(TExamplePage);
       H1.SetContext(C1.GetCurrentContext);
       Handler.AddWithMapping(H1, '/a.html');
@@ -323,6 +336,8 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
+      Handler.SetContext(Context.GetCurrentContext);
+
       H1 := TdjWebComponentHolder.Create(TExamplePage);
       H1.SetContext(Context.GetCurrentContext);
 

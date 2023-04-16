@@ -176,6 +176,7 @@ end;
 
 procedure TdjWebComponentHolder.SetContext(const Context: IContext);
 begin
+  Assert(Context <> nil);
   FConfig.SetContext(Context);
 end;
 
