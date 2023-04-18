@@ -42,11 +42,7 @@ uses
 
 type
   (**
-   * Holds a WebComponent (class reference) and configuration info.
-   *
-   * A WebComponent instance will be created 'on the fly'
-   * when the WebComponent property is accessed.
-   * (lazy instantiation).
+   * Holds a WebComponent and configuration data.
    *)
 
   { TdjWebComponentHolder }
@@ -180,6 +176,7 @@ end;
 
 procedure TdjWebComponentHolder.SetContext(const Context: IContext);
 begin
+  Assert(Context <> nil);
   FConfig.SetContext(Context);
 end;
 

@@ -46,6 +46,9 @@ type
    * Longest prefix match
    * Longest suffix match
    *)
+
+  { TdjPathMap }
+
   TdjPathMap = class(TStringList)
   protected
     (**
@@ -55,8 +58,7 @@ type
      * \param SpecType the path specification type
      * \return True if the Path mathes the Spec (with known SpecType)
      *)
-    class function Matches(const Path, Spec: string;
-      const SpecType: TSpecType): Boolean;
+    class function Matches(const Path, Spec: string; SpecType: TSpecType): Boolean; overload;
 
   public
     (**
@@ -64,6 +66,8 @@ type
      * \return the path specification type
      *)
     class function GetSpecType(const Spec: string): TSpecType;
+
+    class function Matches(const Path, Spec: string): Boolean; overload;
 
     (**
      * Check if a mapping path exists.
@@ -116,6 +120,11 @@ begin
   end;
 end;
 
+class function TdjPathMap.Matches(const Path, Spec: string): Boolean;
+begin
+  Result := Matches(Path, Spec, GetSpecType(Spec));
+end;
+
 class function TdjPathMap.GetSpecType(const Spec: string): TSpecType;
 begin
   if (Pos('/', Spec) = 1) and (Pos('/*', Spec) = Length(Spec) - 1)
@@ -141,7 +150,7 @@ begin
   end;
 end;
 
-class function TdjPathMap.Matches(const Path: string; const Spec: string; const
+class function TdjPathMap.Matches(const Path: string; const Spec: string;
   SpecType: TSpecType): Boolean;
 var
   Tmp: string;

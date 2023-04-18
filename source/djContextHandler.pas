@@ -121,24 +121,22 @@ type
   (**
    * Context handler.
    *)
+
+  { TdjContextHandler }
+
   TdjContextHandler = class(TdjHandlerWrapper)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FContext: IContext;
-
     FConfig: TdjContextConfig;
-
     FConnectorNames: TStrings;
-
     FErrorHandler: IHandler;
 
     procedure Trace(const S: string);
-
     function GetContextPath: string;
-
     procedure SetErrorHandler(const Value: IHandler);
 
   protected
@@ -360,6 +358,7 @@ end;
 
 function TdjContextHandler.GetCurrentContext: IContext;
 begin
+  Assert(FContext <> nil);
   Result := FContext;
 end;
 
