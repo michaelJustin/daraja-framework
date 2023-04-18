@@ -95,14 +95,15 @@ var
   PathSpec: string;
 begin
   Result := False;
-  if FPathSpecs.Count = 0 then Exit;
+  if FPathSpecs.Count = 0 then
+    Exit;
   for PathSpec in PathSpecs do
   begin
     if TdjPathMap.Matches(PathInContext, PathSpec) then
     begin
       Result := True;
+      Exit;
     end;
-    Exit;
   end;
 end;
 
