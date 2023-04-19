@@ -38,7 +38,6 @@ uses
 type
   (**
    * Context configuration.
-   *
    *)
   TdjContextConfig = class(TdjAbstractConfig, IContextConfig)
   public
@@ -63,7 +62,6 @@ begin
 
   // copy from IConfig argument to self:
 
-  // Params:
   L := Config.GetInitParameterNames;
   for S in L do
   begin

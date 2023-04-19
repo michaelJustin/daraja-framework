@@ -279,8 +279,8 @@ begin
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default); // todo: add a constructor to avoid repeated TComparer code
   FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
 
-  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
-  FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
+  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default, True);
+  FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default, True);
 
   FWebFilterNameMap := TObjectDictionary<string, TdjWebFilterHolder>.Create;
 

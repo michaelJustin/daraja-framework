@@ -94,7 +94,7 @@ type
       const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
-     * Add a Web Component.
+     * Add a Web Component.  todo: deprecate
      *
      * \param ComponentClass WebComponent class
      * \param PathSpec path specification
@@ -160,8 +160,17 @@ type
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const WebComponentName: string); overload;
 
+    (**
+     * Add a Web Filter, specifying a WebFilter class
+     * and the mapped WebComponent name.
+     *
+     * \param FilterClass WebFilter class
+     * \param PathSpec path specification
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
     function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string): TdjWebFilterHolder;
+      const PathSpec: string): TdjWebFilterHolder; // todo see WebComponent, same name and signature
 
     // IHandler interface
 

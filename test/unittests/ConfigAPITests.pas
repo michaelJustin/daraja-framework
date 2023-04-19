@@ -1244,7 +1244,12 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
   Context.AddWebFilter(TTestFilter, TExamplePage);
+  {$IFDEF FPC}
   ExpectException(EListError, '');
+  {$ELSE}
+  ExpectedException := EListError;
+  {$ENDIF}
+
   Context.AddWebFilter(TTestFilter, TExamplePage);
 end;
 
@@ -1256,7 +1261,12 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
   Holder := TdjWebFilterHolder.Create(TTestFilter);
+  {$IFDEF FPC}
   ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
+  {$ELSE}
+  ExpectedException := EWebComponentException;
+  {$ENDIF}
+
   Context.AddWebFilter(Holder, 'Invalid WebComponent name');
 end;
 {$ENDIF}

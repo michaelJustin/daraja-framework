@@ -35,9 +35,9 @@ interface
 uses
   djWebComponent, djGenericHolder, djLifeCycle, djInterfaces,
   djWebComponentConfig, djServerContext, djTypes,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   Classes;
 
 type
@@ -66,7 +66,7 @@ type
      *
      * \param WebComponentClass the Web Component class
      *)
-    constructor Create(const WebComponentClass: TdjWebComponentClass); overload;
+    constructor Create(WebComponentClass: TdjWebComponentClass); overload;
 
     (**
      * Destructor.
@@ -125,14 +125,14 @@ uses
 
 { TdjWebComponentHolder }
 
-constructor TdjWebComponentHolder.Create(const WebComponentClass: TdjWebComponentClass);
+constructor TdjWebComponentHolder.Create(WebComponentClass: TdjWebComponentClass);
 begin
   inherited Create(WebComponentClass);
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponentHolder.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   FConfig := TdjWebComponentConfig.Create;
   FClass := WebComponentClass;
@@ -151,12 +151,12 @@ end;
 
 procedure TdjWebComponentHolder.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 function TdjWebComponentHolder.GetClass: TdjWebComponentClass;
@@ -204,12 +204,12 @@ begin
   except
     on E: Exception do
     begin
-{$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
       Logger.Warn(
         Format('Could not start "%s". Init method raised %s with message "%s".', [
         FClass.ClassName, E.ClassName, E.Message]),
         E);
-{$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_LOGGING}
 
       Trace('Free the Web Component  "' + Name + '"');
       FWebComponent.Free;
