@@ -109,10 +109,9 @@ type
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
     procedure TestOneFilterAndTwoWebComponents;
-    {$IFDEF FPC}
+
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
     procedure TestMapFilterWithUnknownComponentNameRaisesException;
-    {$ENDIF}
     procedure TestWebFilterHolderInit;
     procedure TestWebFilterHolderInitHavingTwoInstances;
     procedure TestCatchAllWebFilter;
@@ -1236,7 +1235,6 @@ begin
   end;
 end;
 
-{$IFDEF FPC}
 procedure TAPIConfigTests.TestMapFilterTwiceToSameWebComponentRaisesException;
 var
   Context: TdjWebAppContext;
@@ -1244,13 +1242,17 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
   Context.AddWebFilter(TTestFilter, TExamplePage);
+
   {$IFDEF FPC}
   ExpectException(EListError, '');
   {$ELSE}
   ExpectedException := EListError;
   {$ENDIF}
-
-  Context.AddWebFilter(TTestFilter, TExamplePage);
+  try
+    Context.AddWebFilter(TTestFilter, TExamplePage);
+  finally
+    Context.Free;
+  end;
 end;
 
 procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
@@ -1260,16 +1262,23 @@ var
 begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Holder := TdjWebFilterHolder.Create(TTestFilter);
-  {$IFDEF FPC}
-  ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
-  {$ELSE}
-  ExpectedException := EWebComponentException;
-  {$ENDIF}
 
-  Context.AddWebFilter(Holder, 'Invalid WebComponent name');
+  Holder := TdjWebFilterHolder.Create(TTestFilter);
+  try
+    {$IFDEF FPC}
+    ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
+    {$ELSE}
+    ExpectedException := EWebComponentException;
+    {$ENDIF}
+    try
+      Context.AddWebFilter(Holder, 'Invalid WebComponent name');
+    finally
+      Context.Free;
+    end;
+  finally
+    Holder.Free;
+  end;
 end;
-{$ENDIF}
 
 procedure TAPIConfigTests.TestWebFilterHolderInit;
 var
