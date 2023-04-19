@@ -48,7 +48,7 @@ type
     FName: string;
     // FHandler: TdjAbstractHandler;
   public
-    constructor Create(const AClass: TInterfacedClass); reintroduce;
+    constructor Create(AClass: TInterfacedClass); reintroduce;
 
     // properties
     property Name: string read FName write FName;
@@ -58,7 +58,7 @@ type
 
 implementation
 
-constructor TdjGenericHolder<T>.Create(const AClass: TInterfacedClass);
+constructor TdjGenericHolder<T>.Create(AClass: TInterfacedClass);
 begin
   inherited Create;
 
