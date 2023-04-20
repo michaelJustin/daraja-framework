@@ -58,6 +58,42 @@ type
 
     procedure Trace(const S: string);
 
+    (**
+     * Add a Web Filter. Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponentName name of the WebComponent
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebComponentName: string); overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilterHolder
+     * and the mapped WebComponent name.
+     *  Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent name
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
+      const WebComponentName: string); overload;
+
+    (**
+     * Add a Web Filter.  Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent class
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebFilterName: string;
+      WebComponentClass: TdjWebComponentClass); overload;
+
   protected
     (**
      * \param Target Request target
@@ -94,14 +130,15 @@ type
       const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
-     * Add a Web Component.  todo: deprecate
+     * Add a Web Component.  todo: deprecate?
      *
      * \param ComponentClass WebComponent class
      * \param PathSpec path specification
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure Add(ComponentClass: TdjWebComponentClass; const PathSpec: string);
+    procedure Add(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string);
 
     (**
      * Add a Web Component.
@@ -125,40 +162,6 @@ type
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass); overload;
 
-    (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent class
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebFilterName: string;
-      WebComponentClass: TdjWebComponentClass); overload;
-
-    (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponentName name of the WebComponent
-     *
-     * \throws Exception if the Web Filter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebComponentName: string); overload;
-
-    (**
-     * Add a Web Filter, specifying a WebFilterHolder
-     * and the mapped WebComponent name.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent name
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    procedure AddWebFilter(Holder: TdjWebFilterHolder;
-      const WebComponentName: string); overload;
 
     (**
      * Add a Web Filter, specifying a WebFilter class
