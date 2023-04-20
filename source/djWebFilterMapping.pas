@@ -70,7 +70,8 @@ type
 implementation
 
 uses
-  djPathMap;
+  djPathMap,
+  Generics.Defaults;
 
 { TdjWebFilterMapping }
 

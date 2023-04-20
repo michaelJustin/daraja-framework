@@ -162,7 +162,6 @@ type
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass); overload;
 
-
     (**
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped WebComponent name.

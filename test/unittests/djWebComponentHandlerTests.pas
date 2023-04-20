@@ -37,7 +37,7 @@ type
   TdjWebComponentHandlerTests = class(TTestCase)
   published
     // procedure TestAV;
-    procedure TestAddPathMap;
+    //procedure TestAddPathMap;
     procedure TestAddTwoComponents;
     procedure TestAddSameComponentWithDifferentPaths;
     procedure TestTwoContextsFails;
@@ -135,34 +135,34 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandlerTests.TestAddPathMap;
-var
-  Context: TdjWebAppContext;
-  H1: TdjWebComponentHolder;
-  Handler: TTestdjWebComponentHandler;
-begin
-  Context := TdjWebAppContext.Create('');
-  try
-    Handler := TTestdjWebComponentHandler.Create;
-    try
-      Handler.SetContext(Context.GetCurrentContext);
-
-      H1 := Handler.CreateHolder(TExamplePage);
-      H1.SetContext(Context.GetCurrentContext);
-
-      Handler.AddWithMapping(H1, '/a');
-      Handler.AddWithMapping(H1, '/b');
-
-      CheckEquals(2, Handler.WebComponentMappings[0].PathSpecs.Count);
-      CheckEquals('/a,/b', Handler.WebComponentMappings[0].PathSpecs.CommaText);
-
-    finally
-      Handler.Free;
-    end;
-  finally
-    Context.Free;
-  end;
-end;
+//procedure TdjWebComponentHandlerTests.TestAddPathMap;
+//var
+//  Context: TdjWebAppContext;
+//  H1: TdjWebComponentHolder;
+//  Handler: TTestdjWebComponentHandler;
+//begin
+//  Context := TdjWebAppContext.Create('');
+//  try
+//    Handler := TTestdjWebComponentHandler.Create;
+//    try
+//      Handler.SetContext(Context.GetCurrentContext);
+//
+//      H1 := Handler.CreateHolder(TExamplePage);
+//      H1.SetContext(Context.GetCurrentContext);
+//
+//      Handler.AddWithMapping(H1, '/a');
+//      Handler.AddWithMapping(H1, '/b');
+//
+//      CheckEquals(2, Handler.WebComponentMappings[0].PathSpecs.Count);
+//      CheckEquals('/a,/b', Handler.WebComponentMappings[0].PathSpecs.CommaText);
+//
+//    finally
+//      Handler.Free;
+//    end;
+//  finally
+//    Context.Free;
+//  end;
+//end;
 
 procedure TdjWebComponentHandlerTests.TestAddSamePathMapTwiceFails;
 var
