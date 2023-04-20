@@ -66,7 +66,7 @@ type
     FPathMap: TdjPathMap;
 
     FWebComponentHolders: TdjWebComponentHolders;
-    FMappings: TdjWebComponentMappings;
+    FWebComponentMappings: TdjWebComponentMappings;
 
     FWebFilterHolders: TdjWebFilterHolders;
     FWebFilterMappings: TdjWebFilterMappings;
@@ -93,6 +93,11 @@ type
       Chain: IWebFilterChain): IWebFilterChain;
     procedure UpdateNameMappings;
     procedure UpdateMappings;
+
+    // properties
+    property WebComponentContext: IContext read FWebComponentContext;
+    property WebComponentMappings: TdjWebComponentMappings read FWebComponentMappings;
+
 
   protected
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
@@ -216,9 +221,7 @@ type
     procedure DoStart; override;
     procedure DoStop; override;
 
-    // properties
-    property WebComponentContext: IContext read FWebComponentContext;
-    property WebComponentMappings: TdjWebComponentMappings read FMappings;
+
 
   end;
 
@@ -277,7 +280,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default); // todo: add a constructor to avoid repeated TComparer code
-  FMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
+  FWebComponentMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
 
   FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
@@ -301,7 +304,7 @@ begin
   FPathMap.Free;
 
   FWebComponentHolders.Free;
-  FMappings.Free;
+  FWebComponentMappings.Free;
 
   FWebFilterHolders.Free;
   FWebFilterMappings.Free;
@@ -888,7 +891,7 @@ var
   WebComponentName: string;
 begin
   FWebFilterPathMappings.Free;
-  FWebFilterPathMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
+  FWebFilterPathMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);;
   FWebFilterNameMappings.Free;
   FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
 

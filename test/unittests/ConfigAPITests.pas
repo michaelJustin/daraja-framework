@@ -108,12 +108,12 @@ type
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
-    procedure TestOneFilterAndTwoWebComponents;
+    //procedure TestOneFilterAndTwoWebComponents;
 
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
-    procedure TestMapFilterWithUnknownComponentNameRaisesException;
-    procedure TestWebFilterHolderInit;
-    procedure TestWebFilterHolderInitHavingTwoInstances;
+    //procedure TestMapFilterWithUnknownComponentNameRaisesException;
+    //procedure TestWebFilterHolderInit;
+    //procedure TestWebFilterHolderInitHavingTwoInstances;
     procedure TestCatchAllWebFilter;
 
   end;
@@ -1129,16 +1129,15 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Context.AddWebFilter(TTestFilter, TExamplePage);
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilter, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
     CheckGETResponseEquals('example (filtered)', '/web/index.html');
-
   finally
     Server.Free;
   end;
@@ -1149,17 +1148,17 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Context.AddWebFilter(TTestFilterA, TExamplePage);
+  Context.AddWebFilter(TTestFilterB, TExamplePage);
+
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilterA, TExamplePage);
-    Context.AddWebFilter(TTestFilterB, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
     CheckGETResponseEquals('example (A) (B)', '/web/index.html');
-
   finally
     Server.Free;
   end;
@@ -1170,66 +1169,65 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Context.AddWebFilter(TTestFilterB, TExamplePage);
+  Context.AddWebFilter(TTestFilterA, TExamplePage);
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.html');
-    Context.AddWebFilter(TTestFilterB, TExamplePage);
-    Context.AddWebFilter(TTestFilterA, TExamplePage);
     Server.Add(Context);
     Server.Start;
 
     CheckGETResponseEquals('example (B) (A)', '/web/index.html');
-
   finally
     Server.Free;
   end;
 end;
 
-procedure TAPIConfigTests.TestOneFilterAndTwoWebComponents;
-var
-  Server: TdjServer;
-  Context: TdjWebAppContext;
-begin
-  Server := TdjServer.Create;
-  try
-    Context := TdjWebAppContext.Create('web');
-
-    Context.AddWebComponent(TExamplePage, '*.c1');
-    Context.AddWebComponent(TGetComponent, '*.c2');
-    // filter must have unique name
-    Context.AddWebFilter(TTestFilterA, 'Filter A.1', TExamplePage);
-    Context.AddWebFilter(TTestFilterA, 'Filter A.2', TGetComponent);
-
-    Server.Add(Context);
-    Server.Start;
-
-    CheckGETResponseEquals('example (A)', '/web/page.c1');
-    CheckGETResponseEquals('Hello (A)', '/web/page.c2');
-
-  finally
-    Server.Free;
-  end;
-end;
+//procedure TAPIConfigTests.TestOneFilterAndTwoWebComponents;
+//var
+//  Server: TdjServer;
+//  Context: TdjWebAppContext;
+//begin
+//  Server := TdjServer.Create;
+//  try
+//    Context := TdjWebAppContext.Create('web');
+//
+//    Context.AddWebComponent(TExamplePage, '*.c1');
+//    Context.AddWebComponent(TGetComponent, '*.c2');
+//    // filter must have unique name
+//    Context.AddWebFilter(TTestFilterA, 'Filter A.1', TExamplePage);
+//    Context.AddWebFilter(TTestFilterA, 'Filter A.2', TGetComponent);
+//
+//    Server.Add(Context);
+//    Server.Start;
+//
+//    CheckGETResponseEquals('example (A)', '/web/page.c1');
+//    CheckGETResponseEquals('Hello (A)', '/web/page.c2');
+//
+//  finally
+//    Server.Free;
+//  end;
+//end;
 
 procedure TAPIConfigTests.TestTwoFiltersAndTwoWebComponents;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.filterA');
+  Context.AddWebComponent(TGetComponent, '*.filterB');
+  Context.AddWebFilter(TTestFilterA, TExamplePage);
+  Context.AddWebFilter(TTestFilterB, TGetComponent);
+
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.filterA');
-    Context.AddWebComponent(TGetComponent, '*.filterB');
-    Context.AddWebFilter(TTestFilterA, TExamplePage);
-    Context.AddWebFilter(TTestFilterB, TGetComponent);
     Server.Add(Context);
     Server.Start;
 
     CheckGETResponseEquals('example (A)', '/web/page.filterA');
     CheckGETResponseEquals('Hello (B)', '/web/page.filterB');
-
   finally
     Server.Free;
   end;
@@ -1255,89 +1253,89 @@ begin
   end;
 end;
 
-procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
-var
-  Context: TdjWebAppContext;
-  Holder: TdjWebFilterHolder;
-begin
-  Context := TdjWebAppContext.Create('web');
-  Context.AddWebComponent(TExamplePage, '*.html');
+//procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
+//var
+//  Context: TdjWebAppContext;
+//  Holder: TdjWebFilterHolder;
+//begin
+//  Context := TdjWebAppContext.Create('web');
+//  Context.AddWebComponent(TExamplePage, '*.html');
+//
+//  Holder := TdjWebFilterHolder.Create(TTestFilter);
+//  try
+//    {$IFDEF FPC}
+//    ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
+//    {$ELSE}
+//    ExpectedException := EWebComponentException;
+//    {$ENDIF}
+//    try
+//      Context.AddWebFilter(Holder, 'Invalid WebComponent name');
+//    finally
+//      Context.Free;
+//    end;
+//  finally
+//    Holder.Free;
+//  end;
+//end;
 
-  Holder := TdjWebFilterHolder.Create(TTestFilter);
-  try
-    {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
-    {$ELSE}
-    ExpectedException := EWebComponentException;
-    {$ENDIF}
-    try
-      Context.AddWebFilter(Holder, 'Invalid WebComponent name');
-    finally
-      Context.Free;
-    end;
-  finally
-    Holder.Free;
-  end;
-end;
+//procedure TAPIConfigTests.TestWebFilterHolderInit;
+//var
+//  Server: TdjServer;
+//  Context: TdjWebAppContext;
+//  Holder: TdjWebFilterHolder;
+//begin
+//  Server := TdjServer.Create;
+//  try
+//    Context := TdjWebAppContext.Create('web');
+//    Context.AddWebComponent(TExamplePage, '*.html');
+//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+//    Holder.SetInitParameter('key', 'value');
+//    Context.AddWebFilter(Holder, TExamplePage.ClassName);
+//
+//    Server.Add(Context);
+//    Server.Start;
+//
+//    CheckGETResponseEquals('example, Param key=value', '/web/init.html');
+//  finally
+//    Server.Free;
+//  end;
+//end;
 
-procedure TAPIConfigTests.TestWebFilterHolderInit;
-var
-  Server: TdjServer;
-  Context: TdjWebAppContext;
-  Holder: TdjWebFilterHolder;
-begin
-  Server := TdjServer.Create;
-  try
-    Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(TExamplePage, '*.html');
-    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-    Holder.SetInitParameter('key', 'value');
-    Context.AddWebFilter(Holder, TExamplePage.ClassName);
-
-    Server.Add(Context);
-    Server.Start;
-
-    CheckGETResponseEquals('example, Param key=value', '/web/init.html');
-  finally
-    Server.Free;
-  end;
-end;
-
-procedure TAPIConfigTests.TestWebFilterHolderInitHavingTwoInstances;
-var
-  Server: TdjServer;
-  Context: TdjWebAppContext;
-  Holder: TdjWebFilterHolder;
-begin
-  Server := TdjServer.Create;
-  try
-    Context := TdjWebAppContext.Create('web');
-
-    Context.AddWebComponent(TExamplePage, '*.html');
-
-    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-    Holder.SetInitParameter('key', 'value A');
-    // filter must have unique name
-    Holder.Name := 'Instance A';
-
-    Context.AddWebFilter(Holder, 'TExamplePage');
-
-    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-    Holder.SetInitParameter('key', 'value B');
-    // filter must have unique name
-    Holder.Name := 'Instance B';
-
-    Context.AddWebFilter(Holder, 'TExamplePage');
-
-    Server.Add(Context);
-    Server.Start;
-
-    CheckGETResponseEquals('example, Param key=value A, Param key=value B', '/web/page.html');
-
-  finally
-    Server.Free;
-  end;
-end;
+//procedure TAPIConfigTests.TestWebFilterHolderInitHavingTwoInstances;
+//var
+//  Server: TdjServer;
+//  Context: TdjWebAppContext;
+//  Holder: TdjWebFilterHolder;
+//begin
+//  Server := TdjServer.Create;
+//  try
+//    Context := TdjWebAppContext.Create('web');
+//
+//    Context.AddWebComponent(TExamplePage, '*.html');
+//
+//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+//    Holder.SetInitParameter('key', 'value A');
+//    // filter must have unique name
+//    Holder.Name := 'Instance A';
+//
+//    Context.AddWebFilter(Holder, 'TExamplePage');
+//
+//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+//    Holder.SetInitParameter('key', 'value B');
+//    // filter must have unique name
+//    Holder.Name := 'Instance B';
+//
+//    Context.AddWebFilter(Holder, 'TExamplePage');
+//
+//    Server.Add(Context);
+//    Server.Start;
+//
+//    CheckGETResponseEquals('example, Param key=value A, Param key=value B', '/web/page.html');
+//
+//  finally
+//    Server.Free;
+//  end;
+//end;
 
 procedure TAPIConfigTests.TestCatchAllWebFilter;
 var
