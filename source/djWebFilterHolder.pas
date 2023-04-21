@@ -42,11 +42,7 @@ uses
 
 type
   (**
-   * Holds a WebFilter (class reference) and configuration info.
-   *
-   * A WebComponent instance will be created 'on the fly'
-   * when the WebComponent property is accessed.
-   * (lazy instantiation).
+   * Holds a WebFilter and configuration data.
    *)
 
   { TdjWebFilterHolder }
@@ -63,7 +59,7 @@ type
     procedure Trace(const S: string);
     function GetWebFilter: TdjWebFilter;
   public
-    constructor Create(const WebFilterClass: TdjWebFilterClass);
+    constructor Create(WebFilterClass: TdjWebFilterClass);
     destructor Destroy; override;
 
     (**
@@ -121,7 +117,7 @@ uses
 
 { TdjWebFilterHolder }
 
-constructor TdjWebFilterHolder.Create(const WebFilterClass: TdjWebFilterClass);
+constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass);
 begin
   inherited Create(WebFilterClass);
 
@@ -142,7 +138,7 @@ begin
 
   FConfig.Free;
 
-  inherited Destroy;
+  inherited;
 end;
 
 function TdjWebFilterHolder.GetContext: IContext;

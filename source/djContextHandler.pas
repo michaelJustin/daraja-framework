@@ -34,9 +34,9 @@ interface
 
 uses
   djInterfaces, djServerContext, djContextConfig, djHandlerWrapper,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes,
   Classes;
 
@@ -50,12 +50,10 @@ type
    *)
   TdjContext = class(TInterfacedObject, IContext)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     ContextLogger: ILogger;
-{$ENDIF DARAJA_LOGGING}
-
+    {$ENDIF DARAJA_LOGGING}
     FContextConfig: IContextConfig;
-
     FContextPath: string;
 
     (**
@@ -83,20 +81,20 @@ type
 
     (**
      * Get the context configuration.
-	   * \return the context configuration
+     * \return the context configuration
      *)
     function GetContextConfig: IContextConfig;
 
     (**
      * Get the context path.
-	   * \return the context path.
+     * \return the context path.
      *)
     function GetContextPath: string;
 
     (**
      * Get the init parameter with the given name.
-	   * \param Key the parameter name
-	   * \return the init parameter value
+     * \param Key the parameter name
+     * \return the init parameter value
      *)
     function GetInitParameter(const Key: string): string;
 
@@ -121,24 +119,22 @@ type
   (**
    * Context handler.
    *)
+
+  { TdjContextHandler }
+
   TdjContextHandler = class(TdjHandlerWrapper)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     FContext: IContext;
-
     FConfig: TdjContextConfig;
-
     FConnectorNames: TStrings;
-
     FErrorHandler: IHandler;
 
     procedure Trace(const S: string);
-
     function GetContextPath: string;
-
     procedure SetErrorHandler(const Value: IHandler);
 
   protected
@@ -214,9 +210,7 @@ type
     // properties
 
     property ConnectorNames: TStrings read FConnectorNames;
-
     property ContextPath: string read GetContextPath;
-
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
 
   end;
@@ -233,9 +227,9 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   ContextLogger := TdjLoggerFactory.GetLogger(ContextPath);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   ValidateContextPath(ContextPath);
 
@@ -307,14 +301,14 @@ end;
 
 procedure TdjContext.Log(const Msg: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   ContextLogger.Info(Msg);
-{$ELSE}
+  {$ELSE}
   if System.IsConsole then
   begin
     WriteLn(Msg);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 { TdjContextHandler }
@@ -324,9 +318,9 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjContextHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   FContext := TdjContext.Create(ContextPath);
 
@@ -360,6 +354,7 @@ end;
 
 function TdjContextHandler.GetCurrentContext: IContext;
 begin
+  Assert(FContext <> nil);
   Result := FContext;
 end;
 
@@ -370,12 +365,12 @@ end;
 
 procedure TdjContextHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 function TdjContextHandler.ContextMatches(const ConnectorName, Target: string): Boolean;
@@ -409,9 +404,9 @@ procedure TdjContextHandler.DoStart;
 begin
   inherited;
 
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger.Info('Starting context ' + ContextPath);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   // configure the context
   FContext.Init(Self.FConfig);
@@ -419,9 +414,9 @@ end;
 
 procedure TdjContextHandler.DoStop;
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger.Info('Stopping context ' + ContextPath);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   inherited;
 end;

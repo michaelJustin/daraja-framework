@@ -58,6 +58,42 @@ type
 
     procedure Trace(const S: string);
 
+    (**
+     * Add a Web Filter. Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponentName name of the WebComponent
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebComponentName: string); overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilterHolder
+     * and the mapped WebComponent name.
+     *  Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent name
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
+      const WebComponentName: string); overload;
+
+    (**
+     * Add a Web Filter.  Private method for future extensions todo
+     *
+     * \param FilterClass WebFilter class
+     * \param WebComponent class
+     *
+     * \throws Exception if the WebFilter can not be added
+     *)
+    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+      const WebFilterName: string;
+      WebComponentClass: TdjWebComponentClass); overload;
+
   protected
     (**
      * \param Target Request target
@@ -90,18 +126,19 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure AddWebComponent(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string); overload;
+    function AddWebComponent(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
-     * Convenience method to add a Web Component.
+     * Add a Web Component.  todo: deprecate?
      *
      * \param ComponentClass WebComponent class
      * \param PathSpec path specification
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure Add(ComponentClass: TdjWebComponentClass; const PathSpec: string);
+    procedure Add(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string);
 
     (**
      * Add a Web Component.
@@ -126,39 +163,16 @@ type
       WebComponentClass: TdjWebComponentClass); overload;
 
     (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent class
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebFilterName: string;
-      WebComponentClass: TdjWebComponentClass); overload;
-
-    (**
-     * Add a Web Filter.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponentName name of the WebComponent
-     *
-     * \throws Exception if the Web Filter can not be added
-     *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebComponentName: string); overload;
-
-    (**
-     * Add a Web Filter, specifying a WebFilterHolder
+     * Add a Web Filter, specifying a WebFilter class
      * and the mapped WebComponent name.
      *
      * \param FilterClass WebFilter class
-     * \param WebComponent name
+     * \param PathSpec path specification
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddWebFilter(Holder: TdjWebFilterHolder;
-      const WebComponentName: string); overload;
+    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
+      const PathSpec: string): TdjWebFilterHolder; // todo see WebComponent, same name and signature
 
     // IHandler interface
 
@@ -191,14 +205,15 @@ begin
   inherited Create(ContextPath);
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
-  Logger := TdjLoggerFactory.GetLogger('dj.' +
-    TdjWebComponentContextHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
+  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponentContextHandler.ClassName);
+  {$ENDIF DARAJA_LOGGING}
 
   Self.AutoStartSession := Sessions;
 
   WebComponentHandler := TdjWebComponentHandler.Create;
+
+  WebComponentHandler.SetContext(Self.GetCurrentContext);
 
   inherited AddHandler(WebComponentHandler);
 
@@ -249,22 +264,12 @@ begin
   end;
 end;
 
-procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string);
-var
-  Holder: TdjWebComponentHolder;
+function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string): TdjWebComponentHolder;
 begin
-  Holder := TdjWebComponentHolder.Create(ComponentClass);
-
-  try
-    AddWebComponent(Holder, PathSpec);
-  except
-    on E: EWebComponentException do
-    begin
-      Holder.Free;
-      raise;
-    end;
-  end;
+  Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
+  // set context of Holder to propagate it to WebComponentConfig
+  Result.SetContext(GetCurrentContext);
 end;
 
 procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
@@ -335,6 +340,12 @@ begin
   Holder.SetContext(Self.GetCurrentContext);
 
   WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
+end;
+
+function TdjWebComponentContextHandler.AddFilterWithMapping(
+  FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
+begin
+  Result := WebComponentHandler.AddFilterWithMapping(FilterClass, PathSpec);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
