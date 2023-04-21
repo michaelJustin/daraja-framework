@@ -241,7 +241,6 @@ uses
   SysUtils, Classes;
 
 resourcestring
-  rsContextIsNotAssigned = 'Context is not assigned';
   rsCreateMappingForWebComponent = 'Create mapping for Web Component "%s" ->'
     +' %s';
   rsExecutionOfMethodSServiceCausedAnExceptionOfTyp = 'Execution of method %s.'
@@ -256,8 +255,8 @@ resourcestring
     +'name';
   rsUpdateMappingForWebComponent = 'Update mapping for Web Component "%s" -'
     +'> %s,%s';
-  rsWebComponentsMustBelongToTheSameContext = 'Web Components must belong to '
-    +'the same context';
+  //rsWebComponentsMustBelongToTheSameContext = 'Web Components must belong to '
+  //  +'the same context';
 
 type
 
