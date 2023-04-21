@@ -329,7 +329,12 @@ begin
 
   FWebFilterNameMap.Free;
   FWebFilterNameMappings.Free;
-  // FWebFilterPathMappings.Free;
+
+  if FWebFilterPathMappings <> nil then
+  begin // todo why can it be nil here? TestMapFilterTwiceToSameWebComponentRaisesException
+    FWebFilterPathMappings.OwnsObjects := False;
+  end;
+  FWebFilterPathMappings.Free;
 
   inherited;
 end;
@@ -906,7 +911,7 @@ var
   WebComponentName: string;
 begin
   FWebFilterPathMappings.Free;
-  FWebFilterPathMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);;
+  FWebFilterPathMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
   FWebFilterNameMappings.Free;
   FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
 
