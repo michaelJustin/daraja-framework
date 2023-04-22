@@ -1,5 +1,3 @@
-SPDX-License-Identifier: AGPL-3.0-or-later OR Habarisoft
-
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
 # Daraja HTTP Framework
