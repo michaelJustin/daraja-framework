@@ -90,9 +90,9 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+   (* procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       const WebFilterName: string;
-      WebComponentClass: TdjWebComponentClass); overload;
+      WebComponentClass: TdjWebComponentClass); overload; *)
 
   protected
     (**
@@ -297,6 +297,7 @@ begin
   AddWebFilter(FilterClass, WebComponentClass.ClassName);
 end;
 
+(*
 procedure TdjWebComponentContextHandler.AddWebFilter(
   FilterClass: TdjWebFilterClass; const WebFilterName: string;
   WebComponentClass: TdjWebComponentClass);
@@ -315,6 +316,7 @@ begin
     end;
   end;
 end;
+*)
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
   const WebComponentName: string);
