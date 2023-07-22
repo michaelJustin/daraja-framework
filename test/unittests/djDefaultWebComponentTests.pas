@@ -206,7 +206,7 @@ begin
   try
     Context := TdjWebAppContext.Create('test');
     // add default web component
-    Context.Add(TdjDefaultWebComponent, '/');
+    Context.AddWebComponent(TdjDefaultWebComponent, '/');
 
     Server.Add(Context);
 
