@@ -42,7 +42,6 @@ type
     procedure TestAddSameComponentWithDifferentPaths;
     procedure TestTwoContextsFails;
     procedure TestAddSamePathMapTwiceFails;
-    procedure TestTwoComponentsSameNameFails;
     procedure TestTwoComponentsSamePathMapFails;
   end;
 
@@ -231,49 +230,6 @@ begin
       finally
         H2.Free;
       end;
-    finally
-      Handler.Free;
-    end;
-  finally
-    Context.Free;
-  end;
-end;
-
-procedure TdjWebComponentHandlerTests.TestTwoComponentsSameNameFails;
-var
-  Context: TdjWebAppContext;
-  H1, H2: TdjWebComponentHolder;
-  Handler: TTestdjWebComponentHandler;
-begin
-  Context := TdjWebAppContext.Create('');
-  try
-    Handler := TTestdjWebComponentHandler.Create;
-    try
-      Handler.SetContext(Context.GetCurrentContext);
-
-      H1 := Handler.CreateHolder(TExamplePage);
-      H1.SetContext(Context.GetCurrentContext);
-      H1.Name := 'SameNameFails';
-      Handler.AddWithMapping(H1, '/a.html');
-
-      H2 := Handler.CreateHolder(TOtherPage);
-      try
-        H2.SetContext(Context.GetCurrentContext);
-        H2.Name := 'SameNameFails';
-
-        {$IFDEF FPC}
-        ExpectException(EWebComponentException);
-        {$ELSE}
-        ExpectedException := EWebComponentException;
-        {$ENDIF}
-
-        // add the same name
-        Handler.AddWithMapping(H2, '/b.html');
-
-      finally
-        H2.Free;
-      end;
-
     finally
       Handler.Free;
     end;

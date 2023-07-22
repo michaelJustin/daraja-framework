@@ -246,6 +246,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
+(* previous version
 procedure TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
   const PathSpec: string);
 var
@@ -267,6 +268,12 @@ begin
       [ComponentClass.ClassName, PathSpec]));
     WebComponentHandler.AddWithMapping(Holder, PathSpec);
   end;
+end; *)
+
+procedure TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string);
+begin
+  AddWebComponent(ComponentClass, PathSpec);
 end;
 
 function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
@@ -324,7 +331,7 @@ procedure TdjWebComponentContextHandler.AddWebFilter(Holder: TdjWebFilterHolder;
   const WebComponentName: string);
 begin 
   // set context of Holder to propagate it to WebFilterConfig
-  // Holder.SetContext(Self.GetCurrentContext);
+  Holder.SetContext(Self.GetCurrentContext);
 
   WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
 end;

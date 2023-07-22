@@ -81,8 +81,8 @@ var
 begin
   Context := TdjWebAppContext.Create('');
   try
-    Context.Add(TExamplePage, '/a');
-    Context.Add(TExamplePage, '/b');
+    Context.AddWebComponent(TExamplePage, '/a');
+    Context.AddWebComponent(TExamplePage, '/b');
   finally
     Context.Free;
   end;
