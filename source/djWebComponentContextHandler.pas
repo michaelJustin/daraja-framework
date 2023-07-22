@@ -312,6 +312,7 @@ begin
   except
     on E: EWebComponentException do
     begin
+      Trace(E.Message);
       Holder.Free;
       raise;
     end;
