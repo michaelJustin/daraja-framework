@@ -1126,14 +1126,26 @@ begin
   Response.ContentText := Response.ContentText + ' (B)';
 end;
 
+function CreateWebFilterConfig: IWebFilterConfig;
+var
+  C: TdjWebFilterConfig;
+begin
+  C := TdjWebFilterConfig.Create;
+  C.Add('key', 'Hello, World!');
+  Result := C;
+end;
+
 procedure TAPIConfigTests.TestFilter;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilter, TExamplePage);
+  Context.AddWebFilter(TTestFilter, TExamplePage, CreateWebFilterConfig);
+
+  // run
   Server := TdjServer.Create;
   try
     Server.Add(Context);
@@ -1150,11 +1162,13 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
-  Context.AddWebFilter(TTestFilterB, TExamplePage);
+  Context.AddWebFilter(TTestFilterA, TExamplePage, CreateWebFilterConfig);
+  Context.AddWebFilter(TTestFilterB, TExamplePage, CreateWebFilterConfig);
 
+  // run
   Server := TdjServer.Create;
   try
     Server.Add(Context);
@@ -1171,11 +1185,14 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilterB, TExamplePage);
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
+  Context.AddWebFilter(TTestFilterB, TExamplePage, CreateWebFilterConfig);
+  Context.AddWebFilter(TTestFilterA, TExamplePage, CreateWebFilterConfig);
   Server := TdjServer.Create;
+
+  // run
   try
     Server.Add(Context);
     Server.Start;
@@ -1186,43 +1203,19 @@ begin
   end;
 end;
 
-//procedure TAPIConfigTests.TestOneFilterAndTwoWebComponents;
-//var
-//  Server: TdjServer;
-//  Context: TdjWebAppContext;
-//begin
-//  Server := TdjServer.Create;
-//  try
-//    Context := TdjWebAppContext.Create('web');
-//
-//    Context.AddWebComponent(TExamplePage, '*.c1');
-//    Context.AddWebComponent(TGetComponent, '*.c2');
-//    // filter must have unique name
-//    Context.AddWebFilter(TTestFilterA, 'Filter A.1', TExamplePage);
-//    Context.AddWebFilter(TTestFilterA, 'Filter A.2', TGetComponent);
-//
-//    Server.Add(Context);
-//    Server.Start;
-//
-//    CheckGETResponseEquals('example (A)', '/web/page.c1');
-//    CheckGETResponseEquals('Hello (A)', '/web/page.c2');
-//
-//  finally
-//    Server.Free;
-//  end;
-//end;
-
 procedure TAPIConfigTests.TestTwoFiltersAndTwoWebComponents;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filterA');
   Context.AddWebComponent(TGetComponent, '*.filterB');
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
-  Context.AddWebFilter(TTestFilterB, TGetComponent);
+  Context.AddWebFilter(TTestFilterA, TExamplePage, CreateWebFilterConfig);
+  Context.AddWebFilter(TTestFilterB, TGetComponent, CreateWebFilterConfig);
 
+  // run
   Server := TdjServer.Create;
   try
     Server.Add(Context);
@@ -1239,25 +1232,13 @@ procedure TAPIConfigTests.TestFilterWithInit;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  FilterConfig: IWebFilterConfig;
-
-  function CreateWebFilterConfig(const Context: IContext): IWebFilterConfig;
-  var
-    C: TdjWebFilterConfig;
-  begin
-    C := TdjWebFilterConfig.Create;
-    C.Add('key', 'Hello, World!');
-    C.SetContext(Context);
-    Result := C;
-  end;
-
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
-  FilterConfig := CreateWebFilterConfig(Context.GetCurrentContext);
-
   Context.AddWebComponent(TExamplePage, '*.filter');
-  Context.AddWebFilter(TTestFilterWithInit, TExamplePage, FilterConfig);
+  Context.AddWebFilter(TTestFilterWithInit, TExamplePage, CreateWebFilterConfig);
 
+  // run
   Server := TdjServer.Create;
   try
     Server.Add(Context);
@@ -1272,9 +1253,10 @@ procedure TAPIConfigTests.TestMapFilterTwiceToSameWebComponentRaisesException;
 var
   Context: TdjWebAppContext;
 begin
+  // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilter, TExamplePage);
+  Context.AddWebFilter(TTestFilter, TExamplePage, CreateWebFilterConfig);
 
   {$IFDEF FPC}
   ExpectException(EListError, '');
@@ -1282,72 +1264,11 @@ begin
   ExpectedException := EListError;
   {$ENDIF}
   try
-    Context.AddWebFilter(TTestFilter, TExamplePage);
+    Context.AddWebFilter(TTestFilter, TExamplePage, CreateWebFilterConfig);
   finally
     Context.Free;
   end;
 end;
-
-//procedure TAPIConfigTests.TestMapFilterWithUnknownComponentNameRaisesException;
-//var
-//  Context: TdjWebAppContext;
-//  Holder: TdjWebFilterHolder;
-//begin
-//  Context := TdjWebAppContext.Create('web');
-//  Context.AddWebComponent(TExamplePage, '*.html');
-//
-//  Holder := TdjWebFilterHolder.Create(TTestFilter);
-//  try
-//    {$IFDEF FPC}
-//    ExpectException(EWebComponentException, 'Invalid Web Component name mapping "Invalid WebComponent name" for Web Filter "TTestFilter"');
-//    {$ELSE}
-//    ExpectedException := EWebComponentException;
-//    {$ENDIF}
-//    try
-//      Context.AddWebFilter(Holder, 'Invalid WebComponent name');
-//    finally
-//      Context.Free;
-//    end;
-//  finally
-//    Holder.Free;
-//  end;
-//end;
-
-//procedure TAPIConfigTests.TestWebFilterHolderInitHavingTwoInstances;
-//var
-//  Server: TdjServer;
-//  Context: TdjWebAppContext;
-//  Holder: TdjWebFilterHolder;
-//begin
-//  Server := TdjServer.Create;
-//  try
-//    Context := TdjWebAppContext.Create('web');
-//
-//    Context.AddWebComponent(TExamplePage, '*.html');
-//
-//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-//    Holder.SetInitParameter('key', 'value A');
-//    // filter must have unique name
-//    Holder.Name := 'Instance A';
-//
-//    Context.AddWebFilter(Holder, 'TExamplePage');
-//
-//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-//    Holder.SetInitParameter('key', 'value B');
-//    // filter must have unique name
-//    Holder.Name := 'Instance B';
-//
-//    Context.AddWebFilter(Holder, 'TExamplePage');
-//
-//    Server.Add(Context);
-//    Server.Start;
-//
-//    CheckGETResponseEquals('example, Param key=value A, Param key=value B', '/web/page.html');
-//
-//  finally
-//    Server.Free;
-//  end;
-//end;
 
 procedure TAPIConfigTests.TestCatchAllWebFilter;
 var
@@ -1357,7 +1278,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.txt');
-  Context.AddFilterWithMapping(TTestFilter, '/*');
+  Context.AddFilterWithMapping(TTestFilter, '/*', CreateWebFilterConfig);
 
   // run
   Server := TdjServer.Create;

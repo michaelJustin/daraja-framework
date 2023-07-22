@@ -78,6 +78,6 @@ begin
   end;
 
   {$IFNDEF LINUX}
-  SetHeapTraceOutput('heaptrace.log');
+  // SetHeapTraceOutput('heaptrace.log');
   {$ENDIF}
 end.
