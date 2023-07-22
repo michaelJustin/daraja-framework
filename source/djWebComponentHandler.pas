@@ -350,7 +350,16 @@ function TdjWebComponentHandler.AddWebComponent(ComponentClass: TdjWebComponentC
   const PathSpec: string): TdjWebComponentHolder;
 begin
   Result := TdjWebComponentHolder.Create(ComponentClass);
-  AddWithMapping(Result, PathSpec);
+  try
+    AddWithMapping(Result, PathSpec);
+  except
+    on E: EWebComponentException do
+    begin
+      Trace(E.Message);
+      Result.Free;
+      raise;
+    end;
+  end;
 end;
 
 function TdjWebComponentHandler.CreateHolder(WebComponentClass:
