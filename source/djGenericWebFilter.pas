@@ -115,10 +115,10 @@ begin
   Trace('Init');
 
   Assert(Assigned(Config));
-  Assert(Assigned(Config.GetContext));
+  // Assert(Assigned(Config.GetContext));
   Assert(not Assigned(FConfig));
 
-  FConfig := TdjWebFilterConfig.Create(Config);
+  FConfig := TdjWebFilterConfig.Create; // (Config);
 end;
 
 procedure TdjGenericWebFilter.Trace(const S: string);

@@ -173,7 +173,8 @@ type
      * \throws Exception if the WebFilter can not be added
      *)
     function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string): TdjWebFilterHolder; overload;
+      const PathSpec: string;
+      const Config: IWebFilterConfig = nil): TdjWebFilterHolder; overload;
 
     (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
@@ -614,9 +615,10 @@ begin
 end;
 
 function TdjWebComponentHandler.AddFilterWithMapping(
-  FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
+  FilterClass: TdjWebFilterClass; const PathSpec: string;
+  const Config: IWebFilterConfig): TdjWebFilterHolder;
 begin
-  Result := TdjWebFilterHolder.Create(FilterClass);
+  Result := TdjWebFilterHolder.Create(FilterClass, Config);
   AddFilterWithMapping(Result, PathSpec);
 end;
 

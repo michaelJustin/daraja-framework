@@ -47,7 +47,7 @@ type
     (**
      * "Copy" constructor.
      *)
-    constructor Create(const Config: IWebFilterConfig); overload;
+    // constructor Create(const Config: IWebFilterConfig); overload;
 
     function GetFilterName: string;
   end;
@@ -56,6 +56,7 @@ implementation
 
 { TdjWebFilterConfig }
 
+(*
 constructor TdjWebFilterConfig.Create(const Config: IWebFilterConfig);
 var
   L: TdjStrings;
@@ -79,6 +80,7 @@ begin
   end;
   L.Free;
 end;
+*)
 
 function TdjWebFilterConfig.GetFilterName: string;
 begin

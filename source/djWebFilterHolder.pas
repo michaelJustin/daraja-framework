@@ -52,35 +52,29 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FConfig: TdjWebFilterConfig;
+    FConfig: IWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
+    FWebComponentContext: IContext;
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
     function GetWebFilter: TdjWebFilter;
   public
-    constructor Create(WebFilterClass: TdjWebFilterClass);
+    constructor Create(WebFilterClass: TdjWebFilterClass;
+      const Config: IWebFilterConfig);
     destructor Destroy; override;
 
     (**
-     * Get the context.
+     * Get the Web Component context.
      *)
     function GetContext: IContext;
 
     (**
      * Set the context.
      *
-     * \param Context the context
+     * \param Context the Web Component context
      *)
     procedure SetContext(const Context: IContext);
-
-    (**
-     * Set initialization parameter.
-     *
-     * \param Key init parameter name
-     * \param Value init parameter value
-     *)
-    procedure SetInitParameter(const Key: string; const Value: string);
 
     (**
      * Start the filter.
@@ -90,8 +84,9 @@ type
      * Stop the filter.
      *)
      procedure DoStop; override;
-     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse; const Chain: IWebFilterChain);
+     procedure DoFilter(Context: TdjServerContext;
+       Request: TdjRequest; Response: TdjResponse;
+       const Chain: IWebFilterChain);
     // properties
     (**
      * The filter class.
@@ -117,11 +112,18 @@ uses
 
 { TdjWebFilterHolder }
 
-constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass);
+constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass;
+  const Config: IWebFilterConfig);
 begin
   inherited Create(WebFilterClass);
 
-  FConfig := TdjWebFilterConfig.Create;
+  if Assigned(Config) then
+  begin
+    FConfig := Config;
+  end else begin
+    FConfig := TdjWebFilterConfig.Create;
+  end;
+
   FClass := WebFilterClass;
 
   // logging -----------------------------------------------------------------
@@ -136,25 +138,18 @@ destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
 
-  FConfig.Free;
-
   inherited;
 end;
 
 function TdjWebFilterHolder.GetContext: IContext;
 begin
-  Result := FConfig.GetContext;
+  Result := FWebComponentContext;
 end;
 
 procedure TdjWebFilterHolder.SetContext(const Context: IContext);
 begin
-  FConfig.SetContext(Context);
-end;
-
-procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
-  const Value: string);
-begin
-  FConfig.Add(Key, Value);
+  FWebComponentContext := Context;
+  // TODO copy to new instance of TdjWebFilterConfig?
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
@@ -184,7 +179,7 @@ begin
   CheckStarted;
 
   Assert(FConfig <> nil);
-  Assert(FConfig.GetContext <> nil);
+ // Assert(FConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;

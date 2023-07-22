@@ -67,7 +67,8 @@ type
      * \throws Exception if the Web Filter can not be added
      *)
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebComponentName: string); overload;
+      const WebComponentName: string;
+      const Config: IWebFilterConfig = nil); overload;
 
     (**
      * Add a Web Filter, specifying a WebFilterHolder
@@ -90,9 +91,9 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddWebFilter(FilterClass: TdjWebFilterClass;
+   (* procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       const WebFilterName: string;
-      WebComponentClass: TdjWebComponentClass); overload;
+      WebComponentClass: TdjWebComponentClass); overload; *)
 
   protected
     (**
@@ -160,7 +161,8 @@ type
      * \throws Exception if the WebFilter can not be added
      *)
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      WebComponentClass: TdjWebComponentClass); overload;
+      WebComponentClass: TdjWebComponentClass;
+      const Config: IWebFilterConfig = nil); overload;
 
     (**
      * Add a Web Filter, specifying a WebFilter class
@@ -172,7 +174,8 @@ type
      * \throws Exception if the WebFilter can not be added
      *)
     function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string): TdjWebFilterHolder; // todo see WebComponent, same name and signature
+      const PathSpec: string): TdjWebFilterHolder;
+      // todo see WebComponent, same name and signature
 
     // IHandler interface
 
@@ -292,11 +295,12 @@ begin
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
-  WebComponentClass: TdjWebComponentClass);
+  WebComponentClass: TdjWebComponentClass; const Config: IWebFilterConfig);
 begin
-  AddWebFilter(FilterClass, WebComponentClass.ClassName);
+  AddWebFilter(FilterClass, WebComponentClass.ClassName, Config);
 end;
 
+(*
 procedure TdjWebComponentContextHandler.AddWebFilter(
   FilterClass: TdjWebFilterClass; const WebFilterName: string;
   WebComponentClass: TdjWebComponentClass);
@@ -315,13 +319,14 @@ begin
     end;
   end;
 end;
+*)
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
-  const WebComponentName: string);
+  const WebComponentName: string; const Config: IWebFilterConfig);
 var
   Holder: TdjWebFilterHolder;
 begin
-  Holder := TdjWebFilterHolder.Create(FilterClass);
+  Holder := TdjWebFilterHolder.Create(FilterClass, Config);
   try
     AddWebFilter(Holder, WebComponentName);
   except
