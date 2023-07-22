@@ -118,7 +118,7 @@ begin
   // Assert(Assigned(Config.GetContext));
   Assert(not Assigned(FConfig));
 
-  FConfig := TdjWebFilterConfig.Create; // (Config);
+  FConfig := Config;
 end;
 
 procedure TdjGenericWebFilter.Trace(const S: string);
