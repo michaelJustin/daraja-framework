@@ -295,7 +295,7 @@ begin
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(FilterClass: TdjWebFilterClass;
-  WebComponentClass: TdjWebComponentClass; const Config: IWebFilterConfig = nil);
+  WebComponentClass: TdjWebComponentClass; const Config: IWebFilterConfig);
 begin
   AddWebFilter(FilterClass, WebComponentClass.ClassName, Config);
 end;

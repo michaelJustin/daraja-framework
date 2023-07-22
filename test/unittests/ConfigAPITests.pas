@@ -1241,19 +1241,20 @@ var
   Context: TdjWebAppContext;
   FilterConfig: IWebFilterConfig;
 
-  function CreateWebFilterConfig: IWebFilterConfig;
+  function CreateWebFilterConfig(const Context: IContext): IWebFilterConfig;
   var
     C: TdjWebFilterConfig;
   begin
     C := TdjWebFilterConfig.Create;
     C.Add('key', 'Hello, World!');
+    C.SetContext(Context);
     Result := C;
   end;
 
 begin
-  FilterConfig := CreateWebFilterConfig;
-
   Context := TdjWebAppContext.Create('web');
+  FilterConfig := CreateWebFilterConfig(Context.GetCurrentContext);
+
   Context.AddWebComponent(TExamplePage, '*.filter');
   Context.AddWebFilter(TTestFilterWithInit, TExamplePage, FilterConfig);
 
@@ -1309,29 +1310,6 @@ end;
 //    end;
 //  finally
 //    Holder.Free;
-//  end;
-//end;
-
-//procedure TAPIConfigTests.TestWebFilterHolderInit;
-//var
-//  Server: TdjServer;
-//  Context: TdjWebAppContext;
-//  Holder: TdjWebFilterHolder;
-//begin
-//  Server := TdjServer.Create;
-//  try
-//    Context := TdjWebAppContext.Create('web');
-//    Context.AddWebComponent(TExamplePage, '*.html');
-//    Holder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-//    Holder.SetInitParameter('key', 'value');
-//    Context.AddWebFilter(Holder, TExamplePage.ClassName);
-//
-//    Server.Add(Context);
-//    Server.Start;
-//
-//    CheckGETResponseEquals('example, Param key=value', '/web/init.html');
-//  finally
-//    Server.Free;
 //  end;
 //end;
 

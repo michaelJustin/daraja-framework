@@ -149,6 +149,7 @@ end;
 procedure TdjWebFilterHolder.SetContext(const Context: IContext);
 begin
   FWebComponentContext := Context;
+  // TODO copy to new instance of TdjWebFilterConfig?
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
