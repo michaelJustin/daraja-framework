@@ -164,7 +164,7 @@ type
     function GetFilterName: string;
     function GetInitParameterNames: TdjStrings;
     function GetInitParameter(const Key: string): string;
-    function GetContext: IContext;
+    function GetContext: IContext; // TODO
   end;
 
   (**

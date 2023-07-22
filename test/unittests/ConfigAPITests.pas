@@ -108,6 +108,7 @@ type
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
+    procedure TestFilterWithInit;
     //procedure TestOneFilterAndTwoWebComponents;
 
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
@@ -125,6 +126,7 @@ uses
   djWebComponentContextHandler, djServer, djDefaultHandler, djStatisticsHandler,
   djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
   djAbstractHandler, djServerContext, djWebFilter, djWebFilterHolder,
+  djWebFilterConfig,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdServerInterceptLogFile, IdSchedulerOfThreadPool, IdGlobal, IdException,
   IdResourceStrings,
@@ -1228,6 +1230,38 @@ begin
 
     CheckGETResponseEquals('example (A)', '/web/page.filterA');
     CheckGETResponseEquals('Hello (B)', '/web/page.filterB');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestFilterWithInit;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  FilterConfig: IWebFilterConfig;
+
+  function CreateWebFilterConfig: IWebFilterConfig;
+  var
+    C: TdjWebFilterConfig;
+  begin
+    C := TdjWebFilterConfig.Create;
+    C.Add('key', 'Hello, World!');
+    Result := C;
+  end;
+
+begin
+  FilterConfig := CreateWebFilterConfig;
+
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.filter');
+  Context.AddWebFilter(TTestFilterWithInit, TExamplePage, FilterConfig);
+
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('example, Param key=Hello, World!', '/web/page.filter');
   finally
     Server.Free;
   end;
