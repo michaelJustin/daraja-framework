@@ -95,7 +95,7 @@ begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Context.Add(TExamplePage, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
 
     {$IFDEF FPC}
     ExpectException(EWebComponentException, 'Mapping key exists');
@@ -104,7 +104,7 @@ begin
     {$ENDIF}
 
     // same path -> error
-    Context.Add(TExamplePage, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
 
   finally
     Context.Free;

@@ -210,7 +210,7 @@ begin
   try
     // create the 'test' context
     Context := TdjWebAppContext.Create('test');
-    Context.Add(TExamplePage, '/example');
+    Context.AddWebComponent(TExamplePage, '/example');
     Server.Add(Context);
     // add a handlerlist with a TdjDefaultHandler
     DefaultHandler := TdjDefaultHandler.Create;
@@ -234,10 +234,10 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('foo');
-    Context.Add(TExamplePage, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
     Server.Add(Context);
     Context := TdjWebAppContext.Create('foo');
-    Context.Add(TExamplePage, '/bar2');
+    Context.AddWebComponent(TExamplePage, '/bar2');
     Server.Add(Context);
     Server.Start;
 
@@ -257,7 +257,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('foo');
-    Context.Add(TExamplePage, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
     Server.Add(Context);
     Server.Start;
 
@@ -277,7 +277,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('foo');
-    Context.Add(TExamplePage, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
     Server.Add(Context);
     Server.Start;
 
@@ -297,7 +297,7 @@ begin
   try
     Server.AddConnector('::1');
     Context := TdjWebAppContext.Create('example');
-    Context.Add(TExamplePage, '/index.html');
+    Context.AddWebComponent(TExamplePage, '/index.html');
     Server.Add(Context);
     Server.Start;
 
@@ -412,11 +412,11 @@ begin
       // /web1/example1.html
       ContextHandler := TdjWebComponentContextHandler.Create('web1');
       ContextHandlers.AddHandler(ContextHandler);
-      ContextHandler.Add(TExamplePage, '/example1.html');
+      ContextHandler.AddWebComponent(TExamplePage, '/example1.html');
       // /web2/example2.html
       ContextHandler := TdjWebComponentContextHandler.Create('web2');
       ContextHandlers.AddHandler(ContextHandler);
-      ContextHandler.Add(TExamplePage, '/example2.html');
+      ContextHandler.AddWebComponent(TExamplePage, '/example2.html');
       Server.Start;
 
       // Test the component
@@ -449,12 +449,12 @@ begin
 
       // /web1/example1.html
       Context := TdjWebAppContext.Create('web1');
-      Context.Add(TExamplePage, '/example1.html');
+      Context.AddWebComponent(TExamplePage, '/example1.html');
       Server.Add(Context);
 
       // /web2/example2.html
       Context := TdjWebAppContext.Create('web2');
-      Context.Add(TExamplePage, '/example2.html');
+      Context.AddWebComponent(TExamplePage, '/example2.html');
       Server.Add(Context);
 
       Server.Start;
@@ -834,7 +834,7 @@ begin
       Intercept.Filename := 'httpIntercept.log';
       Server.AddConnector(Connector);
       Context := TdjWebAppContext.Create('get');
-      Context.Add(TGetComponent, '/hello');
+      Context.AddWebComponent(TGetComponent, '/hello');
       Server.Add(Context);
       Server.Start;
 
@@ -868,7 +868,7 @@ begin
     Connector.HTTPServer.Scheduler := SchedulerOfThreadPool;
     Server.AddConnector(Connector);
     Context := TdjWebAppContext.Create('get');
-    Context.Add(TGetComponent, '/hello');
+    Context.AddWebComponent(TGetComponent, '/hello');
     Server.Add(Context);
     Server.Start;
 
@@ -908,7 +908,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('example');
-    Context.Add(TContextInitParamComponent, '/index.html');
+    Context.AddWebComponent(TContextInitParamComponent, '/index.html');
     Context.SetInitParameter('a', 'myValue');
     Server.Add(Context);
     Server.Start;
@@ -933,10 +933,10 @@ begin
     Server.AddConnector('127.0.0.1', 8282); // unused, just to see the order
     // configure for context on standard port
     ContextPublic := TdjWebAppContext.Create('public');
-    ContextPublic.Add(TExamplePage, '/hello');
+    ContextPublic.AddWebComponent(TExamplePage, '/hello');
     // configure for context on special port
     Context := TdjWebAppContext.Create('get');
-    Context.Add(TExamplePage, '/hello');
+    Context.AddWebComponent(TExamplePage, '/hello');
     Context.ConnectorNames.Add('127.0.0.1:8181');
     Server.Add(ContextPublic);
     Server.Add(Context);
@@ -983,7 +983,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('get');
-    Context.Add(TCharSetComponent, '/hello');
+    Context.AddWebComponent(TCharSetComponent, '/hello');
     Server.Add(Context);
     Server.Start;
 
@@ -1006,7 +1006,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('get');
-    Context.Add(TCharSetComponent, '/hello');
+    Context.AddWebComponent(TCharSetComponent, '/hello');
     Server.Add(Context);
     Server.Start;
 

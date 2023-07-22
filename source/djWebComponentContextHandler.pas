@@ -131,15 +131,16 @@ type
       const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
-     * Add a Web Component.  todo: deprecate?
+     * Add a Web Component.
      *
      * \param ComponentClass WebComponent class
      * \param PathSpec path specification
      *
      * \throws EWebComponentException if the Web Component can not be added
+     * \deprecated
      *)
     procedure Add(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string);
+      const PathSpec: string); deprecated;
 
     (**
      * Add a Web Component.

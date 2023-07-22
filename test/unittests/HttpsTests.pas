@@ -96,7 +96,7 @@ begin
 
     // add context
     Context := TdjWebAppContext.Create('tls');
-    Context.Add(TExamplePage, '/test');
+    Context.AddWebComponent(TExamplePage, '/test');
     Server.Add(Context);
     Server.Start;
 
