@@ -100,4 +100,19 @@ Alternatively, a more general **suffix mapping** resource handler may be used, w
 
 This resource handler will be invoked for all requests for *.html resources - independent of their actual document name, and also for resources in sub-paths like `/context1/this/works/with_any_page.html`. (But note: the resource handler will _not_ receive requests for other context, such as `/context2/index.html`!)
 
+## Resource filter chains (new in 2.6)
+
+For any resource handler, there may also exist one ore more filters. With filters, HTTP traffic can be modified in many ways. 
+
+Examples:
+
+* detect missing authorization, and forward to a login page when the resource requires authorization 
+* set or remove headers depending con conditions
+* pre- or postprocess the request body content
+
+Version 2.6 is currently in development, and has been merged to the master branch. The Getting Started PDF already includes a chapter about filters.
+
+
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
+
+
