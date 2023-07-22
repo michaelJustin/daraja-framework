@@ -174,7 +174,7 @@ type
      *)
     function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
       const PathSpec: string;
-      const Config: IWebFilterConfig = nil): TdjWebFilterHolder; overload;
+      const Config: IWebFilterConfig): TdjWebFilterHolder; overload;
 
     (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
@@ -634,7 +634,7 @@ var
 begin
   for Holder in Holders do
   begin
-    Holder.SetContext(WebComponentContext);
+    // already set. Holder.SetContext(WebComponentContext);
   end;
 end;
 

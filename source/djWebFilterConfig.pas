@@ -46,8 +46,10 @@ type
   public
     (**
      * "Copy" constructor.
+     * This constructor does not copy the context.
+     * The passed config must not have a context set.
      *)
-    // constructor Create(const Config: IWebFilterConfig); overload;
+    constructor CreateFrom(const Config: IWebFilterConfig);
 
     function GetFilterName: string;
   end;
@@ -56,8 +58,7 @@ implementation
 
 { TdjWebFilterConfig }
 
-(*
-constructor TdjWebFilterConfig.Create(const Config: IWebFilterConfig);
+constructor TdjWebFilterConfig.CreateFrom(const Config: IWebFilterConfig);
 var
   L: TdjStrings;
   S: string;
@@ -65,14 +66,8 @@ begin
   Create;
 
   Assert(Config <> nil);
+  Assert(Config.GetContext = nil); // must be set later, by the container
 
-  Assert(Config.GetContext <> nil);
-
-  // copy from IConfig argument to self:
-
-  // Context:
-  FContext := Config.GetContext;
-  // Params:
   L := Config.GetInitParameterNames;
   for S in L do
   begin
@@ -80,7 +75,6 @@ begin
   end;
   L.Free;
 end;
-*)
 
 function TdjWebFilterConfig.GetFilterName: string;
 begin
