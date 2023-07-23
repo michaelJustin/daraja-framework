@@ -36,7 +36,6 @@ uses
   LoginResource in 'LoginResource.pas',
   LoginErrorResource in 'LoginErrorResource.pas',
   LogoutResource in 'LogoutResource.pas',
-  FormAuthHandler in 'FormAuthHandler.pas',
   FooterTemplate in 'FooterTemplate.pas',
   MainUnit in 'MainUnit.pas';
 
