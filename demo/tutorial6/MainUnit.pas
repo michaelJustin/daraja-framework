@@ -42,7 +42,7 @@ uses
   djInterfaces,
   djWebFilter,
   djWebFilterConfig,
-  djNCSALogHandler,
+  djNCSALogFilter,
   PublicResource,
   SecuredResource,
   LoginResource,
@@ -64,7 +64,6 @@ type
      *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
-
   end;
 
 
@@ -76,14 +75,14 @@ type
     IsLoggedIn: Boolean;
   begin
     IsLoggedIn := Request.Session.Content.Values['auth:username'] <> '';
-    if not IsLoggedIn then
+    if IsLoggedIn then
     begin
-      Request.Session.Content.Values['auth:target'] := Request.Document;
-      Response.Redirect('/login');
+      Chain.DoFilter(Context, Request, Response); // pass
     end
     else
     begin
-      Chain.DoFilter(Context, Request, Response); // pass
+      Request.Session.Content.Values['auth:target'] := Request.Document;
+      Response.Redirect('/login');
     end;
   end;
 
@@ -91,7 +90,6 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  LogHandler: IHandler;
   WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
@@ -105,11 +103,9 @@ begin
 
     WebFilterConfig := TdjWebFilterConfig.Create;
     Context.AddFilterWithMapping(TFormAuthFilter, '/admin', WebFilterConfig);
-    Server.Add(Context);
+    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
 
-    // add NCSA logger handler (at the end to log all handlers)
-    LogHandler := TdjNCSALogHandler.Create;
-    Server.AddHandler(LogHandler);
+    Server.Add(Context);
 
     Server.Start;
     WriteLn('Server is running, please open http://localhost/index.html');
