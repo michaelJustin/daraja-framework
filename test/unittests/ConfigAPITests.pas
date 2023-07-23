@@ -116,6 +116,9 @@ type
     //procedure TestWebFilterHolderInit;
     //procedure TestWebFilterHolderInitHavingTwoInstances;
     procedure TestCatchAllWebFilter;
+    procedure TestExceptionInComponentInitWithWebFilter;
+    procedure TestExceptionInComponentServiceWithWebFilter;
+    procedure TestExceptionInComponentOnGetWithWebFilter;
 
   end;
 
@@ -1288,6 +1291,90 @@ begin
     Server.Start;
 
     CheckGETResponseEquals('example (filtered)', '/web/anypage.txt');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestExceptionInComponentInitWithWebFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExceptionInInitComponent, '*.html');
+  Context.AddFilterWithMapping(TTestFilter, '/*');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    // Test the component
+    CheckGETResponse404('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestExceptionInComponentServiceWithWebFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExceptionComponent, '*.html');
+  Context.AddFilterWithMapping(TTestFilter, '/*');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    // Test the component
+    CheckGETResponse500('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+// test exception in Get  -------------------------------------------------
+type
+  TExceptionInOnGetComponent = class(TdjWebComponent)
+  public
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+{ TExceptionInOnGetComponent }
+
+procedure TExceptionInOnGetComponent.OnGet(Request: TdjRequest;
+  Response: TdjResponse);
+begin
+  raise EUnitTestException.Create('Exception in OnGet');
+end;
+
+procedure TAPIConfigTests.TestExceptionInComponentOnGetWithWebFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExceptionInOnGetComponent, '*.html');
+  Context.AddFilterWithMapping(TTestFilter, '/*');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    // Test the component
+    CheckGETResponse500('/web/exception.html');
   finally
     Server.Free;
   end;
