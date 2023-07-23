@@ -47,6 +47,7 @@ uses
   djHandlerList,
   djInterfaces,
   djNCSALogFilter,
+  djWebFilterConfig,
   djServer,
   djStatisticsHandler,
   djWebAppContext,
@@ -73,8 +74,11 @@ var
   HandlerList: IHandlerContainer;
   DefaultHandler: IHandler;
   Context: TdjWebAppContext;
+  WebFilterConfig: IWebFilterConfig;
 begin
   ConfigureLogging;
+
+  WebFilterConfig := TdjWebFilterConfig.Create;
 
   Server := TdjServer.Create(8080);
   try
@@ -102,7 +106,7 @@ begin
     Context.AddWebComponent(TSourcePage, '/source.html'); // view source
     // -----------------------------------------------------------------------
     // register the Web Filters
-    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', nil);
+    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
 
     // add the "demo" context
     Server.Add(Context);
