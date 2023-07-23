@@ -137,7 +137,7 @@ type
      * \param PathSpec path specification
      *
      * \throws EWebComponentException if the Web Component can not be added
-     * \deprecated
+     * \deprecated Use AddWebComponent(ComponentClass, PathSpec)
      *)
     procedure Add(ComponentClass: TdjWebComponentClass;
       const PathSpec: string); deprecated;
@@ -154,7 +154,8 @@ type
       const PathSpec: string); overload;
 
     (**
-     * Add a Web Filter.
+     * Add a Web Filter, specifying a WebFilter class
+     * and the mapped WebComponent class.
      *
      * \param FilterClass WebFilter class
      * \param WebComponent class
@@ -276,12 +277,37 @@ begin
   AddWebComponent(ComponentClass, PathSpec);
 end;
 
+(*
 function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
   const PathSpec: string): TdjWebComponentHolder;
 begin
   Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
   // set context of Holder to propagate it to WebComponentConfig
   Result.SetContext(GetCurrentContext);
+end;
+*)
+
+function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string): TdjWebComponentHolder;
+begin
+  Result := WebComponentHandler.FindHolder(ComponentClass);
+
+  if Result = nil then
+  begin
+    // create new holder
+    Trace(Format('Add new holder for Web Component %s',
+      [ComponentClass.ClassName]));
+    Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
+    // set context of Holder to propagate it to WebComponentConfig
+    Result.SetContext(GetCurrentContext);
+  end
+  else
+  begin
+    // add the PathSpec
+    Trace(Format('Holder found for Web Component %s, add PathSpec %s',
+      [ComponentClass.ClassName, PathSpec]));
+    WebComponentHandler.AddWithMapping(Result, PathSpec);
+  end;
 end;
 
 procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
