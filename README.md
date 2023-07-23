@@ -1,3 +1,5 @@
+[![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
+
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
 # Daraja HTTP Framework
