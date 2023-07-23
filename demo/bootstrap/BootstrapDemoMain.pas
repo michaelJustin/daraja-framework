@@ -46,7 +46,8 @@ uses
   djDefaultWebComponent,
   djHandlerList,
   djInterfaces,
-  djNCSALogHandler,
+  djNCSALogFilter,
+  djWebFilterConfig,
   djServer,
   djStatisticsHandler,
   djWebAppContext,
@@ -72,10 +73,12 @@ var
   Server: TdjServer;
   HandlerList: IHandlerContainer;
   DefaultHandler: IHandler;
-  LogHandler: IHandler;
   Context: TdjWebAppContext;
+  WebFilterConfig: IWebFilterConfig;
 begin
   ConfigureLogging;
+
+  WebFilterConfig := TdjWebFilterConfig.Create;
 
   Server := TdjServer.Create(8080);
   try
@@ -94,21 +97,19 @@ begin
 
     // -----------------------------------------------------------------------
     // register the Web Components
-    Context.Add(TdjDefaultWebComponent, '/'); // for static contant
-    Context.Add(TIndexPage, '/index.html'); // home page
-    Context.Add(TFormPage, '/form.html');  // form demo
-    Context.Add(TThankYouPage, '/thankyou.html'); // form demo
-    Context.Add(TUploadPage, '/upload.html'); // file upload demo
-    Context.Add(TAjaxStatsJson, '/ajaxstats.json'); // live statistics demo
-    Context.Add(TSourcePage, '/source.html'); // view source
+    Context.AddWebComponent(TdjDefaultWebComponent, '/'); // for static contant
+    Context.AddWebComponent(TIndexPage, '/index.html'); // home page
+    Context.AddWebComponent(TFormPage, '/form.html');  // form demo
+    Context.AddWebComponent(TThankYouPage, '/thankyou.html'); // form demo
+    Context.AddWebComponent(TUploadPage, '/upload.html'); // file upload demo
+    Context.AddWebComponent(TAjaxStatsJson, '/ajaxstats.json'); // live statistics demo
+    Context.AddWebComponent(TSourcePage, '/source.html'); // view source
     // -----------------------------------------------------------------------
+    // register the Web Filters
+    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
 
     // add the "demo" context
     Server.Add(Context);
-
-    // add NCSA logger handler (at the end to log all handlers) --------------
-    LogHandler := TdjNCSALogHandler.Create;
-    Server.AddHandler(LogHandler);
 
     // allow Ctrl+C
     SetShutdownHook(Server);
