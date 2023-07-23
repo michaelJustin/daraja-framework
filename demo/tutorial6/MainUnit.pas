@@ -41,7 +41,6 @@ uses
   djTypes,
   djInterfaces,
   djWebFilter,
-  djWebFilterConfig,
   djNCSALogFilter,
   PublicResource,
   SecuredResource,
@@ -90,7 +89,6 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
   try
@@ -101,9 +99,8 @@ begin
     Context.AddWebComponent(TLoginErrorResource, '/loginError');
     Context.AddWebComponent(TLogoutResource, '/logout');
 
-    WebFilterConfig := TdjWebFilterConfig.Create;
-    Context.AddFilterWithMapping(TFormAuthFilter, '/admin', WebFilterConfig);
-    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
+    Context.AddFilterWithMapping(TFormAuthFilter, '/admin');
+    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
     Server.Add(Context);
 
