@@ -38,7 +38,8 @@ uses
   djServer,
   djWebAppContext,
   djInterfaces,
-  djNCSALogHandler,
+  djNCSALogFilter,
+  djWebFilterConfig,
   OAuthHelper,
   RootResource,
   OAuth2CallbackResource,
@@ -51,21 +52,19 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  LogHandler: IHandler;
+  WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
   try
     try
       Context := TdjWebAppContext.Create('', True);
 
-      Context.Add(TRootResource, '/');
-      Context.Add(TOAuth2CallbackResource, MY_CALLBACK_URL);
+      Context.AddWebComponent(TRootResource, '/');
+      Context.AddWebComponent(TOAuth2CallbackResource, MY_CALLBACK_URL);
+      WebFilterConfig := TdjWebFilterConfig.Create;
+      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
 
       Server.Add(Context);
-
-      // add NCSA logger handler (at the end to log all handlers)
-      LogHandler := TdjNCSALogHandler.Create;
-      Server.AddHandler(LogHandler);
 
       // initializes global variables
       LoadClientSecrets('client_secret.json');
