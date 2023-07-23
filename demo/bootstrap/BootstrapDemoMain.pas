@@ -72,7 +72,6 @@ var
   Server: TdjServer;
   HandlerList: IHandlerContainer;
   DefaultHandler: IHandler;
-  LogHandler: IHandler;
   Context: TdjWebAppContext;
 begin
   ConfigureLogging;
