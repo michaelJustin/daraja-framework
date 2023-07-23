@@ -121,6 +121,7 @@ type
 implementation
 
 uses
+  djWebComponentHandler,
   SysUtils;
 
 { TdjWebComponentHolder }
@@ -239,7 +240,7 @@ end;
 procedure TdjWebComponentHolder.Handle(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
-  WebComponent.Service(Context, Request, Response);
+  TdjWebComponentHandler.InvokeService(WebComponent, Context, Request, Response);
 end;
 
 end.

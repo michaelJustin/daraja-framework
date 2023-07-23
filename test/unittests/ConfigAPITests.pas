@@ -1354,7 +1354,7 @@ type
 procedure TExceptionInOnGetComponent.OnGet(Request: TdjRequest;
   Response: TdjResponse);
 begin
-  raise EUnitTestException.Create('Exception in OnGet');
+  raise Exception.Create('Exception in OnGet');
 end;
 
 procedure TAPIConfigTests.TestExceptionInComponentOnGetWithWebFilter;
