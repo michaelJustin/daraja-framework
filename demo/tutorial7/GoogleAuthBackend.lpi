@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="GoogleAuthBackend"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -22,7 +24,6 @@
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="0"/>
     </RunParams>
     <RequiredPackages Count="1">
       <Item1>
@@ -58,6 +59,9 @@
       </SyntaxOptions>
     </Parsing>
     <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf3"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>
@@ -66,7 +70,7 @@
     </Linking>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="12">
+    <Exceptions Count="13">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -103,6 +107,9 @@
       <Item12>
         <Name Value="EUnitTestException"/>
       </Item12>
+      <Item13>
+        <Name Value="Exception"/>
+      </Item13>
     </Exceptions>
   </Debugging>
 </CONFIG>

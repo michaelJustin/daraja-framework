@@ -78,8 +78,6 @@ type
     procedure InitializeHolders(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
     function StripContext(const Doc: string): string;
-    procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse);
     // procedure CheckStoreContext(const Context: IContext);
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
     procedure CreateOrUpdateMapping(const PathSpec: string; Holder:
@@ -217,6 +215,9 @@ type
      *)
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;
+
+    class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse);
 
     // ILifeCycle interface
     procedure DoStart; override;
@@ -746,13 +747,13 @@ begin
   end;
 end; *)
 
-procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
+class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 var
   Msg: string;
 begin
   try
-    Trace('Invoke ' + Comp.ClassName + '.Service');
+    // Trace('Invoke ' + Comp.ClassName + '.Service');
 
     // invoke service method
     Comp.Service(Context, Request, Response);
@@ -765,20 +766,20 @@ begin
         Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
         [Comp.ClassName, E.ClassName, E.Message]);
 
-{$IFDEF DARAJA_LOGGING}
-    Logger.Warn(Msg, E);
-{$ENDIF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
+      // Logger.Warn(Msg, E);
+      {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-  {$IFDEF DARAJA_LOGGING}
-    {$IFDEF DARAJA_MADEXCEPT}
-      Logger.Warn(string(madStackTrace.StackTrace));
-    {$ENDIF DARAJA_MADEXCEPT}
-    {$IFDEF DARAJA_JCLDEBUG}
-      Logger.Warn(djStackTrace.GetStackList);
-    {$ENDIF DARAJA_JCLDEBUG}
-  {$ENDIF DARAJA_LOGGING}
-{$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+      {$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_MADEXCEPT}
+      // Logger.Warn(string(madStackTrace.StackTrace));
+      {$ENDIF DARAJA_MADEXCEPT}
+      {$IFDEF DARAJA_JCLDEBUG}
+      //Logger.Warn(djStackTrace.GetStackList);
+      {$ENDIF DARAJA_JCLDEBUG}
+      {$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
       Response.ContentText := '<!DOCTYPE html>' + #10
         + '<html>' + #10

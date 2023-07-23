@@ -156,14 +156,8 @@ var
 
 begin
   try
-
     Chain.DoFilter(Context, Request, Response);
-
   finally
-    // todo leave here or move to djHTTPConnector?
-    if not Response.HeaderHasBeenWritten then
-      Response.WriteHeader;
-
     LogMsg := Request.RemoteIP + ' '
       + '- '
       + IfEmpty(Request.AuthUsername) + ' '
