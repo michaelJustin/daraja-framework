@@ -39,7 +39,6 @@ uses
   djWebAppContext,
   djInterfaces,
   djNCSALogFilter,
-  djWebFilterConfig,
   PublicResource,
   TokenSigninResource,
   LoginResource,
@@ -51,7 +50,6 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
   try
@@ -62,8 +60,7 @@ begin
       Context.AddWebComponent(TLoginResource, '/login.html');
       Context.AddWebComponent(TTokenSigninResource, '/tokensignin');
       Context.AddWebComponent(TDashboardResource, '/dashboard.html');
-      WebFilterConfig := TdjWebFilterConfig.Create;
-      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
+      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
       Server.Add(Context);
 

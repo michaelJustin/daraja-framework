@@ -55,7 +55,6 @@ type
     FWebFilterConfig: IWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
-    // FContext: IContext;
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
     function GetWebFilter: TdjWebFilter;
@@ -111,13 +110,12 @@ constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass;
 begin
   inherited Create(WebFilterClass);
 
-  // if Assigned(Config) then
-  //begin
-    // note: Context is not copied!
+  if Assigned(Config) then
+  begin
     FWebFilterConfig := Config;
-  // end else begin
-  //  FWebFilterConfig := TdjWebFilterConfig.Create;
-  //end;
+  end else begin
+    FWebFilterConfig := TdjWebFilterConfig.Create;
+  end;
 
   FClass := WebFilterClass;
 

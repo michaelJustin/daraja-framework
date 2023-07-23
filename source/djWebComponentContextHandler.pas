@@ -164,7 +164,7 @@ type
      *)
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass;
-      const Config: IWebFilterConfig); overload;
+      const Config: IWebFilterConfig = nil); overload;
 
     (**
      * Add a Web Filter, specifying a WebFilter class
@@ -177,7 +177,7 @@ type
      *)
     function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
       const PathSpec: string;
-      const Config: IWebFilterConfig): TdjWebFilterHolder;
+      const Config: IWebFilterConfig = nil): TdjWebFilterHolder;
       // todo see WebComponent, same name and signature
 
     // IHandler interface

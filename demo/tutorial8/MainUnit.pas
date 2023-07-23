@@ -39,7 +39,6 @@ uses
   djWebAppContext,
   djInterfaces,
   djNCSALogFilter,
-  djWebFilterConfig,
   OAuthHelper,
   RootResource,
   OAuth2CallbackResource,
@@ -52,7 +51,6 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
   try
@@ -61,8 +59,7 @@ begin
 
       Context.AddWebComponent(TRootResource, '/');
       Context.AddWebComponent(TOAuth2CallbackResource, MY_CALLBACK_URL);
-      WebFilterConfig := TdjWebFilterConfig.Create;
-      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
+      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
       Server.Add(Context);
 
