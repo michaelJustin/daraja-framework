@@ -117,6 +117,7 @@ type
     //procedure TestWebFilterHolderInitHavingTwoInstances;
     procedure TestCatchAllWebFilter;
     procedure TestExceptionInComponentInitWithWebFilter;
+    procedure TestExceptionInComponentServiceWithWebFilter;
 
   end;
 
@@ -1312,6 +1313,29 @@ begin
 
     // Test the component
     CheckGETResponse404('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestExceptionInComponentServiceWithWebFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExceptionComponent, '*.html');
+  Context.AddFilterWithMapping(TTestFilter, '/*');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    // Test the component
+    CheckGETResponse500('/web/exception.html');
   finally
     Server.Free;
   end;
