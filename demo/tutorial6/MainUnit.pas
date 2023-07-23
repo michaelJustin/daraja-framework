@@ -37,35 +37,75 @@ implementation
 uses
   djServer,
   djWebAppContext,
+  djServerContext,
+  djTypes,
   djInterfaces,
+  djWebFilter,
+  djWebFilterConfig,
   djNCSALogHandler,
   PublicResource,
   SecuredResource,
   LoginResource,
   LoginErrorResource,
-  LogoutResource,
-  FormAuthHandler;
+  LogoutResource;
+
+type
+
+  { TFormAuthFilter }
+
+  TFormAuthFilter = class(TdjWebFilter)
+  public
+    (**
+     * The doFilter method of the Filter is called by the container each time
+     * a request/response pair is passed through the chain due to a client
+     * request for a resource at the end of the chain.
+     * The FilterChain passed in to this method allows the Filter to pass on
+     * the request and response to the next entity in the chain.
+     *)
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse; const Chain: IWebFilterChain); override;
+
+  end;
+
+
+  { TFormAuthFilter }
+
+  procedure TFormAuthFilter.DoFilter(Context: TdjServerContext;
+    Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+  var
+    IsLoggedIn: Boolean;
+  begin
+    IsLoggedIn := Request.Session.Content.Values['auth:username'] <> '';
+    if not IsLoggedIn then
+    begin
+      Request.Session.Content.Values['auth:target'] := Request.Document;
+      Response.Redirect('/login');
+    end
+    else
+    begin
+      Chain.DoFilter(Context, Request, Response); // pass
+    end;
+  end;
 
 procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  Handler: IHandler;
   LogHandler: IHandler;
+  WebFilterConfig: IWebFilterConfig;
 begin
   Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('', True);
-    Context.Add(TPublicResource, '/index.html');
-    Context.Add(TSecuredResource, '/admin');
-    Context.Add(TLoginResource, '/login');
-    Context.Add(TLoginErrorResource, '/loginError');
-    Context.Add(TLogoutResource, '/logout');
-    Server.Add(Context);
+    Context.AddWebComponent(TPublicResource, '/index.html');
+    Context.AddWebComponent(TSecuredResource, '/admin');
+    Context.AddWebComponent(TLoginResource, '/login');
+    Context.AddWebComponent(TLoginErrorResource, '/loginError');
+    Context.AddWebComponent(TLogoutResource, '/logout');
 
-    // add the security handler
-    Handler := TFormAuthHandler.Create;
-    Server.AddHandler(Handler);
+    WebFilterConfig := TdjWebFilterConfig.Create;
+    Context.AddFilterWithMapping(TFormAuthFilter, '/admin', WebFilterConfig);
+    Server.Add(Context);
 
     // add NCSA logger handler (at the end to log all handlers)
     LogHandler := TdjNCSALogHandler.Create;
