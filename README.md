@@ -8,16 +8,6 @@ Daraja is a flexible HTTP server framework for Object Pascal, based on the stand
 
 Daraja provides the core foundation for serving HTTP resources of all content-types such as HTML pages, images, scripts, web service responses etc. by mapping resource paths to your own code. Your code then can create the response content, or let the framework serve a static file. 
 
-## Optional Extensions
-
-### slf4p
-
-A simple logging facade with support for LazLogger, Log4D, and other logging frameworks.
-
-https://github.com/michaelJustin/slf4p
-
-You can find this project at https://github.com/michaelJustin/daraja-framework
-
 ## Documentation
 
 ### API generated with doxygen
@@ -113,6 +103,17 @@ Examples:
 * pre- or postprocess the request body content
 
 Version 2.6 is currently in development, and has been merged to the master branch. The Getting Started PDF already includes a chapter about filters.
+
+
+## Optional Extensions
+
+### slf4p
+
+A simple logging facade with support for LazLogger, Log4D, and other logging frameworks.
+
+https://github.com/michaelJustin/slf4p
+
+You can find this project at https://github.com/michaelJustin/daraja-framework
 
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
