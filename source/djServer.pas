@@ -57,7 +57,8 @@ const
    *
    * It allows to compose web applications with these building blocks:
    *
-   * \li a \link TdjWebComponent Web Component base class \endlink which provides HTTP method handlers (OnGet, OnPost, OnPut etc.)
+   * \li a \link TdjWebComponent Web Component base class \endlink which provides HTTP method handling (OnGet, OnPost, OnPut etc.)
+   * \li a \link TdjWebFilter Web Filter base class \endlink for request interception and modification (pre- and postprocessing)
    * \li a HTTP server run time environment, based on <a target="_blank" href="http://www.indyproject.org/">Internet Direct (Indy)</a>
    *
    * Copyright (C) Michael Justin
