@@ -8,6 +8,9 @@ var annotated_dup =
     [ "ILifeCycle", "interfaceILifeCycle.html", null ],
     [ "IWebComponent", "interfaceIWebComponent.html", null ],
     [ "IWebComponentConfig", "interfaceIWebComponentConfig.html", null ],
+    [ "IWebFilter", "interfaceIWebFilter.html", null ],
+    [ "IWebFilterChain", "interfaceIWebFilterChain.html", null ],
+    [ "IWebFilterConfig", "interfaceIWebFilterConfig.html", null ],
     [ "TdjAbstractConfig", "classTdjAbstractConfig.html", "classTdjAbstractConfig" ],
     [ "TdjAbstractConnector", "classTdjAbstractConnector.html", "classTdjAbstractConnector" ],
     [ "TdjAbstractHandler", "classTdjAbstractHandler.html", "classTdjAbstractHandler" ],
@@ -18,6 +21,7 @@ var annotated_dup =
     [ "TdjContextHandlerCollection", "classTdjContextHandlerCollection.html", "classTdjContextHandlerCollection" ],
     [ "TdjGenericHolder", "classTdjGenericHolder.html", "classTdjGenericHolder" ],
     [ "TdjGenericWebComponent", "classTdjGenericWebComponent.html", "classTdjGenericWebComponent" ],
+    [ "TdjGenericWebFilter", "classTdjGenericWebFilter.html", "classTdjGenericWebFilter" ],
     [ "TdjHandlerCollection", "classTdjHandlerCollection.html", "classTdjHandlerCollection" ],
     [ "TdjHandlerList", "classTdjHandlerList.html", "classTdjHandlerList" ],
     [ "TdjHandlerWrapper", "classTdjHandlerWrapper.html", "classTdjHandlerWrapper" ],
@@ -25,6 +29,7 @@ var annotated_dup =
     [ "TdjHTTPServer", "classTdjHTTPServer.html", "classTdjHTTPServer" ],
     [ "TdjInitParameters", "classTdjInitParameters.html", null ],
     [ "TdjLifeCycle", "classTdjLifeCycle.html", "classTdjLifeCycle" ],
+    [ "TdjMultiMap", "classTdjMultiMap.html", null ],
     [ "TdjPathMap", "classTdjPathMap.html", "classTdjPathMap" ],
     [ "TdjRequest", "classTdjRequest.html", null ],
     [ "TdjResponse", "classTdjResponse.html", null ],
@@ -37,5 +42,11 @@ var annotated_dup =
     [ "TdjWebComponentContextHandler", "classTdjWebComponentContextHandler.html", "classTdjWebComponentContextHandler" ],
     [ "TdjWebComponentHandler", "classTdjWebComponentHandler.html", "classTdjWebComponentHandler" ],
     [ "TdjWebComponentHolder", "classTdjWebComponentHolder.html", "classTdjWebComponentHolder" ],
-    [ "TdjWebComponentMapping", "classTdjWebComponentMapping.html", "classTdjWebComponentMapping" ]
+    [ "TdjWebComponentHolders", "classTdjWebComponentHolders.html", null ],
+    [ "TdjWebComponentMapping", "classTdjWebComponentMapping.html", "classTdjWebComponentMapping" ],
+    [ "TdjWebFilter", "classTdjWebFilter.html", null ],
+    [ "TdjWebFilterChain", "classTdjWebFilterChain.html", null ],
+    [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", "classTdjWebFilterConfig" ],
+    [ "TdjWebFilterHolder", "classTdjWebFilterHolder.html", "classTdjWebFilterHolder" ],
+    [ "TdjWebFilterMapping", "classTdjWebFilterMapping.html", "classTdjWebFilterMapping" ]
 ];

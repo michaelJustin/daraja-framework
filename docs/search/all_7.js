@@ -10,5 +10,8 @@ var searchData=
   ['isstarted_7',['IsStarted',['../classTdjLifeCycle.html#a5f28103039a0b01fd33cbe20155674e6',1,'TdjLifeCycle']]],
   ['isstopped_8',['IsStopped',['../classTdjLifeCycle.html#a8ec8178ac70d4e5b45b9ea2e5b046fc1',1,'TdjLifeCycle']]],
   ['iwebcomponent_9',['IWebComponent',['../interfaceIWebComponent.html',1,'']]],
-  ['iwebcomponentconfig_10',['IWebComponentConfig',['../interfaceIWebComponentConfig.html',1,'']]]
+  ['iwebcomponentconfig_10',['IWebComponentConfig',['../interfaceIWebComponentConfig.html',1,'']]],
+  ['iwebfilter_11',['IWebFilter',['../interfaceIWebFilter.html',1,'']]],
+  ['iwebfilterchain_12',['IWebFilterChain',['../interfaceIWebFilterChain.html',1,'']]],
+  ['iwebfilterconfig_13',['IWebFilterConfig',['../interfaceIWebFilterConfig.html',1,'']]]
 ];
