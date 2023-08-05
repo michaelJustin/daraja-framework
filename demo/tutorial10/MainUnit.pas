@@ -37,8 +37,7 @@ implementation
 uses
   djServer,
   djWebAppContext,
-  djInterfaces,
-  djNCSALogHandler,
+  djNCSALogFilter,
   GitHubHelper,
   RootResource,
   OAuth2CallbackResource,
@@ -51,21 +50,17 @@ procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-  LogHandler: IHandler;
 begin
   Server := TdjServer.Create(80);
   try
     try
       Context := TdjWebAppContext.Create('', True);
 
-      Context.Add(TRootResource, '/index.html');
-      Context.Add(TOAuth2CallbackResource, MY_CALLBACK_URL);
+      Context.AddWebComponent(TRootResource, '/index.html');
+      Context.AddWebComponent(TOAuth2CallbackResource, MY_CALLBACK_URL);
+      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
       Server.Add(Context);
-
-      // add NCSA logger handler (at the end to log all handlers)
-      LogHandler := TdjNCSALogHandler.Create;
-      Server.AddHandler(LogHandler);
 
       Server.Start;
 
