@@ -102,8 +102,6 @@ Examples:
 * set or remove headers depending con conditions
 * pre- or postprocess the request body content
 
-Version 2.6 is currently in development, and has been merged to the master branch. The Getting Started PDF already includes a chapter about filters.
-
 
 ## Optional Extensions
 
