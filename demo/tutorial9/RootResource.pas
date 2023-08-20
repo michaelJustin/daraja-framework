@@ -51,7 +51,6 @@ uses
 { TRootResource }
 
 // https://developers.google.com/identity/protocols/OpenIDConnect
-// https://developer.paypal.com/docs/integration/direct/identity/button-js-builder/
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 var
