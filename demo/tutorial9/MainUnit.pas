@@ -42,6 +42,7 @@ uses
   djNCSALogFilter,
   OpenIDHelper,
   RootResource,
+  OpenIDAuthFilter,
   OpenIDCallbackResource,
   ShellAPI,
   SysUtils;
@@ -52,16 +53,19 @@ var
   Context: TdjWebAppContext;
 begin
   Context := TdjWebAppContext.Create('', True);
+
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(TOpenIDCallbackResource, MY_CALLBACK_URL);
+
+  Context.AddFilterWithMapping(TFormAuthFilter, '*.html');
   Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+
+  LoadClientSecrets('client_secret.json'); // TODO make secrets config params
 
   Server := TdjServer.Create(80);
   try
     try
-      Server.Add(Context);;
-
-      LoadClientSecrets('client_secret.json'); // TODO make secrets config params
+      Server.Add(Context);
       Server.Start;
 
       ShellExecute(0, 'open', PChar(MY_HOST + '/index.html'), '', '', 0);
