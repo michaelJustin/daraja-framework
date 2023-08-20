@@ -46,7 +46,10 @@ implementation
 
 uses
   OpenIDHelper,
-  IdHTTP, IdSSLOpenSSL, SysUtils, Classes;
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdHTTP,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  SysUtils, Classes;
 
 { TOpenIDCallbackResource }
 
@@ -61,13 +64,13 @@ procedure TOpenIDCallbackResource.OnGet(Request: TdjRequest;
 var
   AuthCode: string;
   IdHTTP: TIdHTTP;
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
   Params: TStrings;
   ResponseText: string;
 begin
   AuthCode := Request.Params.Values['code'];
 
-  if AuthCode = '' then begin
+  if AuthCode = '' then
+  begin
     // get an auth code
     Response.Redirect(OpenIDParams.auth_uri
      + '?client_id=' + OpenIDParams.client_id
@@ -76,7 +79,9 @@ begin
      + '&redirect_uri=' + OpenIDParams.redirect_uri
      + '&state=' + Request.Session.Content.Values['state']
      );
-  end else begin
+  end
+  else
+  begin
     // auth code received, check state first
     if (Request.Params.Values['state'] <> Request.Session.Content.Values['state']) then
     begin
@@ -84,14 +89,11 @@ begin
       WriteLn('Invalid state parameter.');
       Exit;
     end;
+
     // exchange auth code for claims
     Params := TStringList.Create;
     IdHTTP := TIdHTTP.Create;
     try
-      IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(IdHTTP);
-      IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_1, sslvTLSv1_2];
-      IdHTTP.IOHandler := IOHandler;
-
       Params.Values['code'] := AuthCode;
       Params.Values['client_id'] := OpenIDParams.client_id;
       Params.Values['client_secret'] := OpenIDParams.client_secret;
