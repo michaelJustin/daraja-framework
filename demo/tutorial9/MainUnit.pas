@@ -37,7 +37,6 @@ implementation
 uses
   djServer,
   djWebAppContext,
-  djInterfaces,
   djNCSALogFilter,
   OpenIDHelper,
   RootResource,
