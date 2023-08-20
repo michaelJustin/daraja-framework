@@ -103,13 +103,16 @@ var
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCoderMIME, IdGlobal,
-  SysUtils,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   {$IFDEF FPC}
-  fpjson, jsonparser;
+  fpjson, jsonparser,
   {$ELSE}
-  JsonDataObjects;
+  JsonDataObjects,
   {$ENDIF}
+  SysUtils;
+
 
 function CreateState: string;
 var
