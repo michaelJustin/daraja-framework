@@ -45,8 +45,8 @@ type
 implementation
 
 uses
-  OpenIDHelper, BindingHelper,
-  IdHTTP, SysUtils, Classes;
+  OpenIDHelper,
+  SysUtils, Classes;
 
 { TRootResource }
 
@@ -58,28 +58,41 @@ var
   S: string;
   Claims: TIdTokenClaims;
 begin
-  if Request.Session.Content.Values['credentials'] = '' then begin
+  if Request.Session.Content.Values['credentials'] = '' then
+  begin
     Response.Session.Content.Values['state'] := CreateState;
     Response.Redirect(OpenIDParams.redirect_uri)
-  end else begin
+  end
+  else
+  begin
     IdTokenResponse := ToIdTokenResponse(Request.Session.Content.Values['credentials']);
-    if IdTokenResponse.expires_in <= 0 then begin // does this (<=0) happen?
+    if IdTokenResponse.expires_in <= 0 then
+    begin // does this (<=0) happen?
       Response.Redirect(OpenIDParams.redirect_uri)
-    end else begin
+    end
+    else
+    begin
       S := ReadJWTParts(IdTokenResponse.id_token);
       // WriteLn(S);
+
       Claims := ParseJWT(S);
+
       // WriteLn('sub:' + Claims.sub); // Benutzer ID (stabil!)
       // WriteLn('email:' + Claims.email);
       // WriteLn('email_verified:' + Claims.email_verified);
-      Request.Session.Content.Values['iss'] := Claims.iss;
-      Request.Session.Content.Values['sub'] := Claims.sub;
-      Request.Session.Content.Values['email'] := Claims.email;
-      Request.Session.Content.Values['name'] := Claims.name;
+      //Request.Session.Content.Values['iss'] := Claims.iss;
+      //Request.Session.Content.Values['sub'] := Claims.sub;
+      //Request.Session.Content.Values['email'] := Claims.email;
+      //Request.Session.Content.Values['name'] := Claims.name;
 
-      Response.ContentText := Bind(Config.GetContext.GetContextPath,
-        'index.html', Request.Session.Content);
-      Response.ContentType := 'text/html';
+      Response.ContentText := Format(
+         'Name: %s ' + #10
+       + 'E-Mail: %s ' + #10
+       + 'Issuer (OpenID Provider): %s' + #10
+       + 'Subject (User-ID): %s',
+       [Claims.name, Claims.email, Claims.iss, Claims.sub]);
+
+      Response.ContentType := 'text/plain';
       Response.CharSet := 'utf-8';
     end;
   end;
