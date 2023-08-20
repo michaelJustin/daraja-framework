@@ -61,7 +61,7 @@ begin
     try
       Server.Add(Context);;
 
-      LoadClientSecrets('client_secret.json');
+      LoadClientSecrets('client_secret.json'); // TODO make secrets config params
       Server.Start;
 
       ShellExecute(0, 'open', PChar(MY_HOST + '/index.html'), '', '', 0);
