@@ -79,7 +79,6 @@ begin
      + '&response_type=code'
      // The scope parameter must begin with the openid value and then include the profile value, the email value, or both.
      + '&scope=openid%20profile%20email'
-     // + '%20https://www.googleapis.com/auth/gmail.send'
      + '&redirect_uri=' + OpenIDParams.redirect_uri
      + '&state=' + Request.Session.Content.Values['state']
      );
