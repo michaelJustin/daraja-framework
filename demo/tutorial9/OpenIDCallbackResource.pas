@@ -28,6 +28,8 @@
 
 unit OpenIDCallbackResource;
 
+// note: this is unsupported example code
+
 interface
 
 uses

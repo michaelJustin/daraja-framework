@@ -28,6 +28,8 @@
 
 unit MainUnit;
 
+// note: this is unsupported example code
+
 interface
 
 procedure Demo;
@@ -44,29 +46,24 @@ uses
   ShellAPI,
   SysUtils;
 
-// requires OpenSSL libraries in application folder (32 bit or 64 bit!)
-
 procedure Demo;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('', True);
+  Context.AddWebComponent(TRootResource, '/index.html');
+  Context.AddWebComponent(TOpenIDCallbackResource, MY_CALLBACK_URL);
+  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+
   Server := TdjServer.Create(80);
   try
     try
-      Context := TdjWebAppContext.Create('', True);
-
-      Context.AddWebComponent(TRootResource, '/index.html');
-      Context.AddWebComponent(TOpenIDCallbackResource, MY_CALLBACK_URL);
-      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
-
       Server.Add(Context);;
 
       LoadClientSecrets('client_secret.json');
-
       Server.Start;
 
-      // launch browser
       ShellExecute(0, 'open', PChar(MY_HOST + '/index.html'), '', '', 0);
 
       WriteLn('Server is running, launching ' + MY_HOST + '/index.html ...');

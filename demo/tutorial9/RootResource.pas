@@ -28,6 +28,8 @@
 
 unit RootResource;
 
+// note: this is unsupported example code
+
 interface
 
 uses

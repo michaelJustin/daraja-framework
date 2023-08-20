@@ -88,13 +88,9 @@ type
   end;
 
 function CreateState: string;
-
 procedure LoadClientSecrets(Filename: string);
-
 function ToIdTokenResponse(const JSON: string): TIdTokenResponse;
-
 function ReadJWTParts(const JSON: string): string;
-
 function ParseJWT(const JSON: string): TIdTokenClaims;
 
 var
@@ -112,7 +108,6 @@ uses
   JsonDataObjects,
   {$ENDIF}
   SysUtils;
-
 
 function CreateState: string;
 var
@@ -134,7 +129,6 @@ begin
   try
     Data := GetJSON(S);
     C := TJSONObject(Data);
-
     W := C.Objects['web'];
 
     OpenIDParams.client_id := W.Get('client_id');
@@ -142,7 +136,6 @@ begin
     OpenIDParams.redirect_uri := MY_HOST + MY_CALLBACK_URL; // TODO compare ...
     OpenIDParams.auth_uri := W.Get('auth_uri');
     OpenIDParams.token_uri := W.Get('token_uri');
-
   finally
     S.Free;
   end;
@@ -260,7 +253,6 @@ begin
     S := SL[1];
     while Length(S) mod 4 <> 0 do S := S + '=';
     Result := TIdDecoderMIME.DecodeString(S, IndyTextEncoding_UTF8);
-
   finally
     SL.Free;
   end;
