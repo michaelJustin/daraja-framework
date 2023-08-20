@@ -43,9 +43,6 @@
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
-    <Target>
-      <Filename Value="OpenIDConnect"/>
-    </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy10\Lib\Core"/>
       <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy10\Lib\Core;..\..\..\Indy10\Lib\Protocols;..\..\..\Indy10\Lib\System"/>
