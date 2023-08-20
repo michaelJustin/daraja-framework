@@ -34,9 +34,6 @@ interface
 
 {$i IdCompilerDefines.inc}
 
-uses
-  Classes;
-
 const
   MY_HOST = 'http://localhost';
   MY_CALLBACK_URL = '/openidcallback';
@@ -107,7 +104,7 @@ uses
   {$ELSE}
   JsonDataObjects,
   {$ENDIF}
-  SysUtils;
+  Classes, SysUtils;
 
 function CreateState: string;
 var
