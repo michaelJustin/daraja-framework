@@ -34,15 +34,10 @@ interface
 
 {$i IdCompilerDefines.inc}
 
-const
-  MY_HOST = 'http://localhost';
-  MY_CALLBACK_URL = '/openidcallback';
-
 type
   TOpenIDParams = record
     client_id: string;
     client_secret: string;
-    redirect_uri: string;
     auth_uri: string;
     token_uri: string;
   end;
@@ -85,13 +80,10 @@ type
   end;
 
 function CreateState: string;
-procedure LoadClientSecrets(Filename: string);
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 function ToIdTokenResponse(const JSON: string): TIdTokenResponse;
 function ReadJWTParts(const JSON: string): string;
 function ParseJWT(const JSON: string): TIdTokenClaims;
-
-var
-  OpenIDParams: TOpenIDParams;
 
 implementation
 
@@ -115,7 +107,7 @@ begin
 end;
 
 {$IFDEF FPC}
-procedure LoadClientSecrets(Filename: string);
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 var
   S: TStream;
   Data: TJSONData;
@@ -128,19 +120,16 @@ begin
     C := TJSONObject(Data);
     W := C.Objects['web'];
 
-    OpenIDParams.client_id := W.Get('client_id');
-    OpenIDParams.client_secret := W.Get('client_secret');
-    OpenIDParams.redirect_uri := MY_HOST + MY_CALLBACK_URL; // TODO compare ...
-    OpenIDParams.auth_uri := W.Get('auth_uri');
-    OpenIDParams.token_uri := W.Get('token_uri');
+    Result.client_id := W.Get('client_id');
+    Result.client_secret := W.Get('client_secret');
+    Result.auth_uri := W.Get('auth_uri');
+    Result.token_uri := W.Get('token_uri');
   finally
     S.Free;
   end;
 end;
-
 {$ELSE}
-
-procedure LoadClientSecrets(Filename: string);
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 var
   C, web: TJsonObject;
 begin
@@ -148,18 +137,11 @@ begin
 
   web := C.O['web'];
 
-  OpenIDParams.client_id := web.S['client_id'];
-  OpenIDParams.client_secret := web.S['client_secret'];
-  OpenIDParams.redirect_uri := MY_HOST + MY_CALLBACK_URL; // TODO compare ...
-  OpenIDParams.auth_uri := web.S['auth_uri'];
-  OpenIDParams.token_uri := web.S['token_uri'];
-
-  (* if OpenIDParams.redirect_uri <> MY_HOST + MY_CALLBACK_URL then
-    raise Exception
-      .CreateFmt('Please enter the redirect URI %s in the API console!',
-        [MY_HOST + MY_CALLBACK_URL]); *)
+  Result.client_id := web.S['client_id'];
+  Result.client_secret := web.S['client_secret'];
+  Result.auth_uri := web.S['auth_uri'];
+  Result.token_uri := web.S['token_uri'];
 end;
-
 {$ENDIF}
 
 

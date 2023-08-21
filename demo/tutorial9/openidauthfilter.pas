@@ -41,17 +41,13 @@ uses
 
 type
 
-  { TFormAuthFilter }
+  { TOpenIDAuthFilter }
 
-  TFormAuthFilter = class(TdjWebFilter)
+  TOpenIDAuthFilter = class(TdjWebFilter)
+  private
+    RedirectURI: string;
   public
-  (**
-   * The doFilter method of the Filter is called by the container each time
-   * a request/response pair is passed through the chain due to a client
-   * request for a resource at the end of the chain.
-   * The FilterChain passed in to this method allows the Filter to pass on
-   * the request and response to the next entity in the chain.
-   *)
+    procedure Init(const Config: IWebFilterConfig); override;
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse;
       const Chain: IWebFilterChain); override;
   end;
@@ -61,9 +57,17 @@ implementation
 uses
   OpenIDHelper;
 
-{ TFormAuthFilter }
+{ TOpenIDAuthFilter }
 
-procedure TFormAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+procedure TOpenIDAuthFilter.Init(const Config: IWebFilterConfig);
+begin
+  inherited Init(Config);
+
+//  RedirectURI := Config.GetContext.GetInitParameter('redirect_uri');
+  RedirectURI := 'http://localhost/openidcallback';
+end;
+
+procedure TOpenIDAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 var
   Credentials: string;
@@ -75,14 +79,14 @@ begin
   if Credentials = '' then
   begin
     Response.Session.Content.Values['state'] := CreateState;
-    Response.Redirect(OpenIDParams.redirect_uri);
+    Response.Redirect(RedirectURI);
   end
   else
   begin
     IdTokenResponse := ToIdTokenResponse(Credentials);
     if IdTokenResponse.expires_in <= 0 then
     begin // does this (<=0) happen?
-      Response.Redirect(OpenIDParams.redirect_uri);
+      Response.Redirect(RedirectURI);
     end
     else
     begin

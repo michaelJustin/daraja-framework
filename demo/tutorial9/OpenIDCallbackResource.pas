@@ -33,21 +33,25 @@ unit OpenIDCallbackResource;
 interface
 
 uses
-  djWebComponent, djTypes;
+  OpenIDHelper,
+  djInterfaces, djWebComponent, djTypes;
 
 type
 
   { TOpenIDCallbackResource }
 
   TOpenIDCallbackResource = class(TdjWebComponent)
+  private
+    OpenIDParams: TOpenIDParams;
+    RedirectURI: string;
   public
+    procedure Init(const Config: IWebComponentConfig); override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 implementation
 
 uses
-  OpenIDHelper,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP,
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
@@ -55,14 +59,23 @@ uses
 
 { TOpenIDCallbackResource }
 
-// https://developers.google.com/identity/protocols/OpenIDConnect
+procedure TOpenIDCallbackResource.Init(const Config: IWebComponentConfig);
+var
+  ClientSecretsFilename: string;
+begin
+  inherited Init(Config);
+
+  // RedirectURI := Config.GetContext.GetInitParameter('redirect_uri');
+  RedirectURI := 'http://localhost/openidcallback';
+  // ClientSecretsFilename := Config.GetContext.GetInitParameter('client_secret_filename');
+  ClientSecretsFilename := 'client_secret.json';
+  OpenIDParams := LoadClientSecrets(ClientSecretsFilename);
+end;
 
 // https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse
+// TODO: "When using the Authorization Code Flow, the Client MUST validate the response according to RFC 6749, especially Sections 4.1.2 and 10.12."
 
-// "When using the Authorization Code Flow, the Client MUST validate the response according to RFC 6749, especially Sections 4.1.2 and 10.12."
-
-procedure TOpenIDCallbackResource.OnGet(Request: TdjRequest;
-  Response: TdjResponse);
+procedure TOpenIDCallbackResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 var
   AuthCode: string;
   IdHTTP: TIdHTTP;
@@ -79,7 +92,7 @@ begin
      + '&response_type=code'
      // The scope parameter must begin with the openid value and then include the profile value, the email value, or both.
      + '&scope=openid%20profile%20email'
-     + '&redirect_uri=' + OpenIDParams.redirect_uri
+     + '&redirect_uri=' + RedirectURI
      + '&state=' + Request.Session.Content.Values['state']
      );
   end
@@ -100,13 +113,11 @@ begin
       Params.Values['code'] := AuthCode;
       Params.Values['client_id'] := OpenIDParams.client_id;
       Params.Values['client_secret'] := OpenIDParams.client_secret;
-      Params.Values['redirect_uri'] := OpenIDParams.redirect_uri;
+      Params.Values['redirect_uri'] := RedirectURI;
       Params.Values['grant_type'] := 'authorization_code';
 
       ResponseText := IdHTTP.Post(OpenIDParams.token_uri, Params);
-
       Response.Session.Content.Values['credentials'] := ResponseText;
-
       Response.Redirect('/index.html');
     finally
       IdHTTP.Free;

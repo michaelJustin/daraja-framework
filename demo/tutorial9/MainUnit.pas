@@ -40,7 +40,6 @@ uses
   djServer,
   djWebAppContext,
   djNCSALogFilter,
-  OpenIDHelper,
   RootResource,
   OpenIDAuthFilter,
   OpenIDCallbackResource,
@@ -55,12 +54,15 @@ begin
   Context := TdjWebAppContext.Create('', True);
 
   Context.AddWebComponent(TRootResource, '/index.html');
-  Context.AddWebComponent(TOpenIDCallbackResource, MY_CALLBACK_URL);
+  Context.AddWebComponent(TOpenIDCallbackResource, '/openidcallback');
 
-  Context.AddFilterWithMapping(TFormAuthFilter, '*.html');
-  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+  Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html');
+  // Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
-  LoadClientSecrets('client_secret.json'); // TODO make secrets config params
+  // Must match OAuth 2.0 settings in Google Cloud project
+  // Context.SetInitParameter('redirect_uri', 'http://localhost/openidcallback');
+  // Must point to file downloaded from Google Cloud project
+  // Context.SetInitParameter('client_secret_filename', 'client_secret.json');
 
   Server := TdjServer.Create(80);
   try
@@ -68,9 +70,9 @@ begin
       Server.Add(Context);
       Server.Start;
 
-      ShellExecute(0, 'open', PChar(MY_HOST + '/index.html'), '', '', 0);
+      ShellExecute(0, 'open', PChar('http://localhost/index.html'), '', '', 0);
 
-      WriteLn('Server is running, launching ' + MY_HOST + '/index.html ...');
+      WriteLn('Server is running, launching http://localhost/index.html ...');
       WriteLn('Hit any key to terminate.');
     except
       on E: Exception do WriteLn(E.Message);
