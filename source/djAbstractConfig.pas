@@ -39,7 +39,7 @@ type
   (**
    * Generic configuration.
    *)
-  TdjAbstractConfig = class(TInterfacedObject)
+  TdjAbstractConfig = class(TInterfacedObject, IContextAware)
   protected
     (**
      * Initialization parameters.

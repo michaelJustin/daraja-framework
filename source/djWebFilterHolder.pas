@@ -33,7 +33,7 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,
+  djWebFilter, djGenericHolder, djServerContext,
   djTypes, djInterfaces,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
@@ -52,7 +52,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FWebFilterConfig: TdjWebFilterConfig;
+    FWebFilterConfig: IWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
@@ -100,6 +100,7 @@ type
 implementation
 
 uses
+  djWebFilterConfig,
   SysUtils;
 
 { TdjWebFilterHolder }
@@ -110,11 +111,9 @@ begin
   inherited Create(WebFilterClass);
 
   if Assigned(Config) then
-  begin
-    FWebFilterConfig := TdjWebFilterConfig.CreateFrom(Config);
-  end else begin
-    FWebFilterConfig := TdjWebFilterConfig.Create; // error !
-  end;
+    FWebFilterConfig := Config
+  else
+    FWebFilterConfig := TdjWebFilterConfig.Create;
 
   FClass := WebFilterClass;
 
@@ -129,16 +128,15 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-  FWebFilterConfig.Free;
   inherited;
 end;
 
 procedure TdjWebFilterHolder.SetContext(const Context: IContext);
 begin
   Assert(Context <> nil);
-  Assert(FWebFilterConfig.GetContext = nil);
+  Assert(FWebFilterConfig <> nil);
 
-  FWebFilterConfig.SetContext(Context);
+  (FWebFilterConfig as IContextAware).SetContext(Context);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
@@ -168,7 +166,7 @@ begin
   CheckStarted;
 
   Assert(FWebFilterConfig <> nil);
-  // Assert(FWebFilterConfig.GetContext <> nil);
+  Assert(FWebFilterConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;
