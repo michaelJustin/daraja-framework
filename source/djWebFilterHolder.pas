@@ -33,7 +33,7 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebFilter, djGenericHolder, djServerContext,
+  djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,
   djTypes, djInterfaces,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
@@ -52,7 +52,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FWebFilterConfig: IWebFilterConfig;
+    FWebFilterConfig: TdjWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
@@ -66,7 +66,7 @@ type
     (**
      * Set the context.
      *
-     * \param Context the Web Component context
+     * \param Context the Web Filter context
      *)
     procedure SetContext(const Context: IContext);
     (**
@@ -100,7 +100,6 @@ type
 implementation
 
 uses
-  djWebFilterConfig,
   SysUtils;
 
 { TdjWebFilterHolder }
@@ -112,9 +111,9 @@ begin
 
   if Assigned(Config) then
   begin
-    FWebFilterConfig := Config;
+    FWebFilterConfig := TdjWebFilterConfig.CreateFrom(Config);
   end else begin
-    FWebFilterConfig := TdjWebFilterConfig.Create;
+    FWebFilterConfig := TdjWebFilterConfig.Create; // error !
   end;
 
   FClass := WebFilterClass;
@@ -130,29 +129,25 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-
+  FWebFilterConfig.Free;
   inherited;
 end;
 
 procedure TdjWebFilterHolder.SetContext(const Context: IContext);
-var
-  TmpWebFilterConfig: TdjWebFilterConfig;
 begin
   Assert(Context <> nil);
   Assert(FWebFilterConfig.GetContext = nil);
 
-  TmpWebFilterConfig := TdjWebFilterConfig.CreateFrom(Self.FWebFilterConfig);
-  TmpWebFilterConfig.SetContext(Context);
-  Self.FWebFilterConfig := TmpWebFilterConfig;
+  FWebFilterConfig.SetContext(Context);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
 begin
   {$IFDEF DARAJA_LOGGING}
-    if Logger.IsTraceEnabled then
-    begin
-      Logger.Trace(S);
-    end;
+  if Logger.IsTraceEnabled then
+  begin
+    Logger.Trace(S);
+  end;
   {$ENDIF DARAJA_LOGGING}
 end;
 
