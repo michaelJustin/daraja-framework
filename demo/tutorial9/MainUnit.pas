@@ -37,15 +37,12 @@ procedure Demo;
 implementation
 
 uses
-  djServer,
-  djWebAppContext,
-  djNCSALogFilter,
-  djWebComponentHolder,
   RootResource,
   OpenIDAuthFilter,
   OpenIDCallbackResource,
-  ShellAPI,
-  SysUtils;
+  djServer, djWebAppContext, djNCSALogFilter, djWebComponentHolder,
+  djWebFilterConfig, djInterfaces,
+  ShellAPI, SysUtils;
 
 procedure Demo;
 const
@@ -55,19 +52,25 @@ const
   SECRET_FILE = 'client_secret.json';
 var
   Context: TdjWebAppContext;
-  Holder: TdjWebComponentHolder;
+  OIDCCallbackHolder: TdjWebComponentHolder;
   Server: TdjServer;
+  function BuildFilterConfig: IWebFilterConfig;
+  var
+    Cfg: TdjWebFilterConfig;
+  begin
+    Cfg := TdjWebFilterConfig.Create;
+    Cfg.Add('RedirectURI', REDIRECT_URI);
+    Result := Cfg;
+  end;
 begin
+  OIDCCallbackHolder := TdjWebComponentHolder.Create(TOpenIDCallbackResource);
+  OIDCCallbackHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
+  OIDCCallbackHolder.SetInitParameter('secret.file', SECRET_FILE);
+
   Context := TdjWebAppContext.Create('', True);
   Context.AddWebComponent(TRootResource, '/index.html');
-
-  Holder := TdjWebComponentHolder.Create(TOpenIDCallbackResource);
-
-  Holder.SetInitParameter('RedirectURI', REDIRECT_URI);
-  Holder.SetInitParameter('secret.file', SECRET_FILE);
-  Context.AddWebComponent(Holder, '/openidcallback');
-
-  Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html');
+  Context.AddWebComponent(OIDCCallbackHolder, '/openidcallback');
+  Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html', BuildFilterConfig);
   Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);

@@ -54,9 +54,11 @@ uses
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText := Format('Name: %s ' + #10 + 'E-Mail: %s ' + #10 +
-    'Issuer (OpenID Provider): %s' + #10 + 'Subject (User-ID): %s',
+    'Issuer (OpenID Provider): %s' + #10 + 'Subject (User-ID): %s' + #10 +
+    'Access token hash: %s',
     [Request.Session.Content.Values['name'], Request.Session.Content.Values['email'],
-    Request.Session.Content.Values['iss'], Request.Session.Content.Values['sub']]);
+    Request.Session.Content.Values['iss'], Request.Session.Content.Values['sub'],
+    Request.Session.Content.Values['at_hash']]);
 
   Response.ContentType := 'text/plain';
   Response.CharSet := 'utf-8';

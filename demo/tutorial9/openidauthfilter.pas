@@ -61,10 +61,7 @@ uses
 
 procedure TOpenIDAuthFilter.Init(const Config: IWebFilterConfig);
 begin
-  inherited Init(Config);
-
-//  RedirectURI := Config.GetContext.GetInitParameter('redirect_uri');
-  RedirectURI := 'http://localhost/openidcallback';
+  RedirectURI := Config.GetInitParameter('RedirectURI');
 end;
 
 procedure TOpenIDAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -95,9 +92,10 @@ begin
 
       // Request.Session.Content.Objects['claims'] := Claims; // todo to class
       Request.Session.Content.Values['iss'] := Claims.iss;
-      Request.Session.Content.Values['sub'] := Claims.sub;
-      Request.Session.Content.Values['email'] := Claims.email;
+      Request.Session.Content.Values['sub'] := '123456789012 (see source code)'; // Claims.sub;
+      Request.Session.Content.Values['email'] := 'mike@example.com'; // Claims.email;
       Request.Session.Content.Values['name'] := Claims.name;
+      Request.Session.Content.Values['at_hash'] := Claims.at_hash;
 
       Chain.DoFilter(Context, Request, Response); // pass
     end;

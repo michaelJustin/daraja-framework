@@ -74,6 +74,7 @@ type
     aud: string;
     iat: Integer;
     exp: Integer;
+    at_hash: string;
     name: string;
     email: string;
     email_verified: string;
@@ -175,6 +176,7 @@ begin
   Result.aud := C.Get('aud');
   Result.iat := C.Get('iat');
   Result.exp := C.Get('exp');
+  Result.at_hash := C.Get('at_hash');
   Result.email := C.Get('email');
   Result.email_verified := C.Get('email_verified');
   Result.name := C.Get('name');
@@ -206,6 +208,7 @@ begin
   Result.aud := C.S['aud'];
   Result.iat := C.I['iat'];
   Result.exp := C.I['exp'];
+  Result.at_hash := C.S['at_hash'];
   Result.email := C.S['email'];
   Result.email_verified := C.S['email_verified'];
   Result.name := C.S['name'];
