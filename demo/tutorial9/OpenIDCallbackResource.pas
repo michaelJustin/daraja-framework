@@ -60,16 +60,11 @@ uses
 { TOpenIDCallbackResource }
 
 procedure TOpenIDCallbackResource.Init(const Config: IWebComponentConfig);
-var
-  ClientSecretsFilename: string;
 begin
   inherited Init(Config);
 
-  // RedirectURI := Config.GetContext.GetInitParameter('redirect_uri');
-  RedirectURI := 'http://localhost/openidcallback';
-  // ClientSecretsFilename := Config.GetContext.GetInitParameter('client_secret_filename');
-  ClientSecretsFilename := 'client_secret.json';
-  OpenIDParams := LoadClientSecrets(ClientSecretsFilename);
+  RedirectURI := Config.GetInitParameter('RedirectURI');
+  OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
 end;
 
 // https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse

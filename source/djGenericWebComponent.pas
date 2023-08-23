@@ -126,6 +126,7 @@ type
      * the component has been initialized.
      *)
     function GetWebComponentConfig: IWebComponentConfig;
+    // todo move to private ?
 
     // properties
 

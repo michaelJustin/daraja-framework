@@ -40,6 +40,7 @@ uses
   djServer,
   djWebAppContext,
   djNCSALogFilter,
+  djWebComponentHolder,
   RootResource,
   OpenIDAuthFilter,
   OpenIDCallbackResource,
@@ -47,22 +48,27 @@ uses
   SysUtils;
 
 procedure Demo;
+const
+  // URI must match OAuth 2.0 settings in Google Cloud project
+  REDIRECT_URI = 'http://localhost/openidcallback';
+  // Must point to file downloaded from Google Cloud project
+  SECRET_FILE = 'client_secret.json';
 var
-  Server: TdjServer;
   Context: TdjWebAppContext;
+  Holder: TdjWebComponentHolder;
+  Server: TdjServer;
 begin
   Context := TdjWebAppContext.Create('', True);
-
   Context.AddWebComponent(TRootResource, '/index.html');
-  Context.AddWebComponent(TOpenIDCallbackResource, '/openidcallback');
+
+  Holder := TdjWebComponentHolder.Create(TOpenIDCallbackResource);
+
+  Holder.SetInitParameter('RedirectURI', REDIRECT_URI);
+  Holder.SetInitParameter('secret.file', SECRET_FILE);
+  Context.AddWebComponent(Holder, '/openidcallback');
 
   Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html');
-  // Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
-
-  // Must match OAuth 2.0 settings in Google Cloud project
-  // Context.SetInitParameter('redirect_uri', 'http://localhost/openidcallback');
-  // Must point to file downloaded from Google Cloud project
-  // Context.SetInitParameter('client_secret_filename', 'client_secret.json');
+  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);
   try
