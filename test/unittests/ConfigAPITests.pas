@@ -1171,8 +1171,6 @@ end;
 { TTestFilterWithInit }
 
 procedure TTestFilterWithInit.Init(const Config: IWebFilterConfig);
-var
-  ContextConfig: IContextConfig;
 begin
   FInitParam := Config.GetInitParameter('key');
 end;
