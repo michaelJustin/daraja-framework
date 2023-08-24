@@ -167,6 +167,11 @@ type
     function GetContext: IContext; // TODO
   end;
 
+  IContextAware = interface
+    ['{A52F8EA9-8A62-4B6F-A7BD-46C9C51B3EAA}']
+    procedure SetContext(const Context: IContext);
+  end;
+
   (**
    * \interface IWebFilter
    *

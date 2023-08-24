@@ -60,6 +60,9 @@ type
     //
     procedure ConfigAbsolutePath;
 
+    // init method
+    procedure TestInitCanReadWebComponentContext;
+
     // exceptions
     procedure TestExceptionInInitStopsComponent;
     procedure TestExceptionInServiceReturns500;
@@ -73,7 +76,6 @@ type
 
     // web component tests
     procedure TestNoMethodReturns405;
-
     procedure TestPOSTMethodResponse;
 
     // Web Component init parameter
@@ -109,6 +111,7 @@ type
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
     procedure TestFilterWithInit;
+    procedure TestFilterInitCanReadContextConfiguration;
     //procedure TestOneFilterAndTwoWebComponents;
 
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
@@ -306,6 +309,50 @@ begin
 
     CheckGETResponseEquals('example', 'http://[::1]/example/index.html');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+// TCmpWithInit -----------------------------------------------------
+type
+  TCmpWithInit = class(TdjWebComponent)
+  private
+    StaticContent: string;
+  public
+    procedure Init(const Config: IWebComponentConfig); override;
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure TCmpWithInit.Init(const Config: IWebComponentConfig);
+begin
+  inherited Init(Config);
+
+  StaticContent := 'from init';
+
+  if Config <> nil then StaticContent := StaticContent + ' 1';
+  if Config.GetContext <> nil then StaticContent := StaticContent + ' 2';
+  if Config.GetContext.GetContextConfig <> nil then StaticContent := StaticContent + ' 3';
+
+end;
+
+procedure TCmpWithInit.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := StaticContent;
+end;
+
+procedure TAPIConfigTests.TestInitCanReadWebComponentContext;
+var
+  Context: TdjWebAppContext;
+  Server: TdjServer;
+begin
+  Context := TdjWebAppContext.Create('');
+  Context.AddWebComponent(TCmpWithInit, '/');
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('from init 1 2 3', '/');
   finally
     Server.Free;
   end;
@@ -1068,6 +1115,17 @@ type
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
 
+  { TFilterWithInitReadsContextConfiguration }
+
+  TFilterWithInitReadsContextConfiguration = class(TdjWebFilter)
+  private
+    StaticContent: string;
+  public
+    procedure Init(const Config: IWebFilterConfig); override;
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse; const Chain: IWebFilterChain); override;
+  end;
+
   { TTestFilterA }
 
   TTestFilterA = class(TdjWebFilter)
@@ -1083,6 +1141,23 @@ type
     procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
+
+procedure TFilterWithInitReadsContextConfiguration.Init(const Config: IWebFilterConfig);
+begin
+  StaticContent := 'from filter';
+
+  if Config <> nil then StaticContent := StaticContent + ' 1';
+  if Config.GetContext <> nil then StaticContent := StaticContent + ' 2';
+  if Config.GetContext.GetContextConfig <> nil then StaticContent := StaticContent + ' 3';
+end;
+
+procedure TFilterWithInitReadsContextConfiguration.DoFilter(
+  Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse;
+  const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+  Response.ContentText := StaticContent;
+end;
 
 { TTestFilter }
 
@@ -1241,6 +1316,7 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filter');
   Context.AddWebFilter(TTestFilterWithInit, TExamplePage, CreateWebFilterConfig);
+  Context.SetInitParameter('a', 'b');
 
   // run
   Server := TdjServer.Create;
@@ -1248,6 +1324,28 @@ begin
     Server.Add(Context);
     Server.Start;
     CheckGETResponseEquals('example, Param key=Hello, World!', '/web/page.filter');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestFilterInitCanReadContextConfiguration;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.filter');
+  Context.AddWebFilter(TFilterWithInitReadsContextConfiguration, TExamplePage);
+  Context.SetInitParameter('a', 'b');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('from init 1 2 3', '/web/page.filter');
   finally
     Server.Free;
   end;
