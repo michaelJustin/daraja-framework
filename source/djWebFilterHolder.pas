@@ -69,6 +69,15 @@ type
      * \param Context the Web Component context
      *)
     procedure SetContext(const Context: IContext);
+
+    (**
+     * Set initialization parameter.
+     *
+     * \param Key init parameter name
+     * \param Value init parameter value
+     *)
+    procedure SetInitParameter(const Key: string; const Value: string);
+
     (**
      * Start the filter.
      *)
@@ -144,6 +153,12 @@ begin
   TmpWebFilterConfig := TdjWebFilterConfig.CreateFrom(Self.FWebFilterConfig);
   TmpWebFilterConfig.SetContext(Context);
   Self.FWebFilterConfig := TmpWebFilterConfig;
+end;
+
+procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
+  const Value: string);
+begin
+  FConfig.Add(Key, Value);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
