@@ -34,18 +34,10 @@ interface
 
 {$i IdCompilerDefines.inc}
 
-uses
-  Classes;
-
-const
-  MY_HOST = 'http://localhost';
-  MY_CALLBACK_URL = '/openidcallback';
-
 type
   TOpenIDParams = record
     client_id: string;
     client_secret: string;
-    redirect_uri: string;
     auth_uri: string;
     token_uri: string;
   end;
@@ -82,34 +74,30 @@ type
     aud: string;
     iat: Integer;
     exp: Integer;
+    at_hash: string;
     name: string;
     email: string;
     email_verified: string;
   end;
 
 function CreateState: string;
-
-procedure LoadClientSecrets(Filename: string);
-
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 function ToIdTokenResponse(const JSON: string): TIdTokenResponse;
-
 function ReadJWTParts(const JSON: string): string;
-
 function ParseJWT(const JSON: string): TIdTokenClaims;
-
-var
-  OpenIDParams: TOpenIDParams;
 
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdCoderMIME, IdGlobal,
-  SysUtils,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   {$IFDEF FPC}
-  fpjson, jsonparser;
+  fpjson, jsonparser,
   {$ELSE}
-  JsonDataObjects;
+  JsonDataObjects,
   {$ENDIF}
+  Classes, SysUtils;
 
 function CreateState: string;
 var
@@ -120,7 +108,7 @@ begin
 end;
 
 {$IFDEF FPC}
-procedure LoadClientSecrets(Filename: string);
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 var
   S: TStream;
   Data: TJSONData;
@@ -131,23 +119,18 @@ begin
   try
     Data := GetJSON(S);
     C := TJSONObject(Data);
-
     W := C.Objects['web'];
 
-    OpenIDParams.client_id := W.Get('client_id');
-    OpenIDParams.client_secret := W.Get('client_secret');
-    OpenIDParams.redirect_uri := MY_HOST + MY_CALLBACK_URL; // TODO compare ...
-    OpenIDParams.auth_uri := W.Get('auth_uri');
-    OpenIDParams.token_uri := W.Get('token_uri');
-
+    Result.client_id := W.Get('client_id');
+    Result.client_secret := W.Get('client_secret');
+    Result.auth_uri := W.Get('auth_uri');
+    Result.token_uri := W.Get('token_uri');
   finally
     S.Free;
   end;
 end;
-
 {$ELSE}
-
-procedure LoadClientSecrets(Filename: string);
+function LoadClientSecrets(const Filename: string): TOpenIDParams;
 var
   C, web: TJsonObject;
 begin
@@ -155,18 +138,11 @@ begin
 
   web := C.O['web'];
 
-  OpenIDParams.client_id := web.S['client_id'];
-  OpenIDParams.client_secret := web.S['client_secret'];
-  OpenIDParams.redirect_uri := MY_HOST + MY_CALLBACK_URL; // TODO compare ...
-  OpenIDParams.auth_uri := web.S['auth_uri'];
-  OpenIDParams.token_uri := web.S['token_uri'];
-
-  (* if OpenIDParams.redirect_uri <> MY_HOST + MY_CALLBACK_URL then
-    raise Exception
-      .CreateFmt('Please enter the redirect URI %s in the API console!',
-        [MY_HOST + MY_CALLBACK_URL]); *)
+  Result.client_id := web.S['client_id'];
+  Result.client_secret := web.S['client_secret'];
+  Result.auth_uri := web.S['auth_uri'];
+  Result.token_uri := web.S['token_uri'];
 end;
-
 {$ENDIF}
 
 
@@ -200,6 +176,7 @@ begin
   Result.aud := C.Get('aud');
   Result.iat := C.Get('iat');
   Result.exp := C.Get('exp');
+  Result.at_hash := C.Get('at_hash');
   Result.email := C.Get('email');
   Result.email_verified := C.Get('email_verified');
   Result.name := C.Get('name');
@@ -231,6 +208,7 @@ begin
   Result.aud := C.S['aud'];
   Result.iat := C.I['iat'];
   Result.exp := C.I['exp'];
+  Result.at_hash := C.S['at_hash'];
   Result.email := C.S['email'];
   Result.email_verified := C.S['email_verified'];
   Result.name := C.S['name'];
@@ -257,7 +235,6 @@ begin
     S := SL[1];
     while Length(S) mod 4 <> 0 do S := S + '=';
     Result := TIdDecoderMIME.DecodeString(S, IndyTextEncoding_UTF8);
-
   finally
     SL.Free;
   end;

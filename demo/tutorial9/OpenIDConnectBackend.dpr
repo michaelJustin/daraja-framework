@@ -32,7 +32,6 @@ program OpenIDConnectBackend;
 
 uses
   MainUnit,
-  BindingHelper in 'BindingHelper.pas',
   OpenIDCallbackResource in 'OpenIDCallbackResource.pas',
   OpenIDHelper in 'OpenIDHelper.pas',
   RootResource in 'RootResource.pas';

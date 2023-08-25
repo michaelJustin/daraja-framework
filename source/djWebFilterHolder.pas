@@ -76,7 +76,7 @@ type
      * \param Key init parameter name
      * \param Value init parameter value
      *)
-    procedure SetInitParameter(const Key: string; const Value: string);
+    // procedure SetInitParameter(const Key: string; const Value: string);
 
     (**
      * Start the filter.
@@ -148,11 +148,12 @@ begin
   (FWebFilterConfig as IContextAware).SetContext(Context);
 end;
 
-procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
+(* TODO procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
   const Value: string);
 begin
   FConfig.Add(Key, Value);
 end;
+*)
 
 procedure TdjWebFilterHolder.Trace(const S: string);
 begin
@@ -181,7 +182,7 @@ begin
   CheckStarted;
 
   Assert(FWebFilterConfig <> nil);
-  Assert(FWebFilterConfig.GetContext <> nil);
+  // Assert(FWebFilterConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;

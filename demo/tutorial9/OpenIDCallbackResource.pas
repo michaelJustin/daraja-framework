@@ -28,55 +28,71 @@
 
 unit OpenIDCallbackResource;
 
+// note: this is unsupported example code
+
 interface
 
 uses
-  djWebComponent, djTypes;
+  OpenIDHelper,
+  djInterfaces, djWebComponent, djTypes;
 
 type
 
   { TOpenIDCallbackResource }
 
   TOpenIDCallbackResource = class(TdjWebComponent)
+  private
+    OpenIDParams: TOpenIDParams;
+    RedirectURI: string;
   public
+    procedure Init(const Config: IWebComponentConfig); override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 implementation
 
 uses
-  OpenIDHelper,
-  IdHTTP, IdSSLOpenSSL, SysUtils, Classes;
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
+  IdHTTP,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  SysUtils, Classes;
 
 { TOpenIDCallbackResource }
 
-// https://developers.google.com/identity/protocols/OpenIDConnect
+procedure TOpenIDCallbackResource.Init(const Config: IWebComponentConfig);
+begin
+  inherited Init(Config);
+
+  RedirectURI := Config.GetInitParameter('RedirectURI');
+  OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
+end;
 
 // https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse
+// TODO: "When using the Authorization Code Flow, the Client MUST validate the response according to RFC 6749, especially Sections 4.1.2 and 10.12."
 
-// "When using the Authorization Code Flow, the Client MUST validate the response according to RFC 6749, especially Sections 4.1.2 and 10.12."
-
-procedure TOpenIDCallbackResource.OnGet(Request: TdjRequest;
-  Response: TdjResponse);
+procedure TOpenIDCallbackResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 var
   AuthCode: string;
   IdHTTP: TIdHTTP;
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
   Params: TStrings;
   ResponseText: string;
 begin
   AuthCode := Request.Params.Values['code'];
 
-  if AuthCode = '' then begin
+  if AuthCode = '' then
+  begin
     // get an auth code
     Response.Redirect(OpenIDParams.auth_uri
      + '?client_id=' + OpenIDParams.client_id
      + '&response_type=code'
+     // The scope parameter must begin with the openid value and then include the profile value, the email value, or both.
      + '&scope=openid%20profile%20email'
-     + '&redirect_uri=' + OpenIDParams.redirect_uri
+     + '&redirect_uri=' + RedirectURI
      + '&state=' + Request.Session.Content.Values['state']
      );
-  end else begin
+  end
+  else
+  begin
     // auth code received, check state first
     if (Request.Params.Values['state'] <> Request.Session.Content.Values['state']) then
     begin
@@ -84,24 +100,19 @@ begin
       WriteLn('Invalid state parameter.');
       Exit;
     end;
+
     // exchange auth code for claims
     Params := TStringList.Create;
     IdHTTP := TIdHTTP.Create;
     try
-      IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(IdHTTP);
-      IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_1, sslvTLSv1_2];
-      IdHTTP.IOHandler := IOHandler;
-
       Params.Values['code'] := AuthCode;
       Params.Values['client_id'] := OpenIDParams.client_id;
       Params.Values['client_secret'] := OpenIDParams.client_secret;
-      Params.Values['redirect_uri'] := OpenIDParams.redirect_uri;
+      Params.Values['redirect_uri'] := RedirectURI;
       Params.Values['grant_type'] := 'authorization_code';
 
       ResponseText := IdHTTP.Post(OpenIDParams.token_uri, Params);
-
       Response.Session.Content.Values['credentials'] := ResponseText;
-
       Response.Redirect('/index.html');
     finally
       IdHTTP.Free;

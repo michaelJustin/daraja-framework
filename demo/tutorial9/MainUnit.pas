@@ -28,6 +28,8 @@
 
 unit MainUnit;
 
+// note: this is unsupported example code
+
 interface
 
 procedure Demo;
@@ -35,42 +37,51 @@ procedure Demo;
 implementation
 
 uses
-  djServer,
-  djWebAppContext,
-  djInterfaces,
-  djNCSALogFilter,
-  OpenIDHelper,
   RootResource,
+  OpenIDAuthFilter,
   OpenIDCallbackResource,
-  ShellAPI,
-  SysUtils;
-
-// requires OpenSSL libraries in application folder (32 bit or 64 bit!)
+  djServer, djWebAppContext, djNCSALogFilter, djWebComponentHolder,
+  djWebFilterConfig, djInterfaces,
+  ShellAPI, SysUtils;
 
 procedure Demo;
+const
+  // URI must match OAuth 2.0 settings in Google Cloud project
+  REDIRECT_URI = 'http://localhost/openidcallback';
+  // Must point to file downloaded from Google Cloud project
+  SECRET_FILE = 'client_secret.json';
 var
-  Server: TdjServer;
   Context: TdjWebAppContext;
+  OIDCCallbackHolder: TdjWebComponentHolder;
+  Server: TdjServer;
+  function BuildFilterConfig: IWebFilterConfig;
+  var
+    Cfg: TdjWebFilterConfig;
+  begin
+    Cfg := TdjWebFilterConfig.Create;
+    Cfg.Add('RedirectURI', REDIRECT_URI);
+    Result := Cfg;
+  end;
 begin
+  OIDCCallbackHolder := TdjWebComponentHolder.Create(TOpenIDCallbackResource);
+  OIDCCallbackHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
+  OIDCCallbackHolder.SetInitParameter('secret.file', SECRET_FILE);
+
+  Context := TdjWebAppContext.Create('', True);
+  Context.AddWebComponent(TRootResource, '/index.html');
+  Context.AddWebComponent(OIDCCallbackHolder, '/openidcallback');
+  Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html', BuildFilterConfig);
+  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+
   Server := TdjServer.Create(80);
   try
     try
-      Context := TdjWebAppContext.Create('', True);
-
-      Context.AddWebComponent(TRootResource, '/index.html');
-      Context.AddWebComponent(TOpenIDCallbackResource, MY_CALLBACK_URL);
-      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
-
-      Server.Add(Context);;
-
-      LoadClientSecrets('client_secret.json');
-
+      Server.Add(Context);
       Server.Start;
 
-      // launch browser
-      ShellExecute(0, 'open', PChar(MY_HOST + '/index.html'), '', '', 0);
+      ShellExecute(0, 'open', PChar('http://localhost/index.html'), '', '', 0);
 
-      WriteLn('Server is running, launching ' + MY_HOST + '/index.html ...');
+      WriteLn('Server is running, launching http://localhost/index.html ...');
       WriteLn('Hit any key to terminate.');
     except
       on E: Exception do WriteLn(E.Message);

@@ -5,6 +5,9 @@
     <PathDelim Value="\"/>
     <General>
       <Flags>
+        <MainUnitHasCreateFormStatements Value="False"/>
+        <MainUnitHasTitleStatement Value="False"/>
+        <MainUnitHasScaledStatement Value="False"/>
         <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
@@ -48,6 +51,7 @@
     <Parsing>
       <SyntaxOptions>
         <SyntaxMode Value="Delphi"/>
+        <IncludeAssertionCode Value="True"/>
       </SyntaxOptions>
     </Parsing>
     <Linking>
@@ -60,6 +64,11 @@
         </Win32>
       </Options>
     </Linking>
+    <Other>
+      <CompilerMessages>
+        <IgnoredMessages idx6058="True" idx5091="True" idx5071="True" idx5062="True" idx5060="True" idx5057="True" idx5024="True" idx4046="True" idx3124="True" idx3123="True"/>
+      </CompilerMessages>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="12">
