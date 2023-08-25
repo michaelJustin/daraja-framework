@@ -66,9 +66,18 @@ type
     (**
      * Set the context.
      *
-     * \param Context the Web Component context
+     * \param Context the Web Filter context
      *)
     procedure SetContext(const Context: IContext);
+
+    (**
+     * Set initialization parameter.
+     *
+     * \param Key init parameter name
+     * \param Value init parameter value
+     *)
+    procedure SetInitParameter(const Key: string; const Value: string);
+
     (**
      * Start the filter.
      *)
@@ -111,11 +120,9 @@ begin
   inherited Create(WebFilterClass);
 
   if Assigned(Config) then
-  begin
-    FWebFilterConfig := Config;
-  end else begin
+    FWebFilterConfig := Config
+  else
     FWebFilterConfig := TdjWebFilterConfig.Create;
-  end;
 
   FClass := WebFilterClass;
 
@@ -130,29 +137,30 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-
   inherited;
 end;
 
 procedure TdjWebFilterHolder.SetContext(const Context: IContext);
-var
-  TmpWebFilterConfig: TdjWebFilterConfig;
 begin
   Assert(Context <> nil);
-  Assert(FWebFilterConfig.GetContext = nil);
+  Assert(FWebFilterConfig <> nil);
 
-  TmpWebFilterConfig := TdjWebFilterConfig.CreateFrom(Self.FWebFilterConfig);
-  TmpWebFilterConfig.SetContext(Context);
-  Self.FWebFilterConfig := TmpWebFilterConfig;
+  (FWebFilterConfig as IContextAware).SetContext(Context);
+end;
+
+procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
+  const Value: string);
+begin
+  FConfig.Add(Key, Value);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);
 begin
   {$IFDEF DARAJA_LOGGING}
-    if Logger.IsTraceEnabled then
-    begin
-      Logger.Trace(S);
-    end;
+  if Logger.IsTraceEnabled then
+  begin
+    Logger.Trace(S);
+  end;
   {$ENDIF DARAJA_LOGGING}
 end;
 
@@ -173,7 +181,7 @@ begin
   CheckStarted;
 
   Assert(FWebFilterConfig <> nil);
-  // Assert(FWebFilterConfig.GetContext <> nil);
+  Assert(FWebFilterConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;
