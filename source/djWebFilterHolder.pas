@@ -33,7 +33,7 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebFilter, djGenericHolder, djServerContext,
+  djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,
   djTypes, djInterfaces,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
@@ -52,15 +52,14 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FWebFilterConfig: IWebFilterConfig;
+    FWebFilterConfig: TdjWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
     function GetWebFilter: TdjWebFilter;
   public
-    constructor Create(WebFilterClass: TdjWebFilterClass;
-      const Config: IWebFilterConfig);
+    constructor Create(WebFilterClass: TdjWebFilterClass);
     destructor Destroy; override;
 
     (**
@@ -76,7 +75,7 @@ type
      * \param Key init parameter name
      * \param Value init parameter value
      *)
-    // procedure SetInitParameter(const Key: string; const Value: string);
+    procedure SetInitParameter(const Key: string; const Value: string);
 
     (**
      * Start the filter.
@@ -109,21 +108,15 @@ type
 implementation
 
 uses
-  djWebFilterConfig,
   SysUtils;
 
 { TdjWebFilterHolder }
 
-constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass;
-  const Config: IWebFilterConfig);
+constructor TdjWebFilterHolder.Create(WebFilterClass: TdjWebFilterClass);
 begin
   inherited Create(WebFilterClass);
 
-  if Assigned(Config) then
-    FWebFilterConfig := Config
-  else
-    FWebFilterConfig := TdjWebFilterConfig.Create;
-
+  FWebFilterConfig := TdjWebFilterConfig.Create;
   FClass := WebFilterClass;
 
   // logging -----------------------------------------------------------------
@@ -137,6 +130,7 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  FWebFilterConfig.Free;
   inherited;
 end;
 
@@ -148,12 +142,11 @@ begin
   (FWebFilterConfig as IContextAware).SetContext(Context);
 end;
 
-(* TODO procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
+procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
   const Value: string);
 begin
-  FConfig.Add(Key, Value);
+  FWebFilterConfig.Add(Key, Value);
 end;
-*)
 
 procedure TdjWebFilterHolder.Trace(const S: string);
 begin
