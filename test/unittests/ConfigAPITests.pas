@@ -1301,21 +1301,13 @@ procedure TAPIConfigTests.TestFilterWithInit;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
-
-  function CreateWebFilterConfig: IWebFilterConfig;
-  var
-    C: TdjWebFilterConfig;
-  begin
-    C := TdjWebFilterConfig.Create;
-    C.Add('key', 'Hello, World!');
-    Result := C;
-  end;
-
+  FilterHolder: TdjWebFilterHolder;
 begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filter');
-  Context.AddWebFilter(TTestFilterWithInit, TExamplePage, CreateWebFilterConfig);
+  FilterHolder := Context.AddFilterWithMapping(TTestFilterWithInit, '*.filter');
+  FilterHolder.SetInitParameter('key', 'Hello, World!');
   Context.SetInitParameter('a', 'b');
 
   // run

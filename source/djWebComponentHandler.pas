@@ -628,7 +628,8 @@ function TdjWebComponentHandler.AddFilterWithMapping(
   FilterClass: TdjWebFilterClass; const PathSpec: string;
   const Config: IWebFilterConfig): TdjWebFilterHolder;
 begin
-  Result := TdjWebFilterHolder.Create(FilterClass, Config);
+  Assert(Config = nil);
+  Result := TdjWebFilterHolder.Create(FilterClass);
   AddFilterWithMapping(Result, PathSpec);
 end;
 
