@@ -101,8 +101,8 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    function AddWebComponent(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string): TdjWebComponentHolder; overload;
+    procedure AddWebComponent(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string); overload;
 
     (**
      * Add a Web Component.
@@ -231,8 +231,13 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-(* previous version
 procedure TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string);
+begin
+  AddWebComponent(ComponentClass, PathSpec);
+end;
+
+procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
   const PathSpec: string);
 var
   Holder: TdjWebComponentHolder;
@@ -244,7 +249,9 @@ begin
     // create new holder
     Trace(Format('Add new holder for Web Component %s',
       [ComponentClass.ClassName]));
-    AddWebComponent(ComponentClass, PathSpec);
+    Holder := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
+    // set context of Holder to propagate it to WebComponentConfig
+    Holder.SetContext(GetCurrentContext);
   end
   else
   begin
@@ -252,45 +259,6 @@ begin
     Trace(Format('Holder found for Web Component %s, add PathSpec %s',
       [ComponentClass.ClassName, PathSpec]));
     WebComponentHandler.AddWithMapping(Holder, PathSpec);
-  end;
-end; *)
-
-procedure TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string);
-begin
-  AddWebComponent(ComponentClass, PathSpec);
-end;
-
-(*
-function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string): TdjWebComponentHolder;
-begin
-  Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
-  // set context of Holder to propagate it to WebComponentConfig
-  Result.SetContext(GetCurrentContext);
-end;
-*)
-
-function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string): TdjWebComponentHolder;
-begin
-  Result := WebComponentHandler.FindHolder(ComponentClass);
-
-  if Result = nil then
-  begin
-    // create new holder
-    Trace(Format('Add new holder for Web Component %s',
-      [ComponentClass.ClassName]));
-    Result := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
-    // set context of Holder to propagate it to WebComponentConfig
-    Result.SetContext(GetCurrentContext);
-  end
-  else
-  begin
-    // add the PathSpec
-    Trace(Format('Holder found for Web Component %s, add PathSpec %s',
-      [ComponentClass.ClassName, PathSpec]));
-    WebComponentHandler.AddWithMapping(Result, PathSpec);
   end;
 end;
 
