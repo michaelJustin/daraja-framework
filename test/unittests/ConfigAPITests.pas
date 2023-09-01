@@ -1305,13 +1305,11 @@ var
 begin
   // configure
   Context := TdjWebAppContext.Create('web');
+  Context.SetInitParameter('a', 'b');
   Context.AddWebComponent(TExamplePage, '*.filter');
   FilterHolder := TdjWebFilterHolder.Create(TTestFilterWithInit);
-  Context.AddWebFilter(FilterHolder, '*.filter');
   FilterHolder.SetInitParameter('key', 'Hello, World!');
   Context.AddWebFilter(FilterHolder, '*.filter');
-
-  Context.SetInitParameter('a', 'b');
 
   // run
   Server := TdjServer.Create;
