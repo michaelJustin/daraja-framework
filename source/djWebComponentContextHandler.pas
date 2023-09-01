@@ -79,8 +79,8 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddWebFilter(Holder: TdjWebFilterHolder;
-      const WebComponentName: string); overload;
+    //procedure AddWebFilter(Holder: TdjWebFilterHolder;
+    //  const WebComponentName: string); overload;
 
     (**
      * Add a Web Filter.  Private method for future extensions todo
@@ -150,6 +150,17 @@ type
      * \throws EWebComponentException if the Web Component can not be added
      *)
     procedure AddWebComponent(Holder: TdjWebComponentHolder;
+      const PathSpec: string); overload;
+
+    (**
+     * Add a Web Filter Holder.
+     *
+     * \param Holder holds information about the Web Filter
+     * \param PathSpec path specification
+     *
+     * \throws Exception if the Web Filter can not be added
+     *)
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const PathSpec: string); overload;
 
     (**
@@ -353,12 +364,12 @@ begin
 end;
 
 procedure TdjWebComponentContextHandler.AddWebFilter(Holder: TdjWebFilterHolder;
-  const WebComponentName: string);
+  const PathSpec: string);
 begin 
   // set context of Holder to propagate it to WebFilterConfig
   Holder.SetContext(Self.GetCurrentContext);
 
-  WebComponentHandler.AddFilterWithNameMapping(Holder, WebComponentName);
+  WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
 end;
 
 function TdjWebComponentContextHandler.AddFilterWithMapping(
