@@ -160,6 +160,7 @@ type
      * \param WebComponent class
      *
      * \throws Exception if the WebFilter can not be added
+     * \deprecated Use AddFilterWithMapping
      *)
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass); overload;

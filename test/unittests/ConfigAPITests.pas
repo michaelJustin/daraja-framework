@@ -1212,7 +1212,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilter, TExamplePage);
+  Context.AddFilterWithMapping(TTestFilter, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1234,8 +1234,8 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
-  Context.AddWebFilter(TTestFilterB, TExamplePage);
+  Context.AddFilterWithMapping(TTestFilterA, '*.html');
+  Context.AddFilterWithMapping(TTestFilterB, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1257,8 +1257,8 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilterB, TExamplePage);
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
+  Context.AddFilterWithMapping(TTestFilterB, '*.html');
+  Context.AddFilterWithMapping(TTestFilterA, '*.html');
   Server := TdjServer.Create;
 
   // run
@@ -1281,8 +1281,8 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filterA');
   Context.AddWebComponent(TGetComponent, '*.filterB');
-  Context.AddWebFilter(TTestFilterA, TExamplePage);
-  Context.AddWebFilter(TTestFilterB, TGetComponent);
+  Context.AddFilterWithMapping(TTestFilterA, '*.filterA');
+  Context.AddFilterWithMapping(TTestFilterB, '*.filterB');
 
   // run
   Server := TdjServer.Create;
@@ -1329,7 +1329,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filter');
-  Context.AddWebFilter(TFilterWithInitReadsContextConfiguration, TExamplePage);
+  Context.AddFilterWithMapping(TFilterWithInitReadsContextConfiguration, '*.filter');
   Context.SetInitParameter('a', 'b');
 
   // run
@@ -1350,7 +1350,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddWebFilter(TTestFilter, TExamplePage);
+  Context.AddFilterWithMapping(TTestFilter, '*.html');
 
   {$IFDEF FPC}
   ExpectException(EListError, '');
@@ -1358,7 +1358,7 @@ begin
   ExpectedException := EListError;
   {$ENDIF}
   try
-    Context.AddWebFilter(TTestFilter, TExamplePage);
+    Context.AddFilterWithMapping(TTestFilter, '*.html');
   finally
     Context.Free;
   end;

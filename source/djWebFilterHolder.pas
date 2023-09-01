@@ -130,7 +130,7 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-  FWebFilterConfig.Free;
+  // FWebFilterConfig.Free; todo AV
   inherited;
 end;
 
