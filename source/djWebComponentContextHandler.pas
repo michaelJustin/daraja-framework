@@ -161,10 +161,11 @@ type
      * \param WebComponent class
      *
      * \throws Exception if the WebFilter can not be added
+     * \deprecated Use AddFilterWithMapping
      *)
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       WebComponentClass: TdjWebComponentClass;
-      const Config: IWebFilterConfig = nil); overload;
+      const Config: IWebFilterConfig = nil); overload; deprecated;
 
     (**
      * Add a Web Filter, specifying a WebFilter class
