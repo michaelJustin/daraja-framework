@@ -69,31 +69,6 @@ type
     procedure AddWebFilter(FilterClass: TdjWebFilterClass;
       const WebComponentName: string); overload;
 
-    (**
-     * Add a Web Filter, specifying a WebFilterHolder
-     * and the mapped WebComponent name.
-     *  Private method for future extensions todo
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent name
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    //procedure AddWebFilter(Holder: TdjWebFilterHolder;
-    //  const WebComponentName: string); overload;
-
-    (**
-     * Add a Web Filter.  Private method for future extensions todo
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent class
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-   (* procedure AddWebFilter(FilterClass: TdjWebFilterClass;
-      const WebFilterName: string;
-      WebComponentClass: TdjWebComponentClass); overload; *)
-
   protected
     (**
      * \param Target Request target
@@ -185,10 +160,9 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
+    procedure AddFilterWithMapping(FilterClass: TdjWebFilterClass;
       const PathSpec: string;
-      const Config: IWebFilterConfig = nil): TdjWebFilterHolder;
-      // todo see WebComponent, same name and signature
+      const Config: IWebFilterConfig = nil);
 
     // IHandler interface
 
@@ -372,12 +346,11 @@ begin
   WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
 end;
 
-function TdjWebComponentContextHandler.AddFilterWithMapping(
+procedure TdjWebComponentContextHandler.AddFilterWithMapping(
   FilterClass: TdjWebFilterClass; const PathSpec: string;
-  const Config: IWebFilterConfig): TdjWebFilterHolder;
+  const Config: IWebFilterConfig);
 begin
-  Result := WebComponentHandler.AddFilterWithMapping(FilterClass, PathSpec,
-    Config);
+  WebComponentHandler.AddFilterWithMapping(FilterClass, PathSpec, Config);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
