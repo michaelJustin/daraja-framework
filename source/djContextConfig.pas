@@ -40,35 +40,9 @@ type
    * Context configuration.
    *)
   TdjContextConfig = class(TdjAbstractConfig, IContextConfig)
-  public
-    (**
-     * "Copy" constructor.
-     *)
-    constructor Create(const Config: IContextConfig); overload;
   end;
 
 implementation
-
-{ TdjContextConfig }
-
-constructor TdjContextConfig.Create(const Config: IContextConfig);
-var
-  L: TdjStrings;
-  S: string;
-begin
-  Create;
-
-  Assert(Config <> nil, 'Config is nil');
-
-  // copy from IConfig argument to self:
-
-  L := Config.GetInitParameterNames;
-  for S in L do
-  begin
-    Add(S, Config.GetInitParameter(S));
-  end;
-  L.Free;
-end;
 
 end.
 

@@ -175,6 +175,8 @@ begin
   CheckStarted;
 
   Assert(FConfig <> nil);
+  // TODO Assert(FConfig.GetContext <> nil);
+  // TODO Assert(FConfig.GetContext.GetContextConfig <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;

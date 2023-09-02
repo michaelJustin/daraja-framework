@@ -210,6 +210,7 @@ begin
 
   Assert(Assigned(Config));
   Assert(Assigned(Config.GetContext));
+  Assert(Assigned(Config.GetContext.GetContextConfig));
   Assert(not Assigned(FConfig));
 
   FConfig := Config;

@@ -53,7 +53,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     ContextLogger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FContextConfig: IContextConfig;
+    FConfig: IContextConfig;
     FContextPath: string;
 
     (**
@@ -129,7 +129,7 @@ type
     {$ENDIF DARAJA_LOGGING}
 
     FContext: IContext;
-    FConfig: TdjContextConfig;
+    FContextHandlerConfig: TdjContextConfig;
     FConnectorNames: TStrings;
     FErrorHandler: IHandler;
 
@@ -233,12 +233,13 @@ begin
 
   ValidateContextPath(ContextPath);
 
+  FConfig := TdjContextConfig.Create;
   FContextPath := ContextPath;
 end;
 
 function TdjContext.GetContextConfig: IContextConfig;
 begin
-  Result := FContextConfig;
+  Result := FConfig;
 end;
 
 function TdjContext.GetContextPath: string;
@@ -248,12 +249,12 @@ end;
 
 function TdjContext.GetInitParameter(const Key: string): string;
 begin
-  Result := FContextConfig.GetInitParameter(Key);
+  Result := FConfig.GetInitParameter(Key);
 end;
 
 function TdjContext.GetInitParameterNames: TdjStrings;
 begin
-  Result := FContextConfig.GetInitParameterNames;
+  Result := FConfig.GetInitParameterNames;
 end;
 
 procedure TdjContext.ValidateContextPath(const ContextPath: string);
@@ -296,7 +297,7 @@ end;
 
 procedure TdjContext.Init(const Config: IContextConfig);
 begin
-  FContextConfig := TdjContextConfig.Create(Config);
+  FConfig := Config;
 end;
 
 procedure TdjContext.Log(const Msg: string);
@@ -324,25 +325,16 @@ begin
 
   FContext := TdjContext.Create(ContextPath);
 
-  FConfig := TdjContextConfig.Create;
-  FConfig.SetContext(FContext);
+  FContextHandlerConfig := TdjContextConfig.Create;
+  FContextHandlerConfig.SetContext(FContext);
 
   FConnectorNames := TStringList.Create;
-
-{$IFDEF LOG_CREATE}
-  Trace('Created context ' + ContextPath);
-{$ENDIF}
 end;
 
 destructor TdjContextHandler.Destroy;
 begin
-{$IFDEF LOG_DESTROY}
-  Trace('Destroy');
-{$ENDIF}
-
+  // FContextHandlerConfig.Free;
   FConnectorNames.Free;
-
-  FConfig.Free;
 
   inherited;
 end;
@@ -397,7 +389,7 @@ end;
 procedure TdjContextHandler.SetInitParameter(const Key, Value: string);
 begin
   CheckStarted;
-  FConfig.Add(Key, Value);
+  FContextHandlerConfig.Add(Key, Value);
 end;
 
 procedure TdjContextHandler.DoStart;
@@ -409,7 +401,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   // configure the context
-  FContext.Init(Self.FConfig);
+  FContext.Init(FContextHandlerConfig);
 end;
 
 procedure TdjContextHandler.DoStop;
