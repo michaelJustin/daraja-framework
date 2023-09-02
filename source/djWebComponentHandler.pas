@@ -326,7 +326,8 @@ begin
   FWebComponentHolders.Free;
   FWebComponentMappings.Free;
 
-  FWebFilterHolders.Free;
+  //FWebFilterHolders.Clear;
+  //FWebFilterHolders.Free;
   FWebFilterMappings.Free;
 
   FWebFilterNameMap.Free;
