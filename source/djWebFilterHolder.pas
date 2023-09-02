@@ -130,7 +130,7 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-  // FWebFilterConfig.Free; // todo AV
+  FConfig.Free;
   inherited;
 end;
 
@@ -139,7 +139,7 @@ begin
   Assert(Context <> nil);
   Assert(FConfig <> nil);
 
-  (FConfig as IContextAware).SetContext(Context);
+  FConfig.SetContext(Context);
 end;
 
 procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
@@ -175,7 +175,6 @@ begin
   CheckStarted;
 
   Assert(FConfig <> nil);
-  // Assert(FConfig.GetContext <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebFilter := FClass.Create;
