@@ -333,7 +333,7 @@ end;
 
 destructor TdjContextHandler.Destroy;
 begin
-  // FContextHandlerConfig.Free;
+  // FContextHandlerConfig := nil; // .Free; // TODO AV
   FConnectorNames.Free;
 
   inherited;
