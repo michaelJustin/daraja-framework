@@ -178,6 +178,7 @@ end;
 procedure TdjWebComponentHolder.SetContext(const Context: IContext);
 begin
   Assert(Context <> nil);
+  Assert(Context.GetContextConfig <> nil);
   FConfig.SetContext(Context);
 end;
 
@@ -195,6 +196,7 @@ begin
 
   Assert(FConfig <> nil);
   Assert(FConfig.GetContext <> nil);
+  Assert(FConfig.GetContext.GetContextConfig <> nil);
 
   Trace('Create instance of class ' + FClass.ClassName);
   FWebComponent := FClass.Create;
