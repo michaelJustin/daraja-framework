@@ -384,6 +384,7 @@ begin
 
   for FH in WebFilters do
   begin
+    FH.SetContext(WebComponentContext);
     FH.Start;
   end;
 

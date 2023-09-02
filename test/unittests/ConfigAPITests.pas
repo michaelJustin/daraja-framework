@@ -1144,7 +1144,7 @@ type
 
 procedure TFilterWithInitReadsContextConfiguration.Init(const Config: IWebFilterConfig);
 begin
-  StaticContent := 'from filter';
+  StaticContent := 'from init';
 
   if Config <> nil then StaticContent := StaticContent + ' 1';
   if Config.GetContext <> nil then StaticContent := StaticContent + ' 2';
