@@ -65,7 +65,7 @@ begin
   L := Config.GetInitParameterNames;
   for S in L do
   begin
-    FParams.Add(S, Config.GetInitParameter(S));
+    Add(S, Config.GetInitParameter(S));
   end;
   L.Free;
 end;

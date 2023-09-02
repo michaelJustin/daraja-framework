@@ -40,40 +40,11 @@ type
    * Web Component configuration.
    *)
   TdjWebComponentConfig = class(TdjAbstractConfig, IWebComponentConfig)
-  public
-    (**
-     * "Copy" constructor.
-     *)
-    constructor Create(const Config: IWebComponentConfig); overload;
   end;
 
 implementation
 
 { TdjWebComponentConfig }
-
-constructor TdjWebComponentConfig.Create(const Config: IWebComponentConfig);
-var
-  L: TdjStrings;
-  S: string;
-begin
-  Create;
-
-  Assert(Config <> nil);
-
-  Assert(Config.GetContext <> nil);
-
-  // copy from IConfig argument to self:
-
-  // Context:
-  FContext := Config.GetContext;
-  // Params:
-  L := Config.GetInitParameterNames;
-  for S in L do
-  begin
-    FParams.Add(S, Config.GetInitParameter(S));
-  end;
-  L.Free;
-end;
 
 end.
 
