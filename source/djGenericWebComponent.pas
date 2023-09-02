@@ -212,7 +212,7 @@ begin
   Assert(Assigned(Config.GetContext));
   Assert(not Assigned(FConfig));
 
-  FConfig := TdjWebComponentConfig.Create(Config);
+  FConfig := Config;
 end;
 
 procedure TdjGenericWebComponent.Service(Context: TdjServerContext;

@@ -39,8 +39,11 @@ type
   (**
    * Generic configuration.
    *)
+
+  { TdjAbstractConfig }
+
   TdjAbstractConfig = class(TInterfacedObject)
-  protected
+  private
     (**
      * Initialization parameters.
      *)
@@ -55,7 +58,7 @@ type
     (**
      * Constructor.
      *)
-    constructor Create; overload;
+    constructor Create;
 
     (**
      * Destructor.

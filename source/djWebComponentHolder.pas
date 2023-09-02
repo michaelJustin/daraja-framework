@@ -145,7 +145,7 @@ destructor TdjWebComponentHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
 
-  FConfig.Free;
+  // FConfig.Free;
 
   inherited;
 end;

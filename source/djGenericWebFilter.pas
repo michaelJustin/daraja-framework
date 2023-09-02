@@ -115,7 +115,7 @@ begin
   Trace('Init');
 
   Assert(Assigned(Config));
-  // Assert(Assigned(Config.GetContext));
+  Assert(Assigned(Config.GetContext));
   Assert(not Assigned(FConfig));
 
   FConfig := Config;
