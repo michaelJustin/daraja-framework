@@ -42,7 +42,7 @@ type
 
   { TdjWebFilterConfig }
 
-  TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig, IContextAware)
+  TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
   public
     function GetFilterName: string;
   end;
