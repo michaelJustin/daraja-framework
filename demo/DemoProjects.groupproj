@@ -1,0 +1,132 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{87E60C5D-9398-4BC5-A7C4-20B509237CB6}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="bootstrap\BootstrapDemo.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial1\HelloWorldServer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial2\HttpSessionServer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial3\TwoMappingsServer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial4\BinaryResponseServer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial5\FormBasedLoginServer.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial7\GoogleAuthBackend.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial9\OpenIDConnectBackend.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="tutorial10\GitHubAppBackend.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="BootstrapDemo">
+			<MSBuild Projects="bootstrap\BootstrapDemo.dproj"/>
+		</Target>
+		<Target Name="BootstrapDemo:Clean">
+			<MSBuild Targets="Clean" Projects="bootstrap\BootstrapDemo.dproj"/>
+		</Target>
+		<Target Name="BootstrapDemo:Make">
+			<MSBuild Targets="Make" Projects="bootstrap\BootstrapDemo.dproj"/>
+		</Target>
+		<Target Name="HelloWorldServer">
+			<MSBuild Projects="tutorial1\HelloWorldServer.dproj"/>
+		</Target>
+		<Target Name="HelloWorldServer:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial1\HelloWorldServer.dproj"/>
+		</Target>
+		<Target Name="HelloWorldServer:Make">
+			<MSBuild Targets="Make" Projects="tutorial1\HelloWorldServer.dproj"/>
+		</Target>
+		<Target Name="HttpSessionServer">
+			<MSBuild Projects="tutorial2\HttpSessionServer.dproj"/>
+		</Target>
+		<Target Name="HttpSessionServer:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial2\HttpSessionServer.dproj"/>
+		</Target>
+		<Target Name="HttpSessionServer:Make">
+			<MSBuild Targets="Make" Projects="tutorial2\HttpSessionServer.dproj"/>
+		</Target>
+		<Target Name="TwoMappingsServer">
+			<MSBuild Projects="tutorial3\TwoMappingsServer.dproj"/>
+		</Target>
+		<Target Name="TwoMappingsServer:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial3\TwoMappingsServer.dproj"/>
+		</Target>
+		<Target Name="TwoMappingsServer:Make">
+			<MSBuild Targets="Make" Projects="tutorial3\TwoMappingsServer.dproj"/>
+		</Target>
+		<Target Name="BinaryResponseServer">
+			<MSBuild Projects="tutorial4\BinaryResponseServer.dproj"/>
+		</Target>
+		<Target Name="BinaryResponseServer:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial4\BinaryResponseServer.dproj"/>
+		</Target>
+		<Target Name="BinaryResponseServer:Make">
+			<MSBuild Targets="Make" Projects="tutorial4\BinaryResponseServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer">
+			<MSBuild Projects="tutorial5\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial5\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Make">
+			<MSBuild Targets="Make" Projects="tutorial5\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="GoogleAuthBackend">
+			<MSBuild Projects="tutorial7\GoogleAuthBackend.dproj"/>
+		</Target>
+		<Target Name="GoogleAuthBackend:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial7\GoogleAuthBackend.dproj"/>
+		</Target>
+		<Target Name="GoogleAuthBackend:Make">
+			<MSBuild Targets="Make" Projects="tutorial7\GoogleAuthBackend.dproj"/>
+		</Target>
+		<Target Name="OpenIDConnectBackend">
+			<MSBuild Projects="tutorial9\OpenIDConnectBackend.dproj"/>
+		</Target>
+		<Target Name="OpenIDConnectBackend:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial9\OpenIDConnectBackend.dproj"/>
+		</Target>
+		<Target Name="OpenIDConnectBackend:Make">
+			<MSBuild Targets="Make" Projects="tutorial9\OpenIDConnectBackend.dproj"/>
+		</Target>
+		<Target Name="GitHubAppBackend">
+			<MSBuild Projects="tutorial10\GitHubAppBackend.dproj"/>
+		</Target>
+		<Target Name="GitHubAppBackend:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial10\GitHubAppBackend.dproj"/>
+		</Target>
+		<Target Name="GitHubAppBackend:Make">
+			<MSBuild Targets="Make" Projects="tutorial10\GitHubAppBackend.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="BootstrapDemo;HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;FormBasedLoginServer;GoogleAuthBackend;OpenIDConnectBackend;GitHubAppBackend"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="BootstrapDemo:Clean;HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;FormBasedLoginServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;GitHubAppBackend:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="BootstrapDemo:Make;HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;FormBasedLoginServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;GitHubAppBackend:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>
