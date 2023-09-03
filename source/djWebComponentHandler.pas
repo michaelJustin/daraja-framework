@@ -78,7 +78,6 @@ type
     procedure InitializeHolders(Holders: TdjWebFilterHolders);
     procedure Trace(const S: string);
     function StripContext(const Doc: string): string;
-    // procedure CheckStoreContext(const Context: IContext);
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
     procedure CreateOrUpdateMapping(const PathSpec: string; Holder:
       TdjWebComponentHolder);
