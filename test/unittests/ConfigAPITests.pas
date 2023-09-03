@@ -260,10 +260,11 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
+  Context := TdjWebAppContext.Create('foo');
+  Context.AddWebComponent(TExamplePage, '/bar');
+
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('foo');
-    Context.AddWebComponent(TExamplePage, '/bar');
     Server.Add(Context);
     Server.Start;
 
