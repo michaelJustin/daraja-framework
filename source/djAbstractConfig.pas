@@ -42,7 +42,7 @@ type
 
   { TdjAbstractConfig }
 
-  TdjAbstractConfig = class(TInterfacedObject)
+  TdjAbstractConfig = class(TInterfacedObject, IWriteableConfig)
   private
     (**
      * Initialization parameters.

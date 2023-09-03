@@ -231,6 +231,7 @@ begin
     Stop;
   end;
 
+  //TODO why not
   // RemoveHandler(ContextHandlers);
 
   ConnectorMap.Free;

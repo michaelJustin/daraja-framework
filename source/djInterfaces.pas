@@ -182,6 +182,12 @@ type
     procedure DestroyFilter;
   end;
 
+  IWriteableConfig = interface
+    ['{A3074743-C2EF-44C6-BD28-27E62F82E598}']
+    procedure Add(const Key: string; const Value: string);
+    procedure SetContext(const Context: IContext);
+  end;
+
 
 implementation
 

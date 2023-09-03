@@ -52,7 +52,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FConfig: TdjWebComponentConfig;
+    FConfig: IWebComponentConfig;
     FClass: TdjWebComponentClass;
     FWebComponent: TdjWebComponent;
 
@@ -144,9 +144,6 @@ end;
 destructor TdjWebComponentHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-
-  // FConfig.Free;
-
   inherited;
 end;
 
@@ -178,14 +175,14 @@ end;
 procedure TdjWebComponentHolder.SetContext(const Context: IContext);
 begin
   Assert(Context <> nil);
-  Assert(Context.GetContextConfig <> nil);
-  FConfig.SetContext(Context);
+  Assert(Context.GetContextConfig <> nil); // TODO check this happens before Context init is called
+  (FConfig as IWriteableConfig).SetContext(Context);
 end;
 
 procedure TdjWebComponentHolder.SetInitParameter(const Key: string;
   const Value: string);
 begin
-  FConfig.Add(Key, Value);
+  (FConfig as IWriteableConfig).Add(Key, Value);
 end;
 
 procedure TdjWebComponentHolder.DoStart;

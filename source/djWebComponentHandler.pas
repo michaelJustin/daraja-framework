@@ -36,7 +36,7 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djPathMap,
-  djWebFilter, djWebFilterHolder, djWebFilterMapping, djMultiMap,
+  djWebFilterHolder, djWebFilterMapping, djMultiMap,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -130,14 +130,6 @@ type
     procedure AddWithMapping(Holder: TdjWebComponentHolder; const PathSpec: string); overload;
 
     (**
-     * Add a Web Filter holder with path mapping.
-     *
-     * \param Holder a Web Filter holder
-     * \param PathSpec a path spec
-     *)
-    // procedure AddWithMapping(Holder: TdjWebFilterHolder; const PathSpec: string); overload;
-
-    (**
      * Add a Web Filter, specifying a WebFilter holder instance
      * and the mapped WebComponent name.
      *
@@ -209,8 +201,6 @@ type
     // ILifeCycle interface
     procedure DoStart; override;
     procedure DoStop; override;
-
-
 
   end;
 
@@ -313,8 +303,7 @@ begin
   FWebComponentHolders.Free;
   FWebComponentMappings.Free;
 
-  //FWebFilterHolders.Clear;
-  //FWebFilterHolders.Free;
+  FWebFilterHolders.Free;
   FWebFilterMappings.Free;
 
   FWebFilterNameMap.Free;
