@@ -43,7 +43,7 @@ type
 implementation
 
 uses
-  djWebComponentHolder, djWebComponent, djWebAppContext, djTypes;
+  djWebComponentHolder, djWebComponent, djWebAppContext, djTypes, djInterfaces;
 
 type
   TExamplePage = class(TdjWebComponent)
@@ -64,20 +64,16 @@ end;
 
 procedure TdjWebComponentHolderTests.TestCreate;
 var
-  Context: TdjWebAppContext;
+  Context: IContext;
   Holder: TdjWebComponentHolder;
 begin
   Context := TdjWebAppContext.Create('x-ctx');
+  Holder := TdjWebComponentHolder.Create(TExamplePage);
   try
-    Holder := TdjWebComponentHolder.Create(TExamplePage);
-    try
-      Holder.SetContext(Context.GetCurrentContext);
-      CheckEquals('x-ctx', Holder.GetContext.GetContextPath);
-    finally
-      Holder.Free;
-    end;
+    Holder.SetContext(Context);
+    CheckEquals('x-ctx', Holder.GetContext.GetContextPath);
   finally
-    Context.Free;
+    Holder.Free;
   end;
 end;
 

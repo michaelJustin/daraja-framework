@@ -48,34 +48,167 @@ type
   (**
    * Context implementation.
    *)
-  TdjContext = class(TInterfacedObject, IContext)
-  private
-    {$IFDEF DARAJA_LOGGING}
-    ContextLogger: ILogger;
-    {$ENDIF DARAJA_LOGGING}
-    FConfig: IContextConfig;
-    FContextPath: string;
+//  TdjContext = class(TInterfacedObject, IContext)
+//  private
+//    {$IFDEF DARAJA_LOGGING}
+//    ContextLogger: ILogger;
+//    {$ENDIF DARAJA_LOGGING}
+//    FConfig: IContextConfig;
+//    FContextPath: string;
 
     (**
      * a-z A-Z 0-9 . - _ ~ ! $ & ' ( ) * + , ; = : @
      * and percent-encoded characters
      *)
+//    procedure ValidateContextPath(const ContextPath: string);
+//
+//  public
+//    (**
+//     * Create a context with the given path.
+//     * \param ContextPath the context path
+//     * \throws EWebComponentException if the conext name contains invalid
+//     * characters
+//     *)
+//    constructor Create(const ContextPath: string);
+//
+//    (**
+//     * Called by the container on start.
+//     * \param Config the context configuration
+//     *)
+//    // procedure Init(const Config: IContextConfig);
+//
+//    // IContext interface
+//
+//    (**
+//     * Get the context configuration.
+//     * \return the context configuration
+//     *)
+//    function GetContextConfig: IContextConfig;
+//
+//    (**
+//     * Get the context path.
+//     * \return the context path.
+//     *)
+//    function GetContextPath: string;
+//
+//    (**
+//     * Get the init parameter with the given name.
+//     * \param Key the parameter name
+//     * \return the init parameter value
+//     *)
+//    function GetInitParameter(const Key: string): string;
+//
+//    (**
+//     * Get the list of init parameter names.
+//     * \return list of init parameter names.
+//     *)
+//    function GetInitParameterNames: TdjStrings;
+//
+//    (**
+//     * Write a log message.
+//     *
+//     * \note if DARAJA_LOGGING is defined, it will write using the logging
+//     * framework. Otherwise, it will log to console if System.IsConsole is True.
+//     *
+//     * \param Msg the log message.
+//     *)
+//    procedure Log(const Msg: string);
+//
+//  end;
+
+  (**
+   * Context handler.
+   *)
+
+  { TdjContextHandler }
+
+  TdjContextHandler = class(TdjHandlerWrapper, IContext)
+  private
+    {$IFDEF DARAJA_LOGGING}
+    Logger: ILogger;
+    ContextLogger: ILogger;
+    {$ENDIF DARAJA_LOGGING}
+    // FContext: IContext;
+    FContextHandlerConfig: IContextConfig;
+    FContextPath: string;
+    FConnectorNames: TStrings;
+    FErrorHandler: IHandler;
+    procedure Trace(const S: string);
+    (**
+     * a-z A-Z 0-9 . - _ ~ ! $ & ' ( ) * + , ; = : @
+     * and percent-encoded characters
+     *)
     procedure ValidateContextPath(const ContextPath: string);
+    procedure SetErrorHandler(const Value: IHandler);
+  protected
+    (**
+     * Check if the Document matches this context.
+     *
+     * \param ConnectorName the connector name (like 'host:port'
+     * \param Target the target URL document
+     *
+     * \return True if the context matches the connector name and target URL document
+     *)
+    function ContextMatches(const ConnectorName, Target: string): Boolean;
+
+    (**
+     * Creates connector name in the form 'host:port'
+     *
+     * \returns connector name
+     *)
+    function ToConnectorName(Context: TdjServerContext): string;
 
   public
     (**
-     * Create a context with the given path.
-     * \param ContextPath the context path
-     * \throws EWebComponentException if the conext name contains invalid
-     * characters
+     * Create a ContextHandler.
      *)
-    constructor Create(const ContextPath: string);
+    constructor Create(const ContextPath: string); reintroduce;
 
     (**
-     * Called by the container on start.
-     * \param Config the context configuration
+     * Destructor.
      *)
-    procedure Init(const Config: IContextConfig);
+    destructor Destroy; override;
+
+//    (**
+//     * The internal IContext field.
+//     *)
+//    function GetCurrentContext: IContext;
+
+    (**
+     * Set initialization parameter.
+     *
+     * \param Key init parameter name
+     * \param Value init parameter value
+     *)
+    procedure SetInitParameter(const Key: string; const Value: string);
+
+    // ILifeCycle interface
+
+    (**
+     * Start the handler.
+     *)
+    procedure DoStart; override;
+
+    (**
+     * Stop the handler.
+     *)
+    procedure DoStop; override;
+
+    // IHandler interface
+
+    (**
+     * Handle a HTTP request.
+     *
+     * \param Target Request target
+     * \param Context HTTP server context
+     * \param Request HTTP request
+     * \param Response HTTP response
+     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     *
+     * \sa IHandler
+     *)
+    procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
+      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
 
     // IContext interface
 
@@ -114,101 +247,7 @@ type
      *)
     procedure Log(const Msg: string);
 
-  end;
-
-  (**
-   * Context handler.
-   *)
-
-  { TdjContextHandler }
-
-  TdjContextHandler = class(TdjHandlerWrapper)
-  private
-    {$IFDEF DARAJA_LOGGING}
-    Logger: ILogger;
-    {$ENDIF DARAJA_LOGGING}
-
-    FContext: IContext;
-    FContextHandlerConfig: IContextConfig;
-    FConnectorNames: TStrings;
-    FErrorHandler: IHandler;
-
-    procedure Trace(const S: string);
-    function GetContextPath: string;
-    procedure SetErrorHandler(const Value: IHandler);
-
-  protected
-    (**
-     * Check if the Document matches this context.
-     *
-     * \param ConnectorName the connector name (like 'host:port'
-     * \param Target the target URL document
-     *
-     * \return True if the context matches the connector name and target URL document
-     *)
-    function ContextMatches(const ConnectorName, Target: string): Boolean;
-
-    (**
-     * Creates connector name in the form 'host:port'
-     *
-     * \returns connector name
-     *)
-    function ToConnectorName(Context: TdjServerContext): string;
-
-  public
-    (**
-     * Create a ContextHandler.
-     *)
-    constructor Create(const ContextPath: string); reintroduce;
-
-    (**
-     * Destructor.
-     *)
-    destructor Destroy; override;
-
-    (**
-     * The internal IContext field.
-     *)
-    function GetCurrentContext: IContext;
-
-    (**
-     * Set initialization parameter.
-     *
-     * \param Key init parameter name
-     * \param Value init parameter value
-     *)
-    procedure SetInitParameter(const Key: string; const Value: string);
-
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
-
-    // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * \sa IHandler
-     *)
-    procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
-      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
-
     // properties
-
     property ConnectorNames: TStrings read FConnectorNames;
     property ContextPath: string read GetContextPath;
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
@@ -221,44 +260,173 @@ uses
   SysUtils;
 
 { TdjContext }
+//
+//constructor TdjContext.Create(const ContextPath: string);
+//begin
+//  inherited Create;
+//
+//  // logging -----------------------------------------------------------------
+//  {$IFDEF DARAJA_LOGGING}
+//  ContextLogger := TdjLoggerFactory.GetLogger(ContextPath);
+//  {$ENDIF DARAJA_LOGGING}
+//
+//  ValidateContextPath(ContextPath);
+//
+//  // TODO check why creation is needed here (actually it is accessed before init is called)
+//  FConfig := TdjContextConfig.Create;
+//  FContextPath := ContextPath;
+//end;
+//
+//function TdjContext.GetContextConfig: IContextConfig;
+//begin
+//  Result := FConfig;
+//end;
+//
+//function TdjContext.GetContextPath: string;
+//begin
+//  Result := FContextPath;
+//end;
+//
+//function TdjContext.GetInitParameter(const Key: string): string;
+//begin
+//  Result := FConfig.GetInitParameter(Key);
+//end;
+//
+//function TdjContext.GetInitParameterNames: TdjStrings;
+//begin
+//  Result := FConfig.GetInitParameterNames;
+//end;
+//
+//procedure TdjContext.ValidateContextPath(const ContextPath: string);
+//var
+//  Ch: Char;
+//begin
+//  Assert(Pos('\', ContextPath) = 0);
+//  Assert(Pos('/', ContextPath) = 0);
+//
+//  for Ch in ContextPath do
+//  begin
+//    case Ch of
+//      'a'..'z': ;
+//      'A'..'Z': ;
+//      '0'..'9': ;
+//      '.': ;
+//      '-': ;
+//      '_': ;
+//      '~': ;
+//      '!': ;
+//      '$': ;
+//      '&': ;
+//      '''': ;
+//      '(': ;
+//      ')': ;
+//      '*': ;
+//      '+': ;
+//      ',': ;
+//      ';': ;
+//      '=': ;
+//      ':': ;
+//      '@': ;
+//      '%': ;
+//    else
+//      raise EWebComponentException.CreateFmt('Invalid context name "%s"',
+//        [ContextPath]);
+//    end;
+//  end;
+//end;
+//
+////procedure TdjContext.Init(const Config: IContextConfig);
+////begin
+////  FConfig := Config; // TODO check if it is ok to overwrite the field here with a new one
+////end;
+//
+//procedure TdjContext.Log(const Msg: string);
+//begin
+//  {$IFDEF DARAJA_LOGGING}
+//  ContextLogger.Info(Msg);
+//  {$ELSE}
+//  if System.IsConsole then
+//  begin
+//    WriteLn(Msg);
+//  end;
+//  {$ENDIF DARAJA_LOGGING}
+//end;
 
-constructor TdjContext.Create(const ContextPath: string);
+{ TdjContextHandler }
+
+constructor TdjContextHandler.Create(const ContextPath: string);
 begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
+  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjContextHandler.ClassName);
   ContextLogger := TdjLoggerFactory.GetLogger(ContextPath);
   {$ENDIF DARAJA_LOGGING}
 
   ValidateContextPath(ContextPath);
 
-  // TODO check why creation is needed here (actually it is accessed before init is called)
-  FConfig := TdjContextConfig.Create;
   FContextPath := ContextPath;
+
+  // FContext := TdjContext.Create(ContextPath);
+
+  FContextHandlerConfig := TdjContextConfig.Create;
+  (FContextHandlerConfig as IWriteableConfig).SetContext(Self);
+
+  FConnectorNames := TStringList.Create;
 end;
 
-function TdjContext.GetContextConfig: IContextConfig;
+destructor TdjContextHandler.Destroy;
 begin
-  Result := FConfig;
+  FConnectorNames.Free;
+
+  (FContextHandlerConfig as IWriteableConfig).SetContext(nil);
+
+  inherited;
 end;
 
-function TdjContext.GetContextPath: string;
+function TdjContextHandler.GetContextConfig: IContextConfig;
+begin
+  Result := FContextHandlerConfig;
+end;
+
+function TdjContextHandler.GetContextPath: string;
 begin
   Result := FContextPath;
 end;
 
-function TdjContext.GetInitParameter(const Key: string): string;
+//function TdjContextHandler.GetCurrentContext: IContext;
+//begin
+//  Assert(FContext <> nil);
+//  Result := FContext;
+//end;
+
+function TdjContextHandler.GetInitParameter(const Key: string): string;
 begin
-  Result := FConfig.GetInitParameter(Key);
+  Result := FContextHandlerConfig.GetInitParameter(Key);
 end;
 
-function TdjContext.GetInitParameterNames: TdjStrings;
+function TdjContextHandler.GetInitParameterNames: TdjStrings;
 begin
-  Result := FConfig.GetInitParameterNames;
+  Result := FContextHandlerConfig.GetInitParameterNames;
 end;
 
-procedure TdjContext.ValidateContextPath(const ContextPath: string);
+function TdjContextHandler.ToConnectorName(Context: TdjServerContext): string;
+begin
+  Result := Context.Binding.IP + ':' + IntToStr(Context.Binding.Port);
+end;
+
+procedure TdjContextHandler.Trace(const S: string);
+begin
+  {$IFDEF DARAJA_LOGGING}
+  if Logger.IsTraceEnabled then
+  begin
+    Logger.Trace(S);
+  end;
+  {$ENDIF DARAJA_LOGGING}
+end;
+
+procedure TdjContextHandler.ValidateContextPath(const ContextPath: string);
 var
   Ch: Char;
 begin
@@ -296,75 +464,6 @@ begin
   end;
 end;
 
-procedure TdjContext.Init(const Config: IContextConfig);
-begin
-  FConfig := Config; // TODO check if it is ok to overwrite the field here with a new one
-end;
-
-procedure TdjContext.Log(const Msg: string);
-begin
-  {$IFDEF DARAJA_LOGGING}
-  ContextLogger.Info(Msg);
-  {$ELSE}
-  if System.IsConsole then
-  begin
-    WriteLn(Msg);
-  end;
-  {$ENDIF DARAJA_LOGGING}
-end;
-
-{ TdjContextHandler }
-
-constructor TdjContextHandler.Create(const ContextPath: string);
-begin
-  inherited Create;
-
-  // logging -----------------------------------------------------------------
-  {$IFDEF DARAJA_LOGGING}
-  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjContextHandler.ClassName);
-  {$ENDIF DARAJA_LOGGING}
-
-  FContext := TdjContext.Create(ContextPath);
-
-  FContextHandlerConfig := TdjContextConfig.Create;
-  (FContextHandlerConfig as IWriteableConfig).SetContext(FContext);
-
-  FConnectorNames := TStringList.Create;
-end;
-
-destructor TdjContextHandler.Destroy;
-begin
-  FConnectorNames.Free;
-
-  inherited;
-end;
-
-function TdjContextHandler.GetContextPath: string;
-begin
-  Result := GetCurrentContext.GetContextPath;
-end;
-
-function TdjContextHandler.GetCurrentContext: IContext;
-begin
-  Assert(FContext <> nil);
-  Result := FContext;
-end;
-
-function TdjContextHandler.ToConnectorName(Context: TdjServerContext): string;
-begin
-  Result := Context.Binding.IP + ':' + IntToStr(Context.Binding.Port);
-end;
-
-procedure TdjContextHandler.Trace(const S: string);
-begin
-  {$IFDEF DARAJA_LOGGING}
-  if Logger.IsTraceEnabled then
-  begin
-    Logger.Trace(S);
-  end;
-  {$ENDIF DARAJA_LOGGING}
-end;
-
 function TdjContextHandler.ContextMatches(const ConnectorName, Target: string): Boolean;
 begin
   Result := (Pos('/' + ContextPath + '/', Target) = 1)
@@ -386,7 +485,8 @@ begin
   end;
 end;
 
-procedure TdjContextHandler.SetInitParameter(const Key, Value: string);
+procedure TdjContextHandler.SetInitParameter(const Key: string;
+  const Value: string);
 begin
   CheckStarted;
   (FContextHandlerConfig as IWriteableConfig).Add(Key, Value);
@@ -401,7 +501,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   // configure the context
-  FContext.Init(FContextHandlerConfig);
+  // FContext.Init(FContextHandlerConfig);
 end;
 
 procedure TdjContextHandler.DoStop;
@@ -417,6 +517,18 @@ procedure TdjContextHandler.Handle(const Target: string; Context: TdjServerConte
   Request: TdjRequest; Response: TdjResponse);
 begin
   Trace('Handle ' + Target);
+end;
+
+procedure TdjContextHandler.Log(const Msg: string);
+begin
+  {$IFDEF DARAJA_LOGGING}
+  ContextLogger.Info(Msg);
+  {$ELSE}
+  if System.IsConsole then
+  begin
+    WriteLn(Msg);
+  end;
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 end.

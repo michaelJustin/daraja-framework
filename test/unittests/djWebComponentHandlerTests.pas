@@ -86,15 +86,15 @@ end;
 
 procedure TdjWebComponentHandlerTests.TestAddTwoComponents;
 var
-  Context: TdjWebAppContext;
+  Context: IContext;
   H1, H2: TdjWebComponentHolder;
   Handler: TTestdjWebComponentHandler;
 begin
   Context := TdjWebAppContext.Create('');
-  try
+
     Handler := TTestdjWebComponentHandler.Create;
     try
-      Handler.SetContext(Context.GetCurrentContext);
+      Handler.SetContext(Context);
 
       CheckTrue(Handler.Stopped);
       Handler.Start;
@@ -105,13 +105,13 @@ begin
       H1.Name := 'Example Page';
       H1.SetInitParameter('a', '123');
 
-      H1.SetContext(Context.GetCurrentContext);
+      H1.SetContext(Context);
 
       Handler.AddWithMapping(H1, '/index.html');
       CheckEquals(1, Handler.WebComponents.Count);
 
       H2 := TdjWebComponentHolder.Create(TExamplePage);
-      H2.SetContext(Context.GetCurrentContext);
+      H2.SetContext(Context);
       // CheckEquals('TExamplePage', H2.Name);
       // todo not allowed H2.Name := 'Example Page';
       H2.SetInitParameter('b', '456');
@@ -129,9 +129,7 @@ begin
     finally
       Handler.Free;
     end;
-  finally
-    Context.Free;
-  end;
+
 end;
 
 //procedure TdjWebComponentHandlerTests.TestAddPathMap;
@@ -165,18 +163,18 @@ end;
 
 procedure TdjWebComponentHandlerTests.TestAddSamePathMapTwiceFails;
 var
-  Context: TdjWebAppContext;
+  Context: IContext;
   H1: TdjWebComponentHolder;
   Handler: TTestdjWebComponentHandler;
 begin
   Context := TdjWebAppContext.Create('');
-  try
+
     Handler := TTestdjWebComponentHandler.Create;
     try
-      Handler.SetContext(Context.GetCurrentContext);
+      Handler.SetContext(Context);
 
       H1 := TdjWebComponentHolder.Create(TExamplePage);
-      H1.SetContext(Context.GetCurrentContext);
+      H1.SetContext(Context);
 
       Handler.AddWithMapping(H1, '/index.html');
 
@@ -192,31 +190,29 @@ begin
     finally
       Handler.Free;
     end;
-  finally
-    Context.Free;
-  end;
+
 end;
 
 procedure TdjWebComponentHandlerTests.TestTwoComponentsSamePathMapFails;
 var
-  Context: TdjWebAppContext;
+  Context: IContext;
   H1, H2: TdjWebComponentHolder;
   Handler: TTestdjWebComponentHandler;
 begin
   Context := TdjWebAppContext.Create('');
-  try
+
     Handler := TTestdjWebComponentHandler.Create;
     try
-      Handler.SetContext(Context.GetCurrentContext);
+      Handler.SetContext(Context);
 
       H1 := TdjWebComponentHolder.Create(TExamplePage);
-      H1.SetContext(Context.GetCurrentContext);
+      H1.SetContext(Context);
 
       Handler.AddWithMapping(H1, '/index.html');
 
       H2 := TdjWebComponentHolder.Create(TExamplePage);
       try
-        H2.SetContext(Context.GetCurrentContext);
+        H2.SetContext(Context);
 
         {$IFDEF FPC}
         ExpectException(EWebComponentException);
@@ -233,31 +229,29 @@ begin
     finally
       Handler.Free;
     end;
-  finally
-    Context.Free;
-  end;
+
 end;
 
 procedure TdjWebComponentHandlerTests.TestTwoContextsFails;
 var
-  C1, C2: TdjWebAppContext;
+  C1, C2: IContext;
   H1, H2: TdjWebComponentHolder;
   Handler: TTestdjWebComponentHandler;
 begin
   C1 := TdjWebAppContext.Create('');
   C2 := TdjWebAppContext.Create('');
-  try
+
     Handler := TTestdjWebComponentHandler.Create;
     try
-      Handler.SetContext(C1.GetCurrentContext);
+      Handler.SetContext(C1);
 
       H1 := TdjWebComponentHolder.Create(TExamplePage);
-      H1.SetContext(C1.GetCurrentContext);
+      H1.SetContext(C1);
       Handler.AddWithMapping(H1, '/a.html');
 
       H2 := TdjWebComponentHolder.Create(TOtherPage);
       try
-        H2.SetContext(C2.GetCurrentContext);
+        H2.SetContext(C2);
 
         {$IFDEF FPC}
         ExpectException(EWebComponentException);
@@ -275,26 +269,23 @@ begin
     finally
       Handler.Free;
     end;
-  finally
-    C1.Free;
-    C2.Free;
-  end;
+
 end;
 
 procedure TdjWebComponentHandlerTests.TestAddSameComponentWithDifferentPaths;
 var
-  Context: TdjWebAppContext;
+  Context: IContext;
   H1: TdjWebComponentHolder;
   Handler: TTestdjWebComponentHandler;
 begin
   Context := TdjWebAppContext.Create('');
-  try
+
     Handler := TTestdjWebComponentHandler.Create;
     try
-      Handler.SetContext(Context.GetCurrentContext);
+      Handler.SetContext(Context);
 
       H1 := TdjWebComponentHolder.Create(TExamplePage);
-      H1.SetContext(Context.GetCurrentContext);
+      H1.SetContext(Context);
 
       Handler.AddWithMapping(H1, '/index.html');
       // add the same component with different path map
@@ -302,9 +293,7 @@ begin
     finally
       Handler.Free;
     end;
-  finally
-    Context.Free;
-  end;
+
 end;
 
 end.

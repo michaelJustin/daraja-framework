@@ -48,7 +48,7 @@ type
 
   { TdjWebComponentContextHandler }
 
-  TdjWebComponentContextHandler = class(TdjContextHandler)
+  TdjWebComponentContextHandler = class(TdjContextHandler, IContext)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
@@ -202,7 +202,7 @@ begin
 
   WebComponentHandler := TdjWebComponentHandler.Create;
 
-  WebComponentHandler.SetContext(Self.GetCurrentContext);
+  WebComponentHandler.SetContext(Self);
 
   inherited AddHandler(WebComponentHandler);
 
@@ -216,6 +216,9 @@ begin
 {$IFDEF LOG_DESTROY}
   Trace('Destroy');
 {$ENDIF}
+
+  // TODO needed?
+  // WebComponentHandler.Free;
 
   inherited;
 end;
@@ -250,7 +253,7 @@ begin
       [ComponentClass.ClassName]));
     Holder := WebComponentHandler.AddWebComponent(ComponentClass, PathSpec);
     // set context of Holder to propagate it to WebComponentConfig
-    Holder.SetContext(GetCurrentContext);
+    Holder.SetContext(Self);
   end
   else
   begin
@@ -275,7 +278,7 @@ begin
   end;
 
   // set context of Holder to propagate it to WebComponentConfig
-  Holder.SetContext(Self.GetCurrentContext);
+  Holder.SetContext(Self);
 
   WebComponentHandler.AddWithMapping(Holder, PathSpec);
 end;
@@ -308,7 +311,7 @@ procedure TdjWebComponentContextHandler.AddWebFilter(Holder: TdjWebFilterHolder;
   const PathSpec: string);
 begin
   // set context of Holder to propagate it to WebFilterConfig
-  Holder.SetContext(Self.GetCurrentContext);
+  Holder.SetContext(Self);
 
   WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
 end;

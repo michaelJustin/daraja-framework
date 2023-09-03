@@ -94,7 +94,7 @@ type
   IContext = interface
     ['{19E32FEB-0348-42B2-8977-F03A0032473C}']
 
-    procedure Init(const Config: IContextConfig);
+    // procedure Init(const Config: IContextConfig);
     function GetContextConfig: IContextConfig;
 
     function GetContextPath: string;

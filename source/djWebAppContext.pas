@@ -33,15 +33,13 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  djWebComponentContextHandler;
+  djWebComponentContextHandler, djInterfaces;
 
 type
   (**
    * Main context handler class.
    *)
-  TdjWebAppContext = class(TdjWebComponentContextHandler)
-  public
-  end;
+  TdjWebAppContext = class(TdjWebComponentContextHandler, IContext);
 
 implementation
 
