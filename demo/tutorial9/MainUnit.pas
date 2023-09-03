@@ -41,7 +41,7 @@ uses
   OpenIDAuthFilter,
   OpenIDCallbackResource,
   djServer, djWebAppContext, djNCSALogFilter, djWebComponentHolder,
-  djWebFilterHolder, djInterfaces,
+  djWebFilterHolder,
   ShellAPI, SysUtils;
 
 procedure Demo;
