@@ -41,7 +41,7 @@ uses
   OpenIDAuthFilter,
   OpenIDCallbackResource,
   djServer, djWebAppContext, djNCSALogFilter, djWebComponentHolder,
-  djWebFilterConfig, djInterfaces,
+  djWebFilterHolder, djInterfaces,
   ShellAPI, SysUtils;
 
 procedure Demo;
@@ -53,24 +53,20 @@ const
 var
   Context: TdjWebAppContext;
   OIDCCallbackHolder: TdjWebComponentHolder;
+  FilterHolder: TdjWebFilterHolder;
   Server: TdjServer;
-  function BuildFilterConfig: IWebFilterConfig;
-  var
-    Cfg: TdjWebFilterConfig;
-  begin
-    Cfg := TdjWebFilterConfig.Create;
-    Cfg.Add('RedirectURI', REDIRECT_URI);
-    Result := Cfg;
-  end;
 begin
   OIDCCallbackHolder := TdjWebComponentHolder.Create(TOpenIDCallbackResource);
   OIDCCallbackHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
   OIDCCallbackHolder.SetInitParameter('secret.file', SECRET_FILE);
 
+  FilterHolder := TdjWebFilterHolder.Create(TOpenIDAuthFilter);
+  FilterHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
+
   Context := TdjWebAppContext.Create('', True);
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(OIDCCallbackHolder, '/openidcallback');
-  Context.AddFilterWithMapping(TOpenIDAuthFilter, '*.html', BuildFilterConfig);
+  Context.AddWebFilter(FilterHolder, '*.html');
   Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);

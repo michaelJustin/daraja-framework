@@ -74,11 +74,8 @@ var
   HandlerList: IHandlerContainer;
   DefaultHandler: IHandler;
   Context: TdjWebAppContext;
-  WebFilterConfig: IWebFilterConfig;
 begin
   ConfigureLogging;
-
-  WebFilterConfig := TdjWebFilterConfig.Create;
 
   Server := TdjServer.Create(8080);
   try
@@ -106,7 +103,7 @@ begin
     Context.AddWebComponent(TSourcePage, '/source.html'); // view source
     // -----------------------------------------------------------------------
     // register the Web Filters
-    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*', WebFilterConfig);
+    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
     // add the "demo" context
     Server.Add(Context);
