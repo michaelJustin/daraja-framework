@@ -52,7 +52,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    FConfig: TdjWebFilterConfig;
+    FConfig: IWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
@@ -130,7 +130,6 @@ end;
 destructor TdjWebFilterHolder.Destroy;
 begin
   {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-  FConfig.Free;
   inherited;
 end;
 
@@ -139,13 +138,13 @@ begin
   Assert(Context <> nil);
   Assert(FConfig <> nil);
 
-  FConfig.SetContext(Context);
+  (FConfig as IWriteableConfig).SetContext(Context);
 end;
 
 procedure TdjWebFilterHolder.SetInitParameter(const Key: string;
   const Value: string);
 begin
-  FConfig.Add(Key, Value);
+  (FConfig as IWriteableConfig).Add(Key, Value);
 end;
 
 procedure TdjWebFilterHolder.Trace(const S: string);

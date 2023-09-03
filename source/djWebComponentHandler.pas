@@ -36,7 +36,7 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djPathMap,
-  djWebFilter, djWebFilterHolder, djWebFilterMapping, djMultiMap,
+  djWebFilterHolder, djWebFilterMapping, djMultiMap,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
@@ -303,7 +303,7 @@ begin
   FWebComponentHolders.Free;
   FWebComponentMappings.Free;
 
-  //FWebFilterHolders.Free;
+  FWebFilterHolders.Free;
   FWebFilterMappings.Free;
 
   FWebFilterNameMap.Free;

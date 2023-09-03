@@ -129,7 +129,7 @@ type
     {$ENDIF DARAJA_LOGGING}
 
     FContext: IContext;
-    FContextHandlerConfig: TdjContextConfig;
+    FContextHandlerConfig: IContextConfig;
     FConnectorNames: TStrings;
     FErrorHandler: IHandler;
 
@@ -233,6 +233,7 @@ begin
 
   ValidateContextPath(ContextPath);
 
+  // TODO check why creation is needed here (actually it is accessed before init is called)
   FConfig := TdjContextConfig.Create;
   FContextPath := ContextPath;
 end;
@@ -297,7 +298,7 @@ end;
 
 procedure TdjContext.Init(const Config: IContextConfig);
 begin
-  FConfig := Config;
+  FConfig := Config; // TODO check if it is ok to overwrite the field here with a new one
 end;
 
 procedure TdjContext.Log(const Msg: string);
@@ -326,14 +327,13 @@ begin
   FContext := TdjContext.Create(ContextPath);
 
   FContextHandlerConfig := TdjContextConfig.Create;
-  FContextHandlerConfig.SetContext(FContext);
+  (FContextHandlerConfig as IWriteableConfig).SetContext(FContext);
 
   FConnectorNames := TStringList.Create;
 end;
 
 destructor TdjContextHandler.Destroy;
 begin
-  // FContextHandlerConfig := nil; // .Free; // TODO AV
   FConnectorNames.Free;
 
   inherited;
@@ -389,7 +389,7 @@ end;
 procedure TdjContextHandler.SetInitParameter(const Key, Value: string);
 begin
   CheckStarted;
-  FContextHandlerConfig.Add(Key, Value);
+  (FContextHandlerConfig as IWriteableConfig).Add(Key, Value);
 end;
 
 procedure TdjContextHandler.DoStart;
