@@ -317,8 +317,11 @@ end;
 procedure TdjWebComponentContextHandler.AddFilterWithMapping(
   FilterClass: TdjWebFilterClass; const PathSpec: string;
   const Config: IWebFilterConfig);
+var
+  Holder: TdjWebFilterHolder;
 begin
-  WebComponentHandler.AddFilterWithMapping(FilterClass, PathSpec, Config);
+  Holder := TdjWebFilterHolder.Create(FilterClass);
+  WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;

@@ -162,19 +162,6 @@ type
       const PathSpec: string); overload;
 
     (**
-     * Add a Web Filter, specifying a WebFilter holder instance
-     * and the mapped path.
-     *
-     * \param FilterClass WebFilter class
-     * \param PathSpec mapped path
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string;
-      const Config: IWebFilterConfig): TdjWebFilterHolder; overload;
-
-    (**
      * Create a TdjWebComponentHolder for a WebComponentClass.
      *
      * \param WebComponentClass the Web Component class
@@ -624,15 +611,6 @@ begin
   Mapping.PathSpecs.Add(PathSpec);
 
   FWebFilterMappings.Add(Mapping);
-end;
-
-function TdjWebComponentHandler.AddFilterWithMapping(
-  FilterClass: TdjWebFilterClass; const PathSpec: string;
-  const Config: IWebFilterConfig): TdjWebFilterHolder;
-begin
-  Assert(Config = nil);
-  Result := TdjWebFilterHolder.Create(FilterClass);
-  AddFilterWithMapping(Result, PathSpec);
 end;
 
 procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
