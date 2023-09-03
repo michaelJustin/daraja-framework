@@ -158,8 +158,8 @@ type
      * \param WebComponentClass the Web Component class
      * \return a TdjWebComponentHolder with the WebComponentClass.
      *)
-    function CreateHolder(WebComponentClass: TdjWebComponentClass):
-      TdjWebComponentHolder;
+    //function CreateHolder(WebComponentClass: TdjWebComponentClass):
+    //  TdjWebComponentHolder;
 
     (**
      * Find a TdjWebComponentHolder for a WebComponentClass.
@@ -339,11 +339,11 @@ begin
   end;
 end;
 
-function TdjWebComponentHandler.CreateHolder(WebComponentClass:
-  TdjWebComponentClass): TdjWebComponentHolder;
-begin
-  Result := TdjWebComponentHolder.Create(WebComponentClass);
-end;
+//function TdjWebComponentHandler.CreateHolder(WebComponentClass:
+//  TdjWebComponentClass): TdjWebComponentHolder;
+//begin
+//  Result := TdjWebComponentHolder.Create(WebComponentClass);
+//end;
 
 // ILifeCycle
 

@@ -249,14 +249,13 @@ begin
   try
     Handler := TTestdjWebComponentHandler.Create;
     try
-
       Handler.SetContext(C1.GetCurrentContext);
 
-      H1 := Handler.CreateHolder(TExamplePage);
+      H1 := TdjWebComponentHolder.Create(TExamplePage);
       H1.SetContext(C1.GetCurrentContext);
       Handler.AddWithMapping(H1, '/a.html');
 
-      H2 := Handler.CreateHolder(TOtherPage);
+      H2 := TdjWebComponentHolder.Create(TOtherPage);
       try
         H2.SetContext(C2.GetCurrentContext);
 
