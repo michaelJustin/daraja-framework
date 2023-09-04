@@ -56,6 +56,8 @@ type
     // context
     procedure StopContext;
     procedure StopStartContext;
+    procedure TestWebAppContextMemoryLeaks;
+    procedure TestWebAppContextMemoryLeaksWithWebComponent;
 
     //
     procedure ConfigAbsolutePath;
@@ -157,6 +159,23 @@ type
 procedure TExamplePage.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText := 'example';
+end;
+
+procedure TAPIConfigTests.TestWebAppContextMemoryLeaks;
+var
+  Context: TdjWebAppContext;
+begin
+  Context := TdjWebAppContext.Create('web');
+  Context.Free;
+end;
+
+procedure TAPIConfigTests.TestWebAppContextMemoryLeaksWithWebComponent;
+var
+  Context: TdjWebAppContext;
+begin
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '/example');
+  Context.Free;
 end;
 
 procedure TAPIConfigTests.ConfigAbsolutePath;
