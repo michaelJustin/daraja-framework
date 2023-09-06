@@ -188,6 +188,16 @@ type
     procedure SetContext(const Context: IContext);
   end;
 
+  (**
+   * \interface IRegistration
+   *)
+  IRegistration = interface
+    ['{98974CF1-D274-4B7B-BB7C-AA0B71F2302D}']
+    // Sets the initialization parameter with the given name and value on the WebComponent or WebFilter that
+    // is represented by this Registration.
+    procedure SetInitParameter(const Key: string; const Value: string);
+  end;
+
 
 implementation
 

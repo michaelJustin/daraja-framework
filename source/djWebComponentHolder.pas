@@ -47,7 +47,7 @@ type
 
   { TdjWebComponentHolder }
 
-  TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>)
+  TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>, IRegistration)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
