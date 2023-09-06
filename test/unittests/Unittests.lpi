@@ -38,7 +38,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="13">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -87,6 +87,11 @@
         <Filename Value="..\..\source\djAbstractHolder.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="..\..\source\djregistration.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="djRegistration"/>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -112,7 +117,6 @@
     <Linking>
       <Debugging>
         <DebugInfoType Value="dsDwarf3"/>
-        <UseLineInfoUnit Value="False"/>
       </Debugging>
     </Linking>
     <Other>

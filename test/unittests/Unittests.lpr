@@ -48,7 +48,7 @@ uses
   testregistry,
   fpcunit,
   GuiTestRunner,
-  consoletestrunner;
+  consoletestrunner, djRegistration;
 
 {$R *.res}
 
