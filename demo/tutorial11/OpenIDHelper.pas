@@ -42,7 +42,6 @@ type
     token_uri: string;
   end;
 
-function CreateState: string;
 function LoadClientSecrets(const Filename: string): TOpenIDParams;
 
 implementation
@@ -57,14 +56,6 @@ uses
   JsonDataObjects,
   {$ENDIF}
   Classes, SysUtils;
-
-function CreateState: string;
-var
-  Guid: TGUID;
-begin
-  CreateGUID(Guid);
-  Result := GUIDToString(Guid);
-end;
 
 {$IFDEF FPC}
 function LoadClientSecrets(const Filename: string): TOpenIDParams;

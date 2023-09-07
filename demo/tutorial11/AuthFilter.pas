@@ -48,14 +48,19 @@ type
     RedirectURI: string;
   public
     procedure Init(const Config: IWebFilterConfig); override;
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse;
-      const Chain: IWebFilterChain); override;
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse; const Chain: IWebFilterChain); override;
   end;
 
 implementation
 
-uses
-  OpenIDHelper;
+function CreateGUIDString: string;
+var
+  Guid: TGUID;
+begin
+  CreateGUID(Guid);
+  Result := GUIDToString(Guid);
+end;
 
 { TAuthFilter }
 
@@ -67,13 +72,13 @@ end;
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 var
-  AccessToken: string;
+  Credentials: string;
 begin
-  AccessToken := Request.Session.Content.Values['access_token'];
-  if AccessToken = '' then
+  Credentials := Request.Session.Content.Values['credentials'];
+  if Credentials = '' then
   begin
-    Response.Session.Content.Values['nonce'] := CreateState;
-    Response.Session.Content.Values['state'] := CreateState;
+    Response.Session.Content.Values['nonce'] := CreateGUIDString;
+    Response.Session.Content.Values['state'] := CreateGUIDString;
     Response.Redirect(RedirectURI);
   end
   else

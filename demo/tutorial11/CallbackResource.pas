@@ -53,7 +53,7 @@ type
 implementation
 
 uses
-  SysUtils, Classes;
+  SysUtils, StrUtils;
 
 { TCallbackResource }
 
@@ -80,6 +80,14 @@ begin
 end;
 
 procedure TCallbackResource.OnPost(Request: TdjRequest; Response: TdjResponse);
+var
+  Credentials: string;
+
+  function Ellipsis(S: string): string;
+  begin
+    Result := Copy(S, 1, 12) + string(' … ') + RightStr(S, 8);
+  end;
+
 begin
   if (Request.Params.Values['state'] <> Request.Session.Content.Values['state']) then
   begin
@@ -88,16 +96,21 @@ begin
     Exit;
   end;
 
-  Response.Session.Content.Values['id_token']
-    := Request.Params.Values['id_token'];
-  Response.Session.Content.Values['access_token']
-    := Request.Params.Values['access_token'];
-  Response.Session.Content.Values['token_type']
-    := Request.Params.Values['token_type'];
-  Response.Session.Content.Values['expires_in']
-    := Request.Params.Values['expires_in'];
-  Response.Session.Content.Values['scope']
-    := Request.Params.Values['scope'];
+  Credentials := Format(
+    'access_token: %s ' + #10 +
+    'scope: %s '+ #10 +
+    'token_type: %s '+ #10 +
+    'expires_in: %s' + #10 +
+    'id_token: %s',
+    [
+    Ellipsis(Request.Params.Values['access_token']),
+    Request.Params.Values['scope'],
+    Request.Params.Values['token_type'],
+    Request.Params.Values['expires_in'],
+    Ellipsis(Request.Params.Values['id_token'])
+    ]);
+
+  Response.Session.Content.Values['credentials'] := Credentials;
 
   Response.Redirect('/index.html');
 end;

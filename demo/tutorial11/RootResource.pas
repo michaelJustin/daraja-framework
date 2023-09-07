@@ -46,31 +46,11 @@ type
 
 implementation
 
-uses
-  SysUtils, StrUtils, Classes;
-
-function Ellipsis(S: string): string;
-begin
-  Result := Copy(S, 1, 12) + ' … ' + RightStr(S, 8);
-end;
-
 { TRootResource }
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
-  Response.ContentText := Format('access_token: %s ' + #10 +
-    'scope: %s '+ #10 +
-    'token_type: %s '+ #10 +
-    'expires_in: %s' + #10 +
-    'id_token: %s',
-    [
-    Ellipsis(Request.Session.Content.Values['access_token']),
-    Request.Session.Content.Values['scope'],
-    Request.Session.Content.Values['token_type'],
-    Request.Session.Content.Values['expires_in'],
-    Ellipsis(Request.Session.Content.Values['id_token'])
-    ]);
-
+  Response.ContentText := Request.Session.Content.Values['credentials'];
   Response.ContentType := 'text/plain';
   Response.CharSet := 'utf-8';
 end;
