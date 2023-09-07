@@ -53,9 +53,6 @@ type
 implementation
 
 uses
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
-  // IdHTTP,
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 { TCallbackResource }
@@ -78,50 +75,30 @@ begin
    + '&scope=openid'
    + '&response_mode=form_post'         // 'form_post' or 'fragment'
    + '&state=' + Request.Session.Content.Values['state']
-   + '&nonce=' + Request.Session.Content.Values['state']
+   + '&nonce=' + Request.Session.Content.Values['nonce']
    );
 end;
 
 procedure TCallbackResource.OnPost(Request: TdjRequest; Response: TdjResponse);
-var
-  State: string;
-  IdToken: string;
-  AccessToken: string;
-  TokenType: string;
-var
-  ResponseText: string;
 begin
-  State := Request.Params.Values['state'];
-  if (State <> Request.Session.Content.Values['state']) then
+  if (Request.Params.Values['state'] <> Request.Session.Content.Values['state']) then
   begin
     Response.ResponseNo := 401;
     WriteLn('Invalid state parameter.');
     Exit;
   end;
 
-  IdToken := Request.Params.Values['id_token'];
-  AccessToken := Request.Params.Values['access_token'];
-  TokenType := Request.Params.Values['token_type'];
+  Response.Session.Content.Values['id_token']
+    := Request.Params.Values['id_token'];
+  Response.Session.Content.Values['access_token']
+    := Request.Params.Values['access_token'];
+  Response.Session.Content.Values['token_type']
+    := Request.Params.Values['token_type'];
+  Response.Session.Content.Values['expires_in']
+    := Request.Params.Values['expires_in'];
+  Response.Session.Content.Values['scope']
+    := Request.Params.Values['scope'];
 
-  Response.Session.Content.Values['id_token'] := IdToken;
-  Response.Session.Content.Values['access_token'] := AccessToken;
-  Response.Session.Content.Values['token_type'] := TokenType;
-  Response.Session.Content.Values['expires_in'] := Request.Params.Values['expires_in'];
-  Response.Session.Content.Values['scope'] := Request.Params.Values['scope'];
-
-  // call UserInfo API
-  (* IdHTTP := TIdHTTP.Create;
-  try
-
-    IdHTTP.HTTPOptions := [hoNoProtocolErrorException, hoWantProtocolErrorContent];
-    IdHTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
-    // see https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration
-    ResponseText := IdHTTP.Get('https://graph.microsoft.com/oidc/userinfo');
-  finally
-    IdHTTP.Free;
-  end; *)
-
-  Response.Session.Content.Values['credentials'] := 'valid';
   Response.Redirect('/index.html');
 end;
 

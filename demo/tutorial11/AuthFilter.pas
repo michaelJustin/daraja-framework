@@ -67,11 +67,12 @@ end;
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 var
-  Credentials: string;
+  AccessToken: string;
 begin
-  Credentials := Request.Session.Content.Values['credentials'];
-  if Credentials = '' then
+  AccessToken := Request.Session.Content.Values['access_token'];
+  if AccessToken = '' then
   begin
+    Response.Session.Content.Values['nonce'] := CreateState;
     Response.Session.Content.Values['state'] := CreateState;
     Response.Redirect(RedirectURI);
   end
