@@ -47,7 +47,12 @@ type
 implementation
 
 uses
-  SysUtils, Classes;
+  SysUtils, StrUtils, Classes;
+
+function Ellipsis(S: string): string;
+begin
+  Result := Copy(S, 1, 12) + ' … ' + RightStr(S, 8);
+end;
 
 { TRootResource }
 
@@ -59,11 +64,11 @@ begin
     'expires_in: %s' + #10 +
     'id_token: %s',
     [
-    Request.Session.Content.Values['access_token'],
+    Ellipsis(Request.Session.Content.Values['access_token']),
     Request.Session.Content.Values['scope'],
     Request.Session.Content.Values['token_type'],
     Request.Session.Content.Values['expires_in'],
-    Request.Session.Content.Values['id_token']
+    Ellipsis(Request.Session.Content.Values['id_token'])
     ]);
 
   Response.ContentType := 'text/plain';
