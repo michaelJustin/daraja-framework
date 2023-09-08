@@ -79,17 +79,16 @@ begin
    );
 end;
 
+function Ellipsis(S: string): string;
+begin
+  Result := Copy(S, 1, 12) + string(' … ') + RightStr(S, 8);
+end;
+
 procedure TCallbackResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
   Credentials: string;
-
-  function Ellipsis(S: string): string;
-  begin
-    Result := Copy(S, 1, 12) + string(' … ') + RightStr(S, 8);
-  end;
-
 begin
-  if (Request.Params.Values['state'] <> Request.Session.Content.Values['state']) then
+  if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
   begin
     Response.ResponseNo := 401;
     WriteLn('Invalid state parameter.');
@@ -111,7 +110,6 @@ begin
     ]);
 
   Response.Session.Content.Values['credentials'] := Credentials;
-
   Response.Redirect('/index.html');
 end;
 
