@@ -107,3 +107,4 @@ demo/common/superobject.pas
 demo/common/JsonDataObjects.pas
 *.ico
 /DarajaFrameworkGettingStarted.pdf
+/demo/tutorial11/client_secret.json

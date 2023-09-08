@@ -30,6 +30,9 @@
 			<Projects Include="tutorial10\GitHubAppBackend.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="tutorial11\EntraOAuthExample.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -119,14 +122,23 @@
 		<Target Name="GitHubAppBackend:Make">
 			<MSBuild Targets="Make" Projects="tutorial10\GitHubAppBackend.dproj"/>
 		</Target>
+		<Target Name="EntraOAuthExample">
+			<MSBuild Projects="tutorial11\EntraOAuthExample.dproj"/>
+		</Target>
+		<Target Name="EntraOAuthExample:Clean">
+			<MSBuild Targets="Clean" Projects="tutorial11\EntraOAuthExample.dproj"/>
+		</Target>
+		<Target Name="EntraOAuthExample:Make">
+			<MSBuild Targets="Make" Projects="tutorial11\EntraOAuthExample.dproj"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="BootstrapDemo;HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;FormBasedLoginServer;GoogleAuthBackend;OpenIDConnectBackend;GitHubAppBackend"/>
+			<CallTarget Targets="BootstrapDemo;HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;FormBasedLoginServer;GoogleAuthBackend;OpenIDConnectBackend;GitHubAppBackend;EntraOAuthExample"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="BootstrapDemo:Clean;HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;FormBasedLoginServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;GitHubAppBackend:Clean"/>
+			<CallTarget Targets="BootstrapDemo:Clean;HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;FormBasedLoginServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;GitHubAppBackend:Clean;EntraOAuthExample:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="BootstrapDemo:Make;HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;FormBasedLoginServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;GitHubAppBackend:Make"/>
+			<CallTarget Targets="BootstrapDemo:Make;HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;FormBasedLoginServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;GitHubAppBackend:Make;EntraOAuthExample:Make"/>
 		</Target>
 		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 	</Project>
