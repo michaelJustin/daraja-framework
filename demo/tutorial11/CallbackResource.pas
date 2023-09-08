@@ -33,7 +33,6 @@ unit CallbackResource;
 interface
 
 uses
-  OpenIDHelper,
   djInterfaces, djWebComponent, djTypes;
 
 type
@@ -41,12 +40,7 @@ type
   { TCallbackResource }
 
   TCallbackResource = class(TdjWebComponent)
-  private
-    OpenIDParams: TOpenIDParams;
-    RedirectURI: string;
   public
-    procedure Init(const Config: IWebComponentConfig); override;
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -56,28 +50,6 @@ uses
   SysUtils, StrUtils;
 
 { TCallbackResource }
-
-procedure TCallbackResource.Init(const Config: IWebComponentConfig);
-begin
-  inherited Init(Config);
-
-  RedirectURI := Config.GetInitParameter('RedirectURI');
-  OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
-end;
-
-procedure TCallbackResource.OnGet(Request: TdjRequest; Response: TdjResponse);
-begin
-  // get an ID token and an access token
-  Response.Redirect(OpenIDParams.auth_uri
-   + '?client_id=' + OpenIDParams.client_id // Your app registration's Application (client) ID
-   + '&response_type=id_token%20token'  // Requests both an ID token and access token
-   + '&redirect_uri=' + RedirectURI
-   + '&scope=openid'
-   + '&response_mode=form_post'         // 'form_post' or 'fragment'
-   + '&state=' + Request.Session.Content.Values['state']
-   + '&nonce=' + Request.Session.Content.Values['nonce']
-   );
-end;
 
 function Ellipsis(S: string): string;
 begin

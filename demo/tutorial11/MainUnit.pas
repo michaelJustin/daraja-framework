@@ -55,11 +55,10 @@ var
   Server: TdjServer;
 begin
   CallbackHolder := TdjWebComponentHolder.Create(TCallbackResource);
-  CallbackHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
-  CallbackHolder.SetInitParameter('secret.file', SECRET_FILE);
 
   FilterHolder := TdjWebFilterHolder.Create(TAuthFilter);
   FilterHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
+  FilterHolder.SetInitParameter('secret.file', SECRET_FILE);
 
   Context := TdjWebAppContext.Create('', True);
   Context.AddWebComponent(TRootResource, '/index.html');

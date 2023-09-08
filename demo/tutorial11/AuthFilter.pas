@@ -33,6 +33,7 @@ unit AuthFilter;
 interface
 
 uses
+  OpenIDHelper,
   djWebFilter,
   djServerContext,
   djTypes,
@@ -45,6 +46,7 @@ type
 
   TAuthFilter = class(TdjWebFilter)
   private
+    OpenIDParams: TOpenIDParams;
     RedirectURI: string;
   public
     procedure Init(const Config: IWebFilterConfig); override;
@@ -67,6 +69,7 @@ end;
 procedure TAuthFilter.Init(const Config: IWebFilterConfig);
 begin
   RedirectURI := Config.GetInitParameter('RedirectURI');
+  OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
 end;
 
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -79,7 +82,16 @@ begin
   begin
     Response.Session.Content.Values['nonce'] := CreateGUIDString;
     Response.Session.Content.Values['state'] := CreateGUIDString;
-    Response.Redirect(RedirectURI);
+    // get an ID token and an access token
+    Response.Redirect(OpenIDParams.auth_uri
+     + '?client_id=' + OpenIDParams.client_id // Your app registration's Application (client) ID
+     + '&response_type=id_token%20token'  // Requests both an ID token and access token
+     + '&redirect_uri=' + RedirectURI
+     + '&scope=openid'
+     + '&response_mode=form_post'         // 'form_post' or 'fragment'
+     + '&state=' + Request.Session.Content.Values['state']
+     + '&nonce=' + Request.Session.Content.Values['nonce']
+     );
   end
   else
   begin
