@@ -68,17 +68,17 @@ begin
   end;
 
   Credentials := Format(
+    'id_token: %s' + #10 +
     'access_token: %s ' + #10 +
-    'scope: %s '+ #10 +
     'token_type: %s '+ #10 +
-    'expires_in: %s' + #10 +
-    'id_token: %s',
+    'scope: %s '+ #10 +
+    'expires_in: %s',
     [
+    Ellipsis(Request.Params.Values['id_token']),
     Ellipsis(Request.Params.Values['access_token']),
-    Request.Params.Values['scope'],
     Request.Params.Values['token_type'],
-    Request.Params.Values['expires_in'],
-    Ellipsis(Request.Params.Values['id_token'])
+    Request.Params.Values['scope'],
+    Request.Params.Values['expires_in']
     ]);
 
   Response.Session.Content.Values['credentials'] := Credentials;
