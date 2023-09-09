@@ -46,12 +46,16 @@ type
 
 implementation
 
+uses
+  SysUtils;
+
 { TRootResource }
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
-  Response.ContentText := Request.Session.Content.Values['credentials'];
-  Response.ContentType := 'text/plain';
+  Response.ContentText := Format('<html><body><pre>%s</pre></body></html>',
+    [Request.Session.Content.Values['credentials']]);
+  Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
 end;
 
