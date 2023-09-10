@@ -9,9 +9,9 @@
 
 # Daraja HTTP Framework
 
-Daraja is a flexible HTTP server framework for Object Pascal, based on the stand-alone HTTP server in the free open source library Internet Direct (Indy).
+Daraja is a flexible HTTP server framework for Object Pascal, based on the non-visual HTTP server component in the free open source library Internet Direct (Indy).
 
-Daraja provides the core foundation for serving HTTP resources of all content-types such as HTML pages, images, scripts, web service responses etc. by mapping resource paths to your own code. Your code then can create the response content, or let the framework serve a static file. 
+Daraja provides the core foundation for serving HTTP resources of all content-types such as HTML pages, images, scripts, web service responses etc. by mapping resource paths to your own code. Your code then can create the response content, or let the framework serve a static file.
 
 ## Documentation
 
