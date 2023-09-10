@@ -124,7 +124,7 @@
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="25">
+    <Exceptions Count="20">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -135,71 +135,56 @@
         <Name Value="EFOpenError"/>
       </Item3>
       <Item4>
-        <Name Value="EBTStompClientNotConnectedError"/>
+        <Name Value="ESynapseError"/>
       </Item4>
       <Item5>
-        <Name Value="ESynapseError"/>
+        <Name Value="EAssertionFailedError"/>
       </Item5>
       <Item6>
-        <Name Value="EAssertionFailedError"/>
+        <Name Value="EIdReadTimeout"/>
       </Item6>
       <Item7>
-        <Name Value="EIdReadTimeout"/>
+        <Name Value="EConnectionFailedException"/>
       </Item7>
       <Item8>
-        <Name Value="EConnectionFailedException"/>
+        <Name Value="Exception"/>
       </Item8>
       <Item9>
-        <Name Value="Exception"/>
+        <Name Value="EIgnoredTest"/>
       </Item9>
       <Item10>
-        <Name Value="EIgnoredTest"/>
+        <Name Value="EIdSocketError"/>
       </Item10>
       <Item11>
-        <Name Value="EBTStompServerErrorMessage"/>
+        <Name Value="EIdConnClosedGracefully"/>
       </Item11>
       <Item12>
-        <Name Value="EBTStompServerHeartbeatMissing"/>
+        <Name Value="EConvertError"/>
       </Item12>
       <Item13>
-        <Name Value="EJMSException"/>
+        <Name Value="EIllegalStateException"/>
       </Item13>
       <Item14>
-        <Name Value="EBTStompError"/>
+        <Name Value="EIdHTTPProtocolException"/>
       </Item14>
       <Item15>
-        <Name Value="EIdSocketError"/>
+        <Name Value="EWebComponentException"/>
       </Item15>
       <Item16>
-        <Name Value="EIdConnClosedGracefully"/>
+        <Name Value="EUnitTestException"/>
       </Item16>
       <Item17>
-        <Name Value="EConvertError"/>
+        <Name Value="EListError"/>
       </Item17>
       <Item18>
-        <Name Value="EIllegalStateException"/>
+        <Name Value="EIdCouldNotBindSocket"/>
       </Item18>
       <Item19>
-        <Name Value="EIdHTTPProtocolException"/>
+        <Name Value="EIdNotConnected"/>
       </Item19>
       <Item20>
-        <Name Value="EWebComponentException"/>
-      </Item20>
-      <Item21>
-        <Name Value="EUnitTestException"/>
-      </Item21>
-      <Item22>
-        <Name Value="EListError"/>
-      </Item22>
-      <Item23>
-        <Name Value="EIdCouldNotBindSocket"/>
-      </Item23>
-      <Item24>
-        <Name Value="EIdNotConnected"/>
-      </Item24>
-      <Item25>
         <Name Value="EIdClosedSocket"/>
-      </Item25>
+      </Item20>
     </Exceptions>
   </Debugging>
 </CONFIG>
