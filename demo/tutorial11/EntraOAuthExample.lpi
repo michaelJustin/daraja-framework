@@ -85,49 +85,16 @@
         <Name Value="EFOpenError"/>
       </Item>
       <Item>
-        <Name Value="EBTStompClientNotConnectedError"/>
-      </Item>
-      <Item>
-        <Name Value="ESynapseError"/>
-      </Item>
-      <Item>
         <Name Value="EAssertionFailedError"/>
       </Item>
       <Item>
         <Name Value="EIdReadTimeout"/>
       </Item>
       <Item>
-        <Name Value="EConnectionFailedException"/>
-      </Item>
-      <Item>
         <Name Value="Exception"/>
       </Item>
       <Item>
         <Name Value="EIgnoredTest"/>
-      </Item>
-      <Item>
-        <Name Value="EBTStompServerErrorMessage"/>
-      </Item>
-      <Item>
-        <Name Value="EBTStompServerHeartbeatMissing"/>
-      </Item>
-      <Item>
-        <Name Value="EJMSException"/>
-      </Item>
-      <Item>
-        <Name Value="EBTStompError"/>
-      </Item>
-      <Item>
-        <Name Value="EIdSocketError"/>
-      </Item>
-      <Item>
-        <Name Value="EIdConnClosedGracefully"/>
-      </Item>
-      <Item>
-        <Name Value="EConvertError"/>
-      </Item>
-      <Item>
-        <Name Value="EIllegalStateException"/>
       </Item>
       <Item>
         <Name Value="EIdHTTPProtocolException"/>
