@@ -98,10 +98,6 @@ type
     procedure TestAddConnector;
     procedure TestThreadPool;
 
-    procedure TestWrapper;
-    procedure TestWrapperWithContexts;
-    procedure TestWrapperWithContextsSimple;
-
     procedure TestBindErrorRaisesException;
 
     // test overriding the TdjWebComponent.OnGetLastModified method
@@ -131,7 +127,7 @@ implementation
 
 uses
   djWebAppContext, djInterfaces, djWebComponent, djWebComponentHolder,
-  djWebComponentContextHandler, djServer, djDefaultHandler, djStatisticsHandler,
+  djWebComponentContextHandler, djServer, djDefaultHandler,
   djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
   djAbstractHandler, djServerContext, djWebFilter, djWebFilterHolder,
   djWebFilterConfig,
@@ -430,6 +426,7 @@ begin
   Response.ResponseNo := 200;
 end;
 
+(*
 procedure TAPIConfigTests.TestWrapper;
 var
   Server: TdjServer;
@@ -544,6 +541,7 @@ begin
     Server.Free;
   end;
 end;
+*)
 
 type
   TNoMethodComponent = class(TdjWebComponent)
