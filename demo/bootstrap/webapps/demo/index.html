@@ -130,7 +130,7 @@
 						$("button.responses4xx").empty().append(data.responses4xx);
 						$("button.responses5xx").empty().append(data.responses5xx);
 					}, 
-					timeout: 10000     // == 10 seconds timeout
+					timeout: 30000     // == 30 seconds timeout
     }).always(function () {
       setTimeout(poll, 4000)           // == 4 seconds polling period
     })
