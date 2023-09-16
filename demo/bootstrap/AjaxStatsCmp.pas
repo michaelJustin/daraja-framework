@@ -33,10 +33,7 @@ unit AjaxStatsCmp;
 interface
 
 uses
-  djWebComponent, djStatisticsHandler, djTypes;
-
-var
-  StatsWrapper: TdjStatisticsHandler;
+  djWebComponent,djTypes;
 
 type
   TAjaxStatsJson = class(TdjWebComponent)
@@ -47,7 +44,7 @@ type
 implementation
 
 uses
-  SysUtils;
+  djStatisticsFilter, SysUtils;
 
 function AddJson(const AKey: string; const AValue: int64): string;
 begin
@@ -57,17 +54,20 @@ end;
 { TAjaxStatsJson }
 
 procedure TAjaxStatsJson.OnGet;
+var
+  Stats: TdjStatisticsFilter;
 begin
-  Sleep(2000); // limit refresh rate
+  // Sleep(2000); // limit refresh rate
 
-  Response.ContentText := '{' + AddJson('requests', StatsWrapper.Requests) +
-    ',' + AddJson('active', StatsWrapper.RequestsActive) + ',' +
-    AddJson('responses1xx', StatsWrapper.Responses1xx) + ',' +
-    AddJson('responses2xx', StatsWrapper.Responses2xx) + ',' +
-    AddJson('responses3xx', StatsWrapper.Responses3xx) + ',' +
-    AddJson('responses4xx', StatsWrapper.Responses4xx) + ',' +
-    AddJson('responses5xx', StatsWrapper.Responses5xx) + '}';
-
+  Stats := Request.Session.Content.Objects[0] as TdjStatisticsFilter;
+  Response.ContentText := '{' +
+    AddJson('requests', Stats.Requests) + ',' +
+    AddJson('active', Stats.RequestsActive) + ',' +
+    AddJson('responses1xx', Stats.Responses1xx) + ',' +
+    AddJson('responses2xx', Stats.Responses2xx) + ',' +
+    AddJson('responses3xx', Stats.Responses3xx) + ',' +
+    AddJson('responses4xx', Stats.Responses4xx) + ',' +
+    AddJson('responses5xx', Stats.Responses5xx) + '}';
   Response.ContentType := 'application/json';
   Response.CharSet := 'utf-8';
 end;

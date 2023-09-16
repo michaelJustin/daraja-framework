@@ -3,8 +3,8 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Daraja Framework</title>
-	<meta name="description" content="Daraja Framework">
+	<title>Daraja HTTP Framework</title>
+	<meta name="description" content="Daraja HTTP Framework">
 	<meta name="author" content="Michael Justin">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css" />
 	<bs:bootstrap_css />
@@ -118,9 +118,10 @@
 	<bs:bootstrap_js />
 	<script>
 		$(document).ready(function () {
-			(function poll() {
-				$.ajax({
-					url: "ajaxstats.json", success: function (data) {
+			function poll() {
+				$.get({
+					url: "ajaxstats.json", 
+					success: function (data) {
 						$("button.requests").empty().append(data.requests + " total requests");
 						$("button.active").empty().append(data.active);
 						$("button.responses1xx").empty().append(data.responses1xx);
@@ -128,10 +129,15 @@
 						$("button.responses3xx").empty().append(data.responses3xx);
 						$("button.responses4xx").empty().append(data.responses4xx);
 						$("button.responses5xx").empty().append(data.responses5xx);
-					}, dataType: "json", complete: poll, timeout: 30000, cache: false
-				});
-			})();
-		});
+					}, 
+					timeout: 10000     // == 10 seconds timeout
+    }).always(function () {
+      setTimeout(poll, 4000)           // == 4 seconds polling period
+    })
+  }
+  // start polling
+  poll()
+})
 	</script>
 </body>
 
