@@ -37,28 +37,30 @@ procedure Demo;
 implementation
 
 uses
-  {$IFDEF DARAJA_LOGGING}
-  djLogOverSimpleLogger,
-  SimpleLogger,
-  {$ENDIF DARAJA_LOGGING}
   AjaxStatsCmp,
+  FileUploadCmp,
+  SourceCmp,
+  IndexCmp,
+  FormCmp,
+  ThankYouCmp,
+  ShutdownHelper,
   djDefaultHandler,
   djDefaultWebComponent,
   djHandlerList,
   djInterfaces,
   djNCSALogFilter,
+  djStatisticsFilter,
   djWebFilterConfig,
   djServer,
-  djStatisticsHandler,
   djWebAppContext,
-  FileUploadCmp,
-  FormCmp,
+  {$IFDEF DARAJA_LOGGING}
+  djLogOverSimpleLogger,
+  SimpleLogger,
+  {$ENDIF DARAJA_LOGGING}
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal,
-  IndexCmp,
-  ShellAPI,
-  ShutdownHelper,
-  SourceCmp,
-  ThankYouCmp;
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  ShellAPI;
 
 procedure ConfigureLogging;
 begin
@@ -79,10 +81,6 @@ begin
 
   Server := TdjServer.Create(8080);
   try
-    // add statistics handler
-    StatsWrapper := TdjStatisticsHandler.Create;
-    Server.AddHandler(StatsWrapper);
-
     // add a handlerlist with a TdjDefaultHandler
     DefaultHandler := TdjDefaultHandler.Create;
     HandlerList := TdjHandlerList.Create;
@@ -103,6 +101,7 @@ begin
     Context.AddWebComponent(TSourcePage, '/source.html'); // view source
     // -----------------------------------------------------------------------
     // register the Web Filters
+    Context.AddFilterWithMapping(TdjStatisticsFilter, '/*');
     Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
     // add the "demo" context

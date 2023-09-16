@@ -166,11 +166,10 @@ begin
       + IntToStr(Response.ResponseNo) + ' '
       + IfNegative(Response.ContentLength);
 
-    {$IFDEF DARAJA_LOGGING}
-    Logger.Info(LogMsg);
-    {$ELSE}
-    System.Writeln(LogMsg);
-    {$ENDIF DARAJA_LOGGING}
+    if IsConsole then
+    begin
+      System.Writeln(LogMsg);
+    end;
   end;
 end;
 

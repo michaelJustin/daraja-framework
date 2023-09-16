@@ -33,10 +33,7 @@ unit AjaxStatsCmp;
 interface
 
 uses
-  djWebComponent, djStatisticsHandler, djTypes;
-
-var
-  StatsWrapper: TdjStatisticsHandler;
+  djWebComponent,djTypes;
 
 type
   TAjaxStatsJson = class(TdjWebComponent)
@@ -49,7 +46,7 @@ implementation
 uses
   SysUtils;
 
-function AddJson(const AKey: string; const AValue: int64): string;
+function AddJson(const AKey: string; const AValue: Int64): string;
 begin
   Result := Format('"%s":"%d"', [AKey, AValue]);
 end;
@@ -57,17 +54,19 @@ end;
 { TAjaxStatsJson }
 
 procedure TAjaxStatsJson.OnGet;
+  function ReadSessionValue(const AKey: string): Int64;
+  begin
+    Result := StrToIntDef(Request.Session.Content.Values['stats:' + AKey], 0);
+  end;
 begin
-  Sleep(2000); // limit refresh rate
-
-  Response.ContentText := '{' + AddJson('requests', StatsWrapper.Requests) +
-    ',' + AddJson('active', StatsWrapper.RequestsActive) + ',' +
-    AddJson('responses1xx', StatsWrapper.Responses1xx) + ',' +
-    AddJson('responses2xx', StatsWrapper.Responses2xx) + ',' +
-    AddJson('responses3xx', StatsWrapper.Responses3xx) + ',' +
-    AddJson('responses4xx', StatsWrapper.Responses4xx) + ',' +
-    AddJson('responses5xx', StatsWrapper.Responses5xx) + '}';
-
+  Response.ContentText := '{' +
+    AddJson('requests', ReadSessionValue('requests')) + ',' +
+    AddJson('active', ReadSessionValue('requestsactive')) + ',' +
+    AddJson('responses1xx', ReadSessionValue('responses1xx')) + ',' +
+    AddJson('responses2xx', ReadSessionValue('responses2xx')) + ',' +
+    AddJson('responses3xx', ReadSessionValue('responses3xx')) + ',' +
+    AddJson('responses4xx', ReadSessionValue('responses4xx')) + ',' +
+    AddJson('responses5xx', ReadSessionValue('responses5xx')) + '}';
   Response.ContentType := 'application/json';
   Response.CharSet := 'utf-8';
 end;
