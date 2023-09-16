@@ -44,9 +44,9 @@ type
 implementation
 
 uses
-  djStatisticsFilter, SysUtils;
+  SysUtils;
 
-function AddJson(const AKey: string; const AValue: int64): string;
+function AddJson(const AKey: string; const AValue: Int64): string;
 begin
   Result := Format('"%s":"%d"', [AKey, AValue]);
 end;
@@ -54,20 +54,19 @@ end;
 { TAjaxStatsJson }
 
 procedure TAjaxStatsJson.OnGet;
-var
-  Stats: TdjStatisticsFilter;
+  function ReadSessionValue(const AKey: string): Int64;
+  begin
+    Result := StrToIntDef(Request.Session.Content.Values['stats:' + AKey], 0);
+  end;
 begin
-  // Sleep(2000); // limit refresh rate
-
-  Stats := Request.Session.Content.Objects[0] as TdjStatisticsFilter;
   Response.ContentText := '{' +
-    AddJson('requests', Stats.Requests) + ',' +
-    AddJson('active', Stats.RequestsActive) + ',' +
-    AddJson('responses1xx', Stats.Responses1xx) + ',' +
-    AddJson('responses2xx', Stats.Responses2xx) + ',' +
-    AddJson('responses3xx', Stats.Responses3xx) + ',' +
-    AddJson('responses4xx', Stats.Responses4xx) + ',' +
-    AddJson('responses5xx', Stats.Responses5xx) + '}';
+    AddJson('requests', ReadSessionValue('requests')) + ',' +
+    AddJson('active', ReadSessionValue('requestsactive')) + ',' +
+    AddJson('responses1xx', ReadSessionValue('responses1xx')) + ',' +
+    AddJson('responses2xx', ReadSessionValue('responses2xx')) + ',' +
+    AddJson('responses3xx', ReadSessionValue('responses3xx')) + ',' +
+    AddJson('responses4xx', ReadSessionValue('responses4xx')) + ',' +
+    AddJson('responses5xx', ReadSessionValue('responses5xx')) + '}';
   Response.ContentType := 'application/json';
   Response.CharSet := 'utf-8';
 end;

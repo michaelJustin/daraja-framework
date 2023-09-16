@@ -55,14 +55,14 @@ type
     FRequestsActive: TIdThreadSafeInt64;
     FRequests: TIdThreadSafeInt64;
 
-    FRequestsDurationTotal: TIdThreadSafeInt64;
-    FRequestsDurationMax: TIdThreadSafeCardinal;
-    FRequestsDurationMin: TIdThreadSafeCardinal;
+    //FRequestsDurationTotal: TIdThreadSafeInt64;
+    //FRequestsDurationMax: TIdThreadSafeCardinal;
+    //FRequestsDurationMin: TIdThreadSafeCardinal;
 
-    function GetRequestsDurationAve: Integer;
-    function GetRequestsDurationMax: Cardinal;
-    function GetRequestsDurationMin: Cardinal;
-    function GetRequestsDurationTotal: Int64;
+    //function GetRequestsDurationAve: Integer;
+    //function GetRequestsDurationMax: Cardinal;
+    //function GetRequestsDurationMin: Cardinal;
+    //function GetRequestsDurationTotal: Int64;
 
     function GetRequests: Int64;
     function GetRequestsActive: Integer;
@@ -85,10 +85,10 @@ type
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
 
-    property RequestsDurationAve: Integer read GetRequestsDurationAve;
-    property RequestsDurationTotal: Int64 read GetRequestsDurationTotal;
-    property RequestsDurationMin: Cardinal read GetRequestsDurationMin;
-    property RequestsDurationMax: Cardinal read GetRequestsDurationMax;
+    //property RequestsDurationAve: Integer read GetRequestsDurationAve;
+    //property RequestsDurationTotal: Int64 read GetRequestsDurationTotal;
+    //property RequestsDurationMin: Cardinal read GetRequestsDurationMin;
+    //property RequestsDurationMax: Cardinal read GetRequestsDurationMax;
 
     property Requests: Int64 read GetRequests;
     property RequestsActive: Integer read GetRequestsActive;
@@ -123,9 +123,9 @@ begin
   FRequestsActive := TIdThreadSafeInt64.Create;
   FRequests := TIdThreadSafeInt64.Create;
 
-  FRequestsDurationTotal := TIdThreadSafeInt64.Create;
-  FRequestsDurationMax := TIdThreadSafeCardinal.Create;
-  FRequestsDurationMin := TIdThreadSafeCardinal.Create;
+  //FRequestsDurationTotal := TIdThreadSafeInt64.Create;
+  //FRequestsDurationMax := TIdThreadSafeCardinal.Create;
+  //FRequestsDurationMin := TIdThreadSafeCardinal.Create;
 end;
 
 destructor TdjStatisticsFilter.Destroy;
@@ -139,9 +139,9 @@ begin
   FRequestsActive.Free;
   FRequests.Free;
 
-  FRequestsDurationTotal.Free;
-  FRequestsDurationMax.Free;
-  FRequestsDurationMin.Free;
+  //FRequestsDurationTotal.Free;
+  //FRequestsDurationMax.Free;
+  //FRequestsDurationMin.Free;
 
   inherited;
 end;
@@ -156,32 +156,32 @@ begin
   Result := FRequestsActive.Value;
 end;
 
-function TdjStatisticsFilter.GetRequestsDurationAve: Integer;
-begin
-  if Requests = 0 then
-  begin
-    Result := 0;
-  end
-  else
-  begin
-    Result := Trunc(RequestsDurationTotal / Requests);
-  end;
-end;
+//function TdjStatisticsFilter.GetRequestsDurationAve: Integer;
+//begin
+//  if Requests = 0 then
+//  begin
+//    Result := 0;
+//  end
+//  else
+//  begin
+//    Result := Trunc(RequestsDurationTotal / Requests);
+//  end;
+//end;
 
-function TdjStatisticsFilter.GetRequestsDurationMax: Cardinal;
-begin
-  Result := FRequestsDurationMax.Value;
-end;
-
-function TdjStatisticsFilter.GetRequestsDurationMin: Cardinal;
-begin
-  Result := FRequestsDurationMin.Value;
-end;
-
-function TdjStatisticsFilter.GetRequestsDurationTotal: Int64;
-begin
-  Result := FRequestsDurationTotal.Value;
-end;
+//function TdjStatisticsFilter.GetRequestsDurationMax: Cardinal;
+//begin
+//  Result := FRequestsDurationMax.Value;
+//end;
+//
+//function TdjStatisticsFilter.GetRequestsDurationMin: Cardinal;
+//begin
+//  Result := FRequestsDurationMin.Value;
+//end;
+//
+//function TdjStatisticsFilter.GetRequestsDurationTotal: Int64;
+//begin
+//  Result := FRequestsDurationTotal.Value;
+//end;
 
 function TdjStatisticsFilter.GetResponses1xx: Int64;
 begin
@@ -209,41 +209,40 @@ begin
 end;
 
 procedure TdjStatisticsFilter.DoFilter;
-var
-  Started: Cardinal;
-  Elapsed: Cardinal;
+//var
+//  Started: Cardinal;
+//  Elapsed: Cardinal;
+  procedure SetSessionValue(const AKey: string; AValue: Integer);
+  begin
+    Request.Session.Content.Values['stats:' + AKey] := IntToStr(AValue);
+  end;
 begin
-  Started := djPlatform.GetTickCount;
+  //Started := djPlatform.GetTickCount;
 
   try
-    FRequests.Increment;
-    FRequestsActive.Increment;
-
-    if Request.Session.Content.Count = 0 then
-    begin
-      Request.Session.Content.AddObject('stats', Self);
-    end;
+    SetSessionValue('requests', FRequests.Increment);
+    SetSessionValue('requestsactive', FRequestsActive.Increment);
 
     Chain.DoFilter(Context, Request, Response);
 
   finally
-    FRequestsActive.Decrement;
+    SetSessionValue('requestsactive', FRequestsActive.Decrement);
 
-    Elapsed := GetTickDiff64(Started, djPlatform.GetTickCount);
+    //Elapsed := GetTickDiff64(Started, djPlatform.GetTickCount);
+    //
+    //FRequestsDurationTotal.Value := FRequestsDurationTotal.Value + Elapsed;
+    //
+    //if Elapsed > FRequestsDurationMax.Value then
+    //  FRequestsDurationMax.Value := Elapsed;
+    //if (FRequestsDurationMin.Value = 0) or (Elapsed < FRequestsDurationMin.Value) then
+    //  FRequestsDurationMin.Value := Elapsed;
 
-    FRequestsDurationTotal.Value := FRequestsDurationTotal.Value + Elapsed;
-
-    if Elapsed > FRequestsDurationMax.Value then
-      FRequestsDurationMax.Value := Elapsed;
-    if (FRequestsDurationMin.Value = 0) or (Elapsed < FRequestsDurationMin.Value) then
-      FRequestsDurationMin.Value := Elapsed;
-
-    case (Trunc(Response.ResponseNo / 100)) of
-      1: FResponses1xx.Increment;
-      2: FResponses2xx.Increment;
-      3: FResponses3xx.Increment;
-      4: FResponses4xx.Increment;
-      5: FResponses5xx.Increment;
+    case Trunc(Response.ResponseNo / 100) of
+      1: SetSessionValue('responses1xx', FResponses1xx.Increment);
+      2: SetSessionValue('responses2xx', FResponses2xx.Increment);
+      3: SetSessionValue('responses3xx', FResponses3xx.Increment);
+      4: SetSessionValue('responses4xx', FResponses4xx.Increment);
+      5: SetSessionValue('responses5xx', FResponses5xx.Increment);
     else
       begin
         {$IFDEF DEBUG}
