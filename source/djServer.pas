@@ -35,12 +35,12 @@ interface
 uses
   djInterfaces, djHTTPConnector, djServerBase, djServerInterfaces,
   djWebComponentContextHandler, djContextHandlerCollection,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
-{$IFDEF FPC}
+  {$ENDIF DARAJA_LOGGING}
+  {$IFDEF FPC}
   LazUTF8,
-{$ENDIF}
+  {$ENDIF}
   Generics.Collections;
 
 const
@@ -80,26 +80,24 @@ type
   (**
    * Basic server class for the Web Component framework.
    *)
+
+  { TdjServer }
+
   TdjServer = class(TdjServerBase)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
-
+    {$ENDIF DARAJA_LOGGING}
     FDefaultHost: string;
     FDefaultPort: Integer;
-
     ConnectorMap: TObjectDictionary<string, IConnector>;
-
     ConnectorList: TdjStrings;
-
     ContextHandlers: IHandlerContainer;
 
     procedure Trace(const S: string);
-
     procedure StartConnectors;
-
     procedure StopConnectors;
+    procedure StopContextHandlers;
 
   public
     (**
@@ -141,8 +139,7 @@ type
      * \param Host the connector host name
      * \param Port the connector port number
      *)
-    procedure AddConnector(const Host: string; Port: Integer = DEFAULT_BINDING_PORT);
-      overload;
+    procedure AddConnector(const Host: string; Port: Integer = DEFAULT_BINDING_PORT); overload;
 
     (**
      * Add a new context.
@@ -184,9 +181,9 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjServer.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   FDefaultHost := DEFAULT_BINDING_IP;
   FDefaultPort := DEFAULT_BINDING_PORT;
@@ -230,9 +227,6 @@ begin
   begin
     Stop;
   end;
-
-  //TODO why not
-  // RemoveHandler(ContextHandlers);
 
   ConnectorMap.Free;
   ConnectorList.Free;
@@ -321,6 +315,11 @@ begin
   Trace('All connectors stopped');
 end;
 
+procedure TdjServer.StopContextHandlers;
+begin
+  ContextHandlers.Stop;
+end;
+
 procedure TdjServer.Trace(const S: string);
 begin
 {$IFDEF DARAJA_LOGGING}
@@ -351,9 +350,9 @@ begin
     except
       on E: Exception do
       begin
-{$IFDEF DARAJA_LOGGING}
+        {$IFDEF DARAJA_LOGGING}
         Logger.Error('Could not start connectors.');
-{$ENDIF DARAJA_LOGGING}
+        {$ENDIF DARAJA_LOGGING}
         raise;
       end;
     end;
@@ -361,9 +360,9 @@ begin
   except
     on E: Exception do
     begin
-{$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
       Logger.Error('Could not start server.');
-{$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_LOGGING}
       raise;
     end;
   end;
@@ -374,7 +373,7 @@ end;
 procedure TdjServer.DoStop;
 begin
   CheckStopped;
-
+  StopContextHandlers;
   StopConnectors;
 
   inherited;
