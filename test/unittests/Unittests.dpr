@@ -58,7 +58,6 @@ uses
   djServerContext in '..\..\source\djServerContext.pas',
   djServerInterfaces in '..\..\source\djServerInterfaces.pas',
   djStacktrace in '..\..\source\optional\djStacktrace.pas',
-  djStatisticsHandler in '..\..\source\optional\djStatisticsHandler.pas',
   djTypes in '..\..\source\djTypes.pas',
   djWebAppContext in '..\..\source\djWebAppContext.pas',
   djWebComponent in '..\..\source\djWebComponent.pas',
@@ -82,8 +81,7 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  SysUtils,
-  djWebFilterHolder in '..\..\source\djWebFilterHolder.pas';
+  SysUtils;
 
 begin
   ConfigureLogging;
