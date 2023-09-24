@@ -48,13 +48,17 @@ type
   (**
    * Context implementation.
    *)
-  TdjContext = class(TInterfacedObject, IContext)
+  TdjContext = class(TInterfacedObject, IContext, IWriteableConfig)
   private
     {$IFDEF DARAJA_LOGGING}
     ContextLogger: ILogger;
     {$ENDIF DARAJA_LOGGING}
     FConfig: IContextConfig;
     FContextPath: string;
+
+    // IWriteableConfig
+    procedure Add(const Key: string; const Value: string);
+    procedure SetContext(const Context: IContext);
 
     (**
      * a-z A-Z 0-9 . - _ ~ ! $ & ' ( ) * + , ; = : @
@@ -127,9 +131,7 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
     FContext: IContext;
-    FContextHandlerConfig: IContextConfig;
     FConnectorNames: TStrings;
     FErrorHandler: IHandler;
 
@@ -298,7 +300,18 @@ end;
 
 procedure TdjContext.Init(const Config: IContextConfig);
 begin
+  // iow: does it decrease the reference count?
   FConfig := Config; // TODO check if it is ok to overwrite the field here with a new one
+end;
+
+procedure TdjContext.Add(const Key, Value: string);
+begin
+  (GetContextConfig as IWriteableConfig).Add(Key, Value);
+end;
+
+procedure TdjContext.SetContext(const Context: IContext);
+begin
+  // do nothing, we are in the context
 end;
 
 procedure TdjContext.Log(const Msg: string);
@@ -325,10 +338,6 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   FContext := TdjContext.Create(ContextPath);
-
-  FContextHandlerConfig := TdjContextConfig.Create;
-  (FContextHandlerConfig as IWriteableConfig).SetContext(FContext);
-
   FConnectorNames := TStringList.Create;
 end;
 
@@ -389,7 +398,7 @@ end;
 procedure TdjContextHandler.SetInitParameter(const Key, Value: string);
 begin
   CheckStarted;
-  (FContextHandlerConfig as IWriteableConfig).Add(Key, Value);
+  (FContext as IWriteableConfig).Add(Key, Value);
 end;
 
 procedure TdjContextHandler.DoStart;
@@ -399,9 +408,6 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger.Info('Starting context ' + ContextPath);
   {$ENDIF DARAJA_LOGGING}
-
-  // configure the context
-  FContext.Init(FContextHandlerConfig);
 end;
 
 procedure TdjContextHandler.DoStop;
