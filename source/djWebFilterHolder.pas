@@ -57,7 +57,6 @@ type
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
-    function GetWebFilter: TdjWebFilter;
   public
     constructor Create(WebFilterClass: TdjWebFilterClass);
     destructor Destroy; override;
@@ -96,7 +95,7 @@ type
     (**
      * The instance of the filter.
      *)
-    property WebFilter: TdjWebFilter read GetWebFilter;
+    property WebFilter: TdjWebFilter read FWebFilter;
   end;
 
   // note Delphi 2009 AVs if it is a TObjectList<>
@@ -160,11 +159,6 @@ end;
 function TdjWebFilterHolder.GetClass: TdjWebFilterClass;
 begin
   Result := FClass;
-end;
-
-function TdjWebFilterHolder.GetWebFilter: TdjWebFilter;
-begin
-  Result := FWebFilter;
 end;
 
 procedure TdjWebFilterHolder.DoStart;
