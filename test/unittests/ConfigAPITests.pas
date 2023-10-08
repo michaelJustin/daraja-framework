@@ -104,6 +104,7 @@ type
     // (since 1.2.10)
     procedure TestCachedGetRequest;
 
+    procedure TestOnlyAFilter;
     procedure TestFilter;
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
@@ -1220,6 +1221,27 @@ procedure TTestFilterB.DoFilter(Context: TdjServerContext; Request: TdjRequest;
 begin
   Chain.DoFilter(Context, Request, Response);
   Response.ContentText := Response.ContentText + ' (B)';
+end;
+
+procedure TAPIConfigTests.TestOnlyAFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddFilterWithMapping(TTestFilter, '*.html');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponse404('/web/index.html');
+  finally
+    Server.Free;
+  end;
 end;
 
 procedure TAPIConfigTests.TestFilter;

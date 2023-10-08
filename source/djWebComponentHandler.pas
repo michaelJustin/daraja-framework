@@ -371,12 +371,12 @@ end;
 
 procedure TdjWebComponentHandler.DoStop;
 var
-  F: TdjWebFilterHolder;
+  FilterHolder: TdjWebFilterHolder;
   H: TdjWebComponentHolder;
 begin
-  for F in WebFilters do
+  for FilterHolder in WebFilters do
   begin
-    F.Stop;
+    FilterHolder.Stop;
   end;
 
   for H in WebComponents do
