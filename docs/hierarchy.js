@@ -1,8 +1,6 @@
 var hierarchy =
 [
-    [ "IContext", "interfaceIContext.html", [
-      [ "TdjContext", "classTdjContext.html", null ]
-    ] ],
+    [ "IContext", "interfaceIContext.html", null ],
     [ "IContextConfig", "interfaceIContextConfig.html", [
       [ "TdjContextConfig", "classTdjContextConfig.html", null ]
     ] ],
@@ -29,7 +27,8 @@ var hierarchy =
       ] ]
     ] ],
     [ "IHandlerContainer", "interfaceIHandlerContainer.html", [
-      [ "TdjAbstractHandlerContainer", "classTdjAbstractHandlerContainer.html", null ]
+      [ "TdjAbstractHandlerContainer", "classTdjAbstractHandlerContainer.html", null ],
+      [ "TdjServerBase", "classTdjServerBase.html", null ]
     ] ],
     [ "ILifeCycle", "interfaceILifeCycle.html", [
       [ "IConnector", "classIConnector.html", [
@@ -47,6 +46,9 @@ var hierarchy =
           [ "TdjWebFilterHolder", "classTdjWebFilterHolder.html", null ]
         ] ]
       ] ]
+    ] ],
+    [ "IRegistration", null, [
+      [ "TdjRegistration", "classTdjRegistration.html", null ]
     ] ],
     [ "IWebComponent", "interfaceIWebComponent.html", [
       [ "TdjGenericWebComponent", "classTdjGenericWebComponent.html", [
@@ -71,6 +73,14 @@ var hierarchy =
     [ "IWebFilterConfig", "interfaceIWebFilterConfig.html", [
       [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", null ]
     ] ],
+    [ "IWriteableConfig", null, [
+      [ "TdjAbstractConfig", "classTdjAbstractConfig.html", [
+        [ "TdjContextConfig", "classTdjContextConfig.html", null ],
+        [ "TdjWebComponentConfig", "classTdjWebComponentConfig.html", null ],
+        [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", null ]
+      ] ],
+      [ "TdjContext", "classTdjContext.html", null ]
+    ] ],
     [ "string", null, [
       [ "TdjInitParameters", "classTdjInitParameters.html", null ]
     ] ],
@@ -89,15 +99,12 @@ var hierarchy =
       [ "TdjServerContext", "classTdjServerContext.html", null ]
     ] ],
     [ "TInterfacedObject", null, [
-      [ "TdjAbstractConfig", "classTdjAbstractConfig.html", [
-        [ "TdjContextConfig", "classTdjContextConfig.html", null ],
-        [ "TdjWebComponentConfig", "classTdjWebComponentConfig.html", null ],
-        [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", null ]
-      ] ],
+      [ "TdjAbstractConfig", "classTdjAbstractConfig.html", null ],
       [ "TdjContext", "classTdjContext.html", null ],
       [ "TdjGenericWebComponent", "classTdjGenericWebComponent.html", null ],
       [ "TdjGenericWebFilter", "classTdjGenericWebFilter.html", null ],
       [ "TdjLifeCycle", "classTdjLifeCycle.html", null ],
+      [ "TdjRegistration", "classTdjRegistration.html", null ],
       [ "TdjWebFilterChain", "classTdjWebFilterChain.html", null ]
     ] ],
     [ "TObject", null, [

@@ -7,6 +7,5 @@ var searchData=
   ['connectorcount_4',['ConnectorCount',['../classTdjServer.html#ab0aaad08ca5ad16a8c4718aaef4ec474',1,'TdjServer']]],
   ['connectornames_5',['ConnectorNames',['../classTdjContextHandler.html#a4404b1fde6e371e72da4d23a28198d21',1,'TdjContextHandler']]],
   ['contextmatches_6',['ContextMatches',['../classTdjContextHandler.html#ae253d495f5cdfbd0ea0e81fb32bfa269',1,'TdjContextHandler']]],
-  ['contextpath_7',['ContextPath',['../classTdjContextHandler.html#aad947156fa085ca6ab982c2fe7dbef10',1,'TdjContextHandler']]],
-  ['createholder_8',['CreateHolder',['../classTdjWebComponentHandler.html#ad610eff960f9be0129ef37f1800c1fd2',1,'TdjWebComponentHandler']]]
+  ['contextpath_7',['ContextPath',['../classTdjContextHandler.html#aad947156fa085ca6ab982c2fe7dbef10',1,'TdjContextHandler']]]
 ];

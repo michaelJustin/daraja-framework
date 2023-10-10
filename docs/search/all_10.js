@@ -10,5 +10,5 @@ var searchData=
   ['webfilterholder_7',['WebFilterHolder',['../classTdjWebFilterMapping.html#ae208a5f606132e24742181c3035da357',1,'TdjWebFilterMapping']]],
   ['webfiltername_8',['WebFilterName',['../classTdjWebFilterMapping.html#a12cb6391ffac7c01e944efc65a7e8b92',1,'TdjWebFilterMapping']]],
   ['webfilters_9',['WebFilters',['../classTdjWebComponentHandler.html#ab67d61e41ef429a7b2f34738421b324d',1,'TdjWebComponentHandler']]],
-  ['welcome_20to_20daraja_20http_20framework_21_10',['Welcome to Daraja HTTP Framework!',['../index.html',1,'']]]
+  ['welcome_20to_20daraja_20http_20framework_10',['Welcome to Daraja HTTP Framework!',['../index.html',1,'']]]
 ];
