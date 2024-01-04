@@ -46,6 +46,9 @@ uses
 
 procedure Demo;
 const
+  AUTHORIZE_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
+  // From Entra configuration
+  CLIENT_ID = 'eadb0a45-0b5e-433f-9407-b25612f7e7c4';
   // URI must match OAuth 2.0 settings in Entra configuration
   REDIRECT_URI = 'http://localhost/callback';
 var
@@ -54,6 +57,8 @@ var
   Server: TdjServer;
 begin
   FilterHolder := TdjWebFilterHolder.Create(TAuthFilter);
+  FilterHolder.SetInitParameter('AuthorizeEndpoint', AUTHORIZE_ENDPOINT);
+  FilterHolder.SetInitParameter('ClientID', CLIENT_ID);
   FilterHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
 
   Context := TdjWebAppContext.Create('', True);

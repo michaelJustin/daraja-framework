@@ -45,6 +45,8 @@ type
 
   TAuthFilter = class(TdjWebFilter)
   private
+    AuthorizeEndpoint: string;
+    ClientID: string;
     RedirectURI: string;
   public
     procedure Init(const Config: IWebFilterConfig); override;
@@ -66,6 +68,8 @@ end;
 
 procedure TAuthFilter.Init(const Config: IWebFilterConfig);
 begin
+  AuthorizeEndpoint := Config.GetInitParameter('AuthorizeEndpoint');
+  ClientID := Config.GetInitParameter('ClientID');
   RedirectURI := Config.GetInitParameter('RedirectURI');
 end;
 
@@ -81,8 +85,8 @@ begin
     Response.Session.Content.Values['nonce'] := CreateGUIDString;
     Response.Session.Content.Values['state'] := CreateGUIDString;
     // get an ID token and an access token
-    Response.Redirect('https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
-     + '?client_id=eadb0a45-0b5e-433f-9407-b25612f7e7c4' // Your app registration's Application (client) ID
+    Response.Redirect(AuthorizeEndpoint
+     + '?client_id=' + ClientID           // Your app registration's Application (client) ID
      + '&response_type=id_token%20token'  // Requests both an ID token and access token
      + '&redirect_uri=' + RedirectURI
      + '&scope=openid User.Read'
