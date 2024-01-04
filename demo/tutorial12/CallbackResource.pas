@@ -54,12 +54,18 @@ uses
 procedure TCallbackResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
   AccessToken: string;
+  P: string;
 begin
   if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
   begin
     Response.ResponseNo := 401;
     WriteLn('Invalid state parameter.');
     Exit;
+  end;
+
+  for P in Request.Params do
+  begin
+    WriteLn(P);
   end;
 
   // Read the access_token
