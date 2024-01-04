@@ -76,11 +76,10 @@ end;
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 var
-  Credentials: string;
+  AccessToken: string;
 begin
-  // TODO: use a 'Authenticated' Flag (on the Session)
-  Credentials := Request.Session.Content.Values['access_token'];
-  if Credentials = '' then
+  AccessToken := Request.Session.Content.Values['access_token'];
+  if AccessToken = '' then
   begin
     Response.Session.Content.Values['nonce'] := CreateGUIDString;
     Response.Session.Content.Values['state'] := CreateGUIDString;
