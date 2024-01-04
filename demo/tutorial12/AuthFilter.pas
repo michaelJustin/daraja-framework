@@ -83,10 +83,10 @@ begin
   begin
     Response.Session.Content.Values['nonce'] := CreateGUIDString;
     Response.Session.Content.Values['state'] := CreateGUIDString;
-    // get an ID token and an access token
+    // get an access token
     Response.Redirect(AuthorizeEndpoint
      + '?client_id=' + ClientID           // Your app registration's Application (client) ID
-     + '&response_type=id_token%20token'  // Requests both an ID token and access token
+     + '&response_type=token'             // Requests an access token
      + '&redirect_uri=' + RedirectURI
      + '&scope=openid User.Read'
      + '&response_mode=form_post'         // 'form_post' or 'fragment'
