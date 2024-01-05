@@ -47,7 +47,7 @@ uses
 procedure Demo;
 const
   AUTHORIZE_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize';
-  // From Entra configuration
+  // Application (client) ID from Entra configuration
   CLIENT_ID = 'ee5a0402-2861-44a2-b0e1-d79bfafbe56a';
   // Redirect URI must match Entra configuration
   REDIRECT_PATH = '/auth-response';
