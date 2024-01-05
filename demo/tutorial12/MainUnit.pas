@@ -46,11 +46,12 @@ uses
 
 procedure Demo;
 const
-  AUTHORIZE_ENDPOINT = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
+  AUTHORIZE_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize';
   // From Entra configuration
-  CLIENT_ID = 'eadb0a45-0b5e-433f-9407-b25612f7e7c4';
-  // URI must match OAuth 2.0 settings in Entra configuration
-  REDIRECT_URI = 'http://localhost/callback';
+  CLIENT_ID = 'ee5a0402-2861-44a2-b0e1-d79bfafbe56a';
+  // Redirect URI must match Entra configuration
+  REDIRECT_PATH = '/auth-response';
+  REDIRECT_URI = 'http://localhost' + REDIRECT_PATH;
 var
   Context: TdjWebAppContext;
   FilterHolder: TdjWebFilterHolder;
@@ -63,7 +64,7 @@ begin
 
   Context := TdjWebAppContext.Create('', True);
   Context.AddWebComponent(TRootResource, '/index.html');
-  Context.AddWebComponent(TCallbackResource, '/callback');
+  Context.AddWebComponent(TCallbackResource, REDIRECT_PATH);
   Context.AddWebFilter(FilterHolder, '*.html');
 
   Server := TdjServer.Create(80);
