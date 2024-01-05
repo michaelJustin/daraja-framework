@@ -96,34 +96,29 @@ end;
 
 function TRootResource.SendMail(const AccessToken: string): string;
 const
-  JSON = '{'+ #10
-    +'"message": {'+ #10
-    +'"subject": "Meet for lunch?",'+ #10
-    +'"body": {'+ #10
-    +'  "contentType": "Text",'+ #10
-    +'  "content": "The new cafeteria is open."'+ #10
-    +'},'+ #10
-    +'"toRecipients": ['+ #10
-    +'  {'+ #10
-    +'    "emailAddress": {'+ #10
-    +'      "address": "info@habarisoft.com"'+ #10
-    +'    }'+ #10
-    +'  }'+ #10
-    +'],'+ #10
-    +'"ccRecipients": ['+ #10
-    +'  {'+ #10
-    +'    "emailAddress": {'+ #10
-    +'      "address": "info@habarisoft.com"'+ #10
-    +'    }'+ #10
-    +'  }'+ #10
-    +']'+ #10
-    +'},'+ #10
-    +'"saveToSentItems": "false"'+ #10
+  JSON =
+     '{'+ #10
+    +' "message": {'+ #10
+    +' "subject": "Meet for lunch?",'+ #10
+    +' "body": {'+ #10
+    +'   "contentType": "Text",'+ #10
+    +'   "content": "The new cafeteria is open."'+ #10
+    +' },'+ #10
+    +' "toRecipients": ['+ #10
+    +'   {'+ #10
+    +'     "emailAddress": {'+ #10
+    +'       "address": "info@habarisoft.com"'+ #10
+    +'     }'+ #10
+    +'   }'+ #10
+    +' ]'+ #10
+    +' },'+ #10
+    +' "saveToSentItems": "false"'+ #10
     +'}';
 var
   HTTP: TIdHTTP;
   IOHandler: TIdSSLIOHandlerSocketOpenSSL;
-  Body: TStream;
+  RequestBody: TStream;
+  ResponseBody: string;
 begin
   WriteLn(JSON);
 
@@ -135,10 +130,9 @@ begin
       HTTP.IOHandler := IOHandler;
       HTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
       HTTP.Request.ContentType := 'application/json';
-      Body := TStringStream.Create(JSON, TEncoding.UTF8);
-      WriteLn(
-        HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', Body)
-        );
+      RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
+      ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
+      WriteLn(ResponseBody);
     except
       on E: EIdHTTPProtocolException do
       begin
