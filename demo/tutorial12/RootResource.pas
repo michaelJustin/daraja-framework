@@ -136,7 +136,6 @@ begin
     except
       on E: EIdHTTPProtocolException do
       begin
-        // WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
         WriteLn(E.Message);
         WriteLn(E.ErrorMessage);
         raise;
