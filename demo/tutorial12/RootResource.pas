@@ -42,6 +42,7 @@ type
   TRootResource = class(TdjWebComponent)
   private
     function ReadUserProfile(const AccessToken: string): string;
+    function SendMail(const AccessToken: string): string;
   public
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -50,7 +51,7 @@ implementation
 
 uses
   IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders,
-  SysUtils;
+  SysUtils, Classes;
 
 { TRootResource }
 
@@ -62,6 +63,8 @@ begin
   AccessToken := Request.Session.Content.Values['access_token'];
 
   APIResponse := ReadUserProfile(AccessToken);
+
+  SendMail(AccessToken);
 
   Response.ContentText := Format('<html><body>Hello, World! %s</body></html>',
     [APIResponse]);
@@ -85,6 +88,70 @@ begin
     except
       WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
       raise;
+    end;
+  finally
+    HTTP.Free;
+  end;
+end;
+
+function TRootResource.SendMail(const AccessToken: string): string;
+const
+  JSON = '{'+ #10
+    +'"message": {'+ #10
+    +'"subject": "Meet for lunch?",'+ #10
+    +'"body": {'+ #10
+    +'  "contentType": "Text",'+ #10
+    +'  "content": "The new cafeteria is open."'+ #10
+    +'},'+ #10
+    +'"toRecipients": ['+ #10
+    +'  {'+ #10
+    +'    "emailAddress": {'+ #10
+    +'      "address": "info@habarisoft.com"'+ #10
+    +'    }'+ #10
+    +'  }'+ #10
+    +'],'+ #10
+    +'"ccRecipients": ['+ #10
+    +'  {'+ #10
+    +'    "emailAddress": {'+ #10
+    +'      "address": "info@habarisoft.com"'+ #10
+    +'    }'+ #10
+    +'  }'+ #10
+    +']'+ #10
+    +'},'+ #10
+    +'"saveToSentItems": "false"'+ #10
+    +'}';
+var
+  HTTP: TIdHTTP;
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+  Body: TStream;
+begin
+  WriteLn(JSON);
+
+  HTTP := TIdHTTP.Create;
+  try
+    try
+      IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HTTP);
+      IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
+      HTTP.IOHandler := IOHandler;
+      HTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
+      HTTP.Request.ContentType := 'application/json';
+      Body := TStringStream.Create(JSON, TEncoding.UTF8);
+      WriteLn(
+        HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', Body)
+        );
+    except
+      on E: EIdHTTPProtocolException do
+      begin
+        // WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
+        WriteLn(E.Message);
+        WriteLn(E.ErrorMessage);
+        raise;
+      end;
+      on E: Exception do
+      begin
+        WriteLn(E.Message);
+        raise;
+      end;
     end;
   finally
     HTTP.Free;
