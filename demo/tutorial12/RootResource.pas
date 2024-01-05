@@ -66,7 +66,7 @@ begin
 
   SendMail(AccessToken);
 
-  Response.ContentText := Format('<html><body>Hello, World! %s</body></html>',
+  Response.ContentText := Format('<html><body><h1>Hello, World!</h1><h2>User profile:</h2><p>%s</p></body></html>',
     [APIResponse]);
   Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
