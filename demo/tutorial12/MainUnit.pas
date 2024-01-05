@@ -75,7 +75,7 @@ begin
 
       ShellExecute(0, 'open', PChar('http://localhost/index.html'), '', '', 0);
 
-      WriteLn('Server is running, launching http://localhost/index.html ...');
+      WriteLn('Server is running, launching web browser ...');
       WriteLn('Hit any key to terminate.');
     except
       on E: Exception do WriteLn(E.Message);
