@@ -66,7 +66,9 @@ begin
 
   SendMail(AccessToken);
 
-  Response.ContentText := Format('<html><body><h1>Hello, World!</h1><h2>User profile:</h2><p>%s</p></body></html>',
+  Response.ContentText := Format('<html><body><h1>Graph API example</h1>'
+    + '<h2>Signed-in user profile:</h2><p>%s</p>'
+    + '<h2>Send email:</h2><p>Email has been sent.</p></body></html>',
     [APIResponse]);
   Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
@@ -132,7 +134,7 @@ begin
       HTTP.Request.ContentType := 'application/json';
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
       ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
-      WriteLn(ResponseBody);
+      WriteLn('Response: "' + ResponseBody + '"');
     except
       on E: EIdHTTPProtocolException do
       begin
