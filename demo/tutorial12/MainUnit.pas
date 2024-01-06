@@ -40,8 +40,7 @@ uses
   AuthFilter,
   AuthResponseResource,
   RootResource,
-  djServer, djWebAppContext, djNCSALogFilter,
-  djWebComponentHolder, djWebFilterHolder,
+  djServer, djWebAppContext, djNCSALogFilter, djWebFilterHolder,
   ShellAPI, SysUtils;
 
 procedure Demo;
@@ -66,6 +65,7 @@ begin
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(TAuthResponseResource, REDIRECT_PATH);
   Context.AddWebFilter(FilterHolder, '*.html');
+  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);
   try

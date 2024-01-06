@@ -1,4 +1,4 @@
-﻿(*
+(*
 
     Daraja HTTP Framework
     Copyright (C) Michael Justin
@@ -21,59 +21,21 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja
+    include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
 *)
 
-unit AuthResponseResource;
+program ReadUserProfileFromMSGraph;
 
 // note: this is unsupported example code
 
-interface
+{$APPTYPE CONSOLE}
 
 uses
-  djWebComponent, djTypes;
+  MainUnit;
 
-type
-
-  { TAuthResponseResource }
-
-  TAuthResponseResource = class(TdjWebComponent)
-  public
-    procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
-  end;
-
-implementation
-
-uses
-  SysUtils;
-
-{ TAuthResponseResource }
-
-procedure TAuthResponseResource.OnPost(Request: TdjRequest; Response: TdjResponse);
-var
-  AccessToken: string;
-  P: string;
 begin
-  if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
-  begin
-    Response.ResponseNo := 401;
-    WriteLn('Invalid state parameter.');
-    Exit;
-  end;
-
-  for P in Request.Params do
-  begin
-    WriteLn(P);
-  end;
-
-  // Read the access_token
-  AccessToken := Request.Params.Values['access_token'];
-
-  Response.Session.Content.Values['access_token'] := AccessToken;
-  Response.Redirect('/index.html');
-end;
-
+  Demo;
 end.
 

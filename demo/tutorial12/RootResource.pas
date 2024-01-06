@@ -50,7 +50,9 @@ type
 implementation
 
 uses
+  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders,
+  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 { TRootResource }
