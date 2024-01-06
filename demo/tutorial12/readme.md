@@ -1,6 +1,7 @@
 # Read user profile data and send mail using Microsoft Graph API
 
 ## Requirements
+* Daraja HTTP Framework source and source/optional units.
 * Indy 10.6.2 (https://github.com/IndySockets)
 * OpenSSL DLLs for Indy (https://github.com/IndySockets/OpenSSL-Binaries)
 * Delphi 2009+ or Lazarus / FPC 3.2
