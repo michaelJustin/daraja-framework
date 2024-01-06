@@ -26,7 +26,7 @@
 
 *)
 
-unit CallbackResource;
+unit AuthResponseResource;
 
 // note: this is unsupported example code
 
@@ -37,9 +37,9 @@ uses
 
 type
 
-  { TCallbackResource }
+  { TAuthResponseResource }
 
-  TCallbackResource = class(TdjWebComponent)
+  TAuthResponseResource = class(TdjWebComponent)
   public
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -49,9 +49,9 @@ implementation
 uses
   SysUtils;
 
-{ TCallbackResource }
+{ TAuthResponseResource }
 
-procedure TCallbackResource.OnPost(Request: TdjRequest; Response: TdjResponse);
+procedure TAuthResponseResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
   AccessToken: string;
   P: string;

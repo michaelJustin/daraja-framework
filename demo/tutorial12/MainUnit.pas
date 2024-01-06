@@ -38,7 +38,7 @@ implementation
 
 uses
   AuthFilter,
-  CallbackResource,
+  AuthResponseResource,
   RootResource,
   djServer, djWebAppContext, djNCSALogFilter,
   djWebComponentHolder, djWebFilterHolder,
@@ -64,7 +64,7 @@ begin
 
   Context := TdjWebAppContext.Create('', True);
   Context.AddWebComponent(TRootResource, '/index.html');
-  Context.AddWebComponent(TCallbackResource, REDIRECT_PATH);
+  Context.AddWebComponent(TAuthResponseResource, REDIRECT_PATH);
   Context.AddWebFilter(FilterHolder, '*.html');
 
   Server := TdjServer.Create(80);
