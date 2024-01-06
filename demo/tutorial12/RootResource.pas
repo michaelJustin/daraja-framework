@@ -131,7 +131,7 @@ var
   RequestBody: TStream;
   ResponseBody: string;
 begin
-  WriteLn(JSON);
+  // WriteLn(JSON);
 
   HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
@@ -139,7 +139,7 @@ begin
       HTTP.Request.ContentType := 'application/json';
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
       ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
-      WriteLn('Response: "' + ResponseBody + '"');
+      // WriteLn('Response: "' + ResponseBody + '"');
     except
       on E: EIdHTTPProtocolException do
       begin

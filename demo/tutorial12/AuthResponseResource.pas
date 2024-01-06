@@ -54,7 +54,7 @@ uses
 procedure TAuthResponseResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
   AccessToken: string;
-  P: string;
+  // P: string;
 begin
   if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
   begin
@@ -63,10 +63,10 @@ begin
     Exit;
   end;
 
-  for P in Request.Params do
-  begin
-    WriteLn(P);
-  end;
+  // for P in Request.Params do
+  // begin
+  //   WriteLn(P);
+  // end;
 
   // Read the access_token
   AccessToken := Request.Params.Values['access_token'];
