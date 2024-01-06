@@ -77,21 +77,20 @@ procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
   Response: TdjResponse; const Chain: IWebFilterChain);
 var
   AccessToken: string;
+  State: string;
 begin
   AccessToken := Request.Session.Content.Values['access_token'];
   if AccessToken = '' then
   begin
-    Response.Session.Content.Values['nonce'] := CreateGUIDString;
-    Response.Session.Content.Values['state'] := CreateGUIDString;
-    // get an access token
+    State := CreateGUIDString;
+    Response.Session.Content.Values['state'] := State;
     Response.Redirect(AuthorizeEndpoint
      + '?client_id=' + ClientID           // Your app registration's Application (client) ID
      + '&response_type=token'             // Requests an access token
      + '&redirect_uri=' + RedirectURI
      + '&scope=User.Read Mail.Send'       // Request read profile and send mail permission
      + '&response_mode=form_post'
-     + '&state=' + Request.Session.Content.Values['state']
-     + '&nonce=' + Request.Session.Content.Values['nonce']
+     + '&state=' + State
      );
   end
   else
