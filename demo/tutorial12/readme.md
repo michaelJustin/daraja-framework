@@ -13,4 +13,4 @@ You may configure it to use a different App, by modifying the constants in unit 
 
 
 ## Security considerations
-The example code uses response_mode=form_post to receive the access token. Unlike with response_mode=fragment (or query), the browser does not receive the access_token parameter in the redirect request. Therefore, the access_token is not accessible within the browser's memory.
+The example code uses response_mode=form_post to receive the access token. Unlike with response_mode=fragment (or query), the browser does not receive the access_token parameter in the redirect request URI. Therefore, the access_token is not accessible within the browser's memory.
