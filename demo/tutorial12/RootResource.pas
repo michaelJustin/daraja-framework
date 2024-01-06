@@ -55,6 +55,19 @@ uses
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
+function CreateIdHTTPwithSSL12(const AccessToken: string): TIdHTTP;
+var
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+begin
+  Result := TIdHTTP.Create;
+
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(Result);
+  IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
+  Result.IOHandler := IOHandler;
+
+  Result.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
+end;
+
 { TRootResource }
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
@@ -79,15 +92,10 @@ end;
 function TRootResource.ReadUserProfile(const AccessToken: string): string;
 var
   HTTP: TIdHTTP;
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
 begin
-  HTTP := TIdHTTP.Create;
+  HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
     try
-      IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HTTP);
-      IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
-      HTTP.IOHandler := IOHandler;
-      HTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
       Result := HTTP.Get('https://graph.microsoft.com/v1.0/users/me');
     except
       WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
@@ -120,19 +128,14 @@ const
     +'}';
 var
   HTTP: TIdHTTP;
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
   RequestBody: TStream;
   ResponseBody: string;
 begin
   WriteLn(JSON);
 
-  HTTP := TIdHTTP.Create;
+  HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
     try
-      IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(HTTP);
-      IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
-      HTTP.IOHandler := IOHandler;
-      HTTP.Request.CustomHeaders.Values['Authorization'] := 'Bearer ' + AccessToken;
       HTTP.Request.ContentType := 'application/json';
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
       ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
