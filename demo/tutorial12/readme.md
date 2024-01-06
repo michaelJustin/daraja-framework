@@ -1,6 +1,6 @@
 # Read user profile data and send mail using Microsoft Graph API
 
-This application launches a local web server and requests an access token from Microsoft Entra. The access token then is used to retrieve user profile data and to send an email. The content and recipient of the email is configured in a JSON document in unit [RootResource](RootResource.pas).
+This application launches a local web server and requests an access token from Microsoft Entra. The access token then is used to retrieve user profile data and to send an email. The content and recipient of the email is configured in a JSON document in unit [RootResource](RootResource.pas). The same unit also renders the index.html page after successful authentication.
 
 ## Requirements
 * Daraja HTTP Framework source and source/optional units.
