@@ -179,6 +179,7 @@ type
     procedure Init(const Config: IWebFilterConfig);
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain);
+    // Called by the container to indicate to a filter that it is being taken out of service.
     procedure DestroyFilter;
   end;
 
