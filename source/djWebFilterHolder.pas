@@ -198,6 +198,7 @@ procedure TdjWebFilterHolder.DoStop;
 begin
   Trace('Destroy instance of ' + FClass.ClassName);
   try
+    WebFilter.DestroyFilter;
     WebFilter.Free;
   except
     on E: Exception do

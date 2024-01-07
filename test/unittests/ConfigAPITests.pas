@@ -121,6 +121,7 @@ type
     procedure TestExceptionInComponentInitWithWebFilter;
     procedure TestExceptionInComponentServiceWithWebFilter;
     procedure TestExceptionInComponentOnGetWithWebFilter;
+    procedure TestWebFilterDestroyFilter;
 
   end;
 
@@ -1506,6 +1507,44 @@ begin
 
     // Test the component
     CheckGETResponse500('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+// ----------------------------------------------------------------------------
+
+{ TTestFilterWithDestroy }
+type
+
+  TTestFilterWithDestroy = class(TTestFilter)
+  public
+    procedure DestroyFilter; override;
+  end;
+
+procedure TTestFilterWithDestroy.DestroyFilter;
+begin
+    raise EUnitTestException.Create('error in destroy');
+end;
+
+procedure TAPIConfigTests.TestWebFilterDestroyFilter;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.AddWebComponent(TExamplePage, '*.html');
+  Context.AddFilterWithMapping(TTestFilterWithDestroy, '/*');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    // Test the component
+    CheckGETResponse200('/web/destroy.html');
   finally
     Server.Free;
   end;
