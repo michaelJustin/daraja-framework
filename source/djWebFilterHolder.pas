@@ -198,7 +198,18 @@ procedure TdjWebFilterHolder.DoStop;
 begin
   Trace('Destroy instance of ' + FClass.ClassName);
   try
-    WebFilter.DestroyFilter;
+    // Destroy (and ensure that Free will be called)
+    try
+      WebFilter.DestroyFilter;
+    except
+      on E: Exception do
+      begin
+        {$IFDEF DARAJA_LOGGING}
+        Logger.Warn('TdjWebFilterHolder.Stop: ' + E.Message, E);
+        {$ENDIF DARAJA_LOGGING}
+      end;
+    end;
+
     WebFilter.Free;
   except
     on E: Exception do
