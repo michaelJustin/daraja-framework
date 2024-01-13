@@ -12,7 +12,7 @@ var searchData=
   ['tdjhandlerlist_9',['TdjHandlerList',['../classTdjHandlerList.html#a1da57586dd017fec6be51a36d055e390',1,'TdjHandlerList']]],
   ['tdjhttpconnector_10',['TdjHTTPConnector',['../classTdjHTTPConnector.html#a6982fd6e2e9415394979c8942eceb729',1,'TdjHTTPConnector']]],
   ['tdjhttpserver_11',['TdjHTTPServer',['../classTdjHTTPServer.html#a2bb964af7f87bed0f3862edbe78f14d8',1,'TdjHTTPServer']]],
-  ['tdjserver_12',['tdjserver',['../classTdjServer.html#af1c9363f4e962d3df622dbb5f9d79d8f',1,'TdjServer::TdjServer()'],['../classTdjServer.html#a2e046514cc0eec94b74a95b3e1823a99',1,'TdjServer::TdjServer(const Integer APort)'],['../classTdjServer.html#ac3d10a4cebc341a5c86363eef6099ff5',1,'TdjServer::TdjServer(const string AHost, const Integer APort=DEFAULT_BINDING_PORT)']]],
+  ['tdjserver_12',['TdjServer',['../classTdjServer.html#af1c9363f4e962d3df622dbb5f9d79d8f',1,'TdjServer::TdjServer()'],['../classTdjServer.html#a2e046514cc0eec94b74a95b3e1823a99',1,'TdjServer::TdjServer(const Integer APort)'],['../classTdjServer.html#ac3d10a4cebc341a5c86363eef6099ff5',1,'TdjServer::TdjServer(const string AHost, const Integer APort=DEFAULT_BINDING_PORT)']]],
   ['tdjserverbase_13',['TdjServerBase',['../classTdjServerBase.html#a8ee353edca185cdefa107f10ff392d01',1,'TdjServerBase']]],
   ['tdjwebcomponentcontexthandler_14',['TdjWebComponentContextHandler',['../classTdjWebComponentContextHandler.html#a530756850dbf7a1a24ca2423dd857a36',1,'TdjWebComponentContextHandler']]],
   ['tdjwebcomponentholder_15',['TdjWebComponentHolder',['../classTdjWebComponentHolder.html#a3545763f0ff335aa8e6b6e4c7d0d0302',1,'TdjWebComponentHolder']]],
