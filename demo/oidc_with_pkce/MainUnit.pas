@@ -45,28 +45,28 @@ uses
 
 procedure Demo;
 const
-//  TOKEN_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token';
+  TOKEN_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token';
   AUTHORIZE_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize';
   // Application (client) ID from Entra configuration
-  CLIENT_ID = 'ee5a0402-2861-44a2-b0e1-d79bfafbe56a';
+  CLIENT_ID = '8e03cfb2-2cd2-48fd-b7b5-789ad1c13fd2';
   // Redirect URI must match Entra configuration
   REDIRECT_PATH = '/auth-response';
   REDIRECT_URI = 'http://localhost' + REDIRECT_PATH;
 var
   Context: TdjWebAppContext;
-  FilterHolder: TdjWebFilterHolder;
   Server: TdjServer;
 begin
-  FilterHolder := TdjWebFilterHolder.Create(TAuthFilter);
-  FilterHolder.SetInitParameter('AuthorizeEndpoint', AUTHORIZE_ENDPOINT);
-  FilterHolder.SetInitParameter('ClientID', CLIENT_ID);
-  FilterHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
-
   Context := TdjWebAppContext.Create('', True);
+
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(TAuthResponseResource, REDIRECT_PATH);
-  Context.AddWebFilter(FilterHolder, '*.html');
+  Context.AddFilterWithMapping(TAuthFilter, '*.html');
   Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+
+  Context.SetInitParameter('ClientID', CLIENT_ID);
+  Context.SetInitParameter('RedirectURI', REDIRECT_URI);
+  Context.SetInitParameter('AuthorizeEndpoint', AUTHORIZE_ENDPOINT);
+  Context.SetInitParameter('TokenEndpoint', TOKEN_ENDPOINT);
 
   Server := TdjServer.Create(80);
   try

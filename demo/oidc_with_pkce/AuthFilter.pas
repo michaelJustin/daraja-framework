@@ -72,9 +72,11 @@ end;
 
 procedure TAuthFilter.Init(const Config: IWebFilterConfig);
 begin
-  AuthorizeEndpoint := Config.GetInitParameter('AuthorizeEndpoint');
-  ClientID := Config.GetInitParameter('ClientID');
-  RedirectURI := Config.GetInitParameter('RedirectURI');
+  inherited;
+
+  AuthorizeEndpoint := Config.GetContext.GetInitParameter('AuthorizeEndpoint');
+  ClientID := Config.GetContext.GetInitParameter('ClientID');
+  RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
 end;
 
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -111,7 +113,6 @@ begin
     Chain.DoFilter(Context, Request, Response); // pass
   end;
 end;
-
 
 function TAuthFilter.encode_SHA256_base64URL(const str_toEncode: string): string;
 var

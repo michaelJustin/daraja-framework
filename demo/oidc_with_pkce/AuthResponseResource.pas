@@ -33,7 +33,7 @@ unit AuthResponseResource;
 interface
 
 uses
-  djWebComponent, djTypes;
+  djWebComponent, djTypes, djInterfaces;
 
 type
 
@@ -41,10 +41,14 @@ type
 
   TAuthResponseResource = class(TdjWebComponent)
   private
+    ClientID: string;
+    TokenEndpoint: string;
+    RedirectURI: string;
     function GetAuthToken(const AuthorizationCode: string;
       const CodeVerifier: string): string;
    function ParseResponse(const TokenResponse: string): string;
   public
+    procedure Init(const Config: IWebComponentConfig); override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -59,7 +63,7 @@ uses
 
 function CreateIdHTTPwithSSL12: TIdHTTP;
 var
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL; //NOPE
 begin
   Result := TIdHTTP.Create;
 
@@ -73,6 +77,15 @@ begin
 end;
 
 { TAuthResponseResource }
+
+procedure TAuthResponseResource.Init(const Config: IWebComponentConfig);
+begin
+  inherited;
+
+  ClientID := Config.GetContext.GetInitParameter('ClientID');
+  TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
+  RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
+end;
 
 procedure TAuthResponseResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
@@ -121,8 +134,6 @@ end;
 
 function TAuthResponseResource.GetAuthToken(const AuthorizationCode: string;
   const CodeVerifier: string): string;
-const
-  TOKEN_ENDPOINT = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token';
 var
   HTTP: TIdHTTP;
   RequestBody: TStrings;
@@ -135,13 +146,12 @@ begin
         HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
 
         RequestBody.Add('grant_type=authorization_code');
-        RequestBody.Add('client_id=ee5a0402-2861-44a2-b0e1-d79bfafbe56a');
-
-        RequestBody.Add('redirect_uri=http://localhost/auth-response');
+        RequestBody.Add('client_id=' + ClientID);
+        RequestBody.Add('redirect_uri=' + RedirectURI);
         RequestBody.Add('code=' + AuthorizationCode);
         RequestBody.Add('code_verifier=' + CodeVerifier);
 
-        Result := HTTP.Post(TOKEN_ENDPOINT, RequestBody);
+        Result := HTTP.Post(TokenEndpoint, RequestBody);
 
 //        WriteLn(Result);
 

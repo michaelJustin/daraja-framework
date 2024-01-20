@@ -42,7 +42,7 @@ type
   TRootResource = class(TdjWebComponent)
   private
     function ReadUserProfile(const AccessToken: string): string;
-    function SendMail(const AccessToken: string): string;
+    procedure SendMail(const AccessToken: string);
   public
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -57,7 +57,7 @@ uses
 
 function CreateIdHTTPwithSSL12(const AccessToken: string): TIdHTTP;
 var
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL; //NOPE
 begin
   Result := TIdHTTP.Create;
 
@@ -106,7 +106,7 @@ begin
   end;
 end;
 
-function TRootResource.SendMail(const AccessToken: string): string;
+procedure TRootResource.SendMail(const AccessToken: string);
 const
   JSON =
      '{'+ #10
@@ -138,8 +138,12 @@ begin
     try
       HTTP.Request.ContentType := 'application/json';
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
-      ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
-      // WriteLn('Response: "' + ResponseBody + '"');
+      try
+        ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
+        // WriteLn('Response: "' + ResponseBody + '"');
+      finally
+        RequestBody.Free;
+      end;
     except
       on E: EIdHTTPProtocolException do
       begin
