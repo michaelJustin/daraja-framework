@@ -40,7 +40,7 @@ uses
   AuthFilter,
   AuthResponseResource,
   RootResource,
-  djServer, djWebAppContext, djNCSALogFilter, djWebFilterHolder,
+  djServer, djWebAppContext, djNCSALogFilter,
   ShellAPI, SysUtils;
 
 procedure Demo;

@@ -61,7 +61,11 @@ uses
   IdLogDebug, IdGlobal,
   {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  {$IFDEF FPC}
+  fpjson, jsonparser,
+  {$ELSE}
   JsonDataObjects,
+  {$ENDIF}
   SysUtils, Classes;
 
 function CreateIdHTTPwithSSL12: TIdHTTP;
@@ -129,17 +133,26 @@ begin
   // ...
 end;
 
+{$IFDEF FPC}
+function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
+var
+  Data: TJSONData;
+  Obj : TJSONObject;
+begin
+  Data := GetJSON(TokenResponse);
+  Obj := TJSONObject(Obj);
+  Result := Obj.Get('access_token');
+end;
+{$ELSE}
 function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
 var
   Obj: TJsonObject;
   AccessToken: string;
 begin
   Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
-
-  AccessToken := Obj.S['access_token'];
-
-  Result := AccessToken;
+  Result := Obj.S['access_token'];
 end;
+{$ENDIF}
 
 function TAuthResponseResource.GetAuthToken(const AuthorizationCode: string;
   const CodeVerifier: string): string;
