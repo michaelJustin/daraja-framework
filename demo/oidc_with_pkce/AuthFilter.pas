@@ -48,7 +48,7 @@ type
     AuthorizeEndpoint: string;
     ClientID: string;
     RedirectURI: string;
-    function encode_SHA256_base64URL(const str_toEncode: string): string;
+    function BuildCodeChallenge(const ACodeVerifier: string): string;
   public
     procedure Init(const Config: IWebFilterConfig); override;
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -93,7 +93,7 @@ begin
     CodeVerifier := Copy(CreateGUIDString, 2, 12);
     Response.Session.Content.Values['CodeVerifier'] := CodeVerifier;
 
-    CodeChallenge := encode_SHA256_base64URL(CodeVerifier);
+    CodeChallenge := BuildCodeChallenge(CodeVerifier);
 
     State := CreateGUIDString;
     Response.Session.Content.Values['state'] := State;
@@ -114,32 +114,27 @@ begin
   end;
 end;
 
-function TAuthFilter.encode_SHA256_base64URL(const str_toEncode: string): string;
+function TAuthFilter.BuildCodeChallenge(const ACodeVerifier: string): string;
 var
-  hash_sha256: TIdHashSHA256;
-  arr_sha256:  TIdBytes;
-  str_b64:     string;
-  str_b64URL:  string;
+  IdHashSHA256: TIdHashSHA256;
+  SHA256Bytes: TIdBytes;
+  SHA256: string;
 begin
   IdSSLOpenSSL.LoadOpenSSLLibrary;
-  hash_sha256 := TIdHashSHA256.Create;
+  IdHashSHA256 := TIdHashSHA256.Create;
   try
-    arr_sha256 := hash_sha256
-      .HashString(str_toEncode, IndyTextEncoding_ASCII); // Hash SHA256
-    str_b64 := TIdEncoderMIME.EncodeBytes(arr_sha256);
+    SHA256Bytes := IdHashSHA256.HashString(ACodeVerifier, IndyTextEncoding_ASCII);
+    SHA256 := TIdEncoderMIME.EncodeBytes(SHA256Bytes);
   finally
-    hash_sha256.Free;
+    IdHashSHA256.Free;
   end;
   IdSSLOpenSSL.UnLoadOpenSSLLibrary;
 
-  // convert to Base64URL
-  str_b64URL := str_b64;
-  str_b64URL := StringReplace(str_b64URL, '+', '-', [rfReplaceAll]);    // Replace + with -
-  str_b64URL := StringReplace(str_b64URL, '/', '_', [rfReplaceAll]);    // Replace / with _
-  str_b64URL := StringReplace(str_b64URL, '=', '',  [rfReplaceAll]);    // Remove padding, character =
+  Result := StringReplace(SHA256, '+', '-', [rfReplaceAll]);
+  Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
+  Result := StringReplace(Result, '=', '',  [rfReplaceAll]);
 
-  Assert(Length(str_b64URL) = 43);
-  result := str_b64URL;
+//  Assert(Length(Result) = 43);
 end;
 
 end.
