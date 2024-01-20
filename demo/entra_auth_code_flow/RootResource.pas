@@ -33,7 +33,7 @@ unit RootResource;
 interface
 
 uses
-  djWebComponent, djTypes;
+  djWebComponent, djTypes, djInterfaces;
 
 type
 
@@ -41,9 +41,11 @@ type
 
   TRootResource = class(TdjWebComponent)
   private
+    GraphAPIEndpoint: string;
     function ReadUserProfile(const AccessToken: string): string;
     procedure SendMail(const AccessToken: string);
   public
+    procedure Init(const Config: IWebComponentConfig); override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -69,6 +71,13 @@ begin
 end;
 
 { TRootResource }
+
+procedure TRootResource.Init(const Config: IWebComponentConfig);
+begin
+  inherited;
+
+  GraphAPIEndpoint := Config.GetContext.GetInitParameter('GraphAPIEndpoint');
+end;
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 var
@@ -96,7 +105,7 @@ begin
   HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
     try
-      Result := HTTP.Get('https://graph.microsoft.com/v1.0/users/me');
+      Result := HTTP.Get(GraphAPIEndpoint + '/v1.0/users/me');
     except
       WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
       raise;
@@ -137,7 +146,7 @@ begin
       HTTP.Request.ContentType := 'application/json';
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
       try
-        ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
+        ResponseBody := HTTP.Post(GraphAPIEndpoint + '/v1.0/me/sendMail', RequestBody);
         {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
         WriteLn(ResponseBody);
         {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
