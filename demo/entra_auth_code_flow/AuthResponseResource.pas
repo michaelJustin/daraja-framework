@@ -130,7 +130,6 @@ begin
     Response.Session.Content.Values['access_token'] := AccessToken;
     Response.Redirect('/index.html');
   end;
-  // ...
 end;
 
 {$IFDEF FPC}
@@ -147,7 +146,6 @@ end;
 function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
 var
   Obj: TJsonObject;
-  AccessToken: string;
 begin
   Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
   Result := Obj.S['access_token'];

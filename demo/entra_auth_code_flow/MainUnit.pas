@@ -52,6 +52,7 @@ const
   // Redirect URI must match Entra configuration
   REDIRECT_PATH = '/auth-response';
   REDIRECT_URI = 'http://localhost' + REDIRECT_PATH;
+  GRAPH_API_ENDPOINT = 'https://graph.microsoft.com';
 var
   Context: TdjWebAppContext;
   Server: TdjServer;
@@ -67,6 +68,7 @@ begin
   Context.SetInitParameter('RedirectURI', REDIRECT_URI);
   Context.SetInitParameter('AuthorizeEndpoint', AUTHORIZE_ENDPOINT);
   Context.SetInitParameter('TokenEndpoint', TOKEN_ENDPOINT);
+  Context.SetInitParameter('GraphAPIEndpoint', GRAPH_API_ENDPOINT);
 
   Server := TdjServer.Create(80);
   try
