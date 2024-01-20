@@ -131,8 +131,6 @@ var
   RequestBody: TStream;
   ResponseBody: string;
 begin
-  // WriteLn(JSON);
-
   HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
     try
@@ -140,7 +138,9 @@ begin
       RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
       try
         ResponseBody := HTTP.Post('https://graph.microsoft.com/v1.0/me/sendMail', RequestBody);
-        // WriteLn('Response: "' + ResponseBody + '"');
+        {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+        WriteLn(ResponseBody);
+        {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
       finally
         RequestBody.Free;
       end;

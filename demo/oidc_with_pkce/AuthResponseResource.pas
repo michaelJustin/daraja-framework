@@ -56,7 +56,10 @@ implementation
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
-  IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdLogDebug, IdGlobal,
+  IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders,
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  IdLogDebug, IdGlobal,
+  {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   JsonDataObjects,
   SysUtils, Classes;
@@ -71,9 +74,11 @@ begin
   IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
   Result.IOHandler := IOHandler;
 
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
   // Raw HTTP logging
-  // Result.Intercept := TIdLogDebug.Create(Result);
-  // TIdLogDebug(Result.Intercept).Active := True;
+  Result.Intercept := TIdLogDebug.Create(Result);
+  TIdLogDebug(Result.Intercept).Active := True;
+  {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 end;
 
 { TAuthResponseResource }
@@ -93,7 +98,9 @@ var
   CodeVerifier: string;
   TokenResponse: string;
   AccessToken: string;
-//  P: string;
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  P: string;
+  {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 begin
   if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
   begin
@@ -102,10 +109,12 @@ begin
     Exit;
   end;
 
-//  for P in Request.Params do
-//  begin
-//    WriteLn(P);
-//  end;
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  for P in Request.Params do
+  begin
+    WriteLn(P);
+  end;
+  {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
   AuthorizationCode := Request.Params.Values['code'];
 
@@ -153,7 +162,9 @@ begin
 
         Result := HTTP.Post(TokenEndpoint, RequestBody);
 
-//        WriteLn(Result);
+        {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+        WriteLn(Result);
+        {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
       finally
         RequestBody.Free;
