@@ -26,7 +26,7 @@
 
 *)
 
-program OIDCwithPKCE;
+program EntraAuthCodeFlowExample;
 
 // note: this is unsupported example code
 
