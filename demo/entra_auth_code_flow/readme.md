@@ -10,6 +10,7 @@ The content and recipient of the email is configured in a JSON document in unit 
 * Daraja HTTP Framework (https://github.com/michaelJustin/daraja-framework)
 * Indy (https://github.com/IndySockets)
 * OpenSSL DLLs for Indy (https://github.com/IndySockets/OpenSSL-Binaries)
+* JsonDataObjects (https://github.com/ahausladen/JsonDataObjects)
 
 Note: the source code contains the configuration for an existing Microsoft Entra App registration. 
 You may configure it to use a different App, by modifying the constants in unit [MainUnit](MainUnit.pas).
