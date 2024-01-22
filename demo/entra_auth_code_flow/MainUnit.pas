@@ -51,7 +51,7 @@ const
   CLIENT_ID = '8e03cfb2-2cd2-48fd-b7b5-789ad1c13fd2';
   // Redirect URI must match Entra configuration
   REDIRECT_PATH = '/auth-response';
-  REDIRECT_URI = 'http://localhost' + REDIRECT_PATH;
+  REDIRECT_URI = 'http://127.0.0.1' + REDIRECT_PATH;
   GRAPH_API_ENDPOINT = 'https://graph.microsoft.com';
 var
   Context: TdjWebAppContext;
@@ -76,7 +76,7 @@ begin
       Server.Add(Context);
       Server.Start;
 
-      ShellExecute(0, 'open', PChar('http://localhost/index.html'), '', '', 0);
+      ShellExecute(0, 'open', PChar('http://127.0.0.1/index.html'), '', '', 0);
 
       WriteLn('Server is running, launching web browser ...');
       WriteLn('Hit any key to terminate.');
