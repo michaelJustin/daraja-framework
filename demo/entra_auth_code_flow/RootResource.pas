@@ -59,7 +59,7 @@ uses
 
 function CreateIdHTTPwithSSL12(const AccessToken: string): TIdHTTP;
 var
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL; //NOPE
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
 begin
   Result := TIdHTTP.Create;
 
@@ -104,12 +104,7 @@ var
 begin
   HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
-    try
-      Result := HTTP.Get(GraphAPIEndpoint + '/v1.0/users/me');
-    except
-      WriteLn(IdSSLOpenSSLHeaders.WhichFailedToLoad);
-      raise;
-    end;
+    Result := HTTP.Get(GraphAPIEndpoint + '/v1.0/users/me');
   finally
     HTTP.Free;
   end;
@@ -138,33 +133,15 @@ const
 var
   HTTP: TIdHTTP;
   RequestBody: TStream;
-  ResponseBody: string;
 begin
   HTTP := CreateIdHTTPwithSSL12(AccessToken);
   try
+    HTTP.Request.ContentType := 'application/json';
+    RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
     try
-      HTTP.Request.ContentType := 'application/json';
-      RequestBody := TStringStream.Create(JSON, TEncoding.UTF8);
-      try
-        ResponseBody := HTTP.Post(GraphAPIEndpoint + '/v1.0/me/sendMail', RequestBody);
-        {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-        WriteLn(ResponseBody);
-        {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-      finally
-        RequestBody.Free;
-      end;
-    except
-      on E: EIdHTTPProtocolException do
-      begin
-        WriteLn(E.Message);
-        WriteLn(E.ErrorMessage);
-        raise;
-      end;
-      on E: Exception do
-      begin
-        WriteLn(E.Message);
-        raise;
-      end;
+      HTTP.Post(GraphAPIEndpoint + '/v1.0/me/sendMail', RequestBody);
+    finally
+      RequestBody.Free;
     end;
   finally
     HTTP.Free;

@@ -70,7 +70,7 @@ uses
 
 function CreateIdHTTPwithSSL12: TIdHTTP;
 var
-  IOHandler: TIdSSLIOHandlerSocketOpenSSL; //NOPE
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
 begin
   Result := TIdHTTP.Create;
 
@@ -122,7 +122,7 @@ begin
 
   AuthorizationCode := Request.Params.Values['code'];
 
-  if (AuthorizationCode <> '') then
+  if AuthorizationCode <> '' then
   begin
     CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
     TokenResponse := GetAuthToken(AuthorizationCode, CodeVerifier);
@@ -160,38 +160,20 @@ var
 begin
   HTTP := CreateIdHTTPwithSSL12;
   try
+    RequestBody := TStringList.Create;
     try
-      RequestBody := TStringList.Create;
-      try
-        HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+      HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
 
-        RequestBody.Add('grant_type=authorization_code');
-        RequestBody.Add('client_id=' + ClientID);
-        RequestBody.Add('redirect_uri=' + RedirectURI);
-        RequestBody.Add('code=' + AuthorizationCode);
-        RequestBody.Add('code_verifier=' + CodeVerifier);
+      RequestBody.Add('grant_type=authorization_code');
+      RequestBody.Add('client_id=' + ClientID);
+      RequestBody.Add('redirect_uri=' + RedirectURI);
+      RequestBody.Add('code=' + AuthorizationCode);
+      RequestBody.Add('code_verifier=' + CodeVerifier);
 
-        Result := HTTP.Post(TokenEndpoint, RequestBody);
+      Result := HTTP.Post(TokenEndpoint, RequestBody);
 
-        {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-        WriteLn(Result);
-        {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-
-      finally
-        RequestBody.Free;
-      end;
-    except
-      on E: EIdHTTPProtocolException do
-      begin
-        WriteLn(E.Message);
-        WriteLn(E.ErrorMessage);
-        raise;
-      end;
-      on E: Exception do
-      begin
-        WriteLn(E.Message);
-        raise;
-      end;
+    finally
+      RequestBody.Free;
     end;
   finally
     HTTP.Free;
