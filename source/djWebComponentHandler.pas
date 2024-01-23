@@ -215,6 +215,7 @@ uses
   djStacktrace, JclDebug,
   {$ENDIF}
   {$ENDIF}
+  IdHTTP,
   Generics.Defaults,
   SysUtils, Classes;
 
@@ -720,6 +721,7 @@ class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Cont
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 var
   Msg: string;
+  Msg2: string;
 begin
   try
     // Trace('Invoke ' + Comp.ClassName + '.Service');
@@ -734,6 +736,12 @@ begin
       Msg :=
         Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
         [Comp.ClassName, E.ClassName, E.Message]);
+
+      if E is EIdHTTPProtocolException
+      then
+      begin
+        Msg2 := '<p>' + EIdHTTPProtocolException(E).ErrorMessage + '</p>';
+      end;
 
       {$IFDEF DARAJA_LOGGING}
       // Logger.Warn(Msg, E);
@@ -759,6 +767,7 @@ begin
         + '    <h1>' + Comp.ClassName + ' caused ' + E.ClassName + '</h1>' + #10
         + '    <h2>Exception message: ' + E.Message + '</h2>' + #10
         + '    <p>' + Msg + '</p>' + #10
+        + Msg2
 {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
   {$IFDEF DARAJA_MADEXCEPT}
         + '    <hr />' + #10
