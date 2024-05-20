@@ -720,6 +720,7 @@ end; *)
 class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 var
+  ExceptionMessageHTML: string;
   Msg: string;
   Msg2: string;
 begin
@@ -733,14 +734,18 @@ begin
     // log exceptions
     on E: Exception do
     begin
+      ExceptionMessageHTML := HTMLEncode(E.Message);
+
       Msg :=
         Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
-        [Comp.ClassName, E.ClassName, E.Message]);
+        [Comp.ClassName, E.ClassName, ExceptionMessageHTML]);
 
       if E is EIdHTTPProtocolException
       then
       begin
-        Msg2 := '<p>' + EIdHTTPProtocolException(E).ErrorMessage + '</p>';
+        Msg2 := '<p>'
+          + HTMLEncode(EIdHTTPProtocolException(E).ErrorMessage)
+          + '</p>';
       end;
 
       {$IFDEF DARAJA_LOGGING}
@@ -765,25 +770,25 @@ begin
         + '  </head>' + #10
         + '  <body>' + #10
         + '    <h1>' + Comp.ClassName + ' caused ' + E.ClassName + '</h1>' + #10
-        + '    <h2>Exception message: ' + E.Message + '</h2>' + #10
+        + '    <h2>Exception message: ' + ExceptionMessageHTML + '</h2>' + #10
         + '    <p>' + Msg + '</p>' + #10
         + Msg2
-{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-  {$IFDEF DARAJA_MADEXCEPT}
+      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+      {$IFDEF DARAJA_MADEXCEPT}
         + '    <hr />' + #10
         + '    <h2>Stack trace:</h2>' + #10
         + '    <pre>' + #10
         + string(madStackTrace.StackTrace) + #10
         + '    </pre>' + #10
-  {$ENDIF DARAJA_MADEXCEPT}
-  {$IFDEF DARAJA_JCLDEBUG}
+      {$ENDIF DARAJA_MADEXCEPT}
+      {$IFDEF DARAJA_JCLDEBUG}
         + '    <hr />' + #10
         + '    <h2>Stack trace:</h2>' + #10
         + '    <pre>' + #10
         + djStackTrace.GetStackList + #10
         + '    </pre>' + #10
-  {$ENDIF DARAJA_JCLDEBUG}
-{$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+      {$ENDIF DARAJA_JCLDEBUG}
+      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
         + '    <hr />' + #10
         + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
         + '  </body>' + #10
