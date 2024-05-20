@@ -34,6 +34,9 @@ uses
   {$IFDEF FPC}fpcunit,testregistry{$ELSE}TestFramework{$ENDIF};
 
 type
+
+  { TdjWebComponentHandlerTests }
+
   TdjWebComponentHandlerTests = class(TTestCase)
   published
     // procedure TestAV;

@@ -93,7 +93,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy\Lib\Core"/>
       <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\slf4p\src\main"/>
     </SearchPaths>
     <Parsing>
