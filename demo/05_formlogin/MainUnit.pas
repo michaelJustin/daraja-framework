@@ -51,7 +51,7 @@ begin
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://localhost/index.html');
-    WriteLn('Hit any key to terminate.');
+    WriteLn('Hit enter to terminate.');
     ReadLn;
   finally
     Server.Free;

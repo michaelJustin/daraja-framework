@@ -32,7 +32,7 @@ begin
     ShellExecute(0, 'open', PChar('https://127.0.0.1'), '', '', 0);
 
     // terminate
-    WriteLn('Hit any key to terminate.');
+    WriteLn('Hit enter to terminate.');
 
     ReadLn;
   finally

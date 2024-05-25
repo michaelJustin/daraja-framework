@@ -67,7 +67,7 @@ begin
     Server.Start;
 
     WriteLn('Server is running, please open https://localhost/tutorial/hello');
-    WriteLn('Hit any key to terminate.');
+    WriteLn('Hit enter to terminate.');
     ReadLn;
   finally
     Server.Free;

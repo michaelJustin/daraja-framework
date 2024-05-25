@@ -118,7 +118,7 @@ begin
       '', 0);
 
     // terminate
-    WriteLn('Hit any key to terminate.');
+    WriteLn('Hit enter to terminate.');
     ReadLn;
 
   finally

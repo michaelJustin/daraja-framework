@@ -79,7 +79,7 @@ begin
       ShellExecute(0, 'open', PChar('http://127.0.0.1/index.html'), '', '', 0);
 
       WriteLn('Server is running, launching web browser ...');
-      WriteLn('Hit any key to terminate.');
+      WriteLn('Hit enter to terminate.');
     except
       on E: Exception do WriteLn(E.Message);
     end;
