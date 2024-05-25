@@ -46,8 +46,8 @@ begin
   Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('', True);
-    Context.Add(TLoginResource, '/index.html');
-    Context.Add(TLogoutResource, '/logout');
+    Context.AddWebComponent(TLoginResource, '/index.html');
+    Context.AddWebComponent(TLogoutResource, '/logout');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://localhost/index.html');

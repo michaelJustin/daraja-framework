@@ -46,7 +46,7 @@ begin
   Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('tutorial', True);
-    Context.Add(TSessionDemoResource, '/session');
+    Context.AddWebComponent(TSessionDemoResource, '/session');
     Server.Add(Context);
     Server.Start;
 	  WriteLn('Server is running, please open http://localhost/tutorial/session');
