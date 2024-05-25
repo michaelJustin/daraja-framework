@@ -50,8 +50,8 @@ begin
     Context.Add(TFibonacciResource, '/fib.html');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/tutorial/fib.html or fib.txt');
-	WriteLn('Hit any key to terminate.');
+    WriteLn('Server is running, please open http://localhost/tutorial/fib.html?n=4 or http://localhost/tutorial/fib.txt?n=4');
+    WriteLn('Hit any key to terminate.');
     ReadLn;
   finally
     Server.Free;
