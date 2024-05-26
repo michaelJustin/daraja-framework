@@ -325,7 +325,7 @@ begin
     Server.Add(Context);
     Server.Start;
 
-    CheckGETResponseEquals('example', 'http://[::1]/example/index.html');
+    CheckGETResponseEquals('example', 'http://[::1]:8080/example/index.html');
 
   finally
     Server.Free;
@@ -897,7 +897,7 @@ begin
       Connector := TdjHTTPConnector.Create(Server.Handler);
       // TODO DOC not TdjHTTPConnector.Create(Server)!
       Connector.Host := '127.0.0.1';
-      Connector.Port := 80;
+      Connector.Port := 8080;
       // new property "HTTPServer" in 1.5
       // here used to set a file based logger for the HTTP server
       Connector.HTTPServer.Intercept := Intercept;
@@ -931,7 +931,7 @@ begin
     Connector := TdjHTTPConnector.Create(Server.Handler);
     // TODO DOC not TdjHTTPConnector.Create(Server)!
     Connector.Host := '127.0.0.1';
-    Connector.Port := 80;
+    Connector.Port := 8080;
     SchedulerOfThreadPool := TIdSchedulerOfThreadPool.Create(Connector.HTTPServer);
     SchedulerOfThreadPool.PoolSize := 20;
     // set thread pool scheduler
@@ -999,7 +999,7 @@ begin
   Server := TdjServer.Create;
   try
     Server.AddConnector('127.0.0.1', 8181);
-    Server.AddConnector('127.0.0.1', 80);
+    Server.AddConnector('127.0.0.1', 8080);
     Server.AddConnector('127.0.0.1', 8282); // unused, just to see the order
     // configure for context on standard port
     ContextPublic := TdjWebAppContext.Create('public');

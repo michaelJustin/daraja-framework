@@ -43,7 +43,7 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
-  Server := TdjServer.Create(80);
+  Server := TdjServer.Create(80); // configured for port 80
   try
     Context := TdjWebAppContext.Create('', True);
     Context.AddWebComponent(TLoginResource, '/index.html');

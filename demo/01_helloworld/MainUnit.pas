@@ -43,13 +43,13 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
-  Server := TdjServer.Create(80);
+  Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('tutorial');
     Context.AddWebComponent(THelloWorldResource, '/hello');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/tutorial/hello');
+    WriteLn('Server is running, please open http://localhost:8080/tutorial/hello');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

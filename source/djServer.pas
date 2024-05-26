@@ -44,7 +44,7 @@ uses
   Generics.Collections;
 
 const
-  DEFAULT_BINDING_PORT = 80;
+  DEFAULT_BINDING_PORT = 8080;
   DEFAULT_BINDING_IP = '127.0.0.1'; // instead of '0.0.0.0';
 
   (**

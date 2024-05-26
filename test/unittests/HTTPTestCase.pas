@@ -85,13 +85,16 @@ implementation
 uses
   Classes;
 
+resourcestring
+  StrHttp127001 = 'http://127.0.0.1:8080';
+
 { THTTPTestCase }
 
 procedure THTTPTestCase.CheckGETResponseEquals(Expected: string; URL: string = ''; msg: string = '');
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   Actual := IdHTTP.Get(URL{$IFDEF STRING_IS_ANSI}, DestEncoding{$ENDIF});
 
@@ -102,7 +105,7 @@ procedure THTTPTestCase.CheckCachedGETResponseEquals(IfModifiedSince: TDateTime;
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Request.RawHeaders.Values['If-Modified-Since'] := LocalDateTimeToGMT(IfModifiedSince);
   Actual := IdHTTP.Get(URL{$IFDEF STRING_IS_ANSI}, DestEncoding{$ENDIF});
@@ -114,7 +117,7 @@ procedure THTTPTestCase.CheckCachedGETResponseIs304(IfModifiedSince: TDateTime; 
 var
   Actual: Integer;
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Request.LastModified := IfModifiedSince;
   IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
@@ -128,7 +131,7 @@ end;
 procedure THTTPTestCase.CheckContentTypeEquals(Expected: string; URL: string;
   msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Get(URL);
   CheckEquals(Expected, IdHTTP.Response.ContentType, msg);
@@ -136,7 +139,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse200(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Get(URL);
   CheckEquals(200, IdHTTP.ResponseCode, msg);
@@ -144,7 +147,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse404(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Get(URL, [404]);
   CheckEquals(404, IdHTTP.ResponseCode, msg);
@@ -152,7 +155,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse405(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Get(URL, [405]);
   CheckEquals(405, IdHTTP.ResponseCode, msg);
@@ -160,7 +163,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse500(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   IdHTTP.Get(URL, [500]);
   CheckEquals(500, IdHTTP.ResponseCode, msg);
@@ -170,7 +173,7 @@ procedure THTTPTestCase.CheckGETResponseContains(Expected: string; URL: string =
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   Actual := IdHTTP.Get(URL);
 
@@ -182,7 +185,7 @@ procedure THTTPTestCase.CheckPOSTResponseEquals(Expected: string; URL: string;
 var
   Strings: TStrings;
 begin
-  if Pos('http', URL) <> 1 then URL := 'http://127.0.0.1' + URL;
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
 
   Strings := TStringList.Create;
   try
