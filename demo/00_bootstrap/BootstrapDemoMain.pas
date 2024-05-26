@@ -79,7 +79,7 @@ var
 begin
   ConfigureLogging;
 
-  Server := TdjServer.Create(8080);
+  Server := TdjServer.Create;
   try
     // add a handlerlist with a TdjDefaultHandler
     DefaultHandler := TdjDefaultHandler.Create;

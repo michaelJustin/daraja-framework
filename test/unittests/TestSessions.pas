@@ -177,7 +177,7 @@ begin
     // add a configured connector TODO DOC not (Server)!
     Connector := TdjHTTPConnector.Create(Server.Handler);
     Connector.Host := '127.0.0.1';
-    Connector.Port := 80;
+    Connector.Port := 8080;
     Connector.HTTPServer.AutoStartSession := True;
     Server.AddConnector(Connector);
 

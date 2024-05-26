@@ -43,14 +43,14 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
-  Server := TdjServer.Create(80);
+  Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('tutorial');
     Context.AddWebComponent(TFibonacciResource, '/fib.txt');
     Context.AddWebComponent(TFibonacciResource, '/fib.html');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/tutorial/fib.html?n=4 or http://localhost/tutorial/fib.txt?n=4');
+    WriteLn('Server is running, please open http://localhost:8080/tutorial/fib.html?n=4 or http://localhost:8080/tutorial/fib.txt?n=4');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally
