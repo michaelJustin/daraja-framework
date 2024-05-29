@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['list_0',['Deprecated List',['../deprecated.html',1,'']]]
+  ['to_20daraja_20http_20framework_0',['Welcome to Daraja HTTP Framework!',['../index.html',1,'']]]
 ];
