@@ -47,9 +47,6 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
-    [ "IRegistration", null, [
-      [ "TdjRegistration", "classTdjRegistration.html", null ]
-    ] ],
     [ "IWebComponent", "interfaceIWebComponent.html", [
       [ "TdjGenericWebComponent", "classTdjGenericWebComponent.html", [
         [ "TdjWebComponent", "classTdjWebComponent.html", [
@@ -104,7 +101,6 @@ var hierarchy =
       [ "TdjGenericWebComponent", "classTdjGenericWebComponent.html", null ],
       [ "TdjGenericWebFilter", "classTdjGenericWebFilter.html", null ],
       [ "TdjLifeCycle", "classTdjLifeCycle.html", null ],
-      [ "TdjRegistration", "classTdjRegistration.html", null ],
       [ "TdjWebFilterChain", "classTdjWebFilterChain.html", null ]
     ] ],
     [ "TObject", null, [

@@ -31,7 +31,6 @@ var annotated_dup =
     [ "TdjLifeCycle", "classTdjLifeCycle.html", "classTdjLifeCycle" ],
     [ "TdjMultiMap", "classTdjMultiMap.html", null ],
     [ "TdjPathMap", "classTdjPathMap.html", "classTdjPathMap" ],
-    [ "TdjRegistration", "classTdjRegistration.html", null ],
     [ "TdjRequest", "classTdjRequest.html", null ],
     [ "TdjResponse", "classTdjResponse.html", null ],
     [ "TdjServer", "classTdjServer.html", "classTdjServer" ],
