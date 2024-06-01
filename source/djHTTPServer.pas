@@ -153,12 +153,6 @@ begin
 {$IFDEF DARAJA_LOGGING}
   Logger.Warn(ClassName + ' (OnException): ' + AException.ClassName + ' '
     + AException.Message);
-	
-  {$IFDEF LINUX}
-  // DumpExceptionBackTrace(StdOut);
-  // Halt;
-  {$ENDIF LINUX}
-
 {$ENDIF DARAJA_LOGGING}
 end;
 

@@ -217,28 +217,6 @@ begin
 
 end;
 
-(*
-procedure TdjHandlerWrapper.LogHierarchy;
-{$IFDEF DARAJA_LOGGING}
-var
-  C: IHandlerContainer;
-{$ENDIF DARAJA_LOGGING}
-begin
-{$IFDEF DARAJA_LOGGING}
-  Logger.Info(ClassName);
-
-  if Supports(Handler, IHandlerContainer, C) then
-  begin
-    Logger.Info(ClassName + ' - wraps a IHandlerContainer:');
-    C.LogHierarchy;
-  end else begin
-    Logger.Info(ClassName + ' - wraps a IHandler');
-  end;
-
-{$ENDIF DARAJA_LOGGING}
-end;
-*)
-
 // IHandler
 
 procedure TdjHandlerWrapper.Handle(const Target: string; Context: TdjServerContext;

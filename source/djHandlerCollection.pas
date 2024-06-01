@@ -256,28 +256,4 @@ begin
   end;
 end;
 
-(*
-procedure TdjHandlerCollection.LogHierarchy;
-var
-  H: IHandler;
-  C: IHandlerContainer;
-begin
-{$IFDEF DARAJA_LOGGING}
-  Logger.Info(Format(ClassName + ' with %d handlers', [FHandlers.Count]));
-
-  for H in FHandlers do
-  begin
-    if Supports(H, IHandlerContainer, C) then
-    begin
-      Logger.Info(ClassName + ' - contains a IHandlerContainer: ');
-      C.LogHierarchy;
-    end else begin
-      Logger.Info(ClassName + ' - contains a IHandler');
-    end;
-  end;
-
-{$ENDIF DARAJA_LOGGING}
-end;
-*)
-
 end.
