@@ -26,7 +26,6 @@ var NAVTREE =
 [
   [ "Daraja HTTP Framework", "index.html", [
     [ "Welcome to Daraja HTTP Framework!", "index.html", "index" ],
-    [ "Deprecated List", "deprecated.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
