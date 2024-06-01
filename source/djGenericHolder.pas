@@ -46,14 +46,10 @@ type
   TdjGenericHolder<T: TInterfacedObject> = class(TdjLifeCycle)
   private
     FName: string;
-    // FHandler: TdjAbstractHandler;
   public
     constructor Create(AClass: TInterfacedClass); reintroduce;
-
     // properties
     property Name: string read FName write FName;
-
-    // property Handler: TdjAbstractHandler read FHandler write FHandler;
   end;
 
 implementation

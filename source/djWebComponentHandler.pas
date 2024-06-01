@@ -129,18 +129,6 @@ type
     procedure AddWithMapping(Holder: TdjWebComponentHolder; const PathSpec: string); overload;
 
     (**
-     * Add a Web Filter, specifying a WebFilter holder instance
-     * and the mapped WebComponent name.
-     *
-     * \param FilterClass WebFilter class
-     * \param WebComponent name
-     *
-     * \throws Exception if the WebFilter can not be added
-     *)
-    //procedure AddFilterWithNameMapping(Holder: TdjWebFilterHolder;
-    //  const ComponentName: string);
-
-    (**
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped path.
      *
@@ -153,15 +141,6 @@ type
       const PathSpec: string); overload;
 
     (**
-     * Create a TdjWebComponentHolder for a WebComponentClass.
-     *
-     * \param WebComponentClass the Web Component class
-     * \return a TdjWebComponentHolder with the WebComponentClass.
-     *)
-    //function CreateHolder(WebComponentClass: TdjWebComponentClass):
-    //  TdjWebComponentHolder;
-
-    (**
      * Find a TdjWebComponentHolder for a WebComponentClass.
      *
      * \param WebComponentClass the Web Component class
@@ -170,14 +149,6 @@ type
      *)
     function FindHolder(WebComponentClass: TdjWebComponentClass):
       TdjWebComponentHolder;
-
-    (**
-     * Find a TdjWebFilterMapping for a named WebFilter.
-     *
-     * \param WebFilterName the Web Filter name
-     * \return a TdjWebFilterMapping or nil if the WebFilter is not mapped
-     *)
-    // function FindMapping(const WebFilterName: string): TdjWebFilterMapping; overload;
 
     // IHandler interface
 
@@ -226,16 +197,12 @@ resourcestring
     +'Service caused an exception of type "%s". The exception message was "%s".';
   rsInvalidMappingSForWebComponentS = 'Invalid mapping "%s" for Web Component '
     +'"%s"';
-  //rsInvalidWebComponentNameMappingSForWebFilterS = 'Invalid Web Component name'
-  //  +' mapping "%s" for Web Filter "%s"';
   rsNoPathMapMatchFoundFor = 'No path map match found for ';
   rsTheWebComponentSCanNotBeAddedBecauseClassSIsAlr = 'The Web Component "%s" '
     +'can not be added because class "%s" is already registered with the same '
     +'name';
   rsUpdateMappingForWebComponent = 'Update mapping for Web Component "%s" -'
     +'> %s,%s';
-  //rsWebComponentsMustBelongToTheSameContext = 'Web Components must belong to '
-  //  +'the same context';
 
 type
 
@@ -339,12 +306,6 @@ begin
     end;
   end;
 end;
-
-//function TdjWebComponentHandler.CreateHolder(WebComponentClass:
-//  TdjWebComponentClass): TdjWebComponentHolder;
-//begin
-//  Result := TdjWebComponentHolder.Create(WebComponentClass);
-//end;
 
 // ILifeCycle
 
@@ -460,37 +421,6 @@ begin
   end;
 end;
 
-(*
-procedure TdjWebComponentHandler.CheckStoreContext(const Context: IContext);
-var
-  Msg: string;
-begin
-  if Context = nil then
-  begin
-    Msg := rsContextIsNotAssigned;
-    Trace(Msg);
-    raise EWebComponentException.Create(Msg);
-  end;
-
-  // store when the first component is added
-  if WebComponents.Count = 0 then
-  begin
-    FWebComponentContext := Context;
-  end
-  else
-  begin
-    // all components must be in the same context
-    if WebComponentContext <> Context then
-    begin
-      Msg := rsWebComponentsMustBelongToTheSameContext;
-      Trace(Msg);
-
-      raise EWebComponentException.Create(Msg);
-    end;
-  end;
-end;
-*)
-
 procedure TdjWebComponentHandler.AddMapping(Mapping: TdjWebComponentMapping);
 begin
   WebComponentMappings.Add(Mapping);
@@ -540,48 +470,6 @@ begin
     Holder.Start;
   end;
 end;
-
-(*
-procedure TdjWebComponentHandler.AddWithMapping(Holder: TdjWebFilterHolder;
-  const PathSpec: string);
-begin
-  // validate and store context
-  CheckStoreContext(Holder.GetContext);
-
-  FWebFilterHolders.Add(Holder);  // todo prevent duplicates, extend path specs in calling routine
-
-  if Started and not Holder.IsStarted then
-  begin
-    Holder.Start;
-  end;
-end;
-*)
-
-//procedure TdjWebComponentHandler.AddFilterWithNameMapping(
-//  Holder: TdjWebFilterHolder; const ComponentName: string);
-//var
-//  Mapping: TdjWebFilterMapping;
-//begin
-//  if not WebComponents.Contains(ComponentName) then
-//  begin
-//    raise EWebComponentException.CreateFmt(
-//      rsInvalidWebComponentNameMappingSForWebFilterS,
-//        [ComponentName, Holder.Name]);
-//  end;
-//
-//  if not WebFilters.Contains(Holder) then
-//  begin
-//    WebFilters.Add(Holder);
-//    SetFilters(WebFilters);
-//  end;
-//
-//  Mapping := TdjWebFilterMapping.Create;
-//  Mapping.WebFilterHolder := Holder;
-//  Mapping.WebFilterName := Holder.Name;
-//  Mapping.WebComponentNames.Add(ComponentName);
-//
-//  FWebFilterMappings.Add(Mapping);
-//end;
 
 procedure TdjWebComponentHandler.AddFilterWithMapping(
   Holder: TdjWebFilterHolder; const PathSpec: string);
@@ -700,22 +588,6 @@ begin
     end;
   end;
 end;
-
-(* function TdjWebComponentHandler.FindMapping(const WebFilterName: string): TdjWebFilterMapping;
-var
-  I: Integer;
-begin
-  Result := nil;
-
-  for I := 0 to FWebFilterMappings.Count - 1 do
-  begin
-    if FWebFilterMappings[I].WebFilterName = WebFilterName then
-    begin
-      Result := FWebFilterMappings[I];
-      Break;
-    end;
-  end;
-end; *)
 
 class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
