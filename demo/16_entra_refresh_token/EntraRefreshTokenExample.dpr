@@ -33,7 +33,7 @@ program EntraRefreshTokenExample;
 {$APPTYPE CONSOLE}
 
 uses
-  MainUnit;
+  MainUnit in 'MainUnit.pas';
 
 begin
   Demo;

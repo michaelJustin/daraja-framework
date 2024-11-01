@@ -33,7 +33,8 @@ unit MainUnit;
 interface
 
 uses
-  djWebComponent, djWebFilter, djServerContext, djTypes, djInterfaces;
+  djWebComponent, djWebFilter, djServerContext, djTypes, djInterfaces,
+  Generics.Collections;
 
 type
 
@@ -68,7 +69,7 @@ type
     RedirectURI: string;
     function GetAuthToken(const AuthorizationCode: string;
       const CodeVerifier: string): string;
-   function ParseResponse(const TokenResponse: string): string;
+   function ParseResponse(const TokenResponse: string): TDictionary<string, string>;
   public
     procedure Init(const Config: IWebComponentConfig); override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
@@ -154,16 +155,17 @@ begin
 end;
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
-var
-  AccessToken: string;
-  APIResponse: string;
 begin
-  AccessToken := Request.Session.Content.Values['access_token'];
-
   Response.ContentText := Format('<html><body><h1>Refresh token example</h1>'
     + '<p><b>Access token:</b> %s</p>'
+    + '<p><b>Token type:</b> %s</p>'
+    + '<p><b>Expires in:</b> %s seconds</p>'
+    + '<p><b>Refresh token:</b> %s</p>'
     + '</body></html>',
-    [AccessToken]);
+    [Request.Session.Content.Values['access_token'],
+     Request.Session.Content.Values['token_type'],
+     Request.Session.Content.Values['expires_in'],
+     Request.Session.Content.Values['refresh_token']]);
   Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
 end;
@@ -208,7 +210,7 @@ begin
      + '?client_id=' + ClientID          // Your app registration's Application (client) ID
      + '&response_type=code'             // Request an auth code
      + '&redirect_uri=' + RedirectURI
-     + '&scope=openid offline_access'      // Request an OpenID token
+     + '&scope=openid offline_access'    // Request offline access
      + '&response_mode=form_post'
      + '&state=' + State
      + '&code_challenge=' + CodeChallenge
@@ -258,7 +260,7 @@ var
   AuthorizationCode: string;
   CodeVerifier: string;
   TokenResponse: string;
-  AccessToken: string;
+  ResponseMap: TDictionary<string, string>;
 begin
   if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
   begin
@@ -268,34 +270,40 @@ begin
   end;
 
   AuthorizationCode := Request.Params.Values['code'];
-
   if AuthorizationCode <> '' then
   begin
     CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
     TokenResponse := GetAuthToken(AuthorizationCode, CodeVerifier);
-    AccessToken := ParseResponse(TokenResponse);
-    Response.Session.Content.Values['access_token'] := AccessToken;
+    ResponseMap := ParseResponse(TokenResponse);
+    Response.Session.Content.Values['access_token'] := ResponseMap['access_token'];
+    Response.Session.Content.Values['token_type'] := ResponseMap['token_type'];
+    Response.Session.Content.Values['expires_in'] := ResponseMap['expires_in'];
+    Response.Session.Content.Values['refresh_token'] := ResponseMap['refresh_token'];
     Response.Redirect('/index.html');
   end;
 end;
 
+function TAuthResponseResource.ParseResponse(const TokenResponse: string): TDictionary<string, string>;
 {$IFDEF FPC}
-function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
 var
   Data: TJSONData;
   Obj : TJSONObject;
 begin
+  Result := TDictionary<string, string>.Create;
   Data := GetJSON(TokenResponse);
   Obj := TJSONObject(Obj);
-  Result := Obj.Get('access_token');
+  Result['access_token'], Obj.Get('access_token')); // todo
 end;
 {$ELSE}
-function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
 var
   Obj: TJsonObject;
+  JSONPair: TJsonNameValuePair;
 begin
+  Result := TDictionary<string, string>.Create;
   Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
-  Result := Obj.S['access_token'];
+  for JSONPair in Obj do begin
+    Result.Add(JSONPair.Name, JSONPair.Value);
+  end;
 end;
 {$ENDIF}
 
