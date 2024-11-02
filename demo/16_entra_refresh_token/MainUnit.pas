@@ -44,7 +44,7 @@ type
   private
     ClientID: string;
     TokenEndpoint: string;
-    function GetAuthTokenByRefreshToken(const RefreshToken: string): string;
+    function GetAccessTokenByRefreshToken(const RefreshToken: string): string;
   public
     procedure Init(const Config: IWebComponentConfig); override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
@@ -72,7 +72,7 @@ type
     ClientID: string;
     TokenEndpoint: string;
     RedirectURI: string;
-    function GetAuthToken(const AuthorizationCode: string;
+    function GetAccessToken(const AuthorizationCode: string;
       const CodeVerifier: string): string;
    function ParseResponse(const TokenResponse: string): TDictionary<string, string>;
   public
@@ -97,7 +97,7 @@ const
   TokenEndpoint = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token';
   AuthorizeEndpoint = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize';
   // Application (client) ID from Entra configuration
-  ClientId = '8e03cfb2-2cd2-48fd-b7b5-789ad1c13fd2';
+  ClientId = '54c3422f-fe81-4f9c-b352-a7dc07d8f9e6';
   // Redirection URI to which the response will be sent.
   // MUST exactly match one of the Redirection URI values
   // for the Client pre-registered at the OpenID Provider.
@@ -182,7 +182,7 @@ begin
   inherited;
 
   RefreshToken := Request.Session.Content.Values['refresh_token'];
-  RefreshResponse := GetAuthTokenByRefreshToken(RefreshToken);
+  RefreshResponse := GetAccessTokenByRefreshToken(RefreshToken);
   Response.ContentText := Format('<html><body><h1>Refresh token example</h1>'
     + '<p><b>Response:</b> %s</p>'
     + '</body></html>',
@@ -200,7 +200,7 @@ begin
   Result := GUIDToString(Guid);
 end;
 
-function TRootResource.GetAuthTokenByRefreshToken(const RefreshToken: string): string;
+function TRootResource.GetAccessTokenByRefreshToken(const RefreshToken: string): string;
 var
   HTTP: TIdHTTP;
   RequestBody: TStrings;
@@ -316,7 +316,7 @@ begin
   if AuthorizationCode <> '' then
   begin
     CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
-    TokenResponse := GetAuthToken(AuthorizationCode, CodeVerifier);
+    TokenResponse := GetAccessToken(AuthorizationCode, CodeVerifier);
     ResponseMap := ParseResponse(TokenResponse);
     Response.Session.Content.Values['access_token'] := ResponseMap['access_token'];
     Response.Session.Content.Values['token_type'] := ResponseMap['token_type'];
@@ -338,7 +338,7 @@ begin
   end;
 end;
 
-function TAuthResponseResource.GetAuthToken(const AuthorizationCode: string;
+function TAuthResponseResource.GetAccessToken(const AuthorizationCode: string;
   const CodeVerifier: string): string;
 var
   HTTP: TIdHTTP;
