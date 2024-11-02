@@ -85,11 +85,8 @@ implementation
 
 uses
   djServer, djWebAppContext, djNCSALogFilter,
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCoderMIME, IdHashSHA, IdGlobal,
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
-  JsonDataObjects,
-  ShellAPI, SysUtils, Classes;
+  JsonDataObjects, ShellAPI, SysUtils, Classes;
 
 procedure Demo;
 const
