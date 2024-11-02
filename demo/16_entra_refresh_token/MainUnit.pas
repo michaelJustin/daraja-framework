@@ -41,9 +41,14 @@ type
   { TRootResource }
 
   TRootResource = class(TdjWebComponent)
+  private
+    ClientID: string;
+    TokenEndpoint: string;
+    function GetAuthTokenByRefreshToken(const RefreshToken: string): string;
   public
     procedure Init(const Config: IWebComponentConfig); override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+    procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
   { TAuthFilter }
@@ -84,11 +89,7 @@ uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders, IdCoderMIME, IdHashSHA, IdGlobal,
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
-  {$IFDEF FPC}
-  fpjson, jsonparser,
-  {$ELSE}
   JsonDataObjects,
-  {$ENDIF}
   ShellAPI, SysUtils, Classes;
 
 procedure Demo;
@@ -152,6 +153,8 @@ end;
 procedure TRootResource.Init(const Config: IWebComponentConfig);
 begin
   inherited;
+  ClientID := Config.GetContext.GetInitParameter('ClientID');
+  TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
 end;
 
 procedure TRootResource.OnGet(Request: TdjRequest; Response: TdjResponse);
@@ -161,6 +164,7 @@ begin
     + '<p><b>Token type:</b> %s</p>'
     + '<p><b>Expires in:</b> %s seconds</p>'
     + '<p><b>Refresh token:</b> %s</p>'
+    + '<form method="post"><input type="submit" value="Use refresh token"/></form>'
     + '</body></html>',
     [Request.Session.Content.Values['access_token'],
      Request.Session.Content.Values['token_type'],
@@ -170,12 +174,52 @@ begin
   Response.CharSet := 'utf-8';
 end;
 
+procedure TRootResource.OnPost(Request: TdjRequest; Response: TdjResponse);
+var
+  RefreshToken: string;
+  RefreshResponse: string;
+begin
+  inherited;
+
+  RefreshToken := Request.Session.Content.Values['refresh_token'];
+  RefreshResponse := GetAuthTokenByRefreshToken(RefreshToken);
+  Response.ContentText := Format('<html><body><h1>Refresh token example</h1>'
+    + '<p><b>Response:</b> %s</p>'
+    + '</body></html>',
+    [RefreshResponse]);
+  Response.ContentType := 'text/html';
+  Response.CharSet := 'utf-8';
+  // Response.Redirect(Request.URI);
+end;
+
 function CreateGUIDString: string;
 var
   Guid: TGUID;
 begin
   CreateGUID(Guid);
   Result := GUIDToString(Guid);
+end;
+
+function TRootResource.GetAuthTokenByRefreshToken(const RefreshToken: string): string;
+var
+  HTTP: TIdHTTP;
+  RequestBody: TStrings;
+begin
+  HTTP := CreateIdHTTPwithSSL12;
+  try
+    RequestBody := TStringList.Create;
+    try
+      HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
+      RequestBody.Add('client_id=' + ClientID);
+      RequestBody.Add('grant_type=refresh_token');
+      RequestBody.Add('refresh_token=' + RefreshToken);
+      Result := HTTP.Post(TokenEndpoint, RequestBody);
+    finally
+      RequestBody.Free;
+    end;
+  finally
+    HTTP.Free;
+  end;
 end;
 
 { TAuthFilter }
@@ -249,7 +293,6 @@ end;
 procedure TAuthResponseResource.Init(const Config: IWebComponentConfig);
 begin
   inherited;
-
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
@@ -284,17 +327,6 @@ begin
 end;
 
 function TAuthResponseResource.ParseResponse(const TokenResponse: string): TDictionary<string, string>;
-{$IFDEF FPC}
-var
-  Data: TJSONData;
-  Obj : TJSONObject;
-begin
-  Result := TDictionary<string, string>.Create;
-  Data := GetJSON(TokenResponse);
-  Obj := TJSONObject(Obj);
-  Result['access_token'], Obj.Get('access_token')); // todo
-end;
-{$ELSE}
 var
   Obj: TJsonObject;
   JSONPair: TJsonNameValuePair;
@@ -305,7 +337,6 @@ begin
     Result.Add(JSONPair.Name, JSONPair.Value);
   end;
 end;
-{$ENDIF}
 
 function TAuthResponseResource.GetAuthToken(const AuthorizationCode: string;
   const CodeVerifier: string): string;
@@ -318,15 +349,12 @@ begin
     RequestBody := TStringList.Create;
     try
       HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
-
       RequestBody.Add('grant_type=authorization_code');
       RequestBody.Add('client_id=' + ClientID);
       RequestBody.Add('redirect_uri=' + RedirectURI);
       RequestBody.Add('code=' + AuthorizationCode);
       RequestBody.Add('code_verifier=' + CodeVerifier);
-
       Result := HTTP.Post(TokenEndpoint, RequestBody);
-
     finally
       RequestBody.Free;
     end;
@@ -334,6 +362,5 @@ begin
     HTTP.Free;
   end;
 end;
-
 
 end.

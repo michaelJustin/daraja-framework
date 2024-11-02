@@ -28,8 +28,6 @@
 
 program EntraRefreshTokenExample;
 
-// note: this is unsupported example code
-
 {$APPTYPE CONSOLE}
 
 uses
