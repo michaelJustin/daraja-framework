@@ -74,7 +74,6 @@ type
     RedirectURI: string;
     function GetAccessToken(const AuthorizationCode: string;
       const CodeVerifier: string): string;
-   function ParseResponse(const TokenResponse: string): TDictionary<string, string>;
   public
     procedure Init(const Config: IWebComponentConfig); override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
@@ -148,6 +147,18 @@ begin
   Result.IOHandler := IOHandler;
 end;
 
+function ParseResponse(const TokenResponse: string): TDictionary<string, string>;
+var
+  Obj: TJsonObject;
+  JSONPair: TJsonNameValuePair;
+begin
+  Result := TDictionary<string, string>.Create;
+  Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
+  for JSONPair in Obj do begin
+    Result.Add(JSONPair.Name, JSONPair.Value);
+  end;
+end;
+
 { TRootResource }
 
 procedure TRootResource.Init(const Config: IWebComponentConfig);
@@ -178,18 +189,24 @@ procedure TRootResource.OnPost(Request: TdjRequest; Response: TdjResponse);
 var
   RefreshToken: string;
   RefreshResponse: string;
+  ResponseMap: TDictionary<string, string>;
+  OldAccessToken: string;
+  NewAccessToken: string;
 begin
   inherited;
-
+  OldAccessToken := Request.Session.Content.Values['access_token'];
   RefreshToken := Request.Session.Content.Values['refresh_token'];
   RefreshResponse := GetAccessTokenByRefreshToken(RefreshToken);
+  ResponseMap := ParseResponse(RefreshResponse);
+  NewAccessToken := ResponseMap['access_token'];
   Response.ContentText := Format('<html><body><h1>Refresh token example</h1>'
-    + '<p><b>Response:</b> %s</p>'
+    + '<p><b>Old access token:</b> %s</p>'
+    + '<p><b>New access token:</b> %s</p>'
     + '</body></html>',
-    [RefreshResponse]);
+    [OldAccessToken, NewAccessToken]);
+  Request.Session.Content.Values['access_token'] := NewAccessToken;
   Response.ContentType := 'text/html';
   Response.CharSet := 'utf-8';
-  // Response.Redirect(Request.URI);
 end;
 
 function CreateGUIDString: string;
@@ -211,6 +228,7 @@ begin
     try
       HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
       RequestBody.Add('client_id=' + ClientID);
+      RequestBody.Add('scope=openid offline_access');
       RequestBody.Add('grant_type=refresh_token');
       RequestBody.Add('refresh_token=' + RefreshToken);
       Result := HTTP.Post(TokenEndpoint, RequestBody);
@@ -323,18 +341,6 @@ begin
     Response.Session.Content.Values['expires_in'] := ResponseMap['expires_in'];
     Response.Session.Content.Values['refresh_token'] := ResponseMap['refresh_token'];
     Response.Redirect('/index.html');
-  end;
-end;
-
-function TAuthResponseResource.ParseResponse(const TokenResponse: string): TDictionary<string, string>;
-var
-  Obj: TJsonObject;
-  JSONPair: TJsonNameValuePair;
-begin
-  Result := TDictionary<string, string>.Create;
-  Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
-  for JSONPair in Obj do begin
-    Result.Add(JSONPair.Name, JSONPair.Value);
   end;
 end;
 
