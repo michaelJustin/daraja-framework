@@ -160,7 +160,6 @@ end;
 
 procedure TRootResource.Init(const Config: IWebComponentConfig);
 begin
-  inherited;
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
 end;
@@ -190,7 +189,6 @@ var
   OldAccessToken: string;
   NewAccessToken: string;
 begin
-  inherited;
   OldAccessToken := Request.Session.Content.Values['access_token'];
   RefreshToken := Request.Session.Content.Values['refresh_token'];
   RefreshResponse := GetAccessTokenByRefreshToken(RefreshToken);
@@ -241,7 +239,6 @@ end;
 
 procedure TAuthFilter.Init(const Config: IWebFilterConfig);
 begin
-  inherited;
   AuthorizeEndpoint := Config.GetContext.GetInitParameter('AuthorizeEndpoint');
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
@@ -307,7 +304,6 @@ end;
 
 procedure TAuthResponseResource.Init(const Config: IWebComponentConfig);
 begin
-  inherited;
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
