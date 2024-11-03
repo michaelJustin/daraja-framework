@@ -144,13 +144,13 @@ begin
   Result.IOHandler := IOHandler;
 end;
 
-function ParseResponse(const TokenResponse: string): TDictionary<string, string>;
+function ParseJsonResponseBody(const JsonResponseBody: string): TDictionary<string, string>;
 var
   Obj: TJsonObject;
   JSONPair: TJsonNameValuePair;
 begin
   Result := TDictionary<string, string>.Create;
-  Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
+  Obj := TJsonObject.Parse(JsonResponseBody) as TJsonObject;
   for JSONPair in Obj do begin
     Result.Add(JSONPair.Name, JSONPair.Value);
   end;
@@ -192,7 +192,7 @@ begin
   OldAccessToken := Request.Session.Content.Values['access_token'];
   RefreshToken := Request.Session.Content.Values['refresh_token'];
   RefreshResponse := GetAccessTokenByRefreshToken(RefreshToken);
-  ResponseMap := ParseResponse(RefreshResponse);
+  ResponseMap := ParseJsonResponseBody(RefreshResponse);
   NewAccessToken := ResponseMap['access_token'];
   Response.ContentText := Format('<html><body><h1>Refresh token example</h1>'
     + '<p><b>Old access token:</b> %s</p>'
@@ -328,7 +328,7 @@ begin
   begin
     CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
     TokenResponse := GetAccessToken(AuthorizationCode, CodeVerifier);
-    ResponseMap := ParseResponse(TokenResponse);
+    ResponseMap := ParseJsonResponseBody(TokenResponse);
     Response.Session.Content.Values['access_token'] := ResponseMap['access_token'];
     Response.Session.Content.Values['token_type'] := ResponseMap['token_type'];
     Response.Session.Content.Values['expires_in'] := ResponseMap['expires_in'];
