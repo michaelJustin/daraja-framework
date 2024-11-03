@@ -7,7 +7,7 @@
 
 
 
-# Daraja HTTP Framework
+# Daraja HTTP Server Framework
 
 Daraja is a flexible HTTP server framework for Object Pascal, based on the non-visual HTTP server component in the free open source library Internet Direct (Indy).
 
@@ -44,46 +44,11 @@ Example:
 
 `<indy-home>\Lib\Core\`
 
-### Optional source
-
-Some useful (but optional) units are located in the `optional` subfolder. Include it when needed:
-
-`<daraja-home>\source;<daraja-home>\source\optional;<indy-home>\Lib\Core\;<indy-home>\Lib\Protocols\;<indy-home>\Lib\System\`
-
-## Usage example: contexts
-
-In the Daraja Framework, contexts are used for the high-level separation of HTTP resources, depending on their first path segment. Here is an example which uses two contexts, 'context1' and 'context2': 
-
-    http://example.com/context1/index.html
-    http://example.com/context2/other.html
-
-This example uses 'news', 'files' and 'admin' contexts:
-
-    http://example.com/news/index.html
-    http://example.com/files/doc1.pdf
-    http://example.com/admin/login.html
-
-### Code
-In the Daraja Framework, creating a context only requires the context name as the parameter of the TdjWebAppContext constructor: 
-
-```pascal
-  Server := TdjServer.Create;
-  try
-    Context1 := TdjWebAppContext.Create('context1');
-    Server.AddContext(Context1); 
-    Context2 := TdjWebAppContext.Create('context2');
-    Server.AddContext(Context2); 
-    Server.Start;
-    ... 
-```        
-
 ## Dynamic resource handlers
 
-Contexts need resource handlers to process requests. A **resource handler** is responsible for the generation of the HTTP response matching a specific client request.
-
-However, the routing between the actual HTTP request and the resource handler is performed via 'mapping' rules.
-
-For example, a resource handler which returns a HTML document could be mapped to the `/context1/index.html` resource path with this **absolute path** resource handler mapping:
+Resource handlers are the central framework parts which process requests. A **resource handler** is responsible for the generation of the HTTP response matching a specific client request.
+The routing between the actual HTTP request and the resource handler is performed via 'mapping' rules.
+For example, a resource handler could be mapped to the `/context1/index.html` resource path with this **absolute path** resource handler mapping:
 
 ```pascal
   Context1.Add(TIndexPageResource, '/index.html');
@@ -95,29 +60,14 @@ Alternatively, a more general **suffix mapping** resource handler may be used, w
   Context1.Add(TCatchAllHtmlResource, '*.html');
 ```
 
-This resource handler will be invoked for all requests for *.html resources - independent of their actual document name, and also for resources in sub-paths like `/context1/this/works/with_any_page.html`. (But note: the resource handler will _not_ receive requests for other context, such as `/context2/index.html`!)
+This resource handler will be invoked for all requests for *.html resources - independent of their actual document name, and also for resources in sub-paths like `/context1/this/works/with_any_page.html`. But note: the resource handler will _not_ receive requests for other context, such as `/context2/index.html`! (more about contexts can be found in the full documentation)
 
-## Resource filter chains (new in 2.6)
+## Resource filters
 
-For any resource handler, there may also exist one ore more filters. With filters, HTTP traffic can be modified in many ways. 
-
-Examples:
-
-* detect missing authorization, and forward to a login page when the resource requires authorization 
-* set or remove headers depending con conditions
-* pre- or postprocess the request body content
-
-
-## Optional Extensions
-
-### slf4p
-
-A simple logging facade with support for LazLogger, Log4D, and other logging frameworks.
-
-https://github.com/michaelJustin/slf4p
-
-You can find this project at https://github.com/michaelJustin/daraja-framework
-
+In addition to resource handlers, the application may also include resource filters. With filters, HTTP traffic can be modified in many ways, such as:
+* Detect missing authorization, and forward to a login page.
+* Set or remove HTTP headers depending on conditions.
+* Pre- or postprocess the request body content, to remove or insert data.
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
