@@ -134,7 +134,7 @@ begin
   end;
 end;
 
-function CreateIdHTTPwithSSL12: TIdHTTP;
+function CreateIdHTTPwithTLS12: TIdHTTP;
 var
   IOHandler: TIdSSLIOHandlerSocketOpenSSL;
 begin
@@ -219,7 +219,7 @@ var
   HTTP: TIdHTTP;
   RequestBody: TStrings;
 begin
-  HTTP := CreateIdHTTPwithSSL12;
+  HTTP := CreateIdHTTPwithTLS12;
   try
     RequestBody := TStringList.Create;
     try
@@ -347,7 +347,7 @@ var
   HTTP: TIdHTTP;
   RequestBody: TStrings;
 begin
-  HTTP := CreateIdHTTPwithSSL12;
+  HTTP := CreateIdHTTPwithTLS12;
   try
     RequestBody := TStringList.Create;
     try
