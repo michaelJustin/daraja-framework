@@ -41,17 +41,16 @@ Example:
 * Note: the project search path for Include files must include the Indy Core path.
 
 
-## Dynamic resource handlers (TdjWebComponent)
+## Resource handlers (TdjWebComponent)
 
-Resource handlers are the central framework parts which process requests. A **resource handler** is responsible for the generation of the HTTP response matching a specific client request.
-The routing between the actual HTTP request and the resource handler is performed via 'mapping' rules.
-For example, a resource handler could be mapped to the `/context1/index.html` resource path with this **absolute path** resource handler mapping:
+A **resource handler** is responsible for the generation of the HTTP response matching a specific client request. The routing between the actual HTTP request and the resource handler is defined by 'mapping' rules.
+For example, a resource handler could be mapped to `/context1/index.html` with an **absolute path** mapping:
 
 ```pascal
   Context1.Add(TIndexPageResource, '/index.html');
 ```
 
-There are two other supported mapping types: **prefix mapping** ('/sub1/*', '/sub2/*' ...) and **suffix mapping ('*.html', '*.pdf').
+There are two other supported mapping types: **prefix mapping** ('/sub1/*', '/sub2/*' ...) and **suffix mapping** ('*.html', '*.pdf' ...). All mappings are checked in a defined order to find the responsible resource handler.
 
 ## Resource filters (TdjWebFilter)
 
