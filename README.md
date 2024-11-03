@@ -38,13 +38,10 @@ Example:
 
 `<daraja-home>\source;<indy-home>\Lib\Core\;<indy-home>\Lib\Protocols\;<indy-home>\Lib\System\`
 
-* The project search path for Include files must include the Indy Core path.
+* Note: the project search path for Include files must include the Indy Core path.
 
-Example:
 
-`<indy-home>\Lib\Core\`
-
-## Dynamic resource handlers
+## Dynamic resource handlers (TdjWebComponent)
 
 Resource handlers are the central framework parts which process requests. A **resource handler** is responsible for the generation of the HTTP response matching a specific client request.
 The routing between the actual HTTP request and the resource handler is performed via 'mapping' rules.
@@ -54,20 +51,16 @@ For example, a resource handler could be mapped to the `/context1/index.html` re
   Context1.Add(TIndexPageResource, '/index.html');
 ```
 
-Alternatively, a more general **suffix mapping** resource handler may be used, which should handle requests to any resources with the extension `*.html`:
+There are two other supported mapping types: **prefix mapping** ('/sub1/*', '/sub2/*' ...) and **suffix mapping ('*.html', '*.pdf').
 
-```pascal
-  Context1.Add(TCatchAllHtmlResource, '*.html');
-```
-
-This resource handler will be invoked for all requests for *.html resources - independent of their actual document name, and also for resources in sub-paths like `/context1/this/works/with_any_page.html`. But note: the resource handler will _not_ receive requests for other context, such as `/context2/index.html`! (more about contexts can be found in the full documentation)
-
-## Resource filters
+## Resource filters (TdjWebFilter)
 
 In addition to resource handlers, the application may also include resource filters. With filters, HTTP traffic can be modified in many ways, such as:
 * Detect missing authorization, and forward to a login page.
 * Set or remove HTTP headers depending on conditions.
 * Pre- or postprocess the request body content, to remove or insert data.
+
+All mapping types may also be used for resource filters. 
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
