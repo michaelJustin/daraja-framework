@@ -1,9 +1,9 @@
 # Demonstration of refresh token usage with Microsoft Entra ID / OpenID Connect
 
-This application launches a local web server and requests an access token from Microsoft Entra ID (formerly known as Azure Active Directory (Azure AD)). The access token then is shown in a web page together with a button, which allows to request a new access token. 
+This application launches a local web server and requests an access token from Microsoft Entra ID (formerly known as Azure Active Directory) and a refresh token. The access token then is shown in a web page together with a button, which allows to request a new access token. 
 
 ## Requirements
-* Daraja HTTP Framework source and source/optional units.
+* Daraja HTTP Server Framework source and source/optional units.
 * Indy 10.6.3 (https://github.com/IndySockets)
 * OpenSSL DLLs for Indy (https://github.com/IndySockets/OpenSSL-Binaries)
 * JsonDataObjects (https://github.com/ahausladen/JsonDataObjects)
