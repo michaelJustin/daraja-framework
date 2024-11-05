@@ -90,13 +90,10 @@ uses
 
 procedure Demo;
 const
-  TokenEndpoint = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/token';
-  AuthorizeEndpoint = 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize';
-  // Application (client) ID from Entra configuration
-  ClientId = '54c3422f-fe81-4f9c-b352-a7dc07d8f9e6';
-  // Redirection URI to which the response will be sent.
-  // MUST exactly match one of the Redirection URI values
-  // for the Client pre-registered at the OpenID Provider.
+  AuthorizeEndpoint = 'https://accounts.google.com/o/oauth2/auth';
+  TokenEndpoint = 'https://oauth2.googleapis.com/token';
+  // Application (client) ID from App onfiguration
+  ClientId = '239503955604-bp2bk8o7vmojrpq5449pug0t608gkkdf.apps.googleusercontent.com';
   RedirectPath = '/auth-response';
   RedirectURI = 'http://127.0.0.1' + RedirectPath;
   RootResourcePath = '/index.html';
@@ -223,7 +220,8 @@ begin
     try
       HTTP.Request.ContentType := 'application/x-www-form-urlencoded';
       RequestBody.Add('client_id=' + ClientID);
-      RequestBody.Add('scope=openid offline_access');
+      RequestBody.Add('scope=openid');
+      RequestBody.Add('access_type=offline');
       RequestBody.Add('grant_type=refresh_token');
       RequestBody.Add('refresh_token=' + RefreshToken);
       Result := HTTP.Post(TokenEndpoint, RequestBody);
@@ -266,7 +264,8 @@ begin
      + '?client_id=' + ClientID          // Your app registration's Application (client) ID
      + '&response_type=code'             // Request an auth code
      + '&redirect_uri=' + RedirectURI
-     + '&scope=openid offline_access'    // Request offline access
+     + '&scope=openid'
+     + '&access_type=offline'            // Request offline access
      + '&response_mode=form_post'
      + '&state=' + State
      + '&code_challenge=' + CodeChallenge
