@@ -93,7 +93,7 @@ const
   AuthorizeEndpoint = 'https://accounts.google.com/o/oauth2/auth';
   TokenEndpoint = 'https://oauth2.googleapis.com/token';
   // Application (client) ID from App onfiguration
-  ClientId = '239503955604-bp2bk8o7vmojrpq5449pug0t608gkkdf.apps.googleusercontent.com';
+  ClientId = '170453537434-70q3hn1c8cd28ughsp3dagb934oq17h2.apps.googleusercontent.com';
   RedirectPath = '/auth-response';
   RedirectURI = 'http://127.0.0.1' + RedirectPath;
   RootResourcePath = '/index.html';
