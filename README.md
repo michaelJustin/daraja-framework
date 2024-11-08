@@ -1,17 +1,17 @@
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
 [![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0) ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/michaelJustin/daraja-framework)
 
-
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
-
-
-
 
 # Daraja HTTP Server Framework
 
 Daraja is a flexible HTTP server framework for Object Pascal, based on the non-visual HTTP server component in the free open source library Internet Direct (Indy).
 
 Daraja provides the core foundation for serving HTTP resources of all content-types such as HTML pages, images, scripts, web service responses etc. by mapping resource paths to your own code. Your code then can create the response content, or let the framework serve a static file.
+
+Included example projects show its usefulness for advanced uses case, such as OAuth 2.0 and OpenID Connect for Microsoft Entra ID and Google Identity platform.
+- https://github.com/michaelJustin/daraja-framework/tree/master/demo/16_entra_refresh_token
+- https://github.com/michaelJustin/daraja-framework/tree/master/demo/17_google_refresh_token
 
 ## Documentation
 
