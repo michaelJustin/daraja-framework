@@ -3,9 +3,6 @@
 			<ProjectGuid>{87E60C5D-9398-4BC5-A7C4-20B509237CB6}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
-			<Projects Include="00_bootstrap\BootstrapDemo.dproj">
-				<Dependencies/>
-			</Projects>
 			<Projects Include="01_helloworld\HelloWorldServer.dproj">
 				<Dependencies/>
 			</Projects>
@@ -18,25 +15,16 @@
 			<Projects Include="04_binaryresource\BinaryResponseServer.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="05_formlogin\FormBasedLoginServer.dproj">
-				<Dependencies/>
-			</Projects>
 			<Projects Include="08_google_oauth2\GoogleAuthBackend.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="09_google_oidc\OpenIDConnectBackend.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="10_github_oauth2\GitHubAppBackend.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="11_entra_openid\EntraOAuthExample.dproj">
-				<Dependencies/>
-			</Projects>
-			<Projects Include="12_entra_msgraph\ReadUserProfileFromMSGraph.dproj">
-				<Dependencies/>
-			</Projects>
 			<Projects Include="13_entra_msgraph\EntraAuthCodeFlowExample.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="06_form_auth_filter\FormBasedLoginServer.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -47,15 +35,6 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
-		<Target Name="BootstrapDemo">
-			<MSBuild Projects="00_bootstrap\BootstrapDemo.dproj"/>
-		</Target>
-		<Target Name="BootstrapDemo:Clean">
-			<MSBuild Targets="Clean" Projects="00_bootstrap\BootstrapDemo.dproj"/>
-		</Target>
-		<Target Name="BootstrapDemo:Make">
-			<MSBuild Targets="Make" Projects="00_bootstrap\BootstrapDemo.dproj"/>
-		</Target>
 		<Target Name="HelloWorldServer">
 			<MSBuild Projects="01_helloworld\HelloWorldServer.dproj"/>
 		</Target>
@@ -92,15 +71,6 @@
 		<Target Name="BinaryResponseServer:Make">
 			<MSBuild Targets="Make" Projects="04_binaryresource\BinaryResponseServer.dproj"/>
 		</Target>
-		<Target Name="FormBasedLoginServer">
-			<MSBuild Projects="05_formlogin\FormBasedLoginServer.dproj"/>
-		</Target>
-		<Target Name="FormBasedLoginServer:Clean">
-			<MSBuild Targets="Clean" Projects="05_formlogin\FormBasedLoginServer.dproj"/>
-		</Target>
-		<Target Name="FormBasedLoginServer:Make">
-			<MSBuild Targets="Make" Projects="05_formlogin\FormBasedLoginServer.dproj"/>
-		</Target>
 		<Target Name="GoogleAuthBackend">
 			<MSBuild Projects="08_google_oauth2\GoogleAuthBackend.dproj"/>
 		</Target>
@@ -119,33 +89,6 @@
 		<Target Name="OpenIDConnectBackend:Make">
 			<MSBuild Targets="Make" Projects="09_google_oidc\OpenIDConnectBackend.dproj"/>
 		</Target>
-		<Target Name="GitHubAppBackend">
-			<MSBuild Projects="10_github_oauth2\GitHubAppBackend.dproj"/>
-		</Target>
-		<Target Name="GitHubAppBackend:Clean">
-			<MSBuild Targets="Clean" Projects="10_github_oauth2\GitHubAppBackend.dproj"/>
-		</Target>
-		<Target Name="GitHubAppBackend:Make">
-			<MSBuild Targets="Make" Projects="10_github_oauth2\GitHubAppBackend.dproj"/>
-		</Target>
-		<Target Name="EntraOAuthExample">
-			<MSBuild Projects="11_entra_openid\EntraOAuthExample.dproj"/>
-		</Target>
-		<Target Name="EntraOAuthExample:Clean">
-			<MSBuild Targets="Clean" Projects="11_entra_openid\EntraOAuthExample.dproj"/>
-		</Target>
-		<Target Name="EntraOAuthExample:Make">
-			<MSBuild Targets="Make" Projects="11_entra_openid\EntraOAuthExample.dproj"/>
-		</Target>
-		<Target Name="ReadUserProfileFromMSGraph">
-			<MSBuild Projects="12_entra_msgraph\ReadUserProfileFromMSGraph.dproj"/>
-		</Target>
-		<Target Name="ReadUserProfileFromMSGraph:Clean">
-			<MSBuild Targets="Clean" Projects="12_entra_msgraph\ReadUserProfileFromMSGraph.dproj"/>
-		</Target>
-		<Target Name="ReadUserProfileFromMSGraph:Make">
-			<MSBuild Targets="Make" Projects="12_entra_msgraph\ReadUserProfileFromMSGraph.dproj"/>
-		</Target>
 		<Target Name="EntraAuthCodeFlowExample">
 			<MSBuild Projects="13_entra_msgraph\EntraAuthCodeFlowExample.dproj"/>
 		</Target>
@@ -155,14 +98,23 @@
 		<Target Name="EntraAuthCodeFlowExample:Make">
 			<MSBuild Targets="Make" Projects="13_entra_msgraph\EntraAuthCodeFlowExample.dproj"/>
 		</Target>
+		<Target Name="FormBasedLoginServer">
+			<MSBuild Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Clean">
+			<MSBuild Targets="Clean" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Make">
+			<MSBuild Targets="Make" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="BootstrapDemo;HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;FormBasedLoginServer;GoogleAuthBackend;OpenIDConnectBackend;GitHubAppBackend;EntraOAuthExample;ReadUserProfileFromMSGraph;EntraAuthCodeFlowExample"/>
+			<CallTarget Targets="HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;GoogleAuthBackend;OpenIDConnectBackend;EntraAuthCodeFlowExample;FormBasedLoginServer"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="BootstrapDemo:Clean;HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;FormBasedLoginServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;GitHubAppBackend:Clean;EntraOAuthExample:Clean;ReadUserProfileFromMSGraph:Clean;EntraAuthCodeFlowExample:Clean"/>
+			<CallTarget Targets="HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;EntraAuthCodeFlowExample:Clean;FormBasedLoginServer:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="BootstrapDemo:Make;HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;FormBasedLoginServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;GitHubAppBackend:Make;EntraOAuthExample:Make;ReadUserProfileFromMSGraph:Make;EntraAuthCodeFlowExample:Make"/>
+			<CallTarget Targets="HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;EntraAuthCodeFlowExample:Make;FormBasedLoginServer:Make"/>
 		</Target>
 		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 	</Project>
