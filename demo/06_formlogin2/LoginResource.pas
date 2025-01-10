@@ -44,11 +44,6 @@ type
 
 implementation
 
-uses
-  // to support UTF-8 form parameters, a patched version
-  // of Indy TIdCustomHTTPServer.DecodeAndSetParams is required
-  utf8helper;
-
 procedure TLoginResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText := '<!DOCTYPE html>' + #13
@@ -77,8 +72,6 @@ var
   Password: string;
   Target: string;
 begin
-  MyDecodeAndSetParams(Request);
-
   // read form data
   Username := Request.Params.Values['username'];
   Password := Request.Params.Values['password'];
