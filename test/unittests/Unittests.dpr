@@ -81,7 +81,8 @@ uses
   TestFramework,
   GUITestRunner,
   TextTestRunner,
-  SysUtils;
+  SysUtils,
+  djGenericWebFilter in '..\..\source\djGenericWebFilter.pas';
 
 begin
   ConfigureLogging;
