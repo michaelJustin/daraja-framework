@@ -477,14 +477,15 @@ end;
 procedure TAPIConfigTests.TestConfigureWebComponentByWebComponentHolder;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('context');
-    Holder := Context.AddWebComponent(TCmpReturnsInitParams, '/*');
-    Holder.SetInitParameter('test', 'success');
+    with Context.AddWebComponent(TCmpReturnsInitParams, '/*') do
+    begin
+      SetInitParameter('test', 'success');
+    end;
     Server.Add(Context);
     Server.Start;
 
