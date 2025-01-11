@@ -43,7 +43,7 @@ type
   TdjWebComponentMapping = class(TObject)
   private
     FName: string;
-    FPathSpecs: TStrings;
+    FUrlPatterns: TStrings;
   public
     (**
      * Constructor.
@@ -56,7 +56,7 @@ type
 
     // properties
     property WebComponentName: string read FName write FName;
-    property PathSpecs: TStrings read FPathSpecs;
+    property UrlPatterns: TStrings read FUrlPatterns;
   end;
 
   (**
@@ -74,12 +74,12 @@ implementation
 
 constructor TdjWebComponentMapping.Create;
 begin
-  FPathSpecs := TStringList.Create;
+  FUrlPatterns := TStringList.Create;
 end;
 
 destructor TdjWebComponentMapping.Destroy;
 begin
-  FPathSpecs.Free;
+  FUrlPatterns.Free;
 
   inherited;
 end;

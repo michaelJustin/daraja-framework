@@ -21,7 +21,7 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
@@ -71,21 +71,21 @@ type
 
     (**
      * Check if a mapping path exists.
-     * This procedure throws a EWebComponentException if the PathSpec is already registered for this context.
+     * This procedure throws a EWebComponentException if the URL pattern is already registered for this context.
      *
-     * \param PathSpec a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
      * \throws EWebComponentException
      *)
-    procedure CheckExists(const PathSpec: string);
+    procedure CheckExists(const UrlPattern: string);
 
     (**
      * Add a web component mapping.
      *
-     * \param PathSpec a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
      * \param Value the mapped web component
      * \throws EWebComponentException
      *)
-    procedure AddPathSpec(const PathSpec: string; Value: TObject); overload;
+    procedure AddUrlPattern(const UrlPattern: string; Value: TObject); overload;
 
     (**
      * Return all matching mappings for the given path.
@@ -105,16 +105,16 @@ uses
 
 { TdjPathMap }
 
-procedure TdjPathMap.AddPathSpec(const PathSpec: string; Value: TObject);
+procedure TdjPathMap.AddUrlPattern(const UrlPattern: string; Value: TObject);
 begin
-  CheckExists(PathSpec);
+  CheckExists(UrlPattern);
 
-  AddObject(PathSpec, Value);
+  AddObject(UrlPattern, Value);
 end;
 
-procedure TdjPathMap.CheckExists(const PathSpec: string);
+procedure TdjPathMap.CheckExists(const UrlPattern: string);
 begin
-  if IndexOf(PathSpec) > -1 then
+  if IndexOf(UrlPattern) > -1 then
   begin
     raise EWebComponentException.Create('Mapping key exists');
   end;

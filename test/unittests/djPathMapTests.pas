@@ -106,14 +106,14 @@ begin
     default.
     *)
 
-    PS.AddPathSpec('/', nil);
-    PS.AddPathSpec('/foo/*', nil);
-    PS.AddPathSpec('/prefix/*', nil);
-    PS.AddPathSpec('/prefix/more/*', nil);
-    PS.AddPathSpec('/absolute.html', nil);
-    PS.AddPathSpec('/absolute2.html', nil);
-    PS.AddPathSpec('*.suf', nil);
-    PS.AddPathSpec('*.suffix', nil);
+    PS.AddUrlPattern('/', nil);
+    PS.AddUrlPattern('/foo/*', nil);
+    PS.AddUrlPattern('/prefix/*', nil);
+    PS.AddUrlPattern('/prefix/more/*', nil);
+    PS.AddUrlPattern('/absolute.html', nil);
+    PS.AddUrlPattern('/absolute2.html', nil);
+    PS.AddUrlPattern('*.suf', nil);
+    PS.AddUrlPattern('*.suffix', nil);
 
     MatchList := PS.GetMatches('/prefix/absolute.html');
     try
@@ -178,7 +178,7 @@ var
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddPathSpec('/*', nil);
+     PS.AddUrlPattern('/*', nil);
 
      MatchList := PS.GetMatches('/something');
     try
@@ -198,7 +198,7 @@ var
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddPathSpec('/*', nil);
+     PS.AddUrlPattern('/*', nil);
 
      MatchList := PS.GetMatches('/dir');
     try
