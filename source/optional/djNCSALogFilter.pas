@@ -60,7 +60,7 @@ type
     {$ENDIF DARAJA_LOGGING}
     FS: TFormatSettings;
   public
-    procedure Init(const Config: IWebFilterConfig); override;
+    procedure Init; override;
 
     (**
      * The doFilter method of the Filter is called by the container each time
@@ -107,7 +107,7 @@ end;
 
 { TdjNCSALogFilter }
 
-procedure TdjNCSALogFilter.Init(const Config: IWebFilterConfig);
+procedure TdjNCSALogFilter.Init;
 begin
   // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}

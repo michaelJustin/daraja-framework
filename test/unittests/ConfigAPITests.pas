@@ -111,6 +111,7 @@ type
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
     procedure TestFilterWithInit;
+    procedure TestFilterV3WithInit;
     procedure TestFilterInitCanReadContextConfiguration;
     //procedure TestOneFilterAndTwoWebComponents;
 
@@ -1165,6 +1166,17 @@ type
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
 
+  { TTestFilterV3WithInit }
+
+  TTestFilterV3WithInit = class(TdjWebFilter)
+  private
+    FInitParam: string;
+  public
+    procedure Init; override;
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse; const Chain: IWebFilterChain); override;
+  end;
+
   { TTestFilterWithInit }
 
   TTestFilterWithInit = class(TdjWebFilter)
@@ -1228,6 +1240,25 @@ begin
    Chain.DoFilter(Context, Request, Response);
    Response.ContentText := Response.ContentText + ' (filtered)';
 end;
+
+{ TTestFilterV3WithInit }
+
+procedure TTestFilterV3WithInit.Init;
+begin
+  FInitParam := Config.GetInitParameter('key');
+end;
+
+procedure TTestFilterV3WithInit.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+
+  if Response.ContentText <> '' then
+    Response.ContentText := Response.ContentText + ', ';
+
+  Response.ContentText := Response.ContentText + 'Param key=' + FInitParam;
+end;
+
 
 { TTestFilterWithInit }
 
@@ -1403,6 +1434,32 @@ begin
     Server.Free;
   end;
 end;
+
+procedure TAPIConfigTests.TestFilterV3WithInit;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  FilterHolder: TdjWebFilterHolder;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.SetInitParameter('a', 'b');
+  Context.AddWebComponent(TExamplePage, '*.filter');
+  FilterHolder := TdjWebFilterHolder.Create(TTestFilterV3WithInit);
+  FilterHolder.SetInitParameter('key', 'Hello, World V3!');
+  Context.AddWebFilter(FilterHolder, '*.filter');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('example, Param key=Hello, World V3!', '/web/page.filter');
+  finally
+    Server.Free;
+  end;
+end;
+
 
 procedure TAPIConfigTests.TestFilterInitCanReadContextConfiguration;
 var

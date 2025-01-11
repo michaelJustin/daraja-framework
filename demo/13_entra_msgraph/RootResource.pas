@@ -45,7 +45,7 @@ type
     function ReadUserProfile(const AccessToken: string): string;
     procedure SendMail(const AccessToken: string);
   public
-    procedure Init(const Config: IWebComponentConfig); override;
+    procedure Init; override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -72,10 +72,8 @@ end;
 
 { TRootResource }
 
-procedure TRootResource.Init(const Config: IWebComponentConfig);
+procedure TRootResource.Init;
 begin
-  inherited;
-
   GraphAPIEndpoint := Config.GetContext.GetInitParameter('GraphAPIEndpoint');
 end;
 
