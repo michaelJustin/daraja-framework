@@ -67,7 +67,7 @@ begin
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(OIDCCallbackHolder, '/openidcallback');
   Context.AddWebFilter(FilterHolder, '*.html');
-  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+  Context.AddWebFilter(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);
   try

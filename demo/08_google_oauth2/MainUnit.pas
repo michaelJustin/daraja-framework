@@ -59,7 +59,7 @@ begin
 
       Context.AddWebComponent(TRootResource, '/');
       Context.AddWebComponent(TOAuth2CallbackResource, MY_CALLBACK_URL);
-      Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+      Context.AddWebFilter(TdjNCSALogFilter, '/*');
 
       Server.Add(Context);
 

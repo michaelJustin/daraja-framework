@@ -99,8 +99,8 @@ begin
     Context.AddWebComponent(TLoginErrorResource, '/loginError');
     Context.AddWebComponent(TLogoutResource, '/logout');
 
-    Context.AddFilterWithMapping(TFormAuthFilter, '/admin');
-    Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+    Context.AddWebFilter(TFormAuthFilter, '/admin');
+    Context.AddWebFilter(TdjNCSALogFilter, '/*');
 
     Server.Add(Context);
 
