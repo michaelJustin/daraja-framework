@@ -64,6 +64,7 @@ type
 
     // init method
     procedure TestInitCanReadWebComponentContext;
+    procedure TestInitv3CanReadWebComponentContext;
 
     // exceptions
     procedure TestExceptionInInitStopsComponent;
@@ -332,6 +333,47 @@ begin
   end;
 end;
 
+// TCmpWithInitV3 -----------------------------------------------------
+type
+  TCmpWithInitv3 = class(TdjWebComponent)
+  private
+    StaticContent: string;
+  public
+    procedure Init; override;
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure TCmpWithInitv3.Init;
+begin
+  StaticContent := 'from init';
+
+  if Config <> nil then StaticContent := StaticContent + ' 1';
+  if Config.GetContext <> nil then StaticContent := StaticContent + ' 2';
+  if Config.GetContext.GetContextConfig <> nil then StaticContent := StaticContent + ' 3';
+end;
+
+procedure TCmpWithInitv3.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := StaticContent;
+end;
+
+procedure TAPIConfigTests.TestInitv3CanReadWebComponentContext;
+var
+  Context: TdjWebAppContext;
+  Server: TdjServer;
+begin
+  Context := TdjWebAppContext.Create('');
+  Context.AddWebComponent(TCmpWithInitv3, '/');
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('from init 1 2 3', '/');
+  finally
+    Server.Free;
+  end;
+end;
+
 // TCmpWithInit -----------------------------------------------------
 type
   TCmpWithInit = class(TdjWebComponent)
@@ -351,7 +393,6 @@ begin
   if Config <> nil then StaticContent := StaticContent + ' 1';
   if Config.GetContext <> nil then StaticContent := StaticContent + ' 2';
   if Config.GetContext.GetContextConfig <> nil then StaticContent := StaticContent + ' 3';
-
 end;
 
 procedure TCmpWithInit.OnGet(Request: TdjRequest; Response: TdjResponse);

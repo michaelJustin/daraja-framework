@@ -46,7 +46,7 @@ type
     TokenEndpoint: string;
     function GetAccessTokenByRefreshToken(const RefreshToken: string): string;
   public
-    procedure Init(const Config: IWebComponentConfig); override;
+    procedure Init; override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -155,7 +155,7 @@ end;
 
 { TRootResource }
 
-procedure TRootResource.Init(const Config: IWebComponentConfig);
+procedure TRootResource.Init;
 begin
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');

@@ -95,7 +95,13 @@ type
       *
       * \throws EWebComponentException if initialization failed
       *)
-    procedure Init(const Config: IWebComponentConfig); virtual;
+    procedure Init(const Config: IWebComponentConfig); overload; virtual;
+
+    (**
+     * A convenience method which can be overridden so that there is no need
+     * to call inherited Init(config).
+     *)
+    procedure Init; overload; virtual;
 
     (**
      * Get or create a HTTP session.
@@ -204,9 +210,16 @@ begin
   Result := FConfig;
 end;
 
-procedure TdjGenericWebComponent.Init(const Config: IWebComponentConfig);
+procedure TdjGenericWebComponent.Init;
 begin
   Trace('Init');
+  // this is a convenience method which can be overridden so that there is no need
+  // to call inherited Init(config).
+end;
+
+procedure TdjGenericWebComponent.Init(const Config: IWebComponentConfig);
+begin
+  Trace('Init(Config)');
 
   Assert(Assigned(Config));
   Assert(Assigned(Config.GetContext));
@@ -214,6 +227,8 @@ begin
   Assert(not Assigned(FConfig));
 
   FConfig := Config;
+
+  Init;
 end;
 
 procedure TdjGenericWebComponent.Service(Context: TdjServerContext;

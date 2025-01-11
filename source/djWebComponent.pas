@@ -54,7 +54,7 @@ type
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-   {$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
 

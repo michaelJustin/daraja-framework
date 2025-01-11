@@ -48,7 +48,7 @@ type
       const CodeVerifier: string): string;
    function ParseResponse(const TokenResponse: string): string;
   public
-    procedure Init(const Config: IWebComponentConfig); override;
+    procedure Init; override;
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -87,10 +87,8 @@ end;
 
 { TAuthResponseResource }
 
-procedure TAuthResponseResource.Init(const Config: IWebComponentConfig);
+procedure TAuthResponseResource.Init;
 begin
-  inherited;
-
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   TokenEndpoint := Config.GetContext.GetInitParameter('TokenEndpoint');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
