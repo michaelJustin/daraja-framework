@@ -50,7 +50,7 @@ begin
     Context.Add(TPingResource, '/ping');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/');
+    WriteLn('Server is running, please open http://127.0.0.1/');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

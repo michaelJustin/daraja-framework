@@ -47,7 +47,7 @@ uses
 procedure Demo;
 const
   // URI must match OAuth 2.0 settings in Google Cloud project
-  REDIRECT_URI = 'http://localhost/openidcallback';
+  REDIRECT_URI = 'http://127.0.0.1/openidcallback';
   // Must point to file downloaded from Google Cloud project
   SECRET_FILE = 'client_secret.json';
 var
@@ -75,9 +75,9 @@ begin
       Server.Add(Context);
       Server.Start;
 
-      ShellExecute(0, 'open', PChar('http://localhost/index.html'), '', '', 0);
+      ShellExecute(0, 'open', PChar('http://127.0.0.1/index.html'), '', '', 0);
 
-      WriteLn('Server is running, launching http://localhost/index.html ...');
+      WriteLn('Server is running, launching http://127.0.0.1/index.html ...');
       WriteLn('Hit enter to terminate.');
     except
       on E: Exception do WriteLn(E.Message);
