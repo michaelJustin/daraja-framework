@@ -85,16 +85,14 @@ type
     destructor Destroy; override;
 
     (**
-      * Called by the container on startup.
-      *
-      * \note if this method is overridden, the overriding code
-      * must also call inherited Init.
-      *
-      *
-      * \param Config the configuration
-      *
-      * \throws EWebComponentException if initialization failed
-      *)
+     * Called by the container on startup.
+     *
+     * \note if this method is overridden, the overriding code
+     * must also call inherited Init.
+     *
+     * \param Config the configuration
+     * \throws EWebComponentException if initialization failed
+     *)
     procedure Init(const Config: IWebComponentConfig); overload; virtual;
 
     (**

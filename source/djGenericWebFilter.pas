@@ -57,6 +57,7 @@ type
     {$ENDIF DARAJA_LOGGING}
     FConfig: IWebFilterConfig;
     procedure Trace(const S: string);
+    function GetWebFilterConfig: IWebFilterConfig;
   public
     (**
      * Constructor.
@@ -68,7 +69,22 @@ type
      *)
     destructor Destroy; override;
 
-    procedure Init(const Config: IWebFilterConfig); virtual;
+    (**
+     * Called by the container on startup.
+     *
+     * \note if this method is overridden, the overriding code
+     * must also call inherited Init.
+     *
+     * \param Config the configuration
+     * \throws EWebComponentException if initialization failed
+     *)
+    procedure Init(const Config: IWebFilterConfig); overload; virtual;
+
+    (**
+     * A convenience method which can be overridden so that there is no need
+     * to call inherited Init(config).
+     *)
+    procedure Init; overload; virtual;
 
     (**
      * The doFilter method of the Filter is called by the container each time a request/response pair is passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed in to this method allows the Filter to pass on the request and response to the next entity in the chain.
@@ -77,6 +93,9 @@ type
       TdjResponse; const Chain: IWebFilterChain); virtual;
 
     procedure DestroyFilter; virtual;
+
+    property Config: IWebFilterConfig read GetWebFilterConfig;
+
   end;
 
 implementation
@@ -110,6 +129,13 @@ begin
   inherited;
 end;
 
+procedure TdjGenericWebFilter.Init;
+begin
+  Trace('Init');
+  // this is a convenience method which can be overridden so that there is no need
+  // to call inherited Init(config).
+end;
+
 procedure TdjGenericWebFilter.Init(const Config: IWebFilterConfig);
 begin
   Trace('Init');
@@ -120,6 +146,8 @@ begin
   Assert(not Assigned(FConfig));
 
   FConfig := Config;
+
+  Init;
 end;
 
 procedure TdjGenericWebFilter.Trace(const S: string);
@@ -141,6 +169,16 @@ begin
     Logger.Trace('DoFilter');
   end;
   {$ENDIF DARAJA_LOGGING}
+end;
+
+function TdjGenericWebFilter.GetWebFilterConfig: IWebFilterConfig;
+begin
+  if not Assigned(FConfig) then
+  begin
+    raise EWebComponentException.Create('Filter is not initialized.');
+  end;
+
+  Result := FConfig;
 end;
 
 procedure TdjGenericWebFilter.DestroyFilter;
