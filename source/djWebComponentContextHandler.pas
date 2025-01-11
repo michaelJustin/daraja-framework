@@ -90,8 +90,8 @@ type
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
-    procedure AddWebComponent(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string); overload;
+    function AddWebComponent(ComponentClass: TdjWebComponentClass;
+      const PathSpec: string): TdjWebComponentHolder; overload;
 
     (**
      * Add a Web Component.
@@ -194,8 +194,8 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-procedure TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string);
+function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
+  const PathSpec: string): TdjWebComponentHolder;
 var
   Holder: TdjWebComponentHolder;
 begin
@@ -217,6 +217,8 @@ begin
       [ComponentClass.ClassName, PathSpec]));
     WebComponentHandler.AddWithMapping(Holder, PathSpec);
   end;
+
+  Result := Holder;
 end;
 
 procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
