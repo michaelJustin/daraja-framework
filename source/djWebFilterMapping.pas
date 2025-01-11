@@ -46,7 +46,7 @@ type
   TdjWebFilterMapping = class(TObject)
   private
     FName: string;
-    FPathSpecs: TStrings;
+    FUrlPatterns: TStrings;
     FWebComponentNames: TStrings;
     FHolder: TdjWebFilterHolder;
   public
@@ -59,7 +59,7 @@ type
     property WebFilterHolder: TdjWebFilterHolder read FHolder write FHolder;
     property WebFilterName: string read FName write FName;
     property WebComponentNames: TStrings read FWebComponentNames;
-    property PathSpecs: TStrings read FPathSpecs;
+    property UrlPatterns: TStrings read FUrlPatterns;
   end;
 
   (**
@@ -79,28 +79,28 @@ constructor TdjWebFilterMapping.Create;
 begin
   inherited;
 
-  FPathSpecs := TStringList.Create;
+  FUrlPatterns := TStringList.Create;
   FWebComponentNames := TStringList.Create;
 end;
 
 destructor TdjWebFilterMapping.Destroy;
 begin
   FWebComponentNames.Free;
-  FPathSpecs.Free;
+  FUrlPatterns.Free;
 
   inherited;
 end;
 
 function TdjWebFilterMapping.AppliesTo(const PathInContext: string): Boolean;
 var
-  PathSpec: string;
+  UrlPattern: string;
 begin
   Result := False;
-  if FPathSpecs.Count = 0 then
+  if FUrlPatterns.Count = 0 then
     Exit;
-  for PathSpec in PathSpecs do
+  for UrlPattern in UrlPatterns do
   begin
-    if TdjPathMap.Matches(PathInContext, PathSpec) then
+    if TdjPathMap.Matches(PathInContext, UrlPattern) then
     begin
       Result := True;
       Exit;

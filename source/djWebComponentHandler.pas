@@ -79,9 +79,9 @@ type
     procedure Trace(const S: string);
     function StripContext(const Doc: string): string;
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
-    procedure CreateOrUpdateMapping(const PathSpec: string; Holder:
+    procedure CreateOrUpdateMapping(const UrlPattern: string; Holder:
       TdjWebComponentHolder);
-    procedure ValidateMappingPathSpec(const PathSpec: string;
+    procedure ValidateMappingUrlPattern(const UrlPattern: string;
       Holder: TdjWebComponentHolder);
     function FindMapping(const WebComponentName: string): TdjWebComponentMapping; // overload;
     function GetFilterChain(const PathInContext: string; Request: TdjRequest;
@@ -113,32 +113,32 @@ type
      * Add a Web Component.
      *
      * \param ComponentClass WebComponent class
-     * \param PathSpec path specification
+     * \param UrlPattern path specification
      *
      * \throws EWebComponentException if the Web Component can not be added
      *)
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
-      const PathSpec: string): TdjWebComponentHolder; overload;
+      const UrlPattern: string): TdjWebComponentHolder; overload;
 
     (**
      * Add a Web Component holder with mapping.
      *
      * \param Holder a Web Component holder
-     * \param PathSpec a path spec
+     * \param UrlPattern a path spec
      *)
-    procedure AddWithMapping(Holder: TdjWebComponentHolder; const PathSpec: string); overload;
+    procedure AddWithMapping(Holder: TdjWebComponentHolder; const UrlPattern: string); overload;
 
     (**
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped path.
      *
      * \param FilterClass WebFilter class
-     * \param PathSpec mapped path
+     * \param UrlPattern mapped path
      *
      * \throws Exception if the WebFilter can not be added
      *)
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
-      const PathSpec: string); overload;
+      const UrlPattern: string); overload;
 
     (**
      * Find a TdjWebComponentHolder for a WebComponentClass.
@@ -292,11 +292,11 @@ begin
 end;
 
 function TdjWebComponentHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
-  const PathSpec: string): TdjWebComponentHolder;
+  const UrlPattern: string): TdjWebComponentHolder;
 begin
   Result := TdjWebComponentHolder.Create(ComponentClass);
   try
-    AddWithMapping(Result, PathSpec);
+    AddWithMapping(Result, UrlPattern);
   except
     on E: EWebComponentException do
     begin
@@ -365,13 +365,13 @@ begin
   end;
 end;
 
-procedure TdjWebComponentHandler.CreateOrUpdateMapping(const PathSpec: string;
+procedure TdjWebComponentHandler.CreateOrUpdateMapping(const UrlPattern: string;
   Holder: TdjWebComponentHolder);
 var
   Mapping: TdjWebComponentMapping;
   WebComponentName: string;
 begin
-  ValidateMappingPathSpec(PathSpec, Holder);
+  ValidateMappingUrlPattern(UrlPattern, Holder);
 
   // check if this Web Component is already mapped
   WebComponentName := Holder.Name;
@@ -382,7 +382,7 @@ begin
   begin
     // already mapped
     Trace(Format(rsUpdateMappingForWebComponent,
-      [WebComponentName, Trim(Mapping.PathSpecs.CommaText), PathSpec]));
+      [WebComponentName, Trim(Mapping.UrlPatterns.CommaText), UrlPattern]));
   end
   else
   begin
@@ -394,11 +394,11 @@ begin
 
     Trace(Format(rsCreateMappingForWebComponent,
     [Mapping.WebComponentName,
-    Trim(PathSpec)]));
+    Trim(UrlPattern)]));
   end;
 
-  // in both cases, add PathSpec
-  Mapping.PathSpecs.Add(PathSpec);
+  // in both cases, add URL pattern
+  Mapping.UrlPatterns.Add(UrlPattern);
 end;
 
 procedure TdjWebComponentHandler.CheckUniqueName(Holder: TdjWebComponentHolder);
@@ -427,10 +427,10 @@ begin
 end;
 
 procedure TdjWebComponentHandler.AddWithMapping(Holder: TdjWebComponentHolder;
-  const PathSpec: string);
+  const UrlPattern: string);
 begin
   try
-    FPathMap.CheckExists(PathSpec);
+    FPathMap.CheckExists(UrlPattern);
   except
     on E: EWebComponentException do
     begin
@@ -460,10 +460,10 @@ begin
   end;
 
   // create or update a mapping entry
-  CreateOrUpdateMapping(PathSpec, Holder);
+  CreateOrUpdateMapping(UrlPattern, Holder);
 
-  // add the PathSpec to the FPathMap
-  FPathMap.AddPathSpec(PathSpec, Holder);
+  // add the URL pattern to the FPathMap
+  FPathMap.AddUrlPattern(UrlPattern, Holder);
 
   if Started and not Holder.IsStarted then
   begin
@@ -472,7 +472,7 @@ begin
 end;
 
 procedure TdjWebComponentHandler.AddWebFilter(
-  Holder: TdjWebFilterHolder; const PathSpec: string);
+  Holder: TdjWebFilterHolder; const UrlPattern: string);
 var
   Mapping: TdjWebFilterMapping;
 begin
@@ -485,7 +485,7 @@ begin
   Mapping := TdjWebFilterMapping.Create;
   Mapping.WebFilterHolder := Holder;
   Mapping.WebFilterName := Holder.Name;
-  Mapping.PathSpecs.Add(PathSpec);
+  Mapping.UrlPatterns.Add(UrlPattern);
 
   FWebFilterMappings.Add(Mapping);
 end;
@@ -527,13 +527,13 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-procedure TdjWebComponentHandler.ValidateMappingPathSpec(const PathSpec: string;
+procedure TdjWebComponentHandler.ValidateMappingUrlPattern(const UrlPattern: string;
   Holder: TdjWebComponentHolder);
 begin
-  if TdjPathMap.GetSpecType(PathSpec) = stUnknown then
+  if TdjPathMap.GetSpecType(UrlPattern) = stUnknown then
   begin
     raise EWebComponentException.CreateFmt(
-      rsInvalidMappingSForWebComponentS, [PathSpec, Holder.Name]);
+      rsInvalidMappingSForWebComponentS, [UrlPattern, Holder.Name]);
   end;
 end;
 
@@ -788,7 +788,7 @@ begin
     // if = nil ...
     FilterMapping.WebFilterHolder := WebFilterHolder;
 
-    if FilterMapping.PathSpecs.Count > 0 then
+    if FilterMapping.UrlPatterns.Count > 0 then
     begin
       FWebFilterPathMappings.Add(FilterMapping);
     end;

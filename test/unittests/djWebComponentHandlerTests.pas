@@ -155,8 +155,8 @@ end;
 //      Handler.AddWithMapping(H1, '/a');
 //      Handler.AddWithMapping(H1, '/b');
 //
-//      CheckEquals(2, Handler.WebComponentMappings[0].PathSpecs.Count);
-//      CheckEquals('/a,/b', Handler.WebComponentMappings[0].PathSpecs.CommaText);
+//      CheckEquals(2, Handler.WebComponentMappings[0].UrlPatterns.Count);
+//      CheckEquals('/a,/b', Handler.WebComponentMappings[0].UrlPatterns.CommaText);
 //
 //    finally
 //      Handler.Free;

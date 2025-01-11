@@ -41,11 +41,11 @@ type
   published
     procedure TestGetSpecType;
 
-    procedure TestPathSpec;
+    procedure TestUrlPattern;
 
-    procedure TestMorePathSpec;
+    procedure TestMoreUrlPattern;
 
-    procedure TestDirPathSpec;
+    procedure TestDirUrlPattern;
   end;
 
 implementation
@@ -89,7 +89,7 @@ begin
   CheckTrue(stUnknown = TTestPathMap.GetSpecType('/*.html'), '/*.html');
 end;
 
-procedure TdjPathMapTests.TestPathSpec;
+procedure TdjPathMapTests.TestUrlPattern;
 var
   PS: TdjPathMap;
 
@@ -106,14 +106,14 @@ begin
     default.
     *)
 
-    PS.AddPathSpec('/', nil);
-    PS.AddPathSpec('/foo/*', nil);
-    PS.AddPathSpec('/prefix/*', nil);
-    PS.AddPathSpec('/prefix/more/*', nil);
-    PS.AddPathSpec('/absolute.html', nil);
-    PS.AddPathSpec('/absolute2.html', nil);
-    PS.AddPathSpec('*.suf', nil);
-    PS.AddPathSpec('*.suffix', nil);
+    PS.AddUrlPattern('/', nil);
+    PS.AddUrlPattern('/foo/*', nil);
+    PS.AddUrlPattern('/prefix/*', nil);
+    PS.AddUrlPattern('/prefix/more/*', nil);
+    PS.AddUrlPattern('/absolute.html', nil);
+    PS.AddUrlPattern('/absolute2.html', nil);
+    PS.AddUrlPattern('*.suf', nil);
+    PS.AddUrlPattern('*.suffix', nil);
 
     MatchList := PS.GetMatches('/prefix/absolute.html');
     try
@@ -171,14 +171,14 @@ begin
 
 end;
 
-procedure TdjPathMapTests.TestMorePathSpec;
+procedure TdjPathMapTests.TestMoreUrlPattern;
 var
   PS: TdjPathMap;
   MatchList: TStrings;
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddPathSpec('/*', nil);
+     PS.AddUrlPattern('/*', nil);
 
      MatchList := PS.GetMatches('/something');
     try
@@ -191,14 +191,14 @@ begin
   end;
 end;
 
-procedure TdjPathMapTests.TestDirPathSpec;
+procedure TdjPathMapTests.TestDirUrlPattern;
 var
   PS: TdjPathMap;
   MatchList: TStrings;
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddPathSpec('/*', nil);
+     PS.AddUrlPattern('/*', nil);
 
      MatchList := PS.GetMatches('/dir');
     try
