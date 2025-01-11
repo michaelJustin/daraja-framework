@@ -84,6 +84,7 @@ type
 
     // Web Component init parameter
     procedure TestTdjWebComponentHolder_SetInitParameter;
+    procedure TestConfigureWebComponentByWebComponentHolder;
 
     procedure TestContextConfig;
 
@@ -463,6 +464,28 @@ begin
     Holder := TdjWebComponentHolder.Create(TCmpReturnsInitParams);
     Holder.SetInitParameter('test', 'success');
     Context.AddWebComponent(Holder, '/*');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('success', '/context/');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestConfigureWebComponentByWebComponentHolder;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('context');
+    with Context.AddWebComponent(TCmpReturnsInitParams, '/*') do
+    begin
+      SetInitParameter('test', 'success');
+    end;
     Server.Add(Context);
     Server.Start;
 
