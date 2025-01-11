@@ -41,13 +41,13 @@ type
   published
     procedure TestTwoEqualComponentsSucceeds;
 
-    procedure Test_Add_ClassWithSamePathSpecTwice_RaisesException;
+    procedure Test_Add_ClassWithSameUrlPatternTwice_RaisesException;
 
-    procedure Test_AddWebComponent_ClassWithSamePathSpecTwice_RaisesException;
+    procedure Test_AddWebComponent_ClassWithSameUrlPatternTwice_RaisesException;
 
-    procedure Test_AddWebComponent_HolderWithSamePathSpecTwice_RaisesException;
+    procedure Test_AddWebComponent_HolderWithSameUrlPatternTwice_RaisesException;
 
-    procedure Test_AddWebComponent_Two_HoldersWithSamePathSpecTwice_RaisesException;
+    procedure Test_AddWebComponent_Two_HoldersWithSameUrlPatternTwice_RaisesException;
 
     // todo: Test AddHandler / RemoveHandler
 
@@ -88,7 +88,7 @@ begin
   end;
 end;
 
-procedure TdjWebAppContextTests.Test_Add_ClassWithSamePathSpecTwice_RaisesException;
+procedure TdjWebAppContextTests.Test_Add_ClassWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
 begin
@@ -111,7 +111,7 @@ begin
   end;
 end;
 
-procedure TdjWebAppContextTests.Test_AddWebComponent_ClassWithSamePathSpecTwice_RaisesException;
+procedure TdjWebAppContextTests.Test_AddWebComponent_ClassWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
 begin
@@ -134,7 +134,7 @@ begin
   end;
 end;
 
-procedure TdjWebAppContextTests.Test_AddWebComponent_HolderWithSamePathSpecTwice_RaisesException;
+procedure TdjWebAppContextTests.Test_AddWebComponent_HolderWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
   Holder: TdjWebComponentHolder;
@@ -159,7 +159,7 @@ begin
   end;
 end;
 
-procedure TdjWebAppContextTests.Test_AddWebComponent_Two_HoldersWithSamePathSpecTwice_RaisesException;
+procedure TdjWebAppContextTests.Test_AddWebComponent_Two_HoldersWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
   Holder1, Holder2: TdjWebComponentHolder;

@@ -41,11 +41,11 @@ type
   published
     procedure TestGetSpecType;
 
-    procedure TestPathSpec;
+    procedure TestUrlPattern;
 
-    procedure TestMorePathSpec;
+    procedure TestMoreUrlPattern;
 
-    procedure TestDirPathSpec;
+    procedure TestDirUrlPattern;
   end;
 
 implementation
@@ -89,7 +89,7 @@ begin
   CheckTrue(stUnknown = TTestPathMap.GetSpecType('/*.html'), '/*.html');
 end;
 
-procedure TdjPathMapTests.TestPathSpec;
+procedure TdjPathMapTests.TestUrlPattern;
 var
   PS: TdjPathMap;
 
@@ -171,7 +171,7 @@ begin
 
 end;
 
-procedure TdjPathMapTests.TestMorePathSpec;
+procedure TdjPathMapTests.TestMoreUrlPattern;
 var
   PS: TdjPathMap;
   MatchList: TStrings;
@@ -191,7 +191,7 @@ begin
   end;
 end;
 
-procedure TdjPathMapTests.TestDirPathSpec;
+procedure TdjPathMapTests.TestDirUrlPattern;
 var
   PS: TdjPathMap;
   MatchList: TStrings;
