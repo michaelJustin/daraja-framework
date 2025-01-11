@@ -74,7 +74,7 @@ type
   public
     destructor Destroy; override;
 
-    procedure Init(const Config: IWebFilterConfig); override;
+    procedure Init; override;
     (**
      * The doFilter method of the Filter is called by the container each time
      * a request/response pair is passed through the chain due to a client
@@ -112,8 +112,6 @@ uses
 
 procedure TdjStatisticsFilter.Init;
 begin
-  inherited;
-
   FResponses1xx := TIdThreadSafeInt64.Create;
   FResponses2xx := TIdThreadSafeInt64.Create;
   FResponses3xx := TIdThreadSafeInt64.Create;
