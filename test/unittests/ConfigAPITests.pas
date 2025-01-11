@@ -80,6 +80,7 @@ type
     // web component tests
     procedure TestNoMethodReturns405;
     procedure TestPOSTMethodResponse;
+    procedure TestRegisterTwoMappings;
 
     // Web Component init parameter
     procedure TestTdjWebComponentHolder_SetInitParameter;
@@ -200,6 +201,26 @@ begin
     // Test non-existent path
     CheckGETResponse404('/web/bar');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestRegisterTwoMappings;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('example');
+    Context.AddWebComponent(TExamplePage, '/index.html');
+    Context.AddWebComponent(TExamplePage, '*.txt');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example', '/example/index.html');
+    CheckGETResponseEquals('example', '/example/test.txt');
   finally
     Server.Free;
   end;
