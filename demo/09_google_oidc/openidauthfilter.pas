@@ -47,7 +47,7 @@ type
   private
     RedirectURI: string;
   public
-    procedure Init(const Config: IWebFilterConfig); override;
+    procedure Init; override;
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse;
       const Chain: IWebFilterChain); override;
   end;
@@ -59,7 +59,7 @@ uses
 
 { TOpenIDAuthFilter }
 
-procedure TOpenIDAuthFilter.Init(const Config: IWebFilterConfig);
+procedure TOpenIDAuthFilter.Init;
 begin
   RedirectURI := Config.GetInitParameter('RedirectURI');
 end;

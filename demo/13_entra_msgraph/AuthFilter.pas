@@ -50,7 +50,7 @@ type
     RedirectURI: string;
     function BuildCodeChallenge(const ACodeVerifier: string): string;
   public
-    procedure Init(const Config: IWebFilterConfig); override;
+    procedure Init; override;
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Chain: IWebFilterChain); override;
   end;
@@ -70,10 +70,8 @@ end;
 
 { TAuthFilter }
 
-procedure TAuthFilter.Init(const Config: IWebFilterConfig);
+procedure TAuthFilter.Init;
 begin
-  inherited;
-
   AuthorizeEndpoint := Config.GetContext.GetInitParameter('AuthorizeEndpoint');
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
