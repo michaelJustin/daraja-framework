@@ -21,7 +21,7 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
@@ -124,8 +124,8 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string): TdjWebFilterHolder;
+    function AddWebFilter(FilterClass: TdjWebFilterClass;
+      const PathSpec: string): TdjWebFilterHolder; overload;
 
     // IHandler interface
 
@@ -246,16 +246,16 @@ begin
   // set context of Holder to propagate it to WebFilterConfig
   Holder.SetContext(Self.GetCurrentContext);
 
-  WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
+  WebComponentHandler.AddWebFilter(Holder, PathSpec);
 end;
 
-function TdjWebComponentContextHandler.AddFilterWithMapping(
+function TdjWebComponentContextHandler.AddWebFilter(
   FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
 var
   Holder: TdjWebFilterHolder;
 begin
   Holder := TdjWebFilterHolder.Create(FilterClass);
-  WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
+  WebComponentHandler.AddWebFilter(Holder, PathSpec);
   Result := Holder;
 end;
 

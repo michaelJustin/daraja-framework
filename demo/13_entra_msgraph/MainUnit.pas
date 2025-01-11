@@ -61,8 +61,8 @@ begin
 
   Context.AddWebComponent(TRootResource, '/index.html');
   Context.AddWebComponent(TAuthResponseResource, REDIRECT_PATH);
-  Context.AddFilterWithMapping(TAuthFilter, '*.html');
-  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+  Context.AddWebFilter(TAuthFilter, '*.html');
+  Context.AddWebFilter(TdjNCSALogFilter, '/*');
 
   Context.SetInitParameter('ClientID', CLIENT_ID);
   Context.SetInitParameter('RedirectURI', REDIRECT_URI);

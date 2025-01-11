@@ -1347,7 +1347,7 @@ var
 begin
   // configure
   Context := TdjWebAppContext.Create('web');
-  Context.AddFilterWithMapping(TTestFilter, '*.html');
+  Context.AddWebFilter(TTestFilter, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1369,7 +1369,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddFilterWithMapping(TTestFilter, '*.html');
+  Context.AddWebFilter(TTestFilter, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1391,8 +1391,8 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddFilterWithMapping(TTestFilterA, '*.html');
-  Context.AddFilterWithMapping(TTestFilterB, '*.html');
+  Context.AddWebFilter(TTestFilterA, '*.html');
+  Context.AddWebFilter(TTestFilterB, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1414,8 +1414,8 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddFilterWithMapping(TTestFilterB, '*.html');
-  Context.AddFilterWithMapping(TTestFilterA, '*.html');
+  Context.AddWebFilter(TTestFilterB, '*.html');
+  Context.AddWebFilter(TTestFilterA, '*.html');
   Server := TdjServer.Create;
 
   // run
@@ -1438,8 +1438,8 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filterA');
   Context.AddWebComponent(TGetComponent, '*.filterB');
-  Context.AddFilterWithMapping(TTestFilterA, '*.filterA');
-  Context.AddFilterWithMapping(TTestFilterB, '*.filterB');
+  Context.AddWebFilter(TTestFilterA, '*.filterA');
+  Context.AddWebFilter(TTestFilterB, '*.filterB');
 
   // run
   Server := TdjServer.Create;
@@ -1488,7 +1488,7 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.SetInitParameter('a', 'b');
   Context.AddWebComponent(TExamplePage, '*.filter');
-  with Context.AddFilterWithMapping(TTestFilterV3WithInit, '*.filter') do
+  with Context.AddWebFilter(TTestFilterV3WithInit, '*.filter') do
   begin
     SetInitParameter('key', 'Hello, World V3!');
   end;
@@ -1513,7 +1513,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.filter');
-  Context.AddFilterWithMapping(TFilterWithInitReadsContextConfiguration, '*.filter');
+  Context.AddWebFilter(TFilterWithInitReadsContextConfiguration, '*.filter');
   Context.SetInitParameter('a', 'b');
 
   // run
@@ -1534,7 +1534,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddFilterWithMapping(TTestFilter, '*.html');
+  Context.AddWebFilter(TTestFilter, '*.html');
 
   {$IFDEF FPC}
   ExpectException(EListError, '');
@@ -1542,7 +1542,7 @@ begin
   ExpectedException := EListError;
   {$ENDIF}
   try
-    Context.AddFilterWithMapping(TTestFilter, '*.html');
+    Context.AddWebFilter(TTestFilter, '*.html');
   finally
     Context.Free;
   end;
@@ -1556,7 +1556,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.txt');
-  Context.AddFilterWithMapping(TTestFilter, '/*');
+  Context.AddWebFilter(TTestFilter, '/*');
 
   // run
   Server := TdjServer.Create;
@@ -1578,7 +1578,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExceptionInInitComponent, '*.html');
-  Context.AddFilterWithMapping(TTestFilter, '/*');
+  Context.AddWebFilter(TTestFilter, '/*');
 
   // run
   Server := TdjServer.Create;
@@ -1601,7 +1601,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExceptionComponent, '*.html');
-  Context.AddFilterWithMapping(TTestFilter, '/*');
+  Context.AddWebFilter(TTestFilter, '/*');
 
   // run
   Server := TdjServer.Create;
@@ -1639,7 +1639,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExceptionInOnGetComponent, '*.html');
-  Context.AddFilterWithMapping(TTestFilter, '/*');
+  Context.AddWebFilter(TTestFilter, '/*');
 
   // run
   Server := TdjServer.Create;
@@ -1677,7 +1677,7 @@ begin
   // configure
   Context := TdjWebAppContext.Create('web');
   Context.AddWebComponent(TExamplePage, '*.html');
-  Context.AddFilterWithMapping(TTestFilterWithDestroy, '/*');
+  Context.AddWebFilter(TTestFilterWithDestroy, '/*');
 
   // run
   Server := TdjServer.Create;

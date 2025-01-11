@@ -109,8 +109,8 @@ begin
 
   Context.AddWebComponent(TRootResource, RootResourcePath);
   Context.AddWebComponent(TAuthResponseResource, RedirectPath);
-  Context.AddFilterWithMapping(TAuthFilter, '*.html');
-  Context.AddFilterWithMapping(TdjNCSALogFilter, '/*');
+  Context.AddWebFilter(TAuthFilter, '*.html');
+  Context.AddWebFilter(TdjNCSALogFilter, '/*');
 
   Context.SetInitParameter('ClientID', ClientId);
   Context.SetInitParameter('RedirectURI', RedirectURI);
