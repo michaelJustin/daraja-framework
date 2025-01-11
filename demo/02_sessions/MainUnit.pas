@@ -49,7 +49,7 @@ begin
     Context.AddWebComponent(TSessionDemoResource, '/session');
     Server.Add(Context);
     Server.Start;
-	  WriteLn('Server is running, please open http://localhost:8080/tutorial/session');
+	  WriteLn('Server is running, please open http://127.0.0.1:8080/tutorial/session');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

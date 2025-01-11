@@ -105,7 +105,7 @@ begin
     Server.Add(Context);
 
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/index.html');
+    WriteLn('Server is running, please open http://127.0.0.1/index.html');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

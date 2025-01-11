@@ -49,7 +49,7 @@ begin
     Context.AddWebComponent(TBinaryResource, '/example.pdf');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost/tutorial/example.pdf');
+    WriteLn('Server is running, please open http://127.0.0.1/tutorial/example.pdf');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

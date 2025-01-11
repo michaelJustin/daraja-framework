@@ -38,7 +38,7 @@ uses
   Classes;
 
 const
-  MY_HOST = 'http://localhost';
+  MY_HOST = 'http://127.0.0.1';
   MY_CALLBACK_URL = '/oauth2callback';
 
 var

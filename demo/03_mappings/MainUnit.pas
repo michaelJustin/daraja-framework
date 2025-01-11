@@ -50,7 +50,7 @@ begin
     Context.AddWebComponent(TFibonacciResource, '/fib.html');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://localhost:8080/tutorial/fib.html?n=4 or http://localhost:8080/tutorial/fib.txt?n=4');
+    WriteLn('Server is running, please open http://127.0.0.1:8080/tutorial/fib.html?n=4 or http://127.0.0.1:8080/tutorial/fib.txt?n=4');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally
