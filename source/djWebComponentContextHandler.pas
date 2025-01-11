@@ -124,8 +124,8 @@ type
      *
      * \throws Exception if the WebFilter can not be added
      *)
-    procedure AddFilterWithMapping(FilterClass: TdjWebFilterClass;
-      const PathSpec: string);
+    function AddFilterWithMapping(FilterClass: TdjWebFilterClass;
+      const PathSpec: string): TdjWebFilterHolder;
 
     // IHandler interface
 
@@ -249,13 +249,14 @@ begin
   WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
 end;
 
-procedure TdjWebComponentContextHandler.AddFilterWithMapping(
-  FilterClass: TdjWebFilterClass; const PathSpec: string);
+function TdjWebComponentContextHandler.AddFilterWithMapping(
+  FilterClass: TdjWebFilterClass; const PathSpec: string): TdjWebFilterHolder;
 var
   Holder: TdjWebFilterHolder;
 begin
   Holder := TdjWebFilterHolder.Create(FilterClass);
   WebComponentHandler.AddFilterWithMapping(Holder, PathSpec);
+  Result := Holder;
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
