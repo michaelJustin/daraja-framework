@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0-MS3</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0-MS4</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -134,9 +134,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa0b96e0ec469a7b7febe0ce3dc87095e" id="r_aa0b96e0ec469a7b7febe0ce3dc87095e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0b96e0ec469a7b7febe0ce3dc87095e">AddWithMapping</a> (<a class="el" href="classTdjWebComponentHolder.html">TdjWebComponentHolder</a> Holder, const string PathSpec)</td></tr>
 <tr class="memdesc:aa0b96e0ec469a7b7febe0ce3dc87095e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a Web Component holder with mapping.  <br /></td></tr>
 <tr class="separator:aa0b96e0ec469a7b7febe0ce3dc87095e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ad43ec18032079c014000259938e948" id="r_a8ad43ec18032079c014000259938e948"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ad43ec18032079c014000259938e948">AddFilterWithMapping</a> (<a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a> Holder, const string PathSpec)</td></tr>
-<tr class="memdesc:a8ad43ec18032079c014000259938e948"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a Web Filter, specifying a WebFilter class and the mapped path.  <br /></td></tr>
-<tr class="separator:a8ad43ec18032079c014000259938e948"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04be66160619ea35ce4109e735270c91" id="r_a04be66160619ea35ce4109e735270c91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a04be66160619ea35ce4109e735270c91">AddWebFilter</a> (<a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a> Holder, const string PathSpec)</td></tr>
+<tr class="memdesc:a04be66160619ea35ce4109e735270c91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a Web Filter, specifying a WebFilter class and the mapped path.  <br /></td></tr>
+<tr class="separator:a04be66160619ea35ce4109e735270c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c1dbf6bedcbf8da081e8bca136b2d30" id="r_a2c1dbf6bedcbf8da081e8bca136b2d30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTdjWebComponentHolder.html">TdjWebComponentHolder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c1dbf6bedcbf8da081e8bca136b2d30">FindHolder</a> (<a class="el" href="classTdjWebComponent.html">TdjWebComponentClass</a> WebComponentClass)</td></tr>
 <tr class="memdesc:a2c1dbf6bedcbf8da081e8bca136b2d30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a <a class="el" href="classTdjWebComponentHolder.html" title="Holds a WebComponent and configuration data.">TdjWebComponentHolder</a> for a WebComponentClass.  <br /></td></tr>
 <tr class="separator:a2c1dbf6bedcbf8da081e8bca136b2d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,44 +228,6 @@ Additional Inherited Members</h2></td></tr>
 <p>An instance of this class is created per context.</p>
 <p>It holds a list of web components and their path mappings, and passes incoming requests to the matching web component. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8ad43ec18032079c014000259938e948" name="a8ad43ec18032079c014000259938e948"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ad43ec18032079c014000259938e948">&#9670;&#160;</a></span>AddFilterWithMapping()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TdjWebComponentHandler::AddFilterWithMapping </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a></td>          <td class="paramname"><span class="paramname"><em>Holder</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>PathSpec</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Add a Web Filter, specifying a WebFilter class and the mapped path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">FilterClass</td><td>WebFilter class </td></tr>
-    <tr><td class="paramname">PathSpec</td><td>mapped path</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname">Exception</td><td>if the WebFilter can not be added </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#a38e7bbe2ae609ba669730e0c3827d577">TdjWebComponentContextHandler::AddFilterWithMapping()</a>, and <a class="el" href="classTdjWebComponentContextHandler.html#a9461d1917c5c0155682c9b9f25730c6e">TdjWebComponentContextHandler::AddWebFilter()</a>.</p>
-
-</div>
-</div>
 <a id="ac1c9b0fc58f8ce5ce2389cd02ac74d62" name="ac1c9b0fc58f8ce5ce2389cd02ac74d62"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac1c9b0fc58f8ce5ce2389cd02ac74d62">&#9670;&#160;</a></span>AddWebComponent()</h2>
 
@@ -300,7 +262,45 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#a277caa51f38d1420fe229b350de75b7b">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#abda1ca99ff0cf8025fd010d0a6189cb9">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
+
+</div>
+</div>
+<a id="a04be66160619ea35ce4109e735270c91" name="a04be66160619ea35ce4109e735270c91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04be66160619ea35ce4109e735270c91">&#9670;&#160;</a></span>AddWebFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjWebComponentHandler::AddWebFilter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a></td>          <td class="paramname"><span class="paramname"><em>Holder</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>PathSpec</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a Web Filter, specifying a WebFilter class and the mapped path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">FilterClass</td><td>WebFilter class </td></tr>
+    <tr><td class="paramname">PathSpec</td><td>mapped path</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Exception</td><td>if the WebFilter can not be added </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#a2db7d8cd6ad5daa772ae443dc7cea8d6">TdjWebComponentContextHandler::AddWebFilter()</a>, and <a class="el" href="classTdjWebComponentContextHandler.html#a9461d1917c5c0155682c9b9f25730c6e">TdjWebComponentContextHandler::AddWebFilter()</a>.</p>
 
 </div>
 </div>
@@ -332,7 +332,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#a277caa51f38d1420fe229b350de75b7b">TdjWebComponentContextHandler::AddWebComponent()</a>, and <a class="el" href="classTdjWebComponentContextHandler.html#a8578fec0b240ffcdf853a821948d6157">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#abda1ca99ff0cf8025fd010d0a6189cb9">TdjWebComponentContextHandler::AddWebComponent()</a>, and <a class="el" href="classTdjWebComponentContextHandler.html#a8578fec0b240ffcdf853a821948d6157">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
 
 </div>
 </div>
@@ -360,7 +360,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classTdjWebComponentHolder.html" title="Holds a WebComponent and configuration data.">TdjWebComponentHolder</a> with the WebComponentClass or nil if the WebComponentClass is not registered </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#a277caa51f38d1420fe229b350de75b7b">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classTdjWebComponentContextHandler.html#abda1ca99ff0cf8025fd010d0a6189cb9">TdjWebComponentContextHandler::AddWebComponent()</a>.</p>
 
 </div>
 </div>
