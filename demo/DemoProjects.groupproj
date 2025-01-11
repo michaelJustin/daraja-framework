@@ -15,6 +15,9 @@
 			<Projects Include="04_binaryresource\BinaryResponseServer.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="06_form_auth_filter\FormBasedLoginServer.dproj">
+				<Dependencies/>
+			</Projects>
 			<Projects Include="08_google_oauth2\GoogleAuthBackend.dproj">
 				<Dependencies/>
 			</Projects>
@@ -24,7 +27,10 @@
 			<Projects Include="13_entra_msgraph\EntraAuthCodeFlowExample.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="06_form_auth_filter\FormBasedLoginServer.dproj">
+			<Projects Include="16_entra_refresh_token\EntraRefreshTokenExample.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="17_google_refresh_token\GoogleRefreshTokenExample.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -71,6 +77,15 @@
 		<Target Name="BinaryResponseServer:Make">
 			<MSBuild Targets="Make" Projects="04_binaryresource\BinaryResponseServer.dproj"/>
 		</Target>
+		<Target Name="FormBasedLoginServer">
+			<MSBuild Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Clean">
+			<MSBuild Targets="Clean" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
+		<Target Name="FormBasedLoginServer:Make">
+			<MSBuild Targets="Make" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		</Target>
 		<Target Name="GoogleAuthBackend">
 			<MSBuild Projects="08_google_oauth2\GoogleAuthBackend.dproj"/>
 		</Target>
@@ -98,23 +113,32 @@
 		<Target Name="EntraAuthCodeFlowExample:Make">
 			<MSBuild Targets="Make" Projects="13_entra_msgraph\EntraAuthCodeFlowExample.dproj"/>
 		</Target>
-		<Target Name="FormBasedLoginServer">
-			<MSBuild Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		<Target Name="EntraRefreshTokenExample">
+			<MSBuild Projects="16_entra_refresh_token\EntraRefreshTokenExample.dproj"/>
 		</Target>
-		<Target Name="FormBasedLoginServer:Clean">
-			<MSBuild Targets="Clean" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		<Target Name="EntraRefreshTokenExample:Clean">
+			<MSBuild Targets="Clean" Projects="16_entra_refresh_token\EntraRefreshTokenExample.dproj"/>
 		</Target>
-		<Target Name="FormBasedLoginServer:Make">
-			<MSBuild Targets="Make" Projects="06_form_auth_filter\FormBasedLoginServer.dproj"/>
+		<Target Name="EntraRefreshTokenExample:Make">
+			<MSBuild Targets="Make" Projects="16_entra_refresh_token\EntraRefreshTokenExample.dproj"/>
+		</Target>
+		<Target Name="GoogleRefreshTokenExample">
+			<MSBuild Projects="17_google_refresh_token\GoogleRefreshTokenExample.dproj"/>
+		</Target>
+		<Target Name="GoogleRefreshTokenExample:Clean">
+			<MSBuild Targets="Clean" Projects="17_google_refresh_token\GoogleRefreshTokenExample.dproj"/>
+		</Target>
+		<Target Name="GoogleRefreshTokenExample:Make">
+			<MSBuild Targets="Make" Projects="17_google_refresh_token\GoogleRefreshTokenExample.dproj"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;GoogleAuthBackend;OpenIDConnectBackend;EntraAuthCodeFlowExample;FormBasedLoginServer"/>
+			<CallTarget Targets="HelloWorldServer;HttpSessionServer;TwoMappingsServer;BinaryResponseServer;FormBasedLoginServer;GoogleAuthBackend;OpenIDConnectBackend;EntraAuthCodeFlowExample;EntraRefreshTokenExample;GoogleRefreshTokenExample"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;EntraAuthCodeFlowExample:Clean;FormBasedLoginServer:Clean"/>
+			<CallTarget Targets="HelloWorldServer:Clean;HttpSessionServer:Clean;TwoMappingsServer:Clean;BinaryResponseServer:Clean;FormBasedLoginServer:Clean;GoogleAuthBackend:Clean;OpenIDConnectBackend:Clean;EntraAuthCodeFlowExample:Clean;EntraRefreshTokenExample:Clean;GoogleRefreshTokenExample:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;EntraAuthCodeFlowExample:Make;FormBasedLoginServer:Make"/>
+			<CallTarget Targets="HelloWorldServer:Make;HttpSessionServer:Make;TwoMappingsServer:Make;BinaryResponseServer:Make;FormBasedLoginServer:Make;GoogleAuthBackend:Make;OpenIDConnectBackend:Make;EntraAuthCodeFlowExample:Make;EntraRefreshTokenExample:Make;GoogleRefreshTokenExample:Make"/>
 		</Target>
 		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 	</Project>

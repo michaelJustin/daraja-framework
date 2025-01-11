@@ -45,7 +45,7 @@ type
     OpenIDParams: TOpenIDParams;
     RedirectURI: string;
   public
-    procedure Init(const Config: IWebComponentConfig); override;
+    procedure Init; override;
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
@@ -59,10 +59,8 @@ uses
 
 { TOpenIDCallbackResource }
 
-procedure TOpenIDCallbackResource.Init(const Config: IWebComponentConfig);
+procedure TOpenIDCallbackResource.Init;
 begin
-  inherited Init(Config);
-
   RedirectURI := Config.GetInitParameter('RedirectURI');
   OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
 end;
