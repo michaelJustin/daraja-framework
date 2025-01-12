@@ -696,7 +696,7 @@ begin
     Server.Start;
 
     // Test the component
-    CheckGETResponse404('/ctx/exception');
+    CheckGETResponse405('/ctx/exception');
 
   finally
     Server.Free;
