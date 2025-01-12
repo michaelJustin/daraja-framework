@@ -87,7 +87,7 @@ type
      *
      * \param ComponentClass WebComponent class
      * \param UrlPattern path specification
-     *
+     * \return the Web Component holder, which can be used for further configuration.
      * \throws EWebComponentException if the Web Component can not be added
      *)
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
@@ -96,9 +96,19 @@ type
     (**
      * Add a Web Component.
      *
+     * \param ComponentClass WebComponent class
+     * \param UrlPattern path specification
+     * \return the Web Component holder, which can be used for further configuration.
+     * \throws EWebComponentException if the Web Component can not be added
+     *)
+    function Add(ComponentClass: TdjWebComponentClass;
+      const UrlPattern: string): TdjWebComponentHolder; overload;
+
+    (**
+     * Add a Web Component.
+     *
      * \param Holder holds information about the Web Component
      * \param UrlPattern path specification
-     *
      * \throws EWebComponentException if the Web Component can not be added
      *)
     procedure AddWebComponent(Holder: TdjWebComponentHolder;
@@ -109,7 +119,6 @@ type
      *
      * \param Holder holds information about the Web Filter
      * \param UrlPattern path specification
-     *
      * \throws Exception if the Web Filter can not be added
      *)
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
@@ -121,10 +130,22 @@ type
      *
      * \param FilterClass WebFilter class
      * \param UrlPattern path specification
-     *
+     * \return the Web Filter holder, which can be used for further configuration.
      * \throws Exception if the WebFilter can not be added
      *)
     function AddWebFilter(FilterClass: TdjWebFilterClass;
+      const UrlPattern: string): TdjWebFilterHolder; overload;
+
+    (**
+     * Add a Web Filter, specifying a WebFilter class
+     * and the mapped WebComponent name.
+     *
+     * \param FilterClass WebFilter class
+     * \param UrlPattern path specification
+     * \return the Web Filter holder, which can be used for further configuration.
+     * \throws Exception if the WebFilter can not be added
+     *)
+    function Add(FilterClass: TdjWebFilterClass;
       const UrlPattern: string): TdjWebFilterHolder; overload;
 
     // IHandler interface
@@ -221,6 +242,12 @@ begin
   Result := Holder;
 end;
 
+function TdjWebComponentContextHandler.Add(ComponentClass: TdjWebComponentClass;
+  const UrlPattern: string): TdjWebComponentHolder;
+begin
+  Result := AddWebComponent(ComponentClass, UrlPattern);
+end;
+
 procedure TdjWebComponentContextHandler.AddWebComponent(Holder: TdjWebComponentHolder;
   const UrlPattern: string);
 begin
@@ -257,6 +284,12 @@ begin
   Holder := TdjWebFilterHolder.Create(FilterClass);
   WebComponentHandler.AddWebFilter(Holder, UrlPattern);
   Result := Holder;
+end;
+
+function TdjWebComponentContextHandler.Add(FilterClass: TdjWebFilterClass;
+  const UrlPattern: string): TdjWebFilterHolder;
+begin
+  Result := AddWebFilter(FilterClass, UrlPattern);
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;

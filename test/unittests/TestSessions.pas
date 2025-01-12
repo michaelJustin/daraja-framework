@@ -125,7 +125,7 @@ begin
 
     // create component and register it
     Context := TdjWebAppContext.Create('session', True);
-    Context.AddWebComponent(TExamplePage, '/example');
+    Context.Add(TExamplePage, '/example');
     Server.Add(Context);
 
     Server.Start;
@@ -147,7 +147,7 @@ begin
   try
     // create component and register it
     Context := TdjWebAppContext.Create('session', True);
-    Context.AddWebComponent(TExamplePage, '/example');
+    Context.Add(TExamplePage, '/example');
     Server.Add(Context);
 
     // Handler
@@ -230,7 +230,7 @@ begin
   try
     // create component and register it
     Context := TdjWebAppContext.Create('get');
-    Context.AddWebComponent(TSessionComponent, '/hello');
+    Context.Add(TSessionComponent, '/hello');
 
     Server.Add(Context);
     Server.Start;
@@ -251,7 +251,7 @@ begin
   try
     // create component and register it
     Context := TdjWebAppContext.Create('post', True);
-    Context.AddWebComponent(TSessionPOSTComponent, '/hello');
+    Context.Add(TSessionPOSTComponent, '/hello');
 
     Server.Add(Context);
     Server.Start;
