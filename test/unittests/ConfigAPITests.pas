@@ -1585,7 +1585,7 @@ begin
     Server.Start;
 
     // Test the component
-    CheckGETResponse404('/web/exception.html');
+    CheckGETResponse405('/web/exception.html');
   finally
     Server.Free;
   end;
