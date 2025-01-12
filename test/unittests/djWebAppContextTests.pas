@@ -81,8 +81,8 @@ var
 begin
   Context := TdjWebAppContext.Create('');
   try
-    Context.AddWebComponent(TExamplePage, '/a');
-    Context.AddWebComponent(TExamplePage, '/b');
+    Context.Add(TExamplePage, '/a');
+    Context.Add(TExamplePage, '/b');
   finally
     Context.Free;
   end;
@@ -95,7 +95,7 @@ begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Context.AddWebComponent(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
     {$IFDEF FPC}
     ExpectException(EWebComponentException, 'Mapping key exists');
@@ -104,7 +104,7 @@ begin
     {$ENDIF}
 
     // same path -> error
-    Context.AddWebComponent(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
   finally
     Context.Free;
@@ -118,7 +118,7 @@ begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Context.AddWebComponent(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
     {$IFDEF FPC}
     ExpectException(EWebComponentException, 'Mapping key exists');
@@ -127,7 +127,7 @@ begin
     {$ENDIF}
 
     // same path -> error
-    Context.AddWebComponent(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
   finally
     Context.Free;

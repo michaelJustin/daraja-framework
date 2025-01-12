@@ -93,14 +93,14 @@ begin
   Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('', True);
-    Context.AddWebComponent(TPublicResource, '/index.html');
-    Context.AddWebComponent(TSecuredResource, '/admin');
-    Context.AddWebComponent(TLoginResource, '/login');
-    Context.AddWebComponent(TLoginErrorResource, '/loginError');
-    Context.AddWebComponent(TLogoutResource, '/logout');
+    Context.Add(TPublicResource, '/index.html');
+    Context.Add(TSecuredResource, '/admin');
+    Context.Add(TLoginResource, '/login');
+    Context.Add(TLoginErrorResource, '/loginError');
+    Context.Add(TLogoutResource, '/logout');
 
-    Context.AddWebFilter(TFormAuthFilter, '/admin');
-    Context.AddWebFilter(TdjNCSALogFilter, '/*');
+    Context.Add(TFormAuthFilter, '/admin');
+    Context.Add(TdjNCSALogFilter, '/*');
 
     Server.Add(Context);
 

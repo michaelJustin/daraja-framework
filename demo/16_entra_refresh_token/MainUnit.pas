@@ -107,10 +107,10 @@ var
 begin
   Context := TdjWebAppContext.Create('', True);
 
-  Context.AddWebComponent(TRootResource, RootResourcePath);
-  Context.AddWebComponent(TAuthResponseResource, RedirectPath);
-  Context.AddWebFilter(TAuthFilter, '*.html');
-  Context.AddWebFilter(TdjNCSALogFilter, '/*');
+  Context.Add(TRootResource, RootResourcePath);
+  Context.Add(TAuthResponseResource, RedirectPath);
+  Context.Add(TAuthFilter, '*.html');
+  Context.Add(TdjNCSALogFilter, '/*');
 
   Context.SetInitParameter('ClientID', ClientId);
   Context.SetInitParameter('RedirectURI', RedirectURI);

@@ -46,7 +46,7 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('tutorial');
-    Context.AddWebComponent(THelloWorldResource, '/hello');
+    Context.Add(THelloWorldResource, '/hello');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://127.0.0.1:8080/tutorial/hello');

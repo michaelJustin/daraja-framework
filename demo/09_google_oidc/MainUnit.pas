@@ -64,10 +64,10 @@ begin
   FilterHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
 
   Context := TdjWebAppContext.Create('', True);
-  Context.AddWebComponent(TRootResource, '/index.html');
+  Context.Add(TRootResource, '/index.html');
   Context.AddWebComponent(OIDCCallbackHolder, '/openidcallback');
   Context.AddWebFilter(FilterHolder, '*.html');
-  Context.AddWebFilter(TdjNCSALogFilter, '/*');
+  Context.Add(TdjNCSALogFilter, '/*');
 
   Server := TdjServer.Create(80);
   try

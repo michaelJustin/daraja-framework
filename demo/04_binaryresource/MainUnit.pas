@@ -46,7 +46,7 @@ begin
   Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('tutorial');
-    Context.AddWebComponent(TBinaryResource, '/example.pdf');
+    Context.Add(TBinaryResource, '/example.pdf');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://127.0.0.1/tutorial/example.pdf');
