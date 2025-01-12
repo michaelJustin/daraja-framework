@@ -53,7 +53,7 @@ implementation
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
-  IdHTTP,
+  IdHTTP, IdSSLOpenSSL, IdSSLOpenSSLHeaders,
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
@@ -63,6 +63,23 @@ procedure TOpenIDCallbackResource.Init;
 begin
   RedirectURI := Config.GetInitParameter('RedirectURI');
   OpenIDParams := LoadClientSecrets(Config.GetInitParameter('secret.file'));
+end;
+
+function CreateIdHTTPwithSSL12: TIdHTTP;
+var
+  IOHandler: TIdSSLIOHandlerSocketOpenSSL;
+begin
+  Result := TIdHTTP.Create;
+
+  IOHandler := TIdSSLIOHandlerSocketOpenSSL.Create(Result);
+  IOHandler.SSLOptions.SSLVersions := [sslvTLSv1_2];
+  Result.IOHandler := IOHandler;
+
+  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+  // Raw HTTP logging
+  Result.Intercept := TIdLogDebug.Create(Result);
+  TIdLogDebug(Result.Intercept).Active := True;
+  {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 end;
 
 // https://openid.net/specs/openid-connect-core-1_0.html#AuthResponse
@@ -101,7 +118,7 @@ begin
 
     // exchange auth code for claims
     Params := TStringList.Create;
-    IdHTTP := TIdHTTP.Create;
+    IdHTTP := CreateIdHTTPwithSSL12;
     try
       Params.Values['code'] := AuthCode;
       Params.Values['client_id'] := OpenIDParams.client_id;
