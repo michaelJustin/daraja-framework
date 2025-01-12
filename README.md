@@ -9,7 +9,7 @@ Daraja enables Object Pascal developers to write well-structured HTTP server app
 
 ## Documentation
 
-### API docs generated
+### API docs
 
 https://michaeljustin.github.io/daraja-framework/
 
