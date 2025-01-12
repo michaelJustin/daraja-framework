@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0-MS4</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0-RC1</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -123,12 +123,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab6b7d7bb6780419304847aba0ce93d6e" id="r_ab6b7d7bb6780419304847aba0ce93d6e"><td class="memItemLeft" align="right" valign="top"><a id="ab6b7d7bb6780419304847aba0ce93d6e" name="ab6b7d7bb6780419304847aba0ce93d6e"></a>
 Boolean&#160;</td><td class="memItemRight" valign="bottom"><b>Matches</b> (const string Path, const string Spec)</td></tr>
 <tr class="separator:ab6b7d7bb6780419304847aba0ce93d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a444c521c4a9d7fd54c74fdd890d92c53" id="r_a444c521c4a9d7fd54c74fdd890d92c53"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a444c521c4a9d7fd54c74fdd890d92c53">CheckExists</a> (const string PathSpec)</td></tr>
-<tr class="memdesc:a444c521c4a9d7fd54c74fdd890d92c53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a mapping path exists.  <br /></td></tr>
-<tr class="separator:a444c521c4a9d7fd54c74fdd890d92c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad934c2fea132624e4f30ddf85a0c32b5" id="r_ad934c2fea132624e4f30ddf85a0c32b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad934c2fea132624e4f30ddf85a0c32b5">AddPathSpec</a> (const string PathSpec, TObject Value)</td></tr>
-<tr class="memdesc:ad934c2fea132624e4f30ddf85a0c32b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a web component mapping.  <br /></td></tr>
-<tr class="separator:ad934c2fea132624e4f30ddf85a0c32b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae34ff19fd0e6bafebf9c311ef8ff59aa" id="r_ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae34ff19fd0e6bafebf9c311ef8ff59aa">CheckExists</a> (const string UrlPattern)</td></tr>
+<tr class="memdesc:ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a mapping path exists.  <br /></td></tr>
+<tr class="separator:ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b2fd997f5504326b70b89815b38901" id="r_a44b2fd997f5504326b70b89815b38901"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44b2fd997f5504326b70b89815b38901">AddUrlPattern</a> (const string UrlPattern, TObject Value)</td></tr>
+<tr class="memdesc:a44b2fd997f5504326b70b89815b38901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a web component mapping.  <br /></td></tr>
+<tr class="separator:a44b2fd997f5504326b70b89815b38901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8900e3fc00516543ec6702a11e071d4" id="r_aa8900e3fc00516543ec6702a11e071d4"><td class="memItemLeft" align="right" valign="top">TStrings&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8900e3fc00516543ec6702a11e071d4">GetMatches</a> (const string Path)</td></tr>
 <tr class="memdesc:aa8900e3fc00516543ec6702a11e071d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return all matching mappings for the given path.  <br /></td></tr>
 <tr class="separator:aa8900e3fc00516543ec6702a11e071d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,16 +142,16 @@ Protected Member Functions</h2></td></tr>
 <div class="textblock"><p>Holds all known web component mappings for a context. </p>
 <p>Matching is performed in the following order Exact match Longest prefix match Longest suffix match </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad934c2fea132624e4f30ddf85a0c32b5" name="ad934c2fea132624e4f30ddf85a0c32b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad934c2fea132624e4f30ddf85a0c32b5">&#9670;&#160;</a></span>AddPathSpec()</h2>
+<a id="a44b2fd997f5504326b70b89815b38901" name="a44b2fd997f5504326b70b89815b38901"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44b2fd997f5504326b70b89815b38901">&#9670;&#160;</a></span>AddUrlPattern()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TdjPathMap::AddPathSpec </td>
+          <td class="memname">TdjPathMap::AddUrlPattern </td>
           <td>(</td>
-          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>PathSpec</em></span>, </td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>UrlPattern</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -164,7 +164,7 @@ Protected Member Functions</h2></td></tr>
 <p>Add a web component mapping. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">PathSpec</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
+    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
     <tr><td class="paramname">Value</td><td>the mapped web component </td></tr>
   </table>
   </dd>
@@ -176,12 +176,12 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="#a444c521c4a9d7fd54c74fdd890d92c53">CheckExists()</a>.</p>
+<p class="reference">References <a class="el" href="#ae34ff19fd0e6bafebf9c311ef8ff59aa">CheckExists()</a>.</p>
 
 </div>
 </div>
-<a id="a444c521c4a9d7fd54c74fdd890d92c53" name="a444c521c4a9d7fd54c74fdd890d92c53"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a444c521c4a9d7fd54c74fdd890d92c53">&#9670;&#160;</a></span>CheckExists()</h2>
+<a id="ae34ff19fd0e6bafebf9c311ef8ff59aa" name="ae34ff19fd0e6bafebf9c311ef8ff59aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae34ff19fd0e6bafebf9c311ef8ff59aa">&#9670;&#160;</a></span>CheckExists()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,17 +189,17 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">TdjPathMap::CheckExists </td>
           <td>(</td>
-          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>PathSpec</em></span></td><td>)</td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>UrlPattern</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Check if a mapping path exists. </p>
-<p>This procedure throws a EWebComponentException if the PathSpec is already registered for this context.</p>
+<p>This procedure throws a EWebComponentException if the URL pattern is already registered for this context.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">PathSpec</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
+    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
   </table>
   </dd>
 </dl>
@@ -210,7 +210,7 @@ Protected Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">Referenced by <a class="el" href="#ad934c2fea132624e4f30ddf85a0c32b5">AddPathSpec()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="#a44b2fd997f5504326b70b89815b38901">AddUrlPattern()</a>.</p>
 
 </div>
 </div>
