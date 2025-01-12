@@ -186,7 +186,7 @@ begin
     {$ELSE}
     // ExpectedException := EWebComponentException;
     {$ENDIF}
-    Context.AddWebComponent(Holder, '/');
+    Context.Add(Holder, '/');
 
     Server.Start;
 
@@ -206,7 +206,7 @@ begin
   try
     Context := TdjWebAppContext.Create('test');
     // add default web component
-    Context.AddWebComponent(TdjDefaultWebComponent, '/');
+    Context.Add(TdjDefaultWebComponent, '/');
 
     Server.Add(Context);
 
