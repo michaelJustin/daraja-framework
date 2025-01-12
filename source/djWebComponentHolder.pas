@@ -213,8 +213,7 @@ begin
 
       Trace('Free the Web Component  "' + Name + '"');
       FWebComponent.Free;
-//      Self.Stop;  /Todo
-
+//      Self.Stop;  //Todo
       raise;
     end;
   end;
