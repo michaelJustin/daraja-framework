@@ -671,15 +671,13 @@ end;
 type
   TExceptionInInitComponent = class(TdjWebComponent)
   public
-    procedure Init(const Config: IWebComponentConfig); override;
+    procedure Init; override;
   end;
 
 { TExceptionInInitComponent }
 
-procedure TExceptionInInitComponent.Init(const Config: IWebComponentConfig);
+procedure TExceptionInInitComponent.Init;
 begin
-  inherited;
-
   raise EUnitTestException.Create('error');
 end;
 
@@ -698,7 +696,7 @@ begin
     Server.Start;
 
     // Test the component
-    CheckGETResponse404('/ctx/exception');
+    CheckGETResponse405('/ctx/exception');
 
   finally
     Server.Free;
@@ -1577,8 +1575,8 @@ var
 begin
   // configure
   Context := TdjWebAppContext.Create('web');
-  Context.AddWebComponent(TExceptionInInitComponent, '*.html');
   Context.AddWebFilter(TTestFilter, '/*');
+  Context.AddWebComponent(TExceptionInInitComponent, '*.html');
 
   // run
   Server := TdjServer.Create;
@@ -1587,7 +1585,7 @@ begin
     Server.Start;
 
     // Test the component
-    CheckGETResponse404('/web/exception.html');
+    CheckGETResponse405('/web/exception.html');
   finally
     Server.Free;
   end;

@@ -211,11 +211,9 @@ begin
         E);
       {$ENDIF DARAJA_LOGGING}
 
-      Trace('Free the Web Component  "' + Name + '"');
-      FWebComponent.Free;
-//      Self.Stop;  /Todo
+      Trace('Stop the Web Component  "' + Name + '"');
 
-      raise;
+      Self.Stop;
     end;
   end;
 end;
