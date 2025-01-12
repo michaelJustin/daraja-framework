@@ -1,16 +1,14 @@
 var searchData=
 [
-  ['_7etdjabstractconfig_0',['~TdjAbstractConfig',['../classTdjAbstractConfig.html#a7c25f2aa4b63d6aa72907354bff61811',1,'TdjAbstractConfig']]],
-  ['_7etdjabstractconnector_1',['~TdjAbstractConnector',['../classTdjAbstractConnector.html#acb9f4d8f1969640796cf412c0aa3a835',1,'TdjAbstractConnector']]],
-  ['_7etdjcontexthandler_2',['~TdjContextHandler',['../classTdjContextHandler.html#a25af8c1ea8bf6dacc5b057fd8cd2af5d',1,'TdjContextHandler']]],
-  ['_7etdjcontexthandlercollection_3',['~TdjContextHandlerCollection',['../classTdjContextHandlerCollection.html#a1694147a8c7cae6a631f96bef9e496ad',1,'TdjContextHandlerCollection']]],
-  ['_7etdjgenericwebcomponent_4',['~TdjGenericWebComponent',['../classTdjGenericWebComponent.html#a1c8818ab7bd3d46c55d37b408126cbb7',1,'TdjGenericWebComponent']]],
-  ['_7etdjgenericwebfilter_5',['~TdjGenericWebFilter',['../classTdjGenericWebFilter.html#a92c3e944efb9118ef3aa8cd1d4283df1',1,'TdjGenericWebFilter']]],
-  ['_7etdjhandlercollection_6',['~TdjHandlerCollection',['../classTdjHandlerCollection.html#aae00bb0934cc705b11ab2cda893bbdfc',1,'TdjHandlerCollection']]],
-  ['_7etdjhttpconnector_7',['~TdjHTTPConnector',['../classTdjHTTPConnector.html#a5d6b620d2b1d7d1dd58f913b9142b614',1,'TdjHTTPConnector']]],
-  ['_7etdjserver_8',['~TdjServer',['../classTdjServer.html#a49704e2fe187694acfcae877a7ccd372',1,'TdjServer']]],
-  ['_7etdjserverbase_9',['~TdjServerBase',['../classTdjServerBase.html#acc16b1cd28c31e63521e3f18b17065f4',1,'TdjServerBase']]],
-  ['_7etdjwebcomponentcontexthandler_10',['~TdjWebComponentContextHandler',['../classTdjWebComponentContextHandler.html#ac7ae07481bdf57ea3bd4374a0587352a',1,'TdjWebComponentContextHandler']]],
-  ['_7etdjwebcomponentholder_11',['~TdjWebComponentHolder',['../classTdjWebComponentHolder.html#aa451de5822cc6056be09dd1866a3ffab',1,'TdjWebComponentHolder']]],
-  ['_7etdjwebcomponentmapping_12',['~TdjWebComponentMapping',['../classTdjWebComponentMapping.html#a7d4e456593d38bafd46d1b087993377b',1,'TdjWebComponentMapping']]]
+  ['webcomponent_0',['WebComponent',['../classTdjWebComponentHolder.html#ae711dad1900fc4040c639e104c9741cc',1,'TdjWebComponentHolder']]],
+  ['webcomponentclass_1',['WebComponentClass',['../classTdjWebComponentHolder.html#ae5ff82e4d846607d67ba8ee863fa0581',1,'TdjWebComponentHolder']]],
+  ['webcomponentname_2',['WebComponentName',['../classTdjWebComponentMapping.html#a6f1a5f049e20b448bc1e58c2ffa3a5de',1,'TdjWebComponentMapping']]],
+  ['webcomponentnames_3',['WebComponentNames',['../classTdjWebFilterMapping.html#aa7f641cda2ca33c2e33e9cafcc2c6142',1,'TdjWebFilterMapping']]],
+  ['webcomponents_4',['WebComponents',['../classTdjWebComponentHandler.html#ae9690d21f6e0ffdd95761964ce104bbb',1,'TdjWebComponentHandler']]],
+  ['webfilter_5',['WebFilter',['../classTdjWebFilterHolder.html#ae32c7a692d4d91958f1402de0852369e',1,'TdjWebFilterHolder']]],
+  ['webfilterclass_6',['WebFilterClass',['../classTdjWebFilterHolder.html#aa9dc88baaa12273133d9f4dea5ba420c',1,'TdjWebFilterHolder']]],
+  ['webfilterholder_7',['WebFilterHolder',['../classTdjWebFilterMapping.html#ae208a5f606132e24742181c3035da357',1,'TdjWebFilterMapping']]],
+  ['webfiltername_8',['WebFilterName',['../classTdjWebFilterMapping.html#a12cb6391ffac7c01e944efc65a7e8b92',1,'TdjWebFilterMapping']]],
+  ['webfilters_9',['WebFilters',['../classTdjWebComponentHandler.html#ab67d61e41ef429a7b2f34738421b324d',1,'TdjWebComponentHandler']]],
+  ['welcome_20to_20daraja_20http_20framework_10',['Welcome to Daraja HTTP Framework!',['../index.html',1,'']]]
 ];
