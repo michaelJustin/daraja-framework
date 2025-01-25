@@ -62,9 +62,10 @@ begin
   Chain.DoFilter(Context, Request, Response);
 
   Response.ContentText := '<!DOCTYPE html>'
-    + '<html><body>'
-    + Response.ContentText
-    + '</body></html>';
+    + '<html lang="en">'
+    + '<head><title>' + Response.ContentText + '</title></head>'
+    + '<body>' + Response.ContentText + '</body>'
+    + '</html>';
   Response.ContentType := 'text/html';
 end;
 
@@ -75,13 +76,13 @@ var
 begin
   Server := TdjServer.Create;
   try
-    Context := TdjWebAppContext.Create('echo');
+    Context := TdjWebAppContext.Create('');
     Context.Add(THelloWorldResource, '/*');
     Context.Add(TResponseHtmlFilter, '*.html');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://127.0.0.1:8080/echo/anypage');
-    WriteLn('or open http://127.0.0.1:8080/echo/anypage.html');
+    WriteLn('Server is running, please open http://127.0.0.1:8080/any/page');
+    WriteLn('or open http://127.0.0.1:8080/any/page.html');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally
