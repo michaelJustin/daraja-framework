@@ -58,11 +58,7 @@ begin
 end;
 
 procedure TResponseTextHtmlFilter.DoFilter;
-var
-  Started: TDateTime;
 begin
-  Started := Now;
-
   Chain.DoFilter(Context, Request, Response);
 
   Response.ContentText := '<!DOCTYPE html>'
