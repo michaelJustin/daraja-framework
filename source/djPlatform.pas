@@ -41,7 +41,7 @@ uses
   IdGlobal;
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
-function GetTickCount: Cardinal;
+function GetTickCount: TIdTicks;
 begin
   Result := IdGlobal.Ticks64;
 end;

@@ -35,8 +35,19 @@ procedure Demo;
 implementation
 
 uses
-  HelloWorldResource,
-  djServer, djWebAppContext;
+  djWebComponent, djServer, djWebAppContext, djTypes;
+
+type
+  THelloWorldResource = class(TdjWebComponent)
+  public
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'Hello, World!';
+  Response.ContentType := 'text/plain';
+end;
 
 procedure Demo;
 var

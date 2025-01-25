@@ -36,38 +36,40 @@ implementation
 
 uses
   djWebComponent, djWebFilter, djServerContext, djServer, djWebAppContext,
-  djTypes, djInterfaces, djPlatform,
-  IdGlobal, // GetTickDiff64
+  djTypes, djInterfaces,
   SysUtils;
 
 type
-  TAnyDocumentResource = class(TdjWebComponent)
+  TRequestDocumentResource = class(TdjWebComponent)
   public
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
-  TResponseTimeFilter = class(TdjWebFilter)
+  TResponseTextHtmlFilter = class(TdjWebFilter)
   public
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
   end;
 
-procedure TAnyDocumentResource.OnGet;
+procedure TRequestDocumentResource.OnGet;
 begin
   Response.ContentText := Request.Document;
   Response.ContentType := 'text/plain';
 end;
 
-procedure TResponseTimeFilter.DoFilter;
+procedure TResponseTextHtmlFilter.DoFilter;
 var
-  Started: UInt64;
+  Started: TDateTime;
 begin
-  Started := djPlatform.GetTickCount;
+  Started := Now;
 
   Chain.DoFilter(Context, Request, Response);
 
-  Response.ContentText := Response.ContentText + Format(' processed in %d ms',
-    [GetTickDiff64(Started, djPlatform.GetTickCount)])
+  Response.ContentText := '<!DOCTYPE html>'
+    + '<html><body>'
+    + Response.ContentText
+    + '</body></html>';
+  Response.ContentType := 'text/html';
 end;
 
 procedure Demo;
@@ -78,11 +80,12 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('echo');
-    Context.Add(TAnyDocumentResource, '/*');
-    Context.Add(TResponseTimeFilter, '/*');
+    Context.Add(TRequestDocumentResource, '/*');
+    Context.Add(TResponseTextHtmlFilter, '*.html');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://127.0.0.1:8080/echo/anypage');
+    WriteLn('or open http://127.0.0.1:8080/echo/anypage.html');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

@@ -467,7 +467,7 @@ begin
     Server.Add(Context);
     Server.Start;
 
-    CheckGETResponseEquals('success', '/context/');
+    CheckGETResponseEquals('success', '/context/123');
 
   finally
     Server.Free;
