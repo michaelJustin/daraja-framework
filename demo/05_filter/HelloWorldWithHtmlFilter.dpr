@@ -26,7 +26,7 @@
 
 *)
 
-program ResponseTimeFilter;
+program HelloWorldWithHtmlFilter;
 
 {$APPTYPE CONSOLE}
 
