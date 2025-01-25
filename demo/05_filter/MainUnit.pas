@@ -36,28 +36,28 @@ implementation
 
 uses
   djWebComponent, djWebFilter, djServerContext, djServer, djWebAppContext,
-  djTypes, djInterfaces,
-  SysUtils;
+  djTypes, djInterfaces, SysUtils;
 
 type
-  TRequestDocumentResource = class(TdjWebComponent)
+  THelloWorldResource = class(TdjWebComponent)
   public
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
-  TResponseTextHtmlFilter = class(TdjWebFilter)
+procedure THelloWorldResource.OnGet;
+begin
+  Response.ContentText := 'Hello, World!';
+  Response.ContentType := 'text/plain';
+end;
+
+type
+  TResponseHtmlFilter = class(TdjWebFilter)
   public
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
   end;
 
-procedure TRequestDocumentResource.OnGet;
-begin
-  Response.ContentText := Request.Document;
-  Response.ContentType := 'text/plain';
-end;
-
-procedure TResponseTextHtmlFilter.DoFilter;
+procedure TResponseHtmlFilter.DoFilter;
 begin
   Chain.DoFilter(Context, Request, Response);
 
@@ -76,8 +76,8 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('echo');
-    Context.Add(TRequestDocumentResource, '/*');
-    Context.Add(TResponseTextHtmlFilter, '*.html');
+    Context.Add(THelloWorldResource, '/*');
+    Context.Add(TResponseHtmlFilter, '*.html');
     Server.Add(Context);
     Server.Start;
     WriteLn('Server is running, please open http://127.0.0.1:8080/echo/anypage');

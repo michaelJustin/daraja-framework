@@ -31,8 +31,7 @@ program HelloWorldServer;
 {$APPTYPE CONSOLE}
 
 uses
-  MainUnit in 'MainUnit.pas',
-  HelloWorldResource in 'HelloWorldResource.pas';
+  MainUnit in 'MainUnit.pas';
 
 begin
   Demo;
