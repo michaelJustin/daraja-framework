@@ -44,12 +44,14 @@ uses
   Classes;
 
 type
-  (**
-   * Defines a generic Web Filter.
-   *)
-
   { TdjGenericWebFilter }
 
+  (**
+   * A generic web filter class implementing the IWebFilter interface.
+   * 
+   * This class provides functionality to filter web requests or responses
+   * as part of the Daraja framework.
+   *)
   TdjGenericWebFilter = class(TInterfacedObject, IWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -92,6 +94,11 @@ type
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); virtual;
 
+    (**
+     * Virtual procedure to destroy the filter.
+     * This method can be overridden in descendant classes to implement
+     * custom cleanup logic for the filter.
+     *)
     procedure DestroyFilter; virtual;
 
     property Config: IWebFilterConfig read GetWebFilterConfig;

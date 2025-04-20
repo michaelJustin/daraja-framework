@@ -41,12 +41,12 @@ uses
   Classes;
 
 type
-  (**
-   * Holds a WebComponent and configuration data.
-   *)
 
   { TdjWebComponentHolder }
 
+  (**
+   * Holds a WebComponent and configuration data.
+   *)
   TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -103,6 +103,13 @@ type
      *)
     procedure DoStop; override;
 
+    (**
+     * Handles the incoming server context, request, and response.
+     *
+     * @param Context The server context for the current operation.
+     * @param Request The incoming request object (unused).
+     * @param Response The outgoing response object (unused).
+     *)
     procedure Handle(Context: TdjServerContext; {%H-}Request: TdjRequest;
        {%H-}Response: TdjResponse);
 

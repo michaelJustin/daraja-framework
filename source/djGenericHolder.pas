@@ -37,16 +37,23 @@ uses
   Classes;
 
 type
-  (**
-   * Holds a reference to a web component or web filter instance.
-   *)
-
   { TdjGenericHolder }
 
+  (**
+   * A generic holder class that manages objects of type T.
+   * 
+   * @tparam T A type parameter constrained to TInterfacedObject.
+   * @note This class inherits from TdjLifeCycle.
+   *)
   TdjGenericHolder<T: TInterfacedObject> = class(TdjLifeCycle)
   private
     FName: string;
   public
+    (**
+     * Constructor for creating an instance of the class.
+     *
+     * @param AClass The class type to be used for initialization.
+     *)
     constructor Create(AClass: TInterfacedClass); reintroduce;
     // properties
     property Name: string read FName write FName;
