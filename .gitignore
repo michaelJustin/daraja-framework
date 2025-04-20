@@ -108,3 +108,8 @@ demo/common/JsonDataObjects.pas
 *.ico
 /DarajaFrameworkGettingStarted.pdf
 /demo/tutorial11/client_secret.json
+/demo/09_google_oidc/client_secret.json
+/demo/09_google_oidc/lib/x86_64-win64/client_secret.json
+/test/unittests/Unittests.dbg
+/test/unittests/ppas.bat
+/docs/search
