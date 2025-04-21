@@ -2,4 +2,8 @@ cd ..
 
 doxygen make\doxygen.cfg > doxygen.log
 
-pause
+type .\warnings.log
+
+rem pause
+
+.\docs\index.html
