@@ -114,10 +114,21 @@ begin
     PS.AddUrlPattern('/absolute2.html', nil);
     PS.AddUrlPattern('*.suf', nil);
     PS.AddUrlPattern('*.suffix', nil);
+    PS.AddUrlPattern('/app/*', nil);
+    PS.AddUrlPattern('/app/special/*', nil);
+
 
     MatchList := PS.GetMatches('/prefix/absolute.html');
     try
       CheckEquals('/prefix/*', Trim(MatchList.Text));
+    finally
+      MatchList.Free;
+    end;
+
+    // prefix matches
+    MatchList := PS.GetMatches('/foo/');
+    try
+      CheckEquals('/foo/*', Trim(MatchList.Text));
     finally
       MatchList.Free;
     end;
@@ -129,6 +140,14 @@ begin
       MatchList.Free;
     end;
 
+    MatchList := PS.GetMatches('/foo/bar/baz');
+    try
+      CheckEquals('/foo/*', Trim(MatchList.Text));
+    finally
+      MatchList.Free;
+    end;
+
+    // no prefix match
     MatchList := PS.GetMatches('/foobar');
     try
       CheckEquals('/', Trim(MatchList.Text));
@@ -136,6 +155,15 @@ begin
       MatchList.Free;
     end;
 
+    // no prefix match
+    MatchList := PS.GetMatches('/bar/foo');
+    try
+      CheckEquals('/', Trim(MatchList.Text));
+    finally
+      MatchList.Free;
+    end;
+
+    // absolute match
     MatchList := PS.GetMatches('/absolute.html');
     try
       CheckEquals('/absolute.html', Trim(MatchList.Text));
@@ -143,6 +171,7 @@ begin
       MatchList.Free;
     end;
 
+    // suffix match
     MatchList := PS.GetMatches('/absolute.suf');
     try
       CheckEquals('*.suf', Trim(MatchList.Text));
@@ -150,6 +179,7 @@ begin
       MatchList.Free;
     end;
 
+    // suffix match
     MatchList := PS.GetMatches('/absolute.suffix');
     try
       CheckEquals('*.suffix', Trim(MatchList.Text));
@@ -157,10 +187,20 @@ begin
       MatchList.Free;
     end;
 
+    // longest match
     MatchList := PS.GetMatches('/prefix/more/absolute.html');
     try
       CheckEquals('/prefix/more/*', MatchList[0]);
       CheckEquals('/prefix/*', MatchList[1]);
+    finally
+      MatchList.Free;
+    end;
+
+    // longest match
+    MatchList := PS.GetMatches('/app/special/report');
+    try
+      CheckEquals('/app/special/*', MatchList[0]);
+      CheckEquals('/app/*', MatchList[1]);
     finally
       MatchList.Free;
     end;
@@ -175,7 +215,6 @@ begin
   finally
     PS.Free;
   end;
-
 end;
 
 procedure TdjPathMapTests.TestMoreUrlPattern;
@@ -185,9 +224,9 @@ var
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddUrlPattern('/*', nil);
+    PS.AddUrlPattern('/*', nil);
 
-     MatchList := PS.GetMatches('/something');
+    MatchList := PS.GetMatches('/something');
     try
       CheckEquals('/*', Trim(MatchList.Text));
     finally
@@ -205,22 +244,21 @@ var
 begin
   PS := TdjPathMap.Create;
   try
-     PS.AddUrlPattern('/*', nil);
+    PS.AddUrlPattern('/*', nil);
 
-     MatchList := PS.GetMatches('/dir');
+    MatchList := PS.GetMatches('/dir');
     try
       CheckEquals('/*', Trim(MatchList.Text));
     finally
       MatchList.Free;
     end;
 
-     MatchList := PS.GetMatches('/dir/');
+    MatchList := PS.GetMatches('/dir/');
     try
       CheckEquals('/*', Trim(MatchList.Text));
     finally
       MatchList.Free;
     end;
-
   finally
     PS.Free;
   end;
