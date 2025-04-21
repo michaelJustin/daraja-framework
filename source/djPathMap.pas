@@ -38,6 +38,8 @@ uses
 type
   TSpecType = (stUnknown, stExact, stPrefix, stSuffix, stDefault);
 
+  { TdjPathMap }
+
   (**
    * Holds all known web component mappings for a context.
    *
@@ -46,34 +48,38 @@ type
    * Longest prefix match
    * Longest suffix match
    *)
-
-  { TdjPathMap }
-
   TdjPathMap = class(TStringList)
   protected
     (**
-     *
+     * Matches a given URL document path against a specified path pattern.
      * \param Path the URL document path
-     * \param Spec the path specification (for example, '/*')
+     * \param Spec the path specification
      * \param SpecType the path specification type
-     * \return True if the Path mathes the Spec (with known SpecType)
+     * \return True if the Path matches the Spec (with known SpecType)
      *)
     class function Matches(const Path, Spec: string; SpecType: TSpecType): Boolean; overload;
 
   public
     (**
-     * \param Spec the path specification (for example, '/*')
+     * \param Spec the path specification
      * \return the path specification type
      *)
     class function GetSpecType(const Spec: string): TSpecType;
 
+    (**
+     * Matches the given path against a specified pattern.
+     *
+     * @param Path The file or directory path to be checked.
+     * @param Spec The pattern or specification to match against.
+     * @return True if the path matches the specification, otherwise False.
+     *)
     class function Matches(const Path, Spec: string): Boolean; overload;
 
     (**
      * Check if a mapping path exists.
      * This procedure throws a EWebComponentException if the URL pattern is already registered for this context.
      *
-     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path
      * \throws EWebComponentException
      *)
     procedure CheckExists(const UrlPattern: string);
@@ -81,7 +87,7 @@ type
     (**
      * Add a web component mapping.
      *
-     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path
      * \param Value the mapped web component
      * \throws EWebComponentException
      *)
@@ -91,11 +97,13 @@ type
      * Return all matching mappings for the given path.
      * The best match will be the first entry.
      *
-     * \param Path the URL path (without context), for example 'test.html'
+     * \param Path the URL path (without context
      * \result list of matching mappings
      *)
     function GetMatches(const Path: string): TStrings;
   end;
+
+{$IFNDEF DOXYGEN_SKIP}
 
 implementation
 
@@ -289,6 +297,8 @@ begin
     AddDefaultMatch;
   end;
 end;
+
+{$ENDIF DOXYGEN_SKIP}
 
 end.
 

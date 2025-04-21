@@ -139,6 +139,8 @@ type
    *)
   TdjWebComponentClass = class of TdjWebComponent;
 
+{$IFNDEF DOXYGEN_SKIP}
+
 implementation
 
 uses
@@ -288,6 +290,8 @@ begin
     end;
   end;
 end;
+
+{$ENDIF DOXYGEN_SKIP}
 
 end.
 

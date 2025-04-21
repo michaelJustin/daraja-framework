@@ -97,7 +97,19 @@ type
 
 
   protected
+    (**
+     * Finds a web component holder by its target identifier.
+     *
+     * @param ATarget The identifier of the target component to find.
+     * @return A TdjWebComponentHolder instance representing the found component, or nil if not found.
+     *)
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
+
+    (**
+     * Adds a new web component mapping to the handler.
+     *
+     * @param Mapping The TdjWebComponentMapping instance to be added.
+     *)
     procedure AddMapping(Mapping: TdjWebComponentMapping);
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
@@ -107,6 +119,11 @@ type
     constructor Create; override;
     destructor Destroy; override;
 
+    (**
+     * Sets the context for the component handler.
+     *
+     * @param Context The context to be set, implementing the IContext interface.
+     *)
     procedure SetContext(const Context: IContext);
 
     (**
@@ -132,7 +149,7 @@ type
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped path.
      *
-     * \param FilterClass WebFilter class
+     * \param Holder WebFilter holder
      * \param UrlPattern mapped path
      *
      * \throws Exception if the WebFilter can not be added
@@ -165,14 +182,32 @@ type
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;
 
+    (**
+     * Invokes a service for the specified web component.
+     *
+     * @param Comp The web component instance to handle.
+     * @param Context The server context in which the service is invoked.
+     * @param Request The incoming request to be processed.
+     * @param Response The outgoing response to be sent.
+     *)
     class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
 
     // ILifeCycle interface
+    (**
+     * Starts the web component handler.
+     * This method is called to initialize and start the handler.
+     *)
     procedure DoStart; override;
+    (**
+     * Stops the web component handler.
+     * This method is called to clean up and stop the handler.
+     *)
     procedure DoStop; override;
 
   end;
+
+{$IFNDEF DOXYGEN_SKIP}
 
 implementation
 
@@ -803,6 +838,8 @@ begin
     end;
   end;
 end;
+
+{$ENDIF DOXYGEN_SKIP}
 
 end.
 

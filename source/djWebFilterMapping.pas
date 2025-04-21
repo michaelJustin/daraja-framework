@@ -53,6 +53,12 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    (**
+     * Determines whether the given path in the current context matches the criteria.
+     *
+     * @param PathInContext The path within the current context to evaluate.
+     * @return True if the path matches the criteria; otherwise, False.
+     *)
     function AppliesTo(const PathInContext: string): Boolean;
 
     // properties

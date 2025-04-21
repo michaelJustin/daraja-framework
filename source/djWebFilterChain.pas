@@ -43,6 +43,9 @@ type
 
   { TdjWebFilterChain }
 
+  (**
+   * Implements the IWebFilterChain interface to manage web filter chains.
+   *)
   TdjWebFilterChain = class(TInterfacedObject, IWebFilterChain)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -53,8 +56,20 @@ type
     FChain: IWebFilterChain;
     FHolder: TdjWebFilterHolder;
   public
+    (**
+      Initializes a new instance of the TdjWebFilterChain class.
+      @param Holder The holder object of type TdjWebFilterHolder.
+      @param FilterChain The filter chain interface of type IWebFilterChain.
+    *)
     constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
 
+    (**
+     * Executes the filter logic for the given server context, request, and response.
+     *
+     * @param Context The server context in which the filter is executed.
+     * @param Request The incoming request to be processed.
+     * @param Response The response to be sent back after processing.
+     *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse);
   end;

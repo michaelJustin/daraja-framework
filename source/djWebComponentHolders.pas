@@ -44,8 +44,18 @@ type
 
   { TdjWebComponentHolders }
 
+  (**
+   * TdjWebComponentHolders is a class that manages a list of TdjWebComponentHolder objects.
+   * It inherits from TObjectList to provide functionality for handling collections of components.
+   *)
   TdjWebComponentHolders = class(TObjectList<TdjWebComponentHolder>)
   public
+    (**
+     * Checks if the specified web component name exists.
+     *
+     * @param WebComponentName The name of the web component to check.
+     * @return True if the web component name exists, otherwise False.
+     *)
     function Contains(WebComponentName: string): Boolean;
   end;
 
