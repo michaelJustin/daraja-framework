@@ -30,6 +30,8 @@ unit djGlobal;
 
 interface
 
+{$IFNDEF DOXYGEN_SKIP}
+
 {$i IdCompilerDefines.inc}
 
 const
@@ -38,8 +40,6 @@ const
   DWF_SERVER_COPYRIGHT = 'Copyright (c) Michael Justin';
 
 function HTMLEncode(const AData: string): string;
-
-{$IFNDEF DOXYGEN_SKIP}
 
 implementation
 
