@@ -30,16 +30,16 @@ unit djPlatform;
 
 interface
 
-{$i IdCompilerDefines.inc}
-
-function GetTickCount: Cardinal;
-
-implementation
-
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal;
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+
+{$i IdCompilerDefines.inc}
+
+function GetTickCount: TIdTicks;
+
+implementation
 
 function GetTickCount: TIdTicks;
 begin
