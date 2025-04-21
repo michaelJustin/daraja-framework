@@ -4,6 +4,6 @@ doxygen make\doxygen.cfg > doxygen.log
 
 type .\warnings.log
 
-rem pause
+pause
 
 .\docs\index.html
