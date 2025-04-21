@@ -124,7 +124,7 @@ begin
 
     MatchList := PS.GetMatches('/foo/bar');
     try
-      CheckEquals('/*', Trim(MatchList.Text));
+      CheckEquals('/foo/*', Trim(MatchList.Text));
     finally
       MatchList.Free;
     end;
