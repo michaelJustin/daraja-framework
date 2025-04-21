@@ -53,7 +53,7 @@ type
     (**
      * Matches a given URL document path against a specified path pattern.
      * \param Path the URL document path
-     * \param Spec the path specification (for example, '/*')
+     * \param Spec the path specification
      * \param SpecType the path specification type
      * \return True if the Path matches the Spec (with known SpecType)
      *)
@@ -61,7 +61,7 @@ type
 
   public
     (**
-     * \param Spec the path specification (for example, '/*')
+     * \param Spec the path specification
      * \return the path specification type
      *)
     class function GetSpecType(const Spec: string): TSpecType;
@@ -79,7 +79,7 @@ type
      * Check if a mapping path exists.
      * This procedure throws a EWebComponentException if the URL pattern is already registered for this context.
      *
-     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path
      * \throws EWebComponentException
      *)
     procedure CheckExists(const UrlPattern: string);
@@ -87,7 +87,7 @@ type
     (**
      * Add a web component mapping.
      *
-     * \param UrlPattern a single component mapping path (for example, '*.html' or '/*')
+     * \param UrlPattern a single component mapping path
      * \param Value the mapped web component
      * \throws EWebComponentException
      *)
@@ -97,7 +97,7 @@ type
      * Return all matching mappings for the given path.
      * The best match will be the first entry.
      *
-     * \param Path the URL path (without context), for example 'test.html'
+     * \param Path the URL path (without context
      * \result list of matching mappings
      *)
     function GetMatches(const Path: string): TStrings;
