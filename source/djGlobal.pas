@@ -30,12 +30,14 @@ unit djGlobal;
 
 interface
 
+{$IFNDEF DOXYGEN_SKIP}
+
 {$i IdCompilerDefines.inc}
 
 const
   DWF_SERVER_VERSION = '3.0';
   DWF_SERVER_FULL_NAME = 'Daraja HTTP Framework ' + DWF_SERVER_VERSION;
-  DWF_SERVER_COPYRIGHT = 'Copyright (C) Michael Justin';
+  DWF_SERVER_COPYRIGHT = 'Copyright (c) Michael Justin';
 
 function HTMLEncode(const AData: string): string;
 
@@ -69,5 +71,7 @@ begin
   end;
   SetLength(Result, Pos - 1);
 end;
+
+{$ENDIF DOXYGEN_SKIP}
 
 end.

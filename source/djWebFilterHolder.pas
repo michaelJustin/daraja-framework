@@ -47,6 +47,12 @@ type
 
   { TdjWebFilterHolder }
 
+  (**
+   * A generic holder class for managing instances of TdjWebFilter.
+   * 
+   * This class is a specialization of TdjGenericHolder, designed to hold and manage
+   * objects of type TdjWebFilter.
+   *)
   TdjWebFilterHolder = class(TdjGenericHolder<TdjWebFilter>)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -58,6 +64,11 @@ type
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
   public
+    (**
+     * Constructor for creating an instance of TdjWebFilterHolder.
+     *
+     * @param WebFilterClass The class reference of type TdjWebFilterClass used to initialize the web filter holder.
+     *)
     constructor Create(WebFilterClass: TdjWebFilterClass);
     destructor Destroy; override;
 
@@ -84,6 +95,14 @@ type
      * Stop the filter.
      *)
      procedure DoStop; override;
+    (**
+     * Executes the filter logic for the given server context, request, and response.
+     *
+     * @param Context The server context in which the filter is executed.
+     * @param Request The HTTP request being processed.
+     * @param Response The HTTP response to be sent back to the client.
+     * @param Chain The filter chain to pass control to the next filter in the chain.
+     *)
      procedure DoFilter(Context: TdjServerContext;
        Request: TdjRequest; Response: TdjResponse;
        const Chain: IWebFilterChain);
