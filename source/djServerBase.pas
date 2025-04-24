@@ -34,14 +34,20 @@ interface
 
 uses
   djInterfaces, djServerContext, djHandlerWrapper,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
   (**
-   * Server Base.
+   * Base server implementation providing core HTTP server functionality.
+   *
+   * This class serves as a foundation for HTTP servers in the Daraja framework,
+   * implementing both IHandlerContainer and basic request handling capabilities.
+   *
+   * \sa IHandlerContainer
+   * \sa TdjHandlerWrapper
    *)
   TdjServerBase = class(TdjHandlerWrapper, IHandlerContainer)
   private
@@ -82,11 +88,17 @@ type
 
     (**
      * Start the server.
+     *
+     * \note This method calls the inherited implementation and logs the server start.
+     * \throws EWebComponentException if the server fails to start
      *)
     procedure DoStart; override;
 
     (**
      * Stop the server.
+     *
+     * \note This method calls the inherited implementation and logs the server stop.
+     * \throws EWebComponentException if the server fails to stop cleanly
      *)
     procedure DoStop; override;
 

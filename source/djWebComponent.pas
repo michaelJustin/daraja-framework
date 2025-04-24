@@ -60,7 +60,11 @@ type
 
   protected
     (**
-     * Called by the server (via the service method) to allow a component to handle a DELETE request.
+     * Called by the server to handle a DELETE request.
+     *
+     * \param Request The HTTP request to process
+     * \param Response The HTTP response to fill
+     * \throws EWebComponentException if an exception occurs
      *)
     procedure OnDelete(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -80,22 +84,38 @@ type
     procedure OnOptions(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
-     * Called by the server (via the service method) to allow a component to handle a POST request.
+     * Called by the server to handle a POST request.
+     *
+     * \param Request The HTTP request to process
+     * \param Response The HTTP response to fill
+     * \throws EWebComponentException if an exception occurs
      *)
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
-     * Called by the server (via the service method) to allow a component to handle a PUT request.
+     * Called by the server to handle a PUT request.
+     *
+     * \param Request The HTTP request to process
+     * \param Response The HTTP response to fill
+     * \throws EWebComponentException if an exception occurs
      *)
     procedure OnPut(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
-     * Called by the server (via the service method) to allow a component to handle a TRACE request.
+     * Called by the server to handle a TRACE request.
+     *
+     * \param Request The HTTP request to process
+     * \param Response The HTTP response to fill
+     * \throws EWebComponentException if an exception occurs
      *)
     procedure OnTrace(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
-     * Called by the server (via the service method) to allow a component to handle a PATCH request.
+     * Called by the server to handle a PATCH request.
+     *
+     * \param Request The HTTP request to process
+     * \param Response The HTTP response to fill
+     * \throws EWebComponentException if an exception occurs
      * \sa http://tools.ietf.org/html/rfc5789
      *)
     procedure OnPatch(Request: TdjRequest; Response: TdjResponse); virtual;

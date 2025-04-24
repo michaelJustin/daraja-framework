@@ -89,17 +89,33 @@ type
     procedure Init; overload; virtual;
 
     (**
-     * The doFilter method of the Filter is called by the container each time a request/response pair is passed through the chain due to a client request for a resource at the end of the chain. The FilterChain passed in to this method allows the Filter to pass on the request and response to the next entity in the chain.
+     * The doFilter method of the Filter is called by the container each time 
+     * a request/response pair is passed through the chain due to a client request 
+     * for a resource at the end of the chain. 
+     *
+     * \param Context The server context for this request
+     * \param Request The HTTP request being processed
+     * \param Response The HTTP response being generated
+     * \param Chain The filter chain to pass the request/response to
      *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); virtual;
 
     (**
      * Virtual procedure to destroy the filter.
-     * This method can be overridden in descendant classes to implement
+     *
+     * \note This method can be overridden in descendant classes to implement
      * custom cleanup logic for the filter.
      *)
     procedure DestroyFilter; virtual;
+
+    (**
+     * Returns the configuration for this filter.
+     *
+     * \return The filter configuration object
+     * \throws EWebComponentException if the filter is not initialized
+     *)
+    function GetWebFilterConfig: IWebFilterConfig;
 
     property Config: IWebFilterConfig read GetWebFilterConfig;
 
