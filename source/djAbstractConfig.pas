@@ -36,12 +36,13 @@ uses
   djInterfaces, djInitParameters;
 
 type
-  (**
-   * Generic configuration.
-   *)
-
   { TdjAbstractConfig }
 
+  (**
+   * Generic configuration class for managing initialization parameters and context.
+   * This class implements the IWriteableConfig interface and provides methods
+   * to add parameters, retrieve them, and manage the application context.
+   *)
   TdjAbstractConfig = class(TInterfacedObject, IWriteableConfig)
   private
     (**
@@ -57,43 +58,54 @@ type
   public
     (**
      * Constructor.
+     * Initializes the configuration object and allocates resources for parameters.
      *)
     constructor Create;
 
     (**
      * Destructor.
+     * Frees allocated resources and cleans up the configuration object.
      *)
     destructor Destroy; override;
 
     (**
      * Add a configuration parameter.
      *
-     * \param Key key
-     * \param Value value
+     * @param Key The key of the parameter to add.
+     * @param Value The value of the parameter to add.
+     * @throws EWebComponentException if the key already exists in the configuration.
      *)
     procedure Add(const Key: string; const Value: string);
 
     (**
      * Set the context.
      *
-     * \param Context the context
+     * @param Context The context to set.
+     * @throws EWebComponentException if the context is nil or if the context is already set and differs from the new context.
      *)
     procedure SetContext(const Context: IContext);
 
     // IConfig interface
 
     (**
-     * Get init parameter.
+     * Get the value of an initialization parameter.
+     *
+     * @param Key The key of the parameter to retrieve.
+     * @return The value of the parameter, or an empty string if the key does not exist.
      *)
     function GetInitParameter(const Key: string): string;
 
     (**
-     * Get init parameter names.
+     * Get the names of all initialization parameters.
+     *
+     * @return A list of all parameter keys as a TdjStrings object.
      *)
     function GetInitParameterNames: TdjStrings;
 
     (**
-     * Get the context.
+     * Get the current context.
+     *
+     * @return The context associated with this configuration.
      *)
     function GetContext: IContext;
 

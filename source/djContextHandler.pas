@@ -46,7 +46,8 @@ const
 
 type
   (**
-   * Context implementation.
+   * Handles requests within a specific context path.
+   * Manages initialization parameters and context configuration.
    *)
   TdjContext = class(TInterfacedObject, IContext, IWriteableConfig)
   private
@@ -68,20 +69,41 @@ type
 
   public
     (**
-     * Create a context with the given path.
-     * \param ContextPath the context path
-     * \throws EWebComponentException if the conext name contains invalid
-     * characters
+     * Initializes a new context with the specified path.
+     *
+     * @param ContextPath The path for this context.
+     * @throws EWebComponentException If the context path contains invalid characters.
      *)
     constructor Create(const ContextPath: string);
 
     (**
-     * Called by the container on start.
-     * \param Config the context configuration
+     * Initializes the context with the given configuration.
+     *
+     * @param Config The context configuration to use.
      *)
     procedure Init(const Config: IContextConfig);
 
-    // IContext interface
+    (**
+     * Gets the value of an initialization parameter.
+     *
+     * @param Key The parameter name.
+     * @return The parameter value or empty string if not found.
+     *)
+    function GetInitParameter(const Key: string): string;
+
+    (**
+     * Gets all initialization parameter names.
+     *
+     * @return A list containing all parameter names.
+     *)
+    function GetInitParameterNames: TdjStrings;
+
+    (**
+     * Logs a message to the configured logging system.
+     *
+     * @param Msg The message to log.
+     *)
+    procedure Log(const Msg: string);
 
     (**
      * Get the context configuration.
@@ -94,29 +116,6 @@ type
      * \return the context path.
      *)
     function GetContextPath: string;
-
-    (**
-     * Get the init parameter with the given name.
-     * \param Key the parameter name
-     * \return the init parameter value
-     *)
-    function GetInitParameter(const Key: string): string;
-
-    (**
-     * Get the list of init parameter names.
-     * \return list of init parameter names.
-     *)
-    function GetInitParameterNames: TdjStrings;
-
-    (**
-     * Write a log message.
-     *
-     * \note if DARAJA_LOGGING is defined, it will write using the logging
-     * framework. Otherwise, it will log to console if System.IsConsole is True.
-     *
-     * \param Msg the log message.
-     *)
-    procedure Log(const Msg: string);
 
   end;
 
