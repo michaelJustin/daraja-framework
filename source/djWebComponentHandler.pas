@@ -129,10 +129,10 @@ type
     (**
      * Add a Web Component.
      *
-     * \param ComponentClass WebComponent class
-     * \param UrlPattern path specification
+     * @param ComponentClass WebComponent class
+     * @param UrlPattern path specification
      *
-     * \throws EWebComponentException if the Web Component can not be added
+     * @throws EWebComponentException if the Web Component can not be added
      *)
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
@@ -140,8 +140,8 @@ type
     (**
      * Add a Web Component holder with mapping.
      *
-     * \param Holder a Web Component holder
-     * \param UrlPattern a path spec
+     * @param Holder a Web Component holder
+     * @param UrlPattern a path spec
      *)
     procedure AddWithMapping(Holder: TdjWebComponentHolder; const UrlPattern: string); overload;
 
@@ -149,10 +149,10 @@ type
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped path.
      *
-     * \param Holder WebFilter holder
-     * \param UrlPattern mapped path
+     * @param Holder WebFilter holder
+     * @param UrlPattern mapped path
      *
-     * \throws Exception if the WebFilter can not be added
+     * @throws Exception if the WebFilter can not be added
      *)
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const UrlPattern: string); overload;
@@ -160,8 +160,8 @@ type
     (**
      * Find a TdjWebComponentHolder for a WebComponentClass.
      *
-     * \param WebComponentClass the Web Component class
-     * \return a TdjWebComponentHolder with the WebComponentClass or nil
+     * @param WebComponentClass the Web Component class
+     * @return a TdjWebComponentHolder with the WebComponentClass or nil
      *         if the WebComponentClass is not registered
      *)
     function FindHolder(WebComponentClass: TdjWebComponentClass):
@@ -172,12 +172,12 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     * \sa IHandler
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;

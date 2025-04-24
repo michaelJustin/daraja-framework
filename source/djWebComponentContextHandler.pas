@@ -60,10 +60,10 @@ type
 
   protected
     (**
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
      *)
     procedure DoHandle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
@@ -72,8 +72,8 @@ type
     (**
      * Constructor.
      *
-     * \param ContextPath the context path
-     * \param Sessions enable HTTP sessions
+     * @param ContextPath the context path
+     * @param Sessions enable HTTP sessions
      *)
     constructor Create(const ContextPath: string; Sessions: Boolean = False); overload;
 
@@ -85,10 +85,10 @@ type
     (**
      * Add a Web Component.
      *
-     * \param ComponentClass WebComponent class
-     * \param UrlPattern path specification
-     * \return the Web Component holder, which can be used for further configuration.
-     * \throws EWebComponentException if the Web Component can not be added
+     * @param ComponentClass WebComponent class
+     * @param UrlPattern path specification
+     * @return the Web Component holder, which can be used for further configuration.
+     * @throws EWebComponentException if the Web Component can not be added
      *)
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
@@ -96,10 +96,10 @@ type
     (**
      * Add a Web Component.
      *
-     * \param ComponentClass WebComponent class
-     * \param UrlPattern path specification
-     * \return the Web Component holder, which can be used for further configuration.
-     * \throws EWebComponentException if the Web Component can not be added
+     * @param ComponentClass WebComponent class
+     * @param UrlPattern path specification
+     * @return the Web Component holder, which can be used for further configuration.
+     * @throws EWebComponentException if the Web Component can not be added
      *)
     function Add(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
@@ -107,9 +107,9 @@ type
     (**
      * Add a Web Component.
      *
-     * \param Holder holds information about the Web Component
-     * \param UrlPattern path specification
-     * \throws EWebComponentException if the Web Component can not be added
+     * @param Holder holds information about the Web Component
+     * @param UrlPattern path specification
+     * @throws EWebComponentException if the Web Component can not be added
      *)
     procedure AddWebComponent(Holder: TdjWebComponentHolder;
       const UrlPattern: string); overload;
@@ -117,9 +117,9 @@ type
     (**
      * Add a Web Filter Holder.
      *
-     * \param Holder holds information about the Web Filter
-     * \param UrlPattern path specification
-     * \throws Exception if the Web Filter can not be added
+     * @param Holder holds information about the Web Filter
+     * @param UrlPattern path specification
+     * @throws Exception if the Web Filter can not be added
      *)
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const UrlPattern: string); overload;
@@ -128,10 +128,10 @@ type
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped WebComponent name.
      *
-     * \param FilterClass WebFilter class
-     * \param UrlPattern path specification
-     * \return the Web Filter holder, which can be used for further configuration.
-     * \throws Exception if the WebFilter can not be added
+     * @param FilterClass WebFilter class
+     * @param UrlPattern path specification
+     * @return the Web Filter holder, which can be used for further configuration.
+     * @throws Exception if the WebFilter can not be added
      *)
     function AddWebFilter(FilterClass: TdjWebFilterClass;
       const UrlPattern: string): TdjWebFilterHolder; overload;
@@ -140,10 +140,10 @@ type
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped WebComponent name.
      *
-     * \param FilterClass WebFilter class
-     * \param UrlPattern path specification
-     * \return the Web Filter holder, which can be used for further configuration.
-     * \throws Exception if the WebFilter can not be added
+     * @param FilterClass WebFilter class
+     * @param UrlPattern path specification
+     * @return the Web Filter holder, which can be used for further configuration.
+     * @throws Exception if the WebFilter can not be added
      *)
     function Add(FilterClass: TdjWebFilterClass;
       const UrlPattern: string): TdjWebFilterHolder; overload;
@@ -153,13 +153,13 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;

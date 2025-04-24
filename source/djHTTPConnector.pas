@@ -69,7 +69,7 @@ type
      * The handler is a required argument. The connector will
      * call the "Handle" method for incoming requests.
      *
-     * \param Handler the request handler
+     * @param Handler the request handler
      *)
     constructor Create(const Handler: IHandler); virtual;
 

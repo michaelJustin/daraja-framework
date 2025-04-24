@@ -42,7 +42,7 @@ type
   (**
    * Collects HTTP request statistics.
    *
-   * \note This class is unsupported demonstration code.
+   * @note This class is unsupported demonstration code.
    *)
   TdjStatisticsFilter = class(TdjWebFilter)
   private

@@ -43,7 +43,7 @@ type
   EWebComponentException = class(Exception);
 
   (**
-   * \interface ILifeCycle
+   * @interface ILifeCycle
    *
    * ILifeCycle interface.
    *)
@@ -57,7 +57,7 @@ type
   end;
 
   (**
-   * \interface IHandler
+   * @interface IHandler
    *
    * IHandler interface.
    *)
@@ -70,7 +70,7 @@ type
   TdjHandlers = TList<IHandler>;
 
   (**
-   * \interface IHandlerContainer
+   * @interface IHandlerContainer
    *
    * IHandlerContainer interface.
    *)
@@ -87,7 +87,7 @@ type
   TdjStrings = TList<string>;
 
   (**
-   * \interface IContext
+   * @interface IContext
    *
    * Context interface.
    *)
@@ -106,7 +106,7 @@ type
   end;
 
   (**
-   * \interface IWebComponentConfig
+   * @interface IWebComponentConfig
    *
    * Web Component configuration interface.
    *)
@@ -118,7 +118,7 @@ type
   end;
 
   (**
-   * \interface IContextConfig
+   * @interface IContextConfig
    *
    * Context configuration interface.
    *)
@@ -129,7 +129,7 @@ type
   end;
 
   (**
-   * \interface IWebComponent
+   * @interface IWebComponent
    *
    * Web Component interface.
    *)
@@ -144,7 +144,7 @@ type
   end;
 
   (**
-   * \interface IWebFilterChain
+   * @interface IWebFilterChain
    *
    * Web Filter Chain interface.
    *)
@@ -155,7 +155,7 @@ type
   end;
 
   (**
-   * \interface IWebFilterConfig
+   * @interface IWebFilterConfig
    *
    * Web Filter configuration interface.
    *)
@@ -168,7 +168,7 @@ type
   end;
 
   (**
-   * \interface IWebFilter
+   * @interface IWebFilter
    *
    * Web Filter interface.
    * A filter is an object that performs filtering tasks on either the request

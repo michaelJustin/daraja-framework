@@ -107,13 +107,13 @@ type
 
     (**
      * Get the context configuration.
-     * \return the context configuration
+     * @return the context configuration
      *)
     function GetContextConfig: IContextConfig;
 
     (**
      * Get the context path.
-     * \return the context path.
+     * @return the context path.
      *)
     function GetContextPath: string;
 
@@ -142,17 +142,17 @@ type
     (**
      * Check if the Document matches this context.
      *
-     * \param ConnectorName the connector name (like 'host:port'
-     * \param Target the target URL document
+     * @param ConnectorName the connector name (like 'host:port'
+     * @param Target the target URL document
      *
-     * \return True if the context matches the connector name and target URL document
+     * @return True if the context matches the connector name and target URL document
      *)
     function ContextMatches(const ConnectorName, Target: string): Boolean;
 
     (**
      * Creates connector name in the form 'host:port'
      *
-     * \returns connector name
+     * @returns connector name
      *)
     function ToConnectorName(Context: TdjServerContext): string;
 
@@ -175,8 +175,8 @@ type
     (**
      * Set initialization parameter.
      *
-     * \param Key init parameter name
-     * \param Value init parameter value
+     * @param Key init parameter name
+     * @param Value init parameter value
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
@@ -197,13 +197,13 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
       {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;

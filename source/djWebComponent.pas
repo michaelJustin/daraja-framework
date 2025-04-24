@@ -45,10 +45,10 @@ type
    * for a Web site.
    *
    * A subclass of TdjWebComponent must override at least one method, usually one of these:
-   * \li OnGet, if the web component supports HTTP GET requests
-   * \li OnPost, for HTTP POST requests
-   * \li OnPut, for HTTP PUT requests
-   * \li OnDelete, for HTTP DELETE requests
+   * @li OnGet, if the web component supports HTTP GET requests
+   * @li OnPost, for HTTP POST requests
+   * @li OnPut, for HTTP PUT requests
+   * @li OnDelete, for HTTP DELETE requests
    *)
   TdjWebComponent = class(TdjGenericWebComponent)
   private
@@ -62,9 +62,9 @@ type
     (**
      * Called by the server to handle a DELETE request.
      *
-     * \param Request The HTTP request to process
-     * \param Response The HTTP response to fill
-     * \throws EWebComponentException if an exception occurs
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *)
     procedure OnDelete(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -86,37 +86,37 @@ type
     (**
      * Called by the server to handle a POST request.
      *
-     * \param Request The HTTP request to process
-     * \param Response The HTTP response to fill
-     * \throws EWebComponentException if an exception occurs
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *)
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
      * Called by the server to handle a PUT request.
      *
-     * \param Request The HTTP request to process
-     * \param Response The HTTP response to fill
-     * \throws EWebComponentException if an exception occurs
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *)
     procedure OnPut(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
      * Called by the server to handle a TRACE request.
      *
-     * \param Request The HTTP request to process
-     * \param Response The HTTP response to fill
-     * \throws EWebComponentException if an exception occurs
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *)
     procedure OnTrace(Request: TdjRequest; Response: TdjResponse); virtual;
 
     (**
      * Called by the server to handle a PATCH request.
      *
-     * \param Request The HTTP request to process
-     * \param Response The HTTP response to fill
-     * \throws EWebComponentException if an exception occurs
-     * \sa http://tools.ietf.org/html/rfc5789
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
+     * @sa http://tools.ietf.org/html/rfc5789
      *)
     procedure OnPatch(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -129,8 +129,8 @@ type
      * browser and proxy caches work more effectively, reducing the load on
      * server and network resources.
      *
-     * \param Request HTTP request
-     * \return the last modified timestamp
+     * @param Request HTTP request
+     * @return the last modified timestamp
      *)
     function OnGetLastModified(Request: TdjRequest): TDateTime; virtual;
 
@@ -142,12 +142,12 @@ type
     (**
      * Dispatches client requests to the protected service method.
      *
-     * \note a custom Web Component should not override this method.
+     * @note a custom Web Component should not override this method.
      *
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *)
     procedure Service(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse); override;

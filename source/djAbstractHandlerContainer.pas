@@ -45,13 +45,13 @@ type
   protected
     (**
      * Add a handler.
-     * \param Handler the handler to be added.
+     * @param Handler the handler to be added.
      *)
     procedure AddHandler(const Handler: IHandler); virtual; abstract;
 
     (**
      * Remove a handler.
-     * \param Handler the handler to be removed.
+     * @param Handler the handler to be removed.
      *)
     procedure RemoveHandler(const Handler: IHandler); virtual; abstract;
 

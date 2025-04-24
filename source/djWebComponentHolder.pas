@@ -64,7 +64,7 @@ type
     (**
      * Constructor.
      *
-     * \param WebComponentClass the Web Component class
+     * @param WebComponentClass the Web Component class
      *)
     constructor Create(WebComponentClass: TdjWebComponentClass); overload;
 
@@ -81,15 +81,15 @@ type
     (**
      * Set the context.
      *
-     * \param Context the context
+     * @param Context the context
      *)
     procedure SetContext(const Context: IContext);
 
     (**
      * Set initialization parameter.
      *
-     * \param Key init parameter name
-     * \param Value init parameter value
+     * @param Key init parameter name
+     * @param Value init parameter value
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
