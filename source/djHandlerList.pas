@@ -42,11 +42,9 @@ type
    * Iterates handler list and exits when the response code is set.
    * If the response code is still -1, it returns 404
    *
-
    * This extension of TdjHandlerCollection will call
    * each contained handler in turn until either an
    * exception is thrown or a positive response status is set.
-   *
    *)
   TdjHandlerList = class(TdjHandlerCollection)
   private

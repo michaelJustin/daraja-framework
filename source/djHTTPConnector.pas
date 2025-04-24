@@ -108,9 +108,9 @@ uses
 constructor TdjHTTPConnector.Create(const Handler: IHandler);
 begin
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjHTTPConnector.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   inherited Create(Handler);
 
@@ -126,9 +126,9 @@ end;
 
 destructor TdjHTTPConnector.Destroy;
 begin
-{$IFDEF LOG_DESTROY}
+  {$IFDEF LOG_DESTROY}
   Trace('Destroy');
-{$ENDIF}
+  {$ENDIF}
 
   if IsStarted then
   begin
@@ -142,12 +142,12 @@ end;
 
 procedure TdjHTTPConnector.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjHTTPConnector.DoStart;
@@ -186,18 +186,18 @@ begin
 
     Started := True;
 
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger.Info(Format('Accepting requests at %s', [HostAndPort]));
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
   except
     on E: Exception do
     begin
-{$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
       Logger.Info(
         Format('Could not start HTTP connector at %s', [HostAndPort]));
       Logger.Error(E.Message, E);
-{$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_LOGGING}
       raise;
     end;
   end;
@@ -213,9 +213,9 @@ begin
     except
       on E: Exception do
       begin
-{$IFDEF DARAJA_LOGGING}
+        {$IFDEF DARAJA_LOGGING}
         Logger.Error(E.Message, E);
-{$ENDIF DARAJA_LOGGING}
+        {$ENDIF DARAJA_LOGGING}
       end;
     end;
   end;
@@ -253,9 +253,9 @@ begin
     end;
     on E: Exception do
     begin
-{$IFDEF DARAJA_LOGGING}
+      {$IFDEF DARAJA_LOGGING}
       Logger.Error(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
-{$ENDIF DARAJA_LOGGING}
+      {$ENDIF DARAJA_LOGGING}
     end;
   end;
 end;
