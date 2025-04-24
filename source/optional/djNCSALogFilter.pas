@@ -46,9 +46,9 @@ type
   (**
    * Implements NCSA logging.
    *
-   * \sa https://en.wikipedia.org/wiki/Common_Log_Format
+   * @sa https://en.wikipedia.org/wiki/Common_Log_Format
    *
-   * \note This class is unsupported demonstration code.
+   * @note This class is unsupported demonstration code.
    *)
 
   { TdjNCSALogFilter }

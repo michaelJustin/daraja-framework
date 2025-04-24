@@ -69,10 +69,10 @@ type
     (**
       * Called by the container on startup.
       *
-      * \note if this method is overridden, the overriding code
+      * @note if this method is overridden, the overriding code
       * must also call inherited Init.
-      * \param Config the configuration
-      * \throws EWebComponentException if initialization failed
+      * @param Config the configuration
+      * @throws EWebComponentException if initialization failed
       *)
     procedure Init(const Config: IWebComponentConfig); override;
 
@@ -81,11 +81,11 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     * \sa IHandler
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @sa IHandler
      *)
     procedure Service(Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse); override;
 

@@ -89,24 +89,24 @@ type
     (**
      * Start the handler.
      *
-     * \sa ILifeCycle
+     * @sa ILifeCycle
      *)
     procedure Start;
 
     (**
      * Stop the handler.
      *
-     * \sa ILifeCycle
+     * @sa ILifeCycle
      *)
      procedure Stop;
 
     (**
-     * \return True if the state is "started"
+     * @return True if the state is "started"
      *)
     function IsStarted: Boolean;
 
     (**
-     * \return True if the state is "stopped"
+     * @return True if the state is "stopped"
      *)
     function IsStopped: Boolean;
 

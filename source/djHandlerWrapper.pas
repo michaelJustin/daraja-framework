@@ -80,14 +80,14 @@ type
      * handler. If this HandlerWrapper had a previous wrapped handler, then
      * it is passed to a call to AddHandler on the passed handler.
      *
-     * \param Handler the handler to be added
+     * @param Handler the handler to be added
      *)
     procedure AddHandler(const Handler: IHandler); override;
 
     (**
      * Remove a handler from the container.
      *
-     * \param Handler the handler to be removed
+     * @param Handler the handler to be removed
      *)
     procedure RemoveHandler(const Handler: IHandler); override;
 
@@ -108,13 +108,13 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;

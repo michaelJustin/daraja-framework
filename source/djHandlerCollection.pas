@@ -73,12 +73,12 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
@@ -99,13 +99,13 @@ type
 
     (**
      * Add a handler.
-     * \param Handler the handler to be added.
+     * @param Handler the handler to be added.
      *)
     procedure AddHandler(const Handler: IHandler); override;
 
     (**
      * Remove a handler.
-     * \param Handler the handler to be removed.
+     * @param Handler the handler to be removed.
      *)
     procedure RemoveHandler(const Handler: IHandler); override;
 

@@ -42,11 +42,9 @@ type
    * Iterates handler list and exits when the response code is set.
    * If the response code is still -1, it returns 404
    *
-
    * This extension of TdjHandlerCollection will call
    * each contained handler in turn until either an
    * exception is thrown or a positive response status is set.
-   *
    *)
   TdjHandlerList = class(TdjHandlerCollection)
   private
@@ -67,13 +65,13 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;

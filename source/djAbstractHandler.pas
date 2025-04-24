@@ -45,9 +45,9 @@ type
    *)
   TdjAbstractHandler = class(TdjLifeCycle, IHandler)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     procedure Trace(const S: string);
 
@@ -63,23 +63,23 @@ type
     procedure DoStart; override;
 
     (**
-     * Start the handler.
+     * Stop the handler.
      *)
      procedure DoStop; override;
 
     // IHandler interface
 
     (**
-     * Handle a HTTP request.
-     *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * \sa IHandler
-     *)
+    * Handle an HTTP request.
+    *
+    * @param Target The request target.
+    * @param Context The HTTP server context.
+    * @param Request The HTTP request object.
+    * @param Response The HTTP response object.
+    * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation.
+    *
+    * @sa IHandler
+    *)
     procedure Handle(const Target: string; Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse); virtual; abstract;
 

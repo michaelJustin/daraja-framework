@@ -46,7 +46,8 @@ const
 
 type
   (**
-   * Context implementation.
+   * Handles requests within a specific context path.
+   * Manages initialization parameters and context configuration.
    *)
   TdjContext = class(TInterfacedObject, IContext, IWriteableConfig)
   private
@@ -68,55 +69,53 @@ type
 
   public
     (**
-     * Create a context with the given path.
-     * \param ContextPath the context path
-     * \throws EWebComponentException if the conext name contains invalid
-     * characters
+     * Initializes a new context with the specified path.
+     *
+     * @param ContextPath The path for this context.
+     * @throws EWebComponentException If the context path contains invalid characters.
      *)
     constructor Create(const ContextPath: string);
 
     (**
-     * Called by the container on start.
-     * \param Config the context configuration
+     * Initializes the context with the given configuration.
+     *
+     * @param Config The context configuration to use.
      *)
     procedure Init(const Config: IContextConfig);
 
-    // IContext interface
+    (**
+     * Gets the value of an initialization parameter.
+     *
+     * @param Key The parameter name.
+     * @return The parameter value or empty string if not found.
+     *)
+    function GetInitParameter(const Key: string): string;
+
+    (**
+     * Gets all initialization parameter names.
+     *
+     * @return A list containing all parameter names.
+     *)
+    function GetInitParameterNames: TdjStrings;
+
+    (**
+     * Logs a message to the configured logging system.
+     *
+     * @param Msg The message to log.
+     *)
+    procedure Log(const Msg: string);
 
     (**
      * Get the context configuration.
-     * \return the context configuration
+     * @return the context configuration
      *)
     function GetContextConfig: IContextConfig;
 
     (**
      * Get the context path.
-     * \return the context path.
+     * @return the context path.
      *)
     function GetContextPath: string;
-
-    (**
-     * Get the init parameter with the given name.
-     * \param Key the parameter name
-     * \return the init parameter value
-     *)
-    function GetInitParameter(const Key: string): string;
-
-    (**
-     * Get the list of init parameter names.
-     * \return list of init parameter names.
-     *)
-    function GetInitParameterNames: TdjStrings;
-
-    (**
-     * Write a log message.
-     *
-     * \note if DARAJA_LOGGING is defined, it will write using the logging
-     * framework. Otherwise, it will log to console if System.IsConsole is True.
-     *
-     * \param Msg the log message.
-     *)
-    procedure Log(const Msg: string);
 
   end;
 
@@ -143,17 +142,17 @@ type
     (**
      * Check if the Document matches this context.
      *
-     * \param ConnectorName the connector name (like 'host:port'
-     * \param Target the target URL document
+     * @param ConnectorName the connector name (like 'host:port'
+     * @param Target the target URL document
      *
-     * \return True if the context matches the connector name and target URL document
+     * @return True if the context matches the connector name and target URL document
      *)
     function ContextMatches(const ConnectorName, Target: string): Boolean;
 
     (**
      * Creates connector name in the form 'host:port'
      *
-     * \returns connector name
+     * @returns connector name
      *)
     function ToConnectorName(Context: TdjServerContext): string;
 
@@ -176,8 +175,8 @@ type
     (**
      * Set initialization parameter.
      *
-     * \param Key init parameter name
-     * \param Value init parameter value
+     * @param Key init parameter name
+     * @param Value init parameter value
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
@@ -198,13 +197,13 @@ type
     (**
      * Handle a HTTP request.
      *
-     * \param Target Request target
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Target Request target
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *
-     * \sa IHandler
+     * @sa IHandler
      *)
     procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
       {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;

@@ -39,7 +39,7 @@ uses
 
 type
   (**
-   * \class TdjRequest
+   * @class TdjRequest
    *
    * HTTP request information.
    * Type alias for Indy class TIdHTTPRequestInfo.
@@ -47,7 +47,7 @@ type
   TdjRequest = TIdHTTPRequestInfo;
 
   (**
-   * \class TdjResponse
+   * @class TdjResponse
    *
    * HTTP response information.
    * Type alias for Indy class TIdHTTPResponseInfo.

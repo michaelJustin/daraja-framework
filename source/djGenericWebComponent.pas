@@ -63,12 +63,12 @@ type
      * The status code of the response always should be set for a component
      * that throws or sends an error.
      *
-     * \note a custom Web Component should not override this method.
+     * @note a custom Web Component should not override this method.
      *
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *)
     procedure Service({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
       {%H-}Response: TdjResponse); virtual;
@@ -87,11 +87,11 @@ type
     (**
      * Called by the container on startup.
      *
-     * \note if this method is overridden, the overriding code
+     * @note if this method is overridden, the overriding code
      * must also call inherited Init.
      *
-     * \param Config the configuration
-     * \throws EWebComponentException if initialization failed
+     * @param Config the configuration
+     * @throws EWebComponentException if initialization failed
      *)
     procedure Init(const Config: IWebComponentConfig); overload; virtual;
 
@@ -104,19 +104,19 @@ type
     (**
      * Get or create a HTTP session.
      *
-     * \note it requires the current TdjServerContext so calling it from one of the
+     * @note it requires the current TdjServerContext so calling it from one of the
      * HTTP method handlers is not possible. It can be called from
      * the Servive method.
      *
-     * \note if the context was created with the Auto Session option,
+     * @note if the context was created with the Auto Session option,
      * this method will always return a session independent of the Create parameter
      *
-     * \param Context HTTP server context
-     * \param Request HTTP request
-     * \param Response HTTP response
-     * \param Create if True, create a session if no one exists
+     * @param Context HTTP server context
+     * @param Request HTTP request
+     * @param Response HTTP response
+     * @param Create if True, create a session if no one exists
      *
-     * \returns HTTP session
+     * @returns HTTP session
      *)
     function GetSession(Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse;
@@ -126,7 +126,7 @@ type
      * Returns a IWebComponentConfig object,
      * which contains initialization parameters for this component.
      *
-     * \throws EWebComponentException if the method is called before
+     * @throws EWebComponentException if the method is called before
      * the component has been initialized.
      *)
     function GetWebComponentConfig: IWebComponentConfig;
