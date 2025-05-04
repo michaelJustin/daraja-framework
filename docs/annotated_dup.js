@@ -29,7 +29,7 @@ var annotated_dup =
     [ "TdjHTTPServer", "classTdjHTTPServer.html", "classTdjHTTPServer" ],
     [ "TdjInitParameters", "classTdjInitParameters.html", null ],
     [ "TdjLifeCycle", "classTdjLifeCycle.html", "classTdjLifeCycle" ],
-    [ "TdjMultiMap", "classTdjMultiMap.html", null ],
+    [ "TdjMultiMap", "classTdjMultiMap.html", "classTdjMultiMap" ],
     [ "TdjPathMap", "classTdjPathMap.html", "classTdjPathMap" ],
     [ "TdjRequest", "classTdjRequest.html", null ],
     [ "TdjResponse", "classTdjResponse.html", null ],
@@ -42,11 +42,11 @@ var annotated_dup =
     [ "TdjWebComponentContextHandler", "classTdjWebComponentContextHandler.html", "classTdjWebComponentContextHandler" ],
     [ "TdjWebComponentHandler", "classTdjWebComponentHandler.html", "classTdjWebComponentHandler" ],
     [ "TdjWebComponentHolder", "classTdjWebComponentHolder.html", "classTdjWebComponentHolder" ],
-    [ "TdjWebComponentHolders", "classTdjWebComponentHolders.html", null ],
+    [ "TdjWebComponentHolders", "classTdjWebComponentHolders.html", "classTdjWebComponentHolders" ],
     [ "TdjWebComponentMapping", "classTdjWebComponentMapping.html", "classTdjWebComponentMapping" ],
     [ "TdjWebFilter", "classTdjWebFilter.html", null ],
-    [ "TdjWebFilterChain", "classTdjWebFilterChain.html", null ],
-    [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", null ],
+    [ "TdjWebFilterChain", "classTdjWebFilterChain.html", "classTdjWebFilterChain" ],
+    [ "TdjWebFilterConfig", "classTdjWebFilterConfig.html", "classTdjWebFilterConfig" ],
     [ "TdjWebFilterHolder", "classTdjWebFilterHolder.html", "classTdjWebFilterHolder" ],
     [ "TdjWebFilterMapping", "classTdjWebFilterMapping.html", "classTdjWebFilterMapping" ]
 ];

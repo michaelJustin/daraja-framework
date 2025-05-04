@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0.1</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -105,7 +105,7 @@ $(function(){initNavTree('classTdjGenericWebFilter.html',''); initResizable(true
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a generic Web Filter.  
+<p>A generic web filter class implementing the <a class="el" href="interfaceIWebFilter.html" title="Web Filter interface.">IWebFilter</a> interface.  
  <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for TdjGenericWebFilter:</div>
@@ -141,8 +141,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a53bb6d0ffa8e52a401382373199b4c46" id="r_a53bb6d0ffa8e52a401382373199b4c46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53bb6d0ffa8e52a401382373199b4c46">DoFilter</a> (<a class="el" href="classTdjServerContext.html">TdjServerContext</a> Context, <a class="el" href="classTdjRequest.html">TdjRequest</a> Request, <a class="el" href="classTdjResponse.html">TdjResponse</a> Response, const <a class="el" href="interfaceIWebFilterChain.html">IWebFilterChain</a> Chain)</td></tr>
 <tr class="memdesc:a53bb6d0ffa8e52a401382373199b4c46"><td class="mdescLeft">&#160;</td><td class="mdescRight">The doFilter method of the Filter is called by the container each time a request/response pair is passed through the chain due to a client request for a resource at the end of the chain.  <br /></td></tr>
 <tr class="separator:a53bb6d0ffa8e52a401382373199b4c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d4b57b5652ae9891ff646d7f70afb46" id="r_a8d4b57b5652ae9891ff646d7f70afb46"><td class="memItemLeft" align="right" valign="top"><a id="a8d4b57b5652ae9891ff646d7f70afb46" name="a8d4b57b5652ae9891ff646d7f70afb46"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DestroyFilter</b> ()</td></tr>
+<tr class="memitem:a8d4b57b5652ae9891ff646d7f70afb46" id="r_a8d4b57b5652ae9891ff646d7f70afb46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d4b57b5652ae9891ff646d7f70afb46">DestroyFilter</a> ()</td></tr>
+<tr class="memdesc:a8d4b57b5652ae9891ff646d7f70afb46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual procedure to destroy the filter.  <br /></td></tr>
 <tr class="separator:a8d4b57b5652ae9891ff646d7f70afb46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -151,8 +151,29 @@ Public Attributes</h2></td></tr>
 <tr class="separator:aa17ed7054cfd1f8f2089c8c1ebb3c952"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines a generic Web Filter. </p>
+<div class="textblock"><p>A generic web filter class implementing the <a class="el" href="interfaceIWebFilter.html" title="Web Filter interface.">IWebFilter</a> interface. </p>
+<p>This class provides functionality to filter web requests or responses as part of the Daraja framework. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8d4b57b5652ae9891ff646d7f70afb46" name="a8d4b57b5652ae9891ff646d7f70afb46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d4b57b5652ae9891ff646d7f70afb46">&#9670;&#160;</a></span>DestroyFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjGenericWebFilter::DestroyFilter </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Virtual procedure to destroy the filter. </p>
+<p>This method can be overridden in descendant classes to implement custom cleanup logic for the filter. </p>
+
+</div>
+</div>
 <a id="a53bb6d0ffa8e52a401382373199b4c46" name="a53bb6d0ffa8e52a401382373199b4c46"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a53bb6d0ffa8e52a401382373199b4c46">&#9670;&#160;</a></span>DoFilter()</h2>
 

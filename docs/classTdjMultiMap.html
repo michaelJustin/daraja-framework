@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0.1</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -103,6 +103,9 @@ $(function(){initNavTree('classTdjMultiMap.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">TdjMultiMap Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>A generic multi-map implementation that maps strings to lists of objects.  
+ <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for TdjMultiMap:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -114,13 +117,103 @@ $(function(){initNavTree('classTdjMultiMap.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5d06178a1d20cd4ff8dfafe19fe7290f" id="r_a5d06178a1d20cd4ff8dfafe19fe7290f"><td class="memItemLeft" align="right" valign="top"><a id="a5d06178a1d20cd4ff8dfafe19fe7290f" name="a5d06178a1d20cd4ff8dfafe19fe7290f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Add</b> (const string Key, T Value)</td></tr>
+<tr class="memitem:aebe2a4e549b01e0fc8514557f9135bd0" id="r_aebe2a4e549b01e0fc8514557f9135bd0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebe2a4e549b01e0fc8514557f9135bd0">~TdjMultiMap</a> ()</td></tr>
+<tr class="memdesc:aebe2a4e549b01e0fc8514557f9135bd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor for the class.  <br /></td></tr>
+<tr class="separator:aebe2a4e549b01e0fc8514557f9135bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d06178a1d20cd4ff8dfafe19fe7290f" id="r_a5d06178a1d20cd4ff8dfafe19fe7290f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d06178a1d20cd4ff8dfafe19fe7290f">Add</a> (const string Key, <a class="el" href="#a603d607be420fd79344db35066160d5a">T</a> Value)</td></tr>
+<tr class="memdesc:a5d06178a1d20cd4ff8dfafe19fe7290f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a value to the collection associated with the specified key.  <br /></td></tr>
 <tr class="separator:a5d06178a1d20cd4ff8dfafe19fe7290f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a603d607be420fd79344db35066160d5a" id="r_a603d607be420fd79344db35066160d5a"><td class="memItemLeft" align="right" valign="top"><a id="a603d607be420fd79344db35066160d5a" name="a603d607be420fd79344db35066160d5a"></a>
-&lt;&gt; TObjectList&#160;</td><td class="memItemRight" valign="bottom"><b>T</b> (const string Key)</td></tr>
+<tr class="memitem:a603d607be420fd79344db35066160d5a" id="r_a603d607be420fd79344db35066160d5a"><td class="memItemLeft" align="right" valign="top">&lt;&gt; TObjectList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a603d607be420fd79344db35066160d5a">T</a> (const string Key)</td></tr>
+<tr class="memdesc:a603d607be420fd79344db35066160d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the list of values associated with the specified key.  <br /></td></tr>
 <tr class="separator:a603d607be420fd79344db35066160d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A generic multi-map implementation that maps strings to lists of objects. </p>
+<p>This class extends TObjectDictionary, where the key is a string and the value is a TObjectList of type T. It provides functionality to manage a collection of objects grouped by string keys.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of objects stored in the multi-map. Must be a class type. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aebe2a4e549b01e0fc8514557f9135bd0" name="aebe2a4e549b01e0fc8514557f9135bd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebe2a4e549b01e0fc8514557f9135bd0">&#9670;&#160;</a></span>~TdjMultiMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjMultiMap::~TdjMultiMap </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destructor for the class. </p>
+<p>Cleans up any resources used by the instance. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5d06178a1d20cd4ff8dfafe19fe7290f" name="a5d06178a1d20cd4ff8dfafe19fe7290f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d06178a1d20cd4ff8dfafe19fe7290f">&#9670;&#160;</a></span>Add()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjMultiMap::Add </td>
+          <td>(</td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Key</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#a603d607be420fd79344db35066160d5a">T</a></td>          <td class="paramname"><span class="paramname"><em>Value</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds a value to the collection associated with the specified key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Key</td><td>The key to which the value will be associated. </td></tr>
+    <tr><td class="paramname">Value</td><td>The value to be added to the collection. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a603d607be420fd79344db35066160d5a" name="a603d607be420fd79344db35066160d5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a603d607be420fd79344db35066160d5a">&#9670;&#160;</a></span>T()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">&lt;&gt; TObjectList TdjMultiMap::T </td>
+          <td>(</td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Key</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the list of values associated with the specified key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Key</td><td>The key whose associated values are to be retrieved. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A TObjectList containing the values associated with the key. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
