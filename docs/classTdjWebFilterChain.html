@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0.1</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -103,6 +103,9 @@ $(function(){initNavTree('classTdjWebFilterChain.html',''); initResizable(true);
   <div class="headertitle"><div class="title">TdjWebFilterChain Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implements the <a class="el" href="interfaceIWebFilterChain.html" title="Web Filter Chain interface.">IWebFilterChain</a> interface to manage web filter chains.  
+ <a href="#details">More...</a></p>
 <div id="dynsection-0" onclick="return dynsection.toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Inheritance diagram for TdjWebFilterChain:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -117,13 +120,85 @@ $(function(){initNavTree('classTdjWebFilterChain.html',''); initResizable(true);
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a29ec876687f06123bde607c5a28f9e6a" id="r_a29ec876687f06123bde607c5a28f9e6a"><td class="memItemLeft" align="right" valign="top"><a id="a29ec876687f06123bde607c5a28f9e6a" name="a29ec876687f06123bde607c5a28f9e6a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>TdjWebFilterChain</b> (<a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a> Holder, const <a class="el" href="interfaceIWebFilterChain.html">IWebFilterChain</a> FilterChain)</td></tr>
+<tr class="memitem:a29ec876687f06123bde607c5a28f9e6a" id="r_a29ec876687f06123bde607c5a28f9e6a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29ec876687f06123bde607c5a28f9e6a">TdjWebFilterChain</a> (<a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a> Holder, const <a class="el" href="interfaceIWebFilterChain.html">IWebFilterChain</a> FilterChain)</td></tr>
+<tr class="memdesc:a29ec876687f06123bde607c5a28f9e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a new instance of the <a class="el" href="classTdjWebFilterChain.html" title="Implements the IWebFilterChain interface to manage web filter chains.">TdjWebFilterChain</a> class.  <br /></td></tr>
 <tr class="separator:a29ec876687f06123bde607c5a28f9e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eba5e3558ff7c04de73b5323b1628d6" id="r_a0eba5e3558ff7c04de73b5323b1628d6"><td class="memItemLeft" align="right" valign="top"><a id="a0eba5e3558ff7c04de73b5323b1628d6" name="a0eba5e3558ff7c04de73b5323b1628d6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>DoFilter</b> (<a class="el" href="classTdjServerContext.html">TdjServerContext</a> Context, <a class="el" href="classTdjRequest.html">TdjRequest</a> Request, <a class="el" href="classTdjResponse.html">TdjResponse</a> Response)</td></tr>
+<tr class="memitem:a0eba5e3558ff7c04de73b5323b1628d6" id="r_a0eba5e3558ff7c04de73b5323b1628d6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0eba5e3558ff7c04de73b5323b1628d6">DoFilter</a> (<a class="el" href="classTdjServerContext.html">TdjServerContext</a> Context, <a class="el" href="classTdjRequest.html">TdjRequest</a> Request, <a class="el" href="classTdjResponse.html">TdjResponse</a> Response)</td></tr>
+<tr class="memdesc:a0eba5e3558ff7c04de73b5323b1628d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the filter logic for the given server context, request, and response.  <br /></td></tr>
 <tr class="separator:a0eba5e3558ff7c04de73b5323b1628d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implements the <a class="el" href="interfaceIWebFilterChain.html" title="Web Filter Chain interface.">IWebFilterChain</a> interface to manage web filter chains. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a29ec876687f06123bde607c5a28f9e6a" name="a29ec876687f06123bde607c5a28f9e6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29ec876687f06123bde607c5a28f9e6a">&#9670;&#160;</a></span>TdjWebFilterChain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjWebFilterChain::TdjWebFilterChain </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTdjWebFilterHolder.html">TdjWebFilterHolder</a></td>          <td class="paramname"><span class="paramname"><em>Holder</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="interfaceIWebFilterChain.html">IWebFilterChain</a></td>          <td class="paramname"><span class="paramname"><em>FilterChain</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initializes a new instance of the <a class="el" href="classTdjWebFilterChain.html" title="Implements the IWebFilterChain interface to manage web filter chains.">TdjWebFilterChain</a> class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Holder</td><td>The holder object of type <a class="el" href="classTdjWebFilterHolder.html" title="Holds a WebFilter and configuration data.">TdjWebFilterHolder</a>. </td></tr>
+    <tr><td class="paramname">FilterChain</td><td>The filter chain interface of type <a class="el" href="interfaceIWebFilterChain.html" title="Web Filter Chain interface.">IWebFilterChain</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0eba5e3558ff7c04de73b5323b1628d6" name="a0eba5e3558ff7c04de73b5323b1628d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eba5e3558ff7c04de73b5323b1628d6">&#9670;&#160;</a></span>DoFilter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TdjWebFilterChain::DoFilter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTdjServerContext.html">TdjServerContext</a></td>          <td class="paramname"><span class="paramname"><em>Context</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classTdjRequest.html">TdjRequest</a></td>          <td class="paramname"><span class="paramname"><em>Request</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classTdjResponse.html">TdjResponse</a></td>          <td class="paramname"><span class="paramname"><em>Response</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Executes the filter logic for the given server context, request, and response. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Context</td><td>The server context in which the filter is executed. </td></tr>
+    <tr><td class="paramname">Request</td><td>The incoming request to be processed. </td></tr>
+    <tr><td class="paramname">Response</td><td>The response to be sent back after processing. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classTdjWebFilterHolder.html#a985f8cd85ea67a8f7a19a77ae30bd288">TdjWebFilterHolder::DoFilter()</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

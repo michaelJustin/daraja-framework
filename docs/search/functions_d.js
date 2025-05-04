@@ -8,9 +8,10 @@ var searchData=
   ['_7etdjgenericwebfilter_5',['~TdjGenericWebFilter',['../classTdjGenericWebFilter.html#a92c3e944efb9118ef3aa8cd1d4283df1',1,'TdjGenericWebFilter']]],
   ['_7etdjhandlercollection_6',['~TdjHandlerCollection',['../classTdjHandlerCollection.html#aae00bb0934cc705b11ab2cda893bbdfc',1,'TdjHandlerCollection']]],
   ['_7etdjhttpconnector_7',['~TdjHTTPConnector',['../classTdjHTTPConnector.html#a5d6b620d2b1d7d1dd58f913b9142b614',1,'TdjHTTPConnector']]],
-  ['_7etdjserver_8',['~TdjServer',['../classTdjServer.html#a49704e2fe187694acfcae877a7ccd372',1,'TdjServer']]],
-  ['_7etdjserverbase_9',['~TdjServerBase',['../classTdjServerBase.html#acc16b1cd28c31e63521e3f18b17065f4',1,'TdjServerBase']]],
-  ['_7etdjwebcomponentcontexthandler_10',['~TdjWebComponentContextHandler',['../classTdjWebComponentContextHandler.html#ac7ae07481bdf57ea3bd4374a0587352a',1,'TdjWebComponentContextHandler']]],
-  ['_7etdjwebcomponentholder_11',['~TdjWebComponentHolder',['../classTdjWebComponentHolder.html#aa451de5822cc6056be09dd1866a3ffab',1,'TdjWebComponentHolder']]],
-  ['_7etdjwebcomponentmapping_12',['~TdjWebComponentMapping',['../classTdjWebComponentMapping.html#a7d4e456593d38bafd46d1b087993377b',1,'TdjWebComponentMapping']]]
+  ['_7etdjmultimap_8',['~TdjMultiMap',['../classTdjMultiMap.html#aebe2a4e549b01e0fc8514557f9135bd0',1,'TdjMultiMap']]],
+  ['_7etdjserver_9',['~TdjServer',['../classTdjServer.html#a49704e2fe187694acfcae877a7ccd372',1,'TdjServer']]],
+  ['_7etdjserverbase_10',['~TdjServerBase',['../classTdjServerBase.html#acc16b1cd28c31e63521e3f18b17065f4',1,'TdjServerBase']]],
+  ['_7etdjwebcomponentcontexthandler_11',['~TdjWebComponentContextHandler',['../classTdjWebComponentContextHandler.html#ac7ae07481bdf57ea3bd4374a0587352a',1,'TdjWebComponentContextHandler']]],
+  ['_7etdjwebcomponentholder_12',['~TdjWebComponentHolder',['../classTdjWebComponentHolder.html#aa451de5822cc6056be09dd1866a3ffab',1,'TdjWebComponentHolder']]],
+  ['_7etdjwebcomponentmapping_13',['~TdjWebComponentMapping',['../classTdjWebComponentMapping.html#a7d4e456593d38bafd46d1b087993377b',1,'TdjWebComponentMapping']]]
 ];

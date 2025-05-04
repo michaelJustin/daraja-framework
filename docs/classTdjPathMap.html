@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0</span>
+   <div id="projectname">Daraja HTTP Framework<span id="projectnumber">&#160;3.0.1</span>
    </div>
    <div id="projectbrief">HTTP server framework for Object Pascal</div>
   </td>
@@ -118,11 +118,11 @@ $(function(){initNavTree('classTdjPathMap.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab5de25fa9831a7856b0c3a3d351beea6" id="r_ab5de25fa9831a7856b0c3a3d351beea6"><td class="memItemLeft" align="right" valign="top">TSpecType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5de25fa9831a7856b0c3a3d351beea6">GetSpecType</a> (const string Spec)</td></tr>
-<tr class="separator:ab5de25fa9831a7856b0c3a3d351beea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6b7d7bb6780419304847aba0ce93d6e" id="r_ab6b7d7bb6780419304847aba0ce93d6e"><td class="memItemLeft" align="right" valign="top"><a id="ab6b7d7bb6780419304847aba0ce93d6e" name="ab6b7d7bb6780419304847aba0ce93d6e"></a>
-Boolean&#160;</td><td class="memItemRight" valign="bottom"><b>Matches</b> (const string Path, const string Spec)</td></tr>
-<tr class="separator:ab6b7d7bb6780419304847aba0ce93d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba163c9bc0467a962291fef77cac0029" id="r_aba163c9bc0467a962291fef77cac0029"><td class="memItemLeft" align="right" valign="top">TSpecType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba163c9bc0467a962291fef77cac0029">GetSpecType</a> (const string Spec)</td></tr>
+<tr class="separator:aba163c9bc0467a962291fef77cac0029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e8c2ea7dfc3e6a78c2a7117630ed0c6" id="r_a3e8c2ea7dfc3e6a78c2a7117630ed0c6"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e8c2ea7dfc3e6a78c2a7117630ed0c6">Matches</a> (const string Path, const string Spec)</td></tr>
+<tr class="memdesc:a3e8c2ea7dfc3e6a78c2a7117630ed0c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matches the given path against a specified pattern.  <br /></td></tr>
+<tr class="separator:a3e8c2ea7dfc3e6a78c2a7117630ed0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae34ff19fd0e6bafebf9c311ef8ff59aa" id="r_ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae34ff19fd0e6bafebf9c311ef8ff59aa">CheckExists</a> (const string UrlPattern)</td></tr>
 <tr class="memdesc:ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a mapping path exists.  <br /></td></tr>
 <tr class="separator:ae34ff19fd0e6bafebf9c311ef8ff59aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,8 +135,9 @@ Boolean&#160;</td><td class="memItemRight" valign="bottom"><b>Matches</b> (const
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ab5c002e07c917e0986fc3e2c9ec8570a" id="r_ab5c002e07c917e0986fc3e2c9ec8570a"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5c002e07c917e0986fc3e2c9ec8570a">Matches</a> (const string Path, const string Spec, TSpecType SpecType)</td></tr>
-<tr class="separator:ab5c002e07c917e0986fc3e2c9ec8570a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a719eae09f6964fb83c21b24af0054980" id="r_a719eae09f6964fb83c21b24af0054980"><td class="memItemLeft" align="right" valign="top">Boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a719eae09f6964fb83c21b24af0054980">Matches</a> (const string Path, const string Spec, TSpecType SpecType)</td></tr>
+<tr class="memdesc:a719eae09f6964fb83c21b24af0054980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matches a given URL document path against a specified path pattern.  <br /></td></tr>
+<tr class="separator:a719eae09f6964fb83c21b24af0054980"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Holds all known web component mappings for a context. </p>
@@ -164,7 +165,7 @@ Protected Member Functions</h2></td></tr>
 <p>Add a web component mapping. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
+    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path </td></tr>
     <tr><td class="paramname">Value</td><td>the mapped web component </td></tr>
   </table>
   </dd>
@@ -175,8 +176,6 @@ Protected Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="reference">References <a class="el" href="#ae34ff19fd0e6bafebf9c311ef8ff59aa">CheckExists()</a>.</p>
 
 </div>
 </div>
@@ -199,7 +198,7 @@ Protected Member Functions</h2></td></tr>
 <p>This procedure throws a EWebComponentException if the URL pattern is already registered for this context.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path (for example, '<em>.html' or '/</em>') </td></tr>
+    <tr><td class="paramname">UrlPattern</td><td>a single component mapping path </td></tr>
   </table>
   </dd>
 </dl>
@@ -209,8 +208,6 @@ Protected Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="reference">Referenced by <a class="el" href="#a44b2fd997f5504326b70b89815b38901">AddUrlPattern()</a>.</p>
 
 </div>
 </div>
@@ -233,7 +230,7 @@ Protected Member Functions</h2></td></tr>
 <p>The best match will be the first entry.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Path</td><td>the URL path (without context), for example 'test.html' </td></tr>
+    <tr><td class="paramname">Path</td><td>the URL path (without context </td></tr>
   </table>
   </dd>
 </dl>
@@ -241,14 +238,14 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab5de25fa9831a7856b0c3a3d351beea6" name="ab5de25fa9831a7856b0c3a3d351beea6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5de25fa9831a7856b0c3a3d351beea6">&#9670;&#160;</a></span>GetSpecType()</h2>
+<a id="aba163c9bc0467a962291fef77cac0029" name="aba163c9bc0467a962291fef77cac0029"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba163c9bc0467a962291fef77cac0029">&#9670;&#160;</a></span>GetSpecType()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">class TSpecType TdjPathMap::GetSpecType </td>
+          <td class="memname">TSpecType TdjPathMap::GetSpecType </td>
           <td>(</td>
           <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Spec</em></span></td><td>)</td>
           <td></td>
@@ -257,7 +254,7 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Spec</td><td>the path specification (for example, '/*') </td></tr>
+    <tr><td class="paramname">Spec</td><td>the path specification </td></tr>
   </table>
   </dd>
 </dl>
@@ -265,8 +262,39 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab5c002e07c917e0986fc3e2c9ec8570a" name="ab5c002e07c917e0986fc3e2c9ec8570a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5c002e07c917e0986fc3e2c9ec8570a">&#9670;&#160;</a></span>Matches()</h2>
+<a id="a3e8c2ea7dfc3e6a78c2a7117630ed0c6" name="a3e8c2ea7dfc3e6a78c2a7117630ed0c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e8c2ea7dfc3e6a78c2a7117630ed0c6">&#9670;&#160;</a></span>Matches() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Boolean TdjPathMap::Matches </td>
+          <td>(</td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Spec</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Matches the given path against a specified pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Path</td><td>The file or directory path to be checked. </td></tr>
+    <tr><td class="paramname">Spec</td><td>The pattern or specification to match against. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the path matches the specification, otherwise False. </dd></dl>
+
+</div>
+</div>
+<a id="a719eae09f6964fb83c21b24af0054980" name="a719eae09f6964fb83c21b24af0054980"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a719eae09f6964fb83c21b24af0054980">&#9670;&#160;</a></span>Matches() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,7 +303,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">class Boolean TdjPathMap::Matches </td>
+          <td class="memname">Boolean TdjPathMap::Matches </td>
           <td>(</td>
           <td class="paramtype">const string</td>          <td class="paramname"><span class="paramname"><em>Path</em></span>, </td>
         </tr>
@@ -296,15 +324,19 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Matches a given URL document path against a specified path pattern. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Path</td><td>the URL document path </td></tr>
-    <tr><td class="paramname">Spec</td><td>the path specification (for example, '/*') </td></tr>
+    <tr><td class="paramname">Spec</td><td>the path specification </td></tr>
     <tr><td class="paramname">SpecType</td><td>the path specification type </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the Path mathes the Spec (with known SpecType) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the Path matches the Spec (with known SpecType) </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classTdjWebFilterMapping.html#af9f90c333fa35db0c5ca5d422d9aa192">TdjWebFilterMapping::AppliesTo()</a>.</p>
 
 </div>
 </div>
