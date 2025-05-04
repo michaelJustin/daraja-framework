@@ -5,7 +5,10 @@
 
 # Daraja HTTP Framework
 
-Daraja enables Object Pascal developers to write well-structured HTTP server applications.
+> "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
+> — ChatGPT, OpenAI (May 2025)
+
+In short, Daraja enables Object Pascal developers to *write well-structured HTTP server applications*.
 
 ## Documentation
 
