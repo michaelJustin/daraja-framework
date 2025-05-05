@@ -25,7 +25,7 @@ jobs:
           DOXYGEN_INPUT_FILTER: make\\pas2dox.exe
 
       - name: Upload docs as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doxygen-docs
           path: docs/html
