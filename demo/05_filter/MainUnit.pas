@@ -74,15 +74,15 @@ var
   Server: TdjServer;
   Context: TdjWebAppContext;
 begin
-  Server := TdjServer.Create;
+  Server := TdjServer.Create(80);
   try
     Context := TdjWebAppContext.Create('');
     Context.Add(THelloWorldResource, '/*');
     Context.Add(TResponseHtmlFilter, '*.html');
     Server.Add(Context);
     Server.Start;
-    WriteLn('Server is running, please open http://127.0.0.1:8080/any/page');
-    WriteLn('or open http://127.0.0.1:8080/any/page.html');
+    WriteLn('Server is running, please open http://127.0.0.1/any/page');
+    WriteLn('or open http://127.0.0.1/any/page.html');
     WriteLn('Hit enter to terminate.');
     ReadLn;
   finally

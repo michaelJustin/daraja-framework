@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="11"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
         <MainUnitHasCreateFormStatements Value="False"/>
         <MainUnitHasTitleStatement Value="False"/>
         <MainUnitHasScaledStatement Value="False"/>
+        <CompatibilityMode Value="True"/>
       </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="HttpSessionServer"/>
       <UseAppBundle Value="False"/>
       <ResourceType Value="res"/>
@@ -24,7 +24,6 @@
     </PublishOptions>
     <RunParams>
       <FormatVersion Value="2"/>
-      <Modes Count="0"/>
     </RunParams>
     <RequiredPackages Count="1">
       <Item1>
@@ -50,8 +49,8 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy10\Lib\Core"/>
-      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy10\Lib\Core;..\..\..\Indy10\Lib\Protocols;..\..\..\Indy10\Lib\System"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy\Lib\Core"/>
+      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\Protocols;..\..\..\Indy\Lib\System"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -60,6 +59,9 @@
       </SyntaxOptions>
     </Parsing>
     <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf3"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

@@ -43,11 +43,9 @@
   <CompilerOptions>
     <Version Value="11"/>
     <PathDelim Value="\"/>
-    <Target>
-      <Filename Value="EntraAuthCodeFlowExample"/>
-    </Target>
     <SearchPaths>
-      <IncludeFiles Value="$(ProjOutDir)"/>
+      <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy\Lib\Core"/>
+      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\Protocols;..\..\..\Indy\Lib\System"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
@@ -59,6 +57,11 @@
       <Debugging>
         <DebugInfoType Value="dsDwarf3"/>
       </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
     </Linking>
     <Other>
       <CompilerMessages>
