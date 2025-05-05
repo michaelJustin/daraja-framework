@@ -532,13 +532,13 @@ begin
 end;
 
 procedure TdjWebComponentHandler.InitializeHolders(Holders: TdjWebFilterHolders);
-var
-  Holder: TdjWebFilterHolder;
+//var
+//  Holder: TdjWebFilterHolder;
 begin
-  for Holder in Holders do
-  begin
-    // already set. Holder.SetContext(WebComponentContext);
-  end;
+//  for Holder in Holders do
+//  begin
+//    // already set. Holder.SetContext(WebComponentContext);
+//  end;
 end;
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
