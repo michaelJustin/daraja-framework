@@ -36,12 +36,11 @@ uses
   djInterfaces, djAbstractConfig;
 
 type
+  { TdjWebFilterConfig }
+
   (**
    * Web Filter configuration.
    *)
-
-  { TdjWebFilterConfig }
-
   TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
   public
     (**

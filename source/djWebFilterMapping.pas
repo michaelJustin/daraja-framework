@@ -37,12 +37,11 @@ uses
   Classes, Generics.Collections;
 
 type
+  { TdjWebFilterMapping }
+
   (**
    * Web Filter Mapping.
    *)
-
-  { TdjWebFilterMapping }
-
   TdjWebFilterMapping = class(TObject)
   private
     FName: string;

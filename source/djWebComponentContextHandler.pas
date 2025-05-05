@@ -42,12 +42,11 @@ uses
   djTypes;
 
 type
+  { TdjWebComponentContextHandler }
+
   (**
    * Context Handler for Web Components.
    *)
-
-  { TdjWebComponentContextHandler }
-
   TdjWebComponentContextHandler = class(TdjContextHandler)
   private
     {$IFDEF DARAJA_LOGGING}

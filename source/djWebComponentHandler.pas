@@ -45,6 +45,8 @@ uses
 
 type
 
+  { TdjWebComponentHandler }
+
   (**
    * Web Component handler.
    *
@@ -53,9 +55,6 @@ type
    * It holds a list of web components and their path mappings,
    * and passes incoming requests to the matching web component.
    *)
-
-  { TdjWebComponentHandler }
-
   TdjWebComponentHandler = class(TdjAbstractHandler)
   private
     {$IFDEF DARAJA_LOGGING}

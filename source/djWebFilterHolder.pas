@@ -41,15 +41,11 @@ uses
   Classes, Generics.Collections;
 
 type
-  (**
-   * Holds a WebFilter and configuration data.
-   *)
-
   { TdjWebFilterHolder }
 
   (**
    * A generic holder class for managing instances of TdjWebFilter.
-   * 
+   *
    * This class is a specialization of TdjGenericHolder, designed to hold and manage
    * objects of type TdjWebFilter.
    *)
