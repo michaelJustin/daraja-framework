@@ -1,0 +1,31 @@
+name: Generate Doxygen Docs (Windows + pas2dox)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  doxygen:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Doxygen via Chocolatey
+        run: choco install doxygen.install -y
+
+      - name: Add Doxygen to PATH
+        run: echo "C:\\Program Files\\doxygen\\bin" >> $env:GITHUB_PATH
+
+      - name: Generate Doxygen documentation with pas2dox
+        run: doxygen make\\doxygen.cfg
+        env:
+          DOXYGEN_INPUT_FILTER: make\\pas2dox.exe
+
+      - name: Upload docs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-docs
+          path: docs/html
