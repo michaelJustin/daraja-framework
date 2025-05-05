@@ -1,4 +1,4 @@
-name: Generate Doxygen Docs (Windows + pas2dox)
+name: Generate Doxygen Docs
 
 on:
   push:
@@ -21,11 +21,11 @@ jobs:
 
       - name: Generate Doxygen documentation with pas2dox
         run: doxygen make\\doxygen.cfg
-        env:
-          DOXYGEN_INPUT_FILTER: make\\pas2dox.exe
-
-      - name: Upload docs as artifact
-        uses: actions/upload-artifact@v4
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: doxygen-docs
-          path: docs/html
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
+          publish_branch: gh-pages
+          force_orphan: true
