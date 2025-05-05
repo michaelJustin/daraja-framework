@@ -6,4 +6,4 @@ type .\warnings.log
 
 pause
 
-.\docs\index.html
+.\docs\html\index.html
