@@ -16,6 +16,12 @@ jobs:
       - name: Install Doxygen via Chocolatey
         run: choco install doxygen.install -y
 
+      - name: Cache Chocolatey Packages
+        uses: actions/cache@v3
+        with:
+          path: C:/ProgramData/chocolatey/lib
+          key: ${{ runner.os }}-choco-packages
+
       - name: Add Doxygen to PATH
         run: echo "C:\\Program Files\\doxygen\\bin" >> $env:GITHUB_PATH
 
