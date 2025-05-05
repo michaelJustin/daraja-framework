@@ -20,7 +20,7 @@ jobs:
         run: echo "C:\\Program Files\\doxygen\\bin" >> $env:GITHUB_PATH
 
       - name: Generate Doxygen documentation with pas2dox
-        run: doxygen Doxyfile
+        run: doxygen make\\doxygen.cfg
         env:
           DOXYGEN_INPUT_FILTER: make\\pas2dox.exe
 
