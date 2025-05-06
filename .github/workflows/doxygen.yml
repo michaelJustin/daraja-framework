@@ -3,6 +3,8 @@ name: Generate Doxygen Docs
 on:
   push:
     branches: [master]
+    paths:
+      - 'source/**/*.pas'
   workflow_dispatch:
 
 jobs:
