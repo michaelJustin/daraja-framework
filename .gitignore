@@ -86,6 +86,7 @@ heaptrace.log
 
 backup/
 target/
+docs/html/
 
 # exact
 doc/DarajaFrameworkGettingStarted.pdf
