@@ -30,7 +30,7 @@ unit djLifeCycle;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces,

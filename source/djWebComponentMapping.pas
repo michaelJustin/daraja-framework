@@ -30,7 +30,7 @@ unit djWebComponentMapping;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   Classes,

@@ -30,7 +30,7 @@ unit djContextHandlerCollection;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djHandlerList, djContextMap

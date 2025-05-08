@@ -30,7 +30,7 @@ unit djAbstractConnector;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djServerInterfaces, djInterfaces, djLifeCycle

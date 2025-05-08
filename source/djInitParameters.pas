@@ -30,7 +30,7 @@ unit djInitParameters;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   Generics.Collections;

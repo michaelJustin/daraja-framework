@@ -30,7 +30,7 @@ unit djContextHandler;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djServerContext, djContextConfig, djHandlerWrapper,

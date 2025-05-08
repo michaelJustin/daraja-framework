@@ -30,7 +30,7 @@ unit djWebFilterHolder;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,

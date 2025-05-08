@@ -30,7 +30,7 @@ unit djWebComponentHandler;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,

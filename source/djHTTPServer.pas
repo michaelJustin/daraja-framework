@@ -30,7 +30,7 @@ unit djHTTPServer;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   {$IFDEF DARAJA_LOGGING}

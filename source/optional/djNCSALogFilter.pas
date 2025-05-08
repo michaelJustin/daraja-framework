@@ -30,7 +30,7 @@ unit djNCSALogFilter;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djWebFilter, djServerContext, djTypes, djInterfaces,

@@ -30,7 +30,7 @@ unit djWebFilterMapping;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djWebFilterHolder,

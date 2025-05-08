@@ -30,7 +30,7 @@ unit djWebFilterConfig;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djAbstractConfig;

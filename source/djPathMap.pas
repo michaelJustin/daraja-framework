@@ -30,13 +30,22 @@ unit djPathMap;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   Classes;
 
 type
-  TSpecType = (stUnknown, stExact, stPrefix, stSuffix, stDefault);
+  (**
+   * @enum TSpecType
+   * Declares the path specification types.
+   *)
+  TSpecType = (stUnknown,  //!< Unknown type
+               stExact,    //!< Exact match
+               stPrefix,   //!< Longest prefix match
+               stSuffix,   //!< Longest suffix match
+               stDefault   //!< Default
+              );
 
   { TdjPathMap }
 
