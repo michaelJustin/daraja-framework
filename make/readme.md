@@ -1,4 +1,4 @@
-Pas2Dox is a pre-processor addon for the Doxygen documentation generator. This allows the production of advanced documentation from Delphi/Kylix.
+Pas2Dox is a pre-processor addon for the Doxygen documentation generator. This allows the production of advanced documentation from Object Pascal source files.
 
 https://sourceforge.net/projects/pas2dox/
 
