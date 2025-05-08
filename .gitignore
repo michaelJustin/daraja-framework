@@ -92,12 +92,12 @@ docs/html/
 .idea/
 
 # exact
-doc/DarajaFrameworkGettingStarted.pdf
 test/unittests/Unittests.fpcunit.ini
 test/unittests/Unittests.res
 test/unittests/dunit.ini
-/DarajaFrameworkGettingStarted.pdf
-/test/unittests/Unittests.dbg
-/test/unittests/ppas.bat
+test/unittests/Unittests.dbg
+test/unittests/ppas.bat
 
 client_secret.json
+
+DarajaFrameworkGettingStarted.pdf
