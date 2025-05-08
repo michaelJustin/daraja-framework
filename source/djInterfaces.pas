@@ -30,7 +30,7 @@ unit djInterfaces;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djServerContext, djTypes,

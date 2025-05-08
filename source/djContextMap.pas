@@ -30,7 +30,7 @@ unit djContextMap;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djWebComponentContextHandler,

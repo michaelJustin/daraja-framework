@@ -30,7 +30,7 @@ unit djHandlerWrapper;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djAbstractHandlerContainer, djServerContext, djInterfaces,

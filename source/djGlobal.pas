@@ -32,7 +32,7 @@ interface
 
 {$IFNDEF DOXYGEN_SKIP}
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 const
   DWF_SERVER_VERSION = '3.0.2-SNAPSHOT';

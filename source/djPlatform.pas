@@ -35,7 +35,7 @@ uses
   IdGlobal;
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 function GetTickCount: TIdTicks;
 

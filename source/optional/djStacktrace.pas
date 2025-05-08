@@ -58,7 +58,7 @@ unit djStacktrace;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 {$IFDEF DARAJA_JCLDEBUG}
 function GetStackList(

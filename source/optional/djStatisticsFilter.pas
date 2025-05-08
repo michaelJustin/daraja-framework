@@ -30,7 +30,7 @@ unit djStatisticsFilter;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djWebFilter, djHandlerWrapper, djServerContext, djTypes, djInterfaces,

@@ -30,7 +30,7 @@ unit djPathMap;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   Classes;

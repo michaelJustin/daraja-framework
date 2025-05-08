@@ -30,7 +30,7 @@ unit djGenericWebComponent;
 
 interface
 
-{$i IdCompilerDefines.inc}
+// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djWebComponentConfig, djServerContext, djTypes,
