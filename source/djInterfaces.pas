@@ -38,6 +38,7 @@ uses
 
 type
   (**
+   * Interface for components with a lifecycle (start/stop capabilities).
    * @interface ILifeCycle
    *)
   ILifeCycle = interface(IInterface)
@@ -64,6 +65,7 @@ type
   end;
 
   (**
+   * Interface for HTTP request handlers.
    * @interface IHandler
    *)
   IHandler = interface(ILifeCycle)
@@ -80,6 +82,7 @@ type
   end;
 
   (**
+   * Interface for components that can contain multiple handlers.
    * @interface IHandlerContainer
    *)
   IHandlerContainer = interface(IHandler)
@@ -102,6 +105,7 @@ type
   IContextConfig = interface;
 
   (**
+   * Interface for server contexts that provide access to configuration and resources.
    * @interface IContext
    *)
   IContext = interface(IInterface)
@@ -142,6 +146,7 @@ type
   end;
 
   (**
+   * Interface for web component configuration, providing access to initialization parameters.
    * @interface IWebComponentConfig
    *)
   IWebComponentConfig = interface(IInterface)
@@ -165,6 +170,7 @@ type
   end;
 
   (**
+   * Interface for context configuration, providing access to initialization parameters.
    * @interface IContextConfig
    *)
   IContextConfig = interface(IInterface)
@@ -183,6 +189,7 @@ type
   end;
 
   (**
+   * Interface for web components that process HTTP requests and generate responses.
    * @interface IWebComponent
    *)
   IWebComponent = interface(IInterface)
@@ -214,6 +221,7 @@ type
   end;
 
   (**
+   * Interface for filter chains that allow sequential processing of requests through multiple filters.
    * @interface IWebFilterChain
    *)
   IWebFilterChain = interface(IInterface)
@@ -229,6 +237,7 @@ type
   end;
 
   (**
+   * Interface for web filter configuration, providing access to filter settings and parameters.
    * @interface IWebFilterConfig
    *)
   IWebFilterConfig = interface(IInterface)
@@ -257,6 +266,7 @@ type
   end;
 
   (**
+   * Interface for web filters that can intercept and modify HTTP requests and responses.
    * @interface IWebFilter
    *)
   IWebFilter = interface(IInterface)
@@ -284,6 +294,7 @@ type
   end;
 
   (**
+   * Interface for writable configuration objects that can be modified at runtime.
    * @interface IWriteableConfig
    *)
   IWriteableConfig = interface(IInterface)
