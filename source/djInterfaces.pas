@@ -38,45 +38,65 @@ uses
 
 type
   (**
-   * Base exception.
-   *)
-  EWebComponentException = class(Exception);
-
-  (**
+   * Interface for components with a lifecycle (start/stop capabilities).
    * @interface ILifeCycle
-   *
-   * ILifeCycle interface.
    *)
-  ILifeCycle = interface
+  ILifeCycle = interface(IInterface)
     ['{9DE150B0-004A-4522-9581-DD47B1CFD87C}']
+    (**
+     * Starts the component.
+     *)
     procedure Start;
+
+    (**
+     * Stops the component.
+     *)
     procedure Stop;
 
-    function IsStarted: Boolean;
-    function IsStopped: Boolean;
+    (**
+     * @return True if component is started
+     *)
+    function IsStarted: boolean;
+
+    (**
+     * @return True if component is stopped
+     *)
+    function IsStopped: boolean;
   end;
 
   (**
+   * Interface for HTTP request handlers.
    * @interface IHandler
-   *
-   * IHandler interface.
    *)
   IHandler = interface(ILifeCycle)
     ['{670E1E72-7EAA-4655-B40C-DD273110B9B7}']
-    procedure Handle(const Target: string; Context: TdjServerContext; Request:
-      TdjRequest; Response: TdjResponse);
+    (**
+     * Handles an HTTP request.
+     * @param Target Target path or resource identifier
+     * @param Context Server context for this request
+     * @param Request HTTP request object
+     * @param Response HTTP response object to populate
+     *)
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse);
   end;
 
-  TdjHandlers = TList<IHandler>;
-
   (**
+   * Interface for components that can contain multiple handlers.
    * @interface IHandlerContainer
-   *
-   * IHandlerContainer interface.
    *)
   IHandlerContainer = interface(IHandler)
     ['{394BA545-CFB8-450D-8B87-E54645E25624}']
+    (**
+     * Adds a handler to this container.
+     * @param Handler Handler to add
+     *)
     procedure AddHandler(const Handler: IHandler);
+
+    (**
+     * Removes a handler from this container.
+     * @param Handler Handler to remove
+     *)
     procedure RemoveHandler(const Handler: IHandler);
   end;
 
@@ -84,113 +104,220 @@ type
 
   IContextConfig = interface;
 
-  TdjStrings = TList<string>;
-
   (**
+   * Interface for server contexts that provide access to configuration and resources.
    * @interface IContext
-   *
-   * Context interface.
    *)
-  IContext = interface
+  IContext = interface(IInterface)
     ['{19E32FEB-0348-42B2-8977-F03A0032473C}']
-
+    (**
+     * Initializes the context with configuration.
+     * @param Config Context configuration
+     *)
     procedure Init(const Config: IContextConfig);
+
+    (**
+     * @return Context configuration
+     *)
     function GetContextConfig: IContextConfig;
 
+    (**
+     * @return Path of this context
+     *)
     function GetContextPath: string;
 
+    (**
+     * Gets an initialization parameter.
+     * @param Key Parameter name
+     * @return Parameter value or empty string if not found
+     *)
     function GetInitParameter(const Key: string): string;
+
+    (**
+     * @return Names of all initialization parameters
+     *)
     function GetInitParameterNames: TdjStrings;
 
+    (**
+     * Logs a message to the context log.
+     * @param Msg Message to log
+     *)
     procedure Log(const Msg: string);
   end;
 
   (**
+   * Interface for web component configuration, providing access to initialization parameters.
    * @interface IWebComponentConfig
-   *
-   * Web Component configuration interface.
    *)
-  IWebComponentConfig = interface
+  IWebComponentConfig = interface(IInterface)
     ['{2F61659D-1EF3-4C7A-BDEF-7349A1B4E690}']
+    (**
+     * @return Names of all initialization parameters
+     *)
     function GetInitParameterNames: TdjStrings;
+
+    (**
+     * Gets an initialization parameter.
+     * @param Key Parameter name
+     * @return Parameter value or empty string if not found
+     *)
     function GetInitParameter(const Key: string): string;
+
+    (**
+     * @return Context this component belongs to
+     *)
     function GetContext: IContext;
   end;
 
   (**
+   * Interface for context configuration, providing access to initialization parameters.
    * @interface IContextConfig
-   *
-   * Context configuration interface.
    *)
-  IContextConfig = interface
+  IContextConfig = interface(IInterface)
     ['{5304AF56-8180-4B71-9EEF-A50CDB97E67F}']
+    (**
+     * @return Names of all initialization parameters
+     *)
     function GetInitParameterNames: TdjStrings;
+
+    (**
+     * Gets an initialization parameter.
+     * @param Key Parameter name
+     * @return Parameter value or empty string if not found
+     *)
     function GetInitParameter(const Key: string): string;
   end;
 
   (**
+   * Interface for web components that process HTTP requests and generate responses.
    * @interface IWebComponent
-   *
-   * Web Component interface.
    *)
-  IWebComponent = interface
+  IWebComponent = interface(IInterface)
     ['{22F7C5D3-36AD-4BCA-BE06-E4FAA03A7A72}']
+    (**
+     * Initializes the component with configuration.
+     * @param Config Component configuration
+     *)
     procedure Init(const Config: IWebComponentConfig);
-    procedure Service(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse);
+
+    (**
+     * Processes a request and generates a response.
+     * @param Context Server context
+     * @param Request HTTP request
+     * @param Response HTTP response to populate
+     *)
+    procedure Service(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse);
+
+    (**
+     * @return Component configuration
+     *)
     function GetWebComponentConfig: IWebComponentConfig;
 
+    (**
+     * Component configuration property.
+     *)
     property Config: IWebComponentConfig read GetWebComponentConfig;
   end;
 
   (**
+   * Interface for filter chains that allow sequential processing of requests through multiple filters.
    * @interface IWebFilterChain
-   *
-   * Web Filter Chain interface.
    *)
-  IWebFilterChain = interface
+  IWebFilterChain = interface(IInterface)
     ['{56337AF8-89D6-45AC-B0BD-94977BB2CE40}']
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse);
+    (**
+     * Executes the next filter in chain.
+     * @param Context Server context
+     * @param Request HTTP request
+     * @param Response HTTP response to populate
+     *)
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse);
   end;
 
   (**
+   * Interface for web filter configuration, providing access to filter settings and parameters.
    * @interface IWebFilterConfig
-   *
-   * Web Filter configuration interface.
    *)
-  IWebFilterConfig = interface
+  IWebFilterConfig = interface(IInterface)
     ['{86823762-EE7A-4523-80FE-32DD714C11DF}']
+    (**
+     * @return Filter name
+     *)
     function GetFilterName: string;
+
+    (**
+     * @return Names of all initialization parameters
+     *)
     function GetInitParameterNames: TdjStrings;
+
+    (**
+     * Gets an initialization parameter.
+     * @param Key Parameter name
+     * @return Parameter value or empty string if not found
+     *)
     function GetInitParameter(const Key: string): string;
+
+    (**
+     * @return Context this filter belongs to
+     *)
     function GetContext: IContext;
   end;
 
   (**
+   * Interface for web filters that can intercept and modify HTTP requests and responses.
    * @interface IWebFilter
-   *
-   * Web Filter interface.
-   * A filter is an object that performs filtering tasks on either the request
-   * to a resource (a servlet or static content), or on the response from a resource, or both.
    *)
-  IWebFilter = interface
+  IWebFilter = interface(IInterface)
     ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
+    (**
+     * Initializes the filter with configuration.
+     * @param Config Filter configuration
+     *)
     procedure Init(const Config: IWebFilterConfig);
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse; const Chain: IWebFilterChain);
-    // Called by the container to indicate to a filter that it is being taken out of service.
+
+    (**
+     * Performs filtering work.
+     * @param Context Server context
+     * @param Request HTTP request
+     * @param Response HTTP response to populate
+     * @param Chain Filter chain to continue processing
+     *)
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse; const Chain: IWebFilterChain);
+
+    (**
+     * Called when filter is being removed from service.
+     *)
     procedure DestroyFilter;
   end;
 
-  IWriteableConfig = interface
+  (**
+   * Interface for writable configuration objects that can be modified at runtime.
+   * @interface IWriteableConfig
+   *)
+  IWriteableConfig = interface(IInterface)
     ['{A3074743-C2EF-44C6-BD28-27E62F82E598}']
+    (**
+     * Adds a key-value pair to configuration.
+     * @param Key Parameter name
+     * @param Value Parameter value
+     *)
     procedure Add(const Key: string; const Value: string);
+
+    (**
+     * Sets the context for this configuration.
+     * @param Context Context to set
+     *)
     procedure SetContext(const Context: IContext);
   end;
 
+  {$IFNDEF DOXYGEN_SKIP}
+  // todo move
+  TdjHandlers = TList<IHandler>;
+  {$ENDIF DOXYGEN_SKIP}
 
 implementation
 
 end.
-

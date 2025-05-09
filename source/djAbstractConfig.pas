@@ -33,7 +33,7 @@ interface
 // {$i IdCompilerDefines.inc}
 
 uses
-  djInterfaces, djInitParameters;
+  djInterfaces, djTypes, djInitParameters;
 
 type
   { TdjAbstractConfig }

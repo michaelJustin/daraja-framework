@@ -33,7 +33,7 @@ interface
 // {$i IdCompilerDefines.inc}
 
 uses
-  djInterfaces, djHTTPConnector, djServerBase, djServerInterfaces,
+  djInterfaces, djTypes, djHTTPConnector, djServerBase, djServerInterfaces,
   djWebComponentContextHandler, djContextHandlerCollection,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,

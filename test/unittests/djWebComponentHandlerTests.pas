@@ -53,7 +53,7 @@ implementation
 uses
   Classes, SysUtils,
   djWebComponentHolder, djWebComponent, djWebAppContext,
-  djWebComponentHandler, djInterfaces, djTypes;
+  djWebComponentHandler, djTypes;
 
 type
   TExamplePage = class(TdjWebComponent)

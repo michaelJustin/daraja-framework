@@ -117,7 +117,7 @@ type
 implementation
 
 uses
-  djInterfaces,
+  djInterfaces, djTypes,
   SysUtils;
 
 { TdjPathMap }

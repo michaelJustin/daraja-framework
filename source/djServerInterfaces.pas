@@ -37,9 +37,8 @@ uses
 
 type
   (**
-   *  \interface IConnector
-   *
-   * IConnector interface.
+   * Interface for HTTP connectors.
+   * @interface IConnector
    *)
   IConnector = interface(ILifeCycle)
     ['{FB350435-6F29-4E28-8EBF-71F8A7FEB6E9}']
@@ -47,14 +46,17 @@ type
      * Set the port.
      *)
     procedure SetPort(Value: Integer);
+    
     (**
      * Set the host.
      *)
     procedure SetHost(const Value: string);
+    
     (**
      * Get the port.
      *)
     function GetPort: Integer;
+    
     (**
      * Get the host.
      *)
