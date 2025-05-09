@@ -44,7 +44,5 @@ type
 
 implementation
 
-{ TdjWebComponentConfig }
-
 end.
 

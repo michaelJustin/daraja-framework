@@ -40,6 +40,8 @@ uses
   djTypes;
 
 type
+  { TdjWebComponent }
+
   (**
    * A base class which can be subclassed to create a HTTP component
    * for a Web site.

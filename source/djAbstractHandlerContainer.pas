@@ -37,6 +37,8 @@ uses
   djInterfaces;
 
 type
+  { TdjAbstractHandlerContainer }
+
   (**
    * This is the base class for handlers that may contain other handlers.
    *)

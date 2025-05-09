@@ -38,6 +38,8 @@ uses
   ;
 
 type
+  { TdjContextHandlerCollection }
+
   (**
    * Multiple contexts may have the same context path and they are
    * called in order until one handles the request.

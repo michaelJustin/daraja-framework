@@ -41,7 +41,6 @@ uses
   Classes;
 
 type
-
   { TdjWebComponentHolder }
 
   (**

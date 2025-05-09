@@ -44,7 +44,6 @@ uses
   Generics.Collections;
 
 type
-
   { TdjWebComponentHandler }
 
   (**

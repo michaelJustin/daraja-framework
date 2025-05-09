@@ -43,6 +43,8 @@ uses
   Classes;
 
 type
+  { TdjGenericWebComponent }
+
   (**
    * Defines a generic Web Component.
    *)

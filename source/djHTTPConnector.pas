@@ -43,6 +43,8 @@ uses
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
+  { TdjHTTPConnector }
+
   (**
    * HTTP connector.
    *

@@ -37,6 +37,8 @@ uses
   Generics.Collections;
 
 type
+  { TdjWebComponentMapping }
+
   (**
    * Web Component Mapping.
    *)

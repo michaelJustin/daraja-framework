@@ -40,6 +40,8 @@ uses
   ;
 
 type
+  { TdjAbstractConnector }
+
   (**
    * Abstract connector class for handling incoming requests.
    * This class provides the basic structure for connectors, including

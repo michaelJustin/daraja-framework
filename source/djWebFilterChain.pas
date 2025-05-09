@@ -40,7 +40,6 @@ uses
   Classes;
 
 type
-
   { TdjWebFilterChain }
 
   (**
