@@ -81,7 +81,7 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHolderTests));
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHandlerTests));
   Tests.AddTest(TTestSuite.Create(TdjWebAppContextTests));
-  Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
+  // optional feature - test separately Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
   Tests.AddTest(TTestSuite.Create(TdjWebFilterTests));
 
   if not UseConsoleTestRunner then
@@ -102,7 +102,7 @@ begin
   RegisterTests('', [TdjWebComponentHolderTests.Suite]);
   RegisterTests('', [TdjWebComponentHandlerTests.Suite]);
   RegisterTests('', [TdjWebAppContextTests.Suite]);
-  RegisterTests('', [TdjDefaultWebComponentTests.Suite]);
+  // optional feature - test separately RegisterTests('', [TdjDefaultWebComponentTests.Suite]);
 
   if not UseConsoleTestRunner then
   begin
