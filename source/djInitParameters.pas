@@ -36,12 +36,10 @@ uses
   Generics.Collections;
 
 type
-  (**
+  (*
    * Initialization parameters.
    *)
-  TdjInitParameters = class(TDictionary<string, string>)
-
-  end;
+  TdjInitParameters = TDictionary<string, string>;
 
 implementation
 

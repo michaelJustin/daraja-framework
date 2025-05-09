@@ -33,9 +33,8 @@ interface
 // {$i IdCompilerDefines.inc}
 
 uses
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
-  IdCustomHTTPServer;
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
+  IdCustomHTTPServer,
+  SysUtils, Generics.Collections ;
 
 type
   (**
@@ -51,8 +50,11 @@ type
    *
    * HTTP response information.
    * Type alias for Indy class TIdHTTPResponseInfo.
-   *)  
+   *)
   TdjResponse = TIdHTTPResponseInfo;
+
+  EWebComponentException = class(Exception);
+  TdjStrings = TList<string>;
 
 implementation
 

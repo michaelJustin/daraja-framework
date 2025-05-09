@@ -37,11 +37,6 @@ uses
   SysUtils, Generics.Collections;
 
 type
-  {$IFNDEF DOXYGEN_SKIP}
-  EWebComponentException = class(Exception);
-  TdjStrings = TList<string>;
-  {$ENDIF DOXYGEN_SKIP}
-
   (**
    * @interface ILifeCycle
    *)
@@ -293,17 +288,17 @@ type
    *)
   IWriteableConfig = interface(IInterface)
     ['{A3074743-C2EF-44C6-BD28-27E62F82E598}']
-  (**
-   * Adds a key-value pair to configuration.
-   * @param Key Parameter name
-   * @param Value Parameter value
-   *)
+    (**
+     * Adds a key-value pair to configuration.
+     * @param Key Parameter name
+     * @param Value Parameter value
+     *)
     procedure Add(const Key: string; const Value: string);
 
-  (**
-   * Sets the context for this configuration.
-   * @param Context Context to set
-   *)
+    (**
+     * Sets the context for this configuration.
+     * @param Context Context to set
+     *)
     procedure SetContext(const Context: IContext);
   end;
 
@@ -311,8 +306,6 @@ type
   // todo move
   TdjHandlers = TList<IHandler>;
   {$ENDIF DOXYGEN_SKIP}
-
-
 
 implementation
 
