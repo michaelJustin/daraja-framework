@@ -933,7 +933,7 @@ var
 begin
   InitParamValue := Config.GetContext.GetInitParameter('a');
 
-  WriteLn('>>>> a=' + InitParamValue);
+  // WriteLn('>>>> a=' + InitParamValue);
   Response.ContentText := InitParamValue;
 end;
 
