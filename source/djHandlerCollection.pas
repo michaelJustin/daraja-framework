@@ -38,13 +38,15 @@ uses
   djTypes;
 
 type
+  { TdjHandlerCollection }
+
   (**
    * A collection of handlers.
    * For each request, all handler are called, regardless of
    * the response status or exceptions.
    *)
-   TdjHandlerCollection = class(TdjAbstractHandlerContainer)
-   private
+  TdjHandlerCollection = class(TdjAbstractHandlerContainer)
+  private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}

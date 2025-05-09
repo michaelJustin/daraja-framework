@@ -38,6 +38,8 @@ uses
   djTypes;
 
 type
+  { TdjHandlerList }
+
   (**
    * Iterates handler list and exits when the response code is set.
    * If the response code is still -1, it returns 404

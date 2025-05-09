@@ -42,12 +42,14 @@ uses
   IdCustomHTTPServer;
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
-(**
- * A HandlerWrapper acts as a IHandler but delegates the handle method
- * and life cycle events to a delegate.
- * This is primarily used to implement the Decorator pattern.
- *)
 type
+  { TdjHandlerWrapper }
+
+  (**
+   * A HandlerWrapper acts as a IHandler but delegates the handle method
+   * and life cycle events to a delegate.
+   * This is primarily used to implement the Decorator pattern.
+   *)
   TdjHandlerWrapper = class(TdjAbstractHandlerContainer)
   private
     {$IFDEF DARAJA_LOGGING}

@@ -58,7 +58,7 @@ type
    *)
   TdjWebFilterClass = class of TdjWebFilter;
 
-  implementation
+implementation
 
 end.
 

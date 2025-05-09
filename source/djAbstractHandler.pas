@@ -40,6 +40,8 @@ uses
   djTypes;
 
 type
+  { TdjAbstractHandler }
+
   (**
    * AbstractHandler
    *)

@@ -40,6 +40,8 @@ uses
   SyncObjs;
 
 type
+  { TdjLifeCycle }
+
   (**
    * Abstract LifeCycle implementation.
    *)

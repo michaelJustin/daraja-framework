@@ -77,12 +77,11 @@ const
    *)
 
 type
+  { TdjServer }
+
   (**
    * Basic server class for the Web Component framework.
    *)
-
-  { TdjServer }
-
   TdjServer = class(TdjServerBase)
   private
     {$IFDEF DARAJA_LOGGING}

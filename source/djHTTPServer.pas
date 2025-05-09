@@ -45,14 +45,13 @@ const
   DEFAULT_SESSION_TIMEOUT = 10 * 60 * 1000;
 
 type
+  { TdjHTTPServer }
+
   (**
    * HTTP Server.
    *
    * Inherits from Indy HTTP Server.
    *)
-
-  { TdjHTTPServer }
-
   TdjHTTPServer = class(TIdCustomHTTPServer)
   private
     {$IFDEF DARAJA_LOGGING}

@@ -40,6 +40,8 @@ uses
   djTypes;
 
 type
+  { TdjServerBase }
+
   (**
    * Base server implementation providing core HTTP server functionality.
    *
