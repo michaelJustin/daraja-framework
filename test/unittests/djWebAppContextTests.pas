@@ -56,7 +56,7 @@ type
 implementation
 
 uses
-  djInterfaces, djWebAppContext, djWebComponentHolder, djTypes, djWebComponent,
+  djWebAppContext, djWebComponentHolder, djTypes, djWebComponent,
   SysUtils, Classes;
 
 type
