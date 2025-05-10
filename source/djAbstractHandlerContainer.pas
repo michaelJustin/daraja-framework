@@ -43,20 +43,10 @@ type
    * This is the base class for handlers that may contain other handlers.
    *)
   TdjAbstractHandlerContainer = class(TdjAbstractHandler, IHandlerContainer)
-
   protected
-    (**
-     * Add a handler.
-     * @param Handler the handler to be added.
-     *)
+    // IHandlerContainer interfaces
     procedure AddHandler(const Handler: IHandler); virtual; abstract;
-
-    (**
-     * Remove a handler.
-     * @param Handler the handler to be removed.
-     *)
     procedure RemoveHandler(const Handler: IHandler); virtual; abstract;
-
   end;
 
 implementation

@@ -86,20 +86,9 @@ type
      *)
     procedure DoStop; override;
 
-    // IHandlerContainer
-
-    (**
-     * Add a handler.
-     * @param Handler the handler to be added.
-     *)
+    // IHandlerContainer interface
     procedure AddHandler(const Handler: IHandler); override;
-
-    (**
-     * Remove a handler.
-     * @param Handler the handler to be removed.
-     *)
     procedure RemoveHandler(const Handler: IHandler); override;
-
   end;
 
 implementation

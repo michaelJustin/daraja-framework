@@ -86,7 +86,6 @@ type
     constructor Create; override;
 
     // IHandlerContainer interface
-
     (**
      * Add a handler to the container.
      * This implementation of AddHandler calls SetHandler with the passed
@@ -96,12 +95,6 @@ type
      * @param Handler the handler to be added
      *)
     procedure AddHandler(const Handler: IHandler); override;
-
-    (**
-     * Remove a handler from the container.
-     *
-     * @param Handler the handler to be removed
-     *)
     procedure RemoveHandler(const Handler: IHandler); override;
 
     // IHandler interface
