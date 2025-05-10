@@ -70,7 +70,18 @@ type
      *)
     function GetSession(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Create: Boolean): TIdHTTPSession;
-
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStart; override;
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStop; override;
   public
     constructor Create; override;
 
@@ -92,18 +103,6 @@ type
      * @param Handler the handler to be removed
      *)
     procedure RemoveHandler(const Handler: IHandler); override;
-
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
 
     // IHandler interface
 
@@ -229,8 +228,6 @@ begin
     Handler.Handle(Target, Context, Request, Response);
   end;
 end;
-
-// ILifeCycle
 
 constructor TdjHandlerWrapper.Create;
 begin

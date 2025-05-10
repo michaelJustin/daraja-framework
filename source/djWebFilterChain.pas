@@ -54,6 +54,10 @@ type
   private
     FChain: IWebFilterChain;
     FHolder: TdjWebFilterHolder;
+  protected
+    // IWebFilterChain
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse);
   public
     (**
       Initializes a new instance of the TdjWebFilterChain class.
@@ -61,16 +65,6 @@ type
       @param FilterChain The filter chain interface of type IWebFilterChain.
     *)
     constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
-
-    (**
-     * Executes the filter logic for the given server context, request, and response.
-     *
-     * @param Context The server context in which the filter is executed.
-     * @param Request The incoming request to be processed.
-     * @param Response The response to be sent back after processing.
-     *)
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse);
   end;
 
 implementation

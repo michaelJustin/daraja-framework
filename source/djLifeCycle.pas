@@ -52,9 +52,9 @@ type
     
     CS: TCriticalSection;
 
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     procedure Trace(const S: string);
 
@@ -83,47 +83,18 @@ type
     procedure CheckStopped;
 
   public
+    // ILifeCycle interface
+    procedure Start;
+    procedure Stop;
+    function IsStarted: Boolean;
+    function IsStopped: Boolean;
+  public
     constructor Create; virtual;
     destructor Destroy; override;
 
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *
-     * @sa ILifeCycle
-     *)
-    procedure Start;
-
-    (**
-     * Stop the handler.
-     *
-     * @sa ILifeCycle
-     *)
-     procedure Stop;
-
-    (**
-     * @return True if the state is "started"
-     *)
-    function IsStarted: Boolean;
-
-    (**
-     * @return True if the state is "stopped"
-     *)
-    function IsStopped: Boolean;
-
     // properties
-
-    (**
-     * True if the state is "started".
-     *)
     property Started: Boolean read FStarted write SetStarted;
-
-    (**
-     * True if the state is "stopped"
-     *)
     property Stopped: Boolean read FStopped write SetStopped;
-
   end;
 
 implementation

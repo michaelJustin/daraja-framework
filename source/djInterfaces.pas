@@ -45,11 +45,13 @@ type
     ['{9DE150B0-004A-4522-9581-DD47B1CFD87C}']
     (**
      * Starts the component.
+     * @sa ILifeCycle
      *)
     procedure Start;
 
     (**
      * Stops the component.
+     * @sa ILifeCycle
      *)
     procedure Stop;
 
@@ -309,6 +311,7 @@ type
     (**
      * Sets the context for this configuration.
      * @param Context Context to set
+     * @throws EWebComponentException if the context is nil or if the context is already set and differs from the new context.
      *)
     procedure SetContext(const Context: IContext);
   end;
