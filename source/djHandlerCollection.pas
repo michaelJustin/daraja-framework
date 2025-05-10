@@ -71,21 +71,10 @@ type
     destructor Destroy; override;
 
     // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     *
-     * @sa IHandler
-     *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
 
-    // Lifecycle
+    // ILifecycle
 
     (**
      * Start the handler.
@@ -97,20 +86,9 @@ type
      *)
     procedure DoStop; override;
 
-    // IHandlerContainer
-
-    (**
-     * Add a handler.
-     * @param Handler the handler to be added.
-     *)
+    // IHandlerContainer interface
     procedure AddHandler(const Handler: IHandler); override;
-
-    (**
-     * Remove a handler.
-     * @param Handler the handler to be removed.
-     *)
     procedure RemoveHandler(const Handler: IHandler); override;
-
   end;
 
 implementation

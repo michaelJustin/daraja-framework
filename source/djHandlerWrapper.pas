@@ -70,12 +70,22 @@ type
      *)
     function GetSession(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Create: Boolean): TIdHTTPSession;
-
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStart; override;
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStop; override;
   public
     constructor Create; override;
 
     // IHandlerContainer interface
-
     (**
      * Add a handler to the container.
      * This implementation of AddHandler calls SetHandler with the passed
@@ -85,39 +95,9 @@ type
      * @param Handler the handler to be added
      *)
     procedure AddHandler(const Handler: IHandler); override;
-
-    (**
-     * Remove a handler from the container.
-     *
-     * @param Handler the handler to be removed
-     *)
     procedure RemoveHandler(const Handler: IHandler); override;
 
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
-
     // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * @sa IHandler
-     *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
 
@@ -229,8 +209,6 @@ begin
     Handler.Handle(Target, Context, Request, Response);
   end;
 end;
-
-// ILifeCycle
 
 constructor TdjHandlerWrapper.Create;
 begin

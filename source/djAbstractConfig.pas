@@ -42,8 +42,9 @@ type
    * Generic configuration class for managing initialization parameters and context.
    * This class implements the IWriteableConfig interface and provides methods
    * to add parameters, retrieve them, and manage the application context.
+   * @implements IWriteableConfig
    *)
-  TdjAbstractConfig = class(TInterfacedObject, IWriteableConfig)
+  TdjAbstractConfig = class(TInterfacedObject, IWriteableConfig, IContextConfig)
   private
     (**
      * Initialization parameters.
@@ -55,6 +56,14 @@ type
      *)
     FContext: IContext;
 
+  protected
+    // IWriteableConfig
+    procedure Add(const Key: string; const Value: string);
+    procedure SetContext(const Context: IContext);
+  protected
+    // IContextConfig todo more generic.
+    function GetInitParameter(const Key: string): string;
+    function GetInitParameterNames: TdjStrings;
   public
     (**
      * Constructor.
@@ -67,40 +76,6 @@ type
      * Frees allocated resources and cleans up the configuration object.
      *)
     destructor Destroy; override;
-
-    (**
-     * Add a configuration parameter.
-     *
-     * @param Key The key of the parameter to add.
-     * @param Value The value of the parameter to add.
-     * @throws EWebComponentException if the key already exists in the configuration.
-     *)
-    procedure Add(const Key: string; const Value: string);
-
-    (**
-     * Set the context.
-     *
-     * @param Context The context to set.
-     * @throws EWebComponentException if the context is nil or if the context is already set and differs from the new context.
-     *)
-    procedure SetContext(const Context: IContext);
-
-    // IConfig interface
-
-    (**
-     * Get the value of an initialization parameter.
-     *
-     * @param Key The key of the parameter to retrieve.
-     * @return The value of the parameter, or an empty string if the key does not exist.
-     *)
-    function GetInitParameter(const Key: string): string;
-
-    (**
-     * Get the names of all initialization parameters.
-     *
-     * @return A list of all parameter keys as a TdjStrings object.
-     *)
-    function GetInitParameterNames: TdjStrings;
 
     (**
      * Get the current context.

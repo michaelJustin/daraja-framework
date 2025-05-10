@@ -93,7 +93,18 @@ type
     property WebComponentContext: IContext read FWebComponentContext;
     property WebComponentMappings: TdjWebComponentMappings read FWebComponentMappings;
 
-
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Starts the web component handler.
+     * This method is called to initialize and start the handler.
+     *)
+    procedure DoStart; override;
+    (**
+     * Stops the web component handler.
+     * This method is called to clean up and stop the handler.
+     *)
+    procedure DoStop; override;
   protected
     (**
      * Finds a web component holder by its target identifier.
@@ -166,17 +177,6 @@ type
       TdjWebComponentHolder;
 
     // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     * @sa IHandler
-     *)
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;
 
@@ -190,18 +190,6 @@ type
      *)
     class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
-
-    // ILifeCycle interface
-    (**
-     * Starts the web component handler.
-     * This method is called to initialize and start the handler.
-     *)
-    procedure DoStart; override;
-    (**
-     * Stops the web component handler.
-     * This method is called to clean up and stop the handler.
-     *)
-    procedure DoStop; override;
 
   end;
 
@@ -340,12 +328,10 @@ begin
   end;
 end;
 
-// ILifeCycle
-
 procedure TdjWebComponentHandler.DoStart;
 var
   FH: TdjWebFilterHolder;
-  H: TdjWebComponentHolder;
+  CH: TdjWebComponentHolder;
 begin
   inherited;
 
@@ -358,25 +344,25 @@ begin
     FH.Start;
   end;
 
-  for H in WebComponents do
+  for CH in WebComponents do
   begin
-    H.Start;
+    CH.Start;
   end;
 end;
 
 procedure TdjWebComponentHandler.DoStop;
 var
-  FilterHolder: TdjWebFilterHolder;
-  H: TdjWebComponentHolder;
+  FH: TdjWebFilterHolder;
+  CH: TdjWebComponentHolder;
 begin
-  for FilterHolder in WebFilters do
+  for FH in WebFilters do
   begin
-    FilterHolder.Stop;
+    FH.Stop;
   end;
 
-  for H in WebComponents do
+  for CH in WebComponents do
   begin
-    H.Stop;
+    CH.Stop;
   end;
 
   inherited;

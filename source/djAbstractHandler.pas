@@ -70,18 +70,6 @@ type
      procedure DoStop; override;
 
     // IHandler interface
-
-    (**
-    * Handle an HTTP request.
-    *
-    * @param Target The request target.
-    * @param Context The HTTP server context.
-    * @param Request The HTTP request object.
-    * @param Response The HTTP response object.
-    * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation.
-    *
-    * @sa IHandler
-    *)
     procedure Handle(const Target: string; Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse); virtual; abstract;
 

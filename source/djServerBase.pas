@@ -59,6 +59,22 @@ type
 
     procedure Trace(const S: string);
 
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the server.
+     *
+     * @note This method calls the inherited implementation and logs the server start.
+     * @throws EWebComponentException if the server fails to start
+     *)
+    procedure DoStart; override;
+    (**
+     * Stop the server.
+     *
+     * @note This method calls the inherited implementation and logs the server stop.
+     * @throws EWebComponentException if the server fails to stop cleanly
+     *)
+    procedure DoStop; override;
   public
     (**
      * Create a ServerBase instance.
@@ -71,38 +87,8 @@ type
     destructor Destroy; override;
 
     // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * @sa IHandler
-     *)	
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;
-
-    // ILifeCycle interface
-
-    (**
-     * Start the server.
-     *
-     * @note This method calls the inherited implementation and logs the server start.
-     * @throws EWebComponentException if the server fails to start
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the server.
-     *
-     * @note This method calls the inherited implementation and logs the server stop.
-     * @throws EWebComponentException if the server fails to stop cleanly
-     *)
-    procedure DoStop; override;
 
   end;
 

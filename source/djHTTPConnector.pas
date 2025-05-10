@@ -64,6 +64,18 @@ type
     procedure OnCommand(AContext: TIdContext;
       ARequestInfo: TdjRequest; AResponseInfo: TdjResponse);
 
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Execute the custom start code.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStart; override;
+    (**
+     * Execute the custom start code.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStop; override;
   public
     (**
      * Create a HTTP connector.
@@ -79,18 +91,6 @@ type
      * Destructor.
      *)
     destructor Destroy; override;
-
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
 
     // properties
     property HTTPServer: TdjHTTPServer read FHTTPServer;

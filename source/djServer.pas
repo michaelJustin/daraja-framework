@@ -97,7 +97,18 @@ type
     procedure StartConnectors;
     procedure StopConnectors;
     procedure StopContextHandlers;
-
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Execute the custom start code.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStart; override;
+    (**
+     * Execute the custom start code.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStop; override;
   public
     (**
      * Create a TdjServer using the default host and port.
@@ -153,18 +164,6 @@ type
      * @returns number of connectors
      *)
     function ConnectorCount: Integer;
-
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
 
   end;
 

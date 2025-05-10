@@ -59,16 +59,15 @@ type
     FConfig: IContextConfig;
     FContextPath: string;
 
-    // IWriteableConfig
-    procedure Add(const Key: string; const Value: string);
-    procedure SetContext(const Context: IContext);
-
     (**
      * a-z A-Z 0-9 . - _ ~ ! $ & ' ( ) * + , ; = : @
      * and percent-encoded characters
      *)
     procedure ValidateContextPath(const ContextPath: string);
-
+  protected
+    // IWriteableConfig
+    procedure Add(const Key: string; const Value: string);
+    procedure SetContext(const Context: IContext);
   public
     (**
      * Initializes a new context with the specified path.
@@ -140,6 +139,18 @@ type
     procedure SetErrorHandler(const Value: IHandler);
 
   protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStart; override;
+    (**
+     * Start the handler.
+     * @sa TdjLifeCycle
+     *)
+    procedure DoStop; override;
+  protected
     (**
      * Check if the Document matches this context.
      *
@@ -180,18 +191,6 @@ type
      * @param Value init parameter value
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
-
-    // ILifeCycle interface
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-    procedure DoStop; override;
 
     // IHandler interface
 
