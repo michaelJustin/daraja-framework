@@ -45,13 +45,11 @@ type
     ['{9DE150B0-004A-4522-9581-DD47B1CFD87C}']
     (**
      * Starts the component.
-     * @sa ILifeCycle
      *)
     procedure Start;
 
     (**
      * Stops the component.
-     * @sa ILifeCycle
      *)
     procedure Stop;
 
