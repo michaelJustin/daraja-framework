@@ -78,6 +78,7 @@ type
      * @param Context Server context for this request
      * @param Request HTTP request object
      * @param Response HTTP response object to populate
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation.
      *)
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
