@@ -58,7 +58,14 @@ type
     procedure Trace(const S: string);
     function GetWebComponent: TdjWebComponent;
     function GetClass: TdjWebComponentClass;
-
+  protected
+    // TdjLifeCycle overrides
+    procedure DoStart; override;
+    procedure DoStop; override;
+  public // todo
+    // ??? IHandler interface
+    procedure Handle(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse);
   public
     (**
      * Constructor.
@@ -91,26 +98,6 @@ type
      * @param Value init parameter value
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
-
-    (**
-     * Start the component.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the component.
-     *)
-    procedure DoStop; override;
-
-    (**
-     * Handles the incoming server context, request, and response.
-     *
-     * @param Context The server context for the current operation.
-     * @param Request The incoming request object (unused).
-     * @param Response The outgoing response object (unused).
-     *)
-    procedure Handle(Context: TdjServerContext; {%H-}Request: TdjRequest;
-       {%H-}Response: TdjResponse);
 
     // properties
     (**

@@ -42,7 +42,7 @@ type
    * Web Filter configuration.
    *)
   TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
-  public
+  protected
     (**
      * Retrieves the name of the filter.
      *
