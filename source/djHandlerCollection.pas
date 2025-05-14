@@ -50,45 +50,33 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
     procedure Trace(const S: string);
-
-   protected
+  protected
      (**
       * The handler collection.
       *)
      FHandlers: TdjHandlers;
-
-   public
+  protected
+     // TdjLifeCycle overrides
+     procedure DoStart; override;
+     procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
+  protected
+    // IHandlerContainer interface
+    procedure AddHandler(const Handler: IHandler); override;
+    procedure RemoveHandler(const Handler: IHandler); override;
+  public
     (**
      * Create a TdjHandlerCollection.
      *)
     constructor Create; override;
-
     (**
      * Destructor.
      *)
     destructor Destroy; override;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
-
-    // ILifecycle
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStop; override;
-
-    // IHandlerContainer interface
-    procedure AddHandler(const Handler: IHandler); override;
-    procedure RemoveHandler(const Handler: IHandler); override;
   end;
 
 implementation
@@ -102,7 +90,7 @@ constructor TdjHandlerCollection.Create;
 begin
   inherited Create;
 
-// logging -----------------------------------------------------------------
+  // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjHandlerCollection.ClassName);
   {$ENDIF DARAJA_LOGGING}
@@ -147,12 +135,12 @@ end;
 
 procedure TdjHandlerCollection.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjHandlerCollection.DoStart;

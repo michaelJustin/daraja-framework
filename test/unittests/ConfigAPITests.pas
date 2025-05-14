@@ -263,7 +263,7 @@ begin
     DefaultHandler := TdjDefaultHandler.Create;
     HandlerList := TdjHandlerList.Create;
     HandlerList.AddHandler(DefaultHandler);
-    Server.AddHandler(HandlerList);
+    (Server as IHandlerContainer).AddHandler(HandlerList);
     Server.Start;
 
     CheckGETResponseContains('Daraja Framework');

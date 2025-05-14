@@ -65,7 +65,7 @@ type
      *)
     procedure ValidateContextPath(const ContextPath: string);
   protected
-    // IWriteableConfig
+    // IWriteableConfig interface
     procedure Add(const Key: string; const Value: string);
     procedure SetContext(const Context: IContext);
   public
@@ -137,7 +137,6 @@ type
     procedure Trace(const S: string);
     function GetContextPath: string;
     procedure SetErrorHandler(const Value: IHandler);
-
   protected
     // TdjLifeCycle overrides
     (**
@@ -150,6 +149,10 @@ type
      * @sa TdjLifeCycle
      *)
     procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
   protected
     (**
      * Check if the Document matches this context.
@@ -167,13 +170,11 @@ type
      * @returns connector name
      *)
     function ToConnectorName(Context: TdjServerContext): string;
-
   public
     (**
      * Create a ContextHandler.
      *)
     constructor Create(const ContextPath: string); reintroduce;
-
     (**
      * Destructor.
      *)
@@ -192,28 +193,10 @@ type
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
-    // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * @sa IHandler
-     *)
-    procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
-      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
-
     // properties
-
     property ConnectorNames: TStrings read FConnectorNames;
     property ContextPath: string read GetContextPath;
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
-
   end;
 
 implementation

@@ -44,7 +44,7 @@ type
    *)
   TdjAbstractHandlerContainer = class(TdjAbstractHandler, IHandlerContainer)
   protected
-    // IHandlerContainer interfaces
+    // IHandlerContainer interface
     procedure AddHandler(const Handler: IHandler); virtual; abstract;
     procedure RemoveHandler(const Handler: IHandler); virtual; abstract;
   end;

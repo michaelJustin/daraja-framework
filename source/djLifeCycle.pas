@@ -121,22 +121,22 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjLifeCycle.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
   CS := TCriticalSection.Create;
 
   FStopped := True;
 
-{$IFDEF LOG_CREATE}Trace('Created');
-{$ENDIF}
+  {$IFDEF LOG_CREATE}Trace('Created');
+  {$ENDIF}
 end;
 
 destructor TdjLifeCycle.Destroy;
 begin
-{$IFDEF LOG_DESTROY}Trace('Destroy');
-{$ENDIF}
+  {$IFDEF LOG_DESTROY}Trace('Destroy');
+  {$ENDIF}
 
   CS.Free;
 
@@ -171,12 +171,12 @@ end;
 
 procedure TdjLifeCycle.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 // methods

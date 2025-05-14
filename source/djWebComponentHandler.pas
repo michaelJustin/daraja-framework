@@ -92,7 +92,6 @@ type
     // properties
     property WebComponentContext: IContext read FWebComponentContext;
     property WebComponentMappings: TdjWebComponentMappings read FWebComponentMappings;
-
   protected
     // TdjLifeCycle overrides
     (**
@@ -123,7 +122,10 @@ type
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
     property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
-
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext; Request:
+      TdjRequest; Response: TdjResponse); override;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -176,10 +178,6 @@ type
     function FindHolder(WebComponentClass: TdjWebComponentClass):
       TdjWebComponentHolder;
 
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext; Request:
-      TdjRequest; Response: TdjResponse); override;
-
     (**
      * Invokes a service for the specified web component.
      *
@@ -190,7 +188,6 @@ type
      *)
     class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
-
   end;
 
 {$IFNDEF DOXYGEN_SKIP}
