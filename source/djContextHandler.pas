@@ -65,9 +65,17 @@ type
      *)
     procedure ValidateContextPath(const ContextPath: string);
   protected
-    // IWriteableConfig
+    // IWriteableConfig interface
     procedure Add(const Key: string; const Value: string);
     procedure SetContext(const Context: IContext);
+  protected
+    // IContext interface
+    procedure Init(const Config: IContextConfig);
+    function GetContextConfig: IContextConfig;
+    function GetContextPath: string;
+    function GetInitParameter(const Key: string): string;
+    function GetInitParameterNames: TdjStrings;
+    procedure Log(const Msg: string);
   public
     (**
      * Initializes a new context with the specified path.
@@ -76,48 +84,6 @@ type
      * @throws EWebComponentException If the context path contains invalid characters.
      *)
     constructor Create(const ContextPath: string);
-
-    (**
-     * Initializes the context with the given configuration.
-     *
-     * @param Config The context configuration to use.
-     *)
-    procedure Init(const Config: IContextConfig);
-
-    (**
-     * Gets the value of an initialization parameter.
-     *
-     * @param Key The parameter name.
-     * @return The parameter value or empty string if not found.
-     *)
-    function GetInitParameter(const Key: string): string;
-
-    (**
-     * Gets all initialization parameter names.
-     *
-     * @return A list containing all parameter names.
-     *)
-    function GetInitParameterNames: TdjStrings;
-
-    (**
-     * Logs a message to the configured logging system.
-     *
-     * @param Msg The message to log.
-     *)
-    procedure Log(const Msg: string);
-
-    (**
-     * Get the context configuration.
-     * @return the context configuration
-     *)
-    function GetContextConfig: IContextConfig;
-
-    (**
-     * Get the context path.
-     * @return the context path.
-     *)
-    function GetContextPath: string;
-
   end;
 
   { TdjContextHandler }
@@ -137,7 +103,6 @@ type
     procedure Trace(const S: string);
     function GetContextPath: string;
     procedure SetErrorHandler(const Value: IHandler);
-
   protected
     // TdjLifeCycle overrides
     (**
@@ -150,6 +115,10 @@ type
      * @sa TdjLifeCycle
      *)
     procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
   protected
     (**
      * Check if the Document matches this context.
@@ -167,13 +136,11 @@ type
      * @returns connector name
      *)
     function ToConnectorName(Context: TdjServerContext): string;
-
   public
     (**
      * Create a ContextHandler.
      *)
     constructor Create(const ContextPath: string); reintroduce;
-
     (**
      * Destructor.
      *)
@@ -192,28 +159,10 @@ type
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
-    // IHandler interface
-
-    (**
-     * Handle a HTTP request.
-     *
-     * @param Target Request target
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *
-     * @sa IHandler
-     *)
-    procedure Handle(const Target: string; {%H-}Context: TdjServerContext;
-      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
-
     // properties
-
     property ConnectorNames: TStrings read FConnectorNames;
     property ContextPath: string read GetContextPath;
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
-
   end;
 
 implementation

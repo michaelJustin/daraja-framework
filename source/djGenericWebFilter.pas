@@ -59,34 +59,21 @@ type
     {$ENDIF DARAJA_LOGGING}
     FConfig: IWebFilterConfig;
     procedure Trace(const S: string);
-    (**
-     * Returns the configuration for this filter.
-     *
-     * @return The filter configuration object
-     * @throws EWebComponentException if the filter is not initialized
-     *)
-    function GetWebFilterConfig: IWebFilterConfig;
+  public
+    // IWebFilter interface todo protected?
+    procedure Init(const Config: IWebFilterConfig); overload; virtual;
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse; const Chain: IWebFilterChain); virtual;
+    procedure DestroyFilter; virtual;
   public
     (**
      * Constructor.
      *)
     constructor Create;
-
     (**
      * Destructor.
      *)
     destructor Destroy; override;
-
-    (**
-     * Called by the container on startup.
-     *
-     * @note if this method is overridden, the overriding code
-     * must also call inherited Init.
-     *
-     * @param Config the configuration
-     * @throws EWebComponentException if initialization failed
-     *)
-    procedure Init(const Config: IWebFilterConfig); overload; virtual;
 
     (**
      * A convenience method which can be overridden so that there is no need
@@ -95,28 +82,14 @@ type
     procedure Init; overload; virtual;
 
     (**
-     * The doFilter method of the Filter is called by the container each time 
-     * a request/response pair is passed through the chain due to a client request 
-     * for a resource at the end of the chain. 
+     * Returns the configuration for this filter.
      *
-     * @param Context The server context for this request
-     * @param Request The HTTP request being processed
-     * @param Response The HTTP response being generated
-     * @param Chain The filter chain to pass the request/response to
+     * @return The filter configuration object
+     * @throws EWebComponentException if the filter is not initialized
      *)
-    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse; const Chain: IWebFilterChain); virtual;
-
-    (**
-     * Virtual procedure to destroy the filter.
-     *
-     * @note This method can be overridden in descendant classes to implement
-     * custom cleanup logic for the filter.
-     *)
-    procedure DestroyFilter; virtual;
+    function GetWebFilterConfig: IWebFilterConfig;
 
     property Config: IWebFilterConfig read GetWebFilterConfig;
-
   end;
 
 implementation

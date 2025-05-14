@@ -112,38 +112,45 @@ type
   IContext = interface(IInterface)
     ['{19E32FEB-0348-42B2-8977-F03A0032473C}']
     (**
-     * Initializes the context with configuration.
-     * @param Config Context configuration
+     * Initializes the context with the given configuration.
+     *
+     * @param Config The context configuration to use.
      *)
     procedure Init(const Config: IContextConfig);
 
     (**
-     * @return Context configuration
+     * Get the context configuration.
+     * @return the context configuration
      *)
     function GetContextConfig: IContextConfig;
 
     (**
-     * @return Path of this context
+     * Get the context path.
+     * @return the context path.
      *)
     function GetContextPath: string;
 
     (**
-     * Gets an initialization parameter.
-     * @param Key Parameter name
-     * @return Parameter value or empty string if not found
+     * Gets the value of an initialization parameter.
+     *
+     * @param Key The parameter name.
+     * @return The parameter value or empty string if not found.
      *)
     function GetInitParameter(const Key: string): string;
 
     (**
-     * @return Names of all initialization parameters
+     * Gets all initialization parameter names.
+     *
+     * @return A list containing all parameter names.
      *)
     function GetInitParameterNames: TdjStrings;
 
     (**
-     * Logs a message to the context log.
-     * @param Msg Message to log
+     * Logs a message to the configured logging system.
+     *
+     * @param Msg The message to log.
      *)
-    procedure Log(const Msg: string);
+     procedure Log(const Msg: string);
   end;
 
   (**
@@ -196,22 +203,38 @@ type
   IWebComponent = interface(IInterface)
     ['{22F7C5D3-36AD-4BCA-BE06-E4FAA03A7A72}']
     (**
-     * Initializes the component with configuration.
-     * @param Config Component configuration
+     * Called by the container on startup.
+     *
+     * @note if this method is overridden, the overriding code
+     * must also call inherited Init.
+     *
+     * @param Config the configuration
+     * @throws EWebComponentException if initialization failed
      *)
     procedure Init(const Config: IWebComponentConfig);
 
     (**
-     * Processes a request and generates a response.
-     * @param Context Server context
+     * Handle a HTTP request.
+     *
+     * The status code of the response always should be set for a component
+     * that throws or sends an error.
+     *
+     * @note a custom Web Component should not override this method.
+     *
+     * @param Context HTTP server context
      * @param Request HTTP request
-     * @param Response HTTP response to populate
+     * @param Response HTTP response
+     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
      *)
     procedure Service(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse);
 
     (**
-     * @return Component configuration
+     * Returns a IWebComponentConfig object,
+     * which contains initialization parameters for this component.
+     *
+     * @throws EWebComponentException if the method is called before
+     * the component has been initialized.
      *)
     function GetWebComponentConfig: IWebComponentConfig;
 
@@ -244,7 +267,9 @@ type
   IWebFilterConfig = interface(IInterface)
     ['{86823762-EE7A-4523-80FE-32DD714C11DF}']
     (**
-     * @return Filter name
+     * Retrieves the name of the filter.
+     *
+     * @return A string representing the name of the filter.
      *)
     function GetFilterName: string;
 
@@ -273,23 +298,33 @@ type
   IWebFilter = interface(IInterface)
     ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
     (**
-     * Initializes the filter with configuration.
-     * @param Config Filter configuration
+     * Called by the container on startup.
+     *
+     * @note if this method is overridden, the overriding code
+     * must also call inherited Init.
+     *
+     * @param Config the configuration
+     * @throws EWebComponentException if initialization failed
      *)
     procedure Init(const Config: IWebFilterConfig);
 
     (**
-     * Performs filtering work.
-     * @param Context Server context
-     * @param Request HTTP request
-     * @param Response HTTP response to populate
-     * @param Chain Filter chain to continue processing
+     * The DoFilter method of the Filter is called by the container each time
+     * a request/response pair is passed through the chain due to a client request
+     * for a resource at the end of the chain.
+     *
+     * @param Context The server context for this request
+     * @param Request The HTTP request being processed
+     * @param Response The HTTP response being generated
+     * @param Chain The filter chain to pass the request/response to
      *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Chain: IWebFilterChain);
 
     (**
      * Called when filter is being removed from service.
+     * @note This method can be overridden in descendant classes to implement
+     * custom cleanup logic for the filter.
      *)
     procedure DestroyFilter;
   end;

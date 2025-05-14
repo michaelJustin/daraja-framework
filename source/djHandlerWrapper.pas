@@ -82,10 +82,12 @@ type
      * @sa TdjLifeCycle
      *)
     procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
   public
-    constructor Create; override;
-
-    // IHandlerContainer interface
+    // IHandlerContainer interface todo still public
     (**
      * Add a handler to the container.
      * This implementation of AddHandler calls SetHandler with the passed
@@ -96,14 +98,11 @@ type
      *)
     procedure AddHandler(const Handler: IHandler); override;
     procedure RemoveHandler(const Handler: IHandler); override;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
+  public
+    constructor Create; override;
 
     // properties
     property Handler: IHandler read GetHandler write SetHandler;
-
   end;
 
 implementation
@@ -196,7 +195,6 @@ begin
   begin
     raise Exception.Create('Can not remove handler');
   end;
-
 end;
 
 // IHandler

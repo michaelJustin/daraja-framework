@@ -55,17 +55,15 @@ type
     {$ENDIF DARAJA_LOGGING}
 
     procedure Trace(const S: string);
-
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
   public
     (**
      * Constructor.
      *)
     constructor Create; override;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
-
   end;
 
 implementation

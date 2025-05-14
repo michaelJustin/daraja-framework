@@ -50,18 +50,16 @@ type
      * Initialization parameters.
      *)
     FParams: TdjInitParameters;
-
     (**
      * The context.
      *)
     FContext: IContext;
-
   protected
-    // IWriteableConfig
+    // IWriteableConfig interface
     procedure Add(const Key: string; const Value: string);
     procedure SetContext(const Context: IContext);
   protected
-    // IContextConfig todo more generic.
+    // IContextConfig interface todo more generic.
     function GetInitParameter(const Key: string): string;
     function GetInitParameterNames: TdjStrings;
   public

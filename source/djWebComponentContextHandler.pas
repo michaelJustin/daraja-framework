@@ -283,7 +283,7 @@ procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
   Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse);
 begin
   Trace('Context ' + ContextPath + ' handles ' + Target);
-  WebComponentHandler.Handle(Target, Context, Request, Response);
+  (WebComponentHandler as IHandler).Handle(Target, Context, Request, Response);
 end;
 
 procedure TdjWebComponentContextHandler.Handle(const Target: string;

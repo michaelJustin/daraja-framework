@@ -75,21 +75,19 @@ type
      * @throws EWebComponentException if the server fails to stop cleanly
      *)
     procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext; Request:
+      TdjRequest; Response: TdjResponse); override;
   public
     (**
      * Create a ServerBase instance.
      *)
     constructor Create; override;
-
     (**
      * Destructor.
      *)
     destructor Destroy; override;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext; Request:
-      TdjRequest; Response: TdjResponse); override;
-
   end;
 
 implementation

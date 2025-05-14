@@ -34,9 +34,9 @@ interface
 
 uses
   djInterfaces, djLifeCycle, djServerContext,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
@@ -50,29 +50,20 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
     procedure Trace(const S: string);
-
+  protected
+    // TdjLifeCycle overrides
+    procedure DoStart; override;
+    procedure DoStop; override;
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext; Request: TdjRequest; Response:
+      TdjResponse); virtual; abstract;
   public
     (**
      * Constructor.
      *)
     constructor Create; override;
-
-    (**
-     * Start the handler.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the handler.
-     *)
-     procedure DoStop; override;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext; Request: TdjRequest; Response:
-      TdjResponse); virtual; abstract;
-
   end;
 
 implementation
@@ -84,23 +75,23 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjAbstractHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF LOG_CREATE}
+  {$IFDEF LOG_CREATE}
   Trace('Created');
-{$ENDIF}
+  {$ENDIF}
 end;
 
 procedure TdjAbstractHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjAbstractHandler.DoStart;

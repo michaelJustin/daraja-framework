@@ -59,6 +59,16 @@ type
     FWebFilter: TdjWebFilter;
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the filter.
+     *)
+    procedure DoStart; override;
+    (**
+     * Stop the filter.
+     *)
+    procedure DoStop; override;
   public
     (**
      * Constructor for creating an instance of TdjWebFilterHolder.
@@ -83,14 +93,6 @@ type
      *)
     procedure SetInitParameter(const Key: string; const Value: string);
 
-    (**
-     * Start the filter.
-     *)
-    procedure DoStart; override;
-    (**
-     * Stop the filter.
-     *)
-     procedure DoStop; override;
     (**
      * Executes the filter logic for the given server context, request, and response.
      *

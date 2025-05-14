@@ -68,13 +68,23 @@ type
     procedure SetHost(const Value: string);
     function GetPort: Integer;
     function GetHost: string;
-
   protected
     (**
      * Handler for incoming requests.
      *)
     Handler: IHandler;
-
+  protected
+    // TdjLifeCycle overrides
+    (**
+     * Start the connector.
+     * This method is called to initialize and start the connector's operations.
+     *)
+    procedure DoStart; override;
+    (**
+     * Stop the connector.
+     * This method is called to terminate the connector's operations.
+     *)
+    procedure DoStop; override;
   public
     (**
      * Constructor.
@@ -84,27 +94,13 @@ type
      * @throws AssertionError if the handler is not assigned.
      *)
     constructor Create(const Handler: IHandler); reintroduce;
-
     (**
      * Destructor.
      * Cleans up resources and ensures the connector is stopped before destruction.
      *)
     destructor Destroy; override;
 
-    (**
-     * Start the connector.
-     * This method is called to initialize and start the connector's operations.
-     *)
-    procedure DoStart; override;
-
-    (**
-     * Stop the connector.
-     * This method is called to terminate the connector's operations.
-     *)
-    procedure DoStop; override;
-
     // properties
-
     (**
      * The host address for the connector.
      *)
