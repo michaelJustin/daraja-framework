@@ -60,10 +60,10 @@ type
       TdjResponse);
   public
     (**
-      Initializes a new instance of the TdjWebFilterChain class.
-      @param Holder The holder object of type TdjWebFilterHolder.
-      @param FilterChain The filter chain interface of type IWebFilterChain.
-    *)
+     * Initializes a new instance of the TdjWebFilterChain class.
+     * @param Holder The holder object of type TdjWebFilterHolder.
+     * @param FilterChain The filter chain interface of type IWebFilterChain.
+     *)
     constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
   end;
 

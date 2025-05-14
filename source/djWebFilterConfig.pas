@@ -43,11 +43,7 @@ type
    *)
   TdjWebFilterConfig = class(TdjAbstractConfig, IWebFilterConfig)
   protected
-    (**
-     * Retrieves the name of the filter.
-     *
-     * @return A string representing the name of the filter.
-     *)
+    // IWebFilterConfig interface
     function GetFilterName: string;
   end;
 

@@ -56,7 +56,7 @@ type
     FConfig: IWebComponentConfig;
     procedure Trace(const S: string);
   public
-    // IWebComponent interface
+    // IWebComponent interface todo protected?
     procedure Init(const Config: IWebComponentConfig); overload; virtual;
     procedure Service(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse); virtual;
@@ -112,32 +112,32 @@ begin
   inherited Create;
 
   // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjGenericWebComponent.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF LOG_CREATE}
+  {$IFDEF LOG_CREATE}
   Trace('Created');
-{$ENDIF}
+  {$ENDIF}
 end;
 
 destructor TdjGenericWebComponent.Destroy;
 begin
-{$IFDEF LOG_DESTROY}
+  {$IFDEF LOG_DESTROY}
   Trace('Destroy');
-{$ENDIF}
+  {$ENDIF}
 
   inherited;
 end;
 
 procedure TdjGenericWebComponent.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 function TdjGenericWebComponent.GetSession(Context: TdjServerContext;

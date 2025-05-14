@@ -267,7 +267,9 @@ type
   IWebFilterConfig = interface(IInterface)
     ['{86823762-EE7A-4523-80FE-32DD714C11DF}']
     (**
-     * @return Filter name
+     * Retrieves the name of the filter.
+     *
+     * @return A string representing the name of the filter.
      *)
     function GetFilterName: string;
 
@@ -296,23 +298,33 @@ type
   IWebFilter = interface(IInterface)
     ['{F1039636-3E60-48CD-BD7F-0050AB644C29}']
     (**
-     * Initializes the filter with configuration.
-     * @param Config Filter configuration
+     * Called by the container on startup.
+     *
+     * @note if this method is overridden, the overriding code
+     * must also call inherited Init.
+     *
+     * @param Config the configuration
+     * @throws EWebComponentException if initialization failed
      *)
     procedure Init(const Config: IWebFilterConfig);
 
     (**
-     * Performs filtering work.
-     * @param Context Server context
-     * @param Request HTTP request
-     * @param Response HTTP response to populate
-     * @param Chain Filter chain to continue processing
+     * The DoFilter method of the Filter is called by the container each time
+     * a request/response pair is passed through the chain due to a client request
+     * for a resource at the end of the chain.
+     *
+     * @param Context The server context for this request
+     * @param Request The HTTP request being processed
+     * @param Response The HTTP response being generated
+     * @param Chain The filter chain to pass the request/response to
      *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Chain: IWebFilterChain);
 
     (**
      * Called when filter is being removed from service.
+     * @note This method can be overridden in descendant classes to implement
+     * custom cleanup logic for the filter.
      *)
     procedure DestroyFilter;
   end;
