@@ -77,4 +77,19 @@ https://www.habarisoft.com/daraja_framework.html
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
+## AGPL Licensing FAQ
 
+<details>
+<summary>Can I use it in my commercial Project?</summary>
+Yes, if you open source your whole project (thus also AGPL it) otherwise no.
+</details>
+
+<details>
+<summary>Is it enough to ship the licence texts or do I need to ship the source code (from Daraja) too?</summary>
+You have to supply the whole sourcecode of everything - but a download link should suffice.
+</details>
+
+<details>
+<summary>Do I need to mention the use of Daraja inside my program (like a info message or something)?</summary>
+No.
+</details>
