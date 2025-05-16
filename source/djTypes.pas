@@ -34,7 +34,7 @@ interface
 
 uses
   IdCustomHTTPServer,
-  SysUtils, Generics.Collections ;
+  SysUtils, Generics.Collections;
 
 type
   (**
@@ -53,7 +53,18 @@ type
    *)
   TdjResponse = TIdHTTPResponseInfo;
 
+  (**
+   * @class EWebComponentException
+   *
+   * This exception is thrown if an error occurs that interferes with the component's normal operation.
+   *)
   EWebComponentException = class(Exception);
+
+  (**
+   * @class TdjStrings
+   *
+   * This class holds a list of strings.
+   *)
   TdjStrings = TList<string>;
 
 implementation
