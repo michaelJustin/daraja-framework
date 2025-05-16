@@ -11,6 +11,56 @@
 
 In short, Daraja enables Object Pascal developers to *write well-structured HTTP server applications*.
 
+## Example code
+
+A simple "Hello, World!" application.
+
+```Pascal
+type
+  THelloWorldResource = class(TdjWebComponent)
+  public
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'Hello, World!';
+  Response.ContentType := 'text/plain';
+end;
+
+procedure Demo;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create(80);
+  try
+    Context := TdjWebAppContext.Create('demo');
+    Context.Add(THelloWorldResource, '/hello.txt');
+    Server.Add(Context);
+    Server.Start;
+    WriteLn('Server is running, please open http://127.0.0.1/demo/hello.txt');
+    WriteLn('Hit enter to terminate.');
+    ReadLn;
+  finally
+    Server.Free;
+  end;
+end;
+```
+
+Tested with curl:
+
+```Console
+curl -i http://127.0.0.1/demo/hello.txt
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Length: 13
+Date: Wed, 22 Jan 2025 19:07:14 GMT
+
+Hello, World!
+```
+
 ## Documentation
 
 ### API docs
