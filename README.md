@@ -75,8 +75,6 @@ https://www.habarisoft.com/daraja_framework/3.0.3/docs/DarajaFrameworkGettingSta
 
 https://www.habarisoft.com/daraja_framework.html
 
-![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
-
 ## AGPL Licensing FAQ
 
 <details>
