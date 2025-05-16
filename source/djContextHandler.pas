@@ -51,6 +51,7 @@ type
    * Handles requests within a specific context path.
    * Manages initialization parameters and context configuration.
    * @implements IContext
+   * @implements IWriteableConfig
    *)
   TdjContext = class(TInterfacedObject, IContext, IWriteableConfig)
   private
