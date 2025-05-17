@@ -42,6 +42,8 @@ type
   
   (**
    * Web Component for static context.
+   *
+   * @note This class is unsupported demonstration code.
    *)
   TdjDefaultWebComponent = class(TdjWebComponent)
   private
