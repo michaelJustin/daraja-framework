@@ -30,8 +30,6 @@ unit djNCSALogFilter;
 
 interface
 
-// {$i IdCompilerDefines.inc}
-
 uses
   djWebFilter, djServerContext, djTypes, djInterfaces,
   {$IFDEF DARAJA_LOGGING}
@@ -43,16 +41,14 @@ uses
   SysUtils;
 
 type
+  { TdjNCSALogFilter }
+
   (**
    * Implements NCSA logging.
    *
    * @sa https://en.wikipedia.org/wiki/Common_Log_Format
-   *
    * @note This class is unsupported demonstration code.
    *)
-
-  { TdjNCSALogFilter }
-
   TdjNCSALogFilter = class(TdjWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -61,14 +57,6 @@ type
     FS: TFormatSettings;
   public
     procedure Init; override;
-
-    (**
-     * The doFilter method of the Filter is called by the container each time
-     * a request/response pair is passed through the chain due to a client
-     * request for a resource at the end of the chain.
-     * The FilterChain passed in to this method allows the Filter to pass on
-     * the request and response to the next entity in the chain.
-     *)
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
   end;
@@ -109,7 +97,6 @@ end;
 
 procedure TdjNCSALogFilter.Init;
 begin
-  // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjNCSALogFilter.ClassName);
   {$ENDIF DARAJA_LOGGING}
@@ -123,8 +110,6 @@ begin
   FS.DateSeparator := '/';
   FS.TimeSeparator := ':';
 end;
-
-{ TdjNCSALogFilter }
 
 procedure TdjNCSALogFilter.DoFilter;
 var
