@@ -35,6 +35,17 @@ The minimum requirements are:
   
 </details>
 
+<details>
+<summary>IDE configuration guide</summary>
+
+To make Daraja HTTP Framework and Internet Direct (Indy) available for a project,
+
+ - add the Daraja HTTP Framework `<Install>/source` folder to the project search path
+ - add the folders `<Indy>/Lib/Core`, `<Indy>/Lib/System` and `<Indy>/Lib/Protocols` to
+the project search path
+ 
+</details>
+
 ## Example
 
 A simple "Hello, World!" application.
