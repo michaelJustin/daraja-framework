@@ -8,13 +8,32 @@
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelJustin/daraja-framework?style=flat)
 
+⭐ Star us on GitHub — it motivates us a lot!
+
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_3.png)
 
 In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
 
 ## About
 
-Daraja is a compact and flexible HTTP server application framework for Object Pascal, based on the HTTP server included in [Indy - Internet Direct](https://github.com/IndySockets/Indy). The framework uses URL patterns to match requests to your resource handler code, and optional request filtering for pre- and post-processing. It enables developers to create well-structured HTTP server applications, written with 100% open source code.
+__Daraja__ is a compact and flexible HTTP server application framework for Object Pascal, based on the HTTP server included in [Indy - Internet Direct](https://github.com/IndySockets/Indy). The framework uses URL patterns to match requests to your resource handler code, and optional request filtering for pre- and post-processing. It enables developers to create well-structured HTTP server applications, written with 100% open source code.
+
+## Usage
+
+<details>
+<summary>Prerequisites</summary>
+
+The minimum requirements are:
+
+ - Delphi 2009 or higher _or_
+ - Lazarus 3.x / Free Pascal 3.2.x
+ - [Indy - Internet Direct](https://github.com/IndySockets/Indy) 10.6.2 or 10.6.3
+
+  Optional requirements for some code examples and logging:
+ - [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects)
+ - [Log4D](http://sourceforge.net/projects/log4d/)
+  
+</details>
 
 ## Example
 
