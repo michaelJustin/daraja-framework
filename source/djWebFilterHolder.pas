@@ -57,17 +57,12 @@ type
     FConfig: IWebFilterConfig;
     FClass: TdjWebFilterClass;
     FWebFilter: TdjWebFilter;
+
     function GetClass: TdjWebFilterClass;
     procedure Trace(const S: string);
   protected
     // TdjLifeCycle overrides
-    (**
-     * Start the filter.
-     *)
     procedure DoStart; override;
-    (**
-     * Stop the filter.
-     *)
     procedure DoStop; override;
   public
     (**
@@ -135,7 +130,6 @@ begin
   FConfig := TdjWebFilterConfig.Create;
   FClass := WebFilterClass;
 
-  // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterHolder.ClassName);
   {$ENDIF DARAJA_LOGGING}

@@ -99,15 +99,7 @@ type
     procedure StopContextHandlers;
   protected
     // TdjLifeCycle overrides
-    (**
-     * Execute the custom start code.
-     * @sa TdjLifeCycle
-     *)
     procedure DoStart; override;
-    (**
-     * Execute the custom start code.
-     * @sa TdjLifeCycle
-     *)
     procedure DoStop; override;
   public
     (**

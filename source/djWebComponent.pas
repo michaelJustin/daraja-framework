@@ -59,7 +59,6 @@ type
     {$ENDIF DARAJA_LOGGING}
 
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
-
   protected
     (**
      * Called by the server to handle a DELETE request.
@@ -138,22 +137,10 @@ type
 
   public
     constructor Create;
-
     destructor Destroy; override;
 
-    (**
-     * Dispatches client requests to the protected service method.
-     *
-     * @note a custom Web Component should not override this method.
-     *
-     * @param Context HTTP server context
-     * @param Request HTTP request
-     * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
-     *)
     procedure Service(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse); override;
-
   end;
 
   (**
@@ -181,17 +168,16 @@ constructor TdjWebComponent.Create;
 begin
   inherited Create;
 
-  // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponent.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
 end;
 
 destructor TdjWebComponent.Destroy;
 begin
-{$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
 
   inherited;
 end;
@@ -306,9 +292,9 @@ begin
       end;
   else
     begin
-{$IFDEF DARAJA_LOGGING}
+        {$IFDEF DARAJA_LOGGING}
         Logger.Error('Unknown HTTP method');
-{$ENDIF DARAJA_LOGGING}
+        {$ENDIF DARAJA_LOGGING}
     end;
   end;
 end;

@@ -39,8 +39,7 @@ type
   (**
    * Web Component configuration.
    *)
-  TdjWebComponentConfig = class(TdjAbstractConfig, IWebComponentConfig)
-  end;
+  TdjWebComponentConfig = class(TdjAbstractConfig, IWebComponentConfig);
 
 implementation
 
