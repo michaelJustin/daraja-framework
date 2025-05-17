@@ -47,6 +47,8 @@ type
    * This handler deals with unhandled requests in the server.
    * For requests for favicon.ico, the favicon.ico file is served.
    * For requests to '/' a welcome page is served.
+   *
+   * @note This class is unsupported demonstration code.
    *)
   TdjDefaultHandler = class(TdjAbstractHandler)
   private
