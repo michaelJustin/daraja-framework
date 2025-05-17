@@ -30,17 +30,17 @@ unit djDefaultHandler;
 
 interface
 
-// {$i IdCompilerDefines.inc}
-
 uses
   djAbstractHandler, djServerContext,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   djTypes,
   Classes;
 
 type
+  { TdjDefaultHandler }
+  
   (**
    * Default Handler.
    *
@@ -50,22 +50,18 @@ type
    *)
   TdjDefaultHandler = class(TdjAbstractHandler)
   private
-{$IFDEF DARAJA_LOGGING}
+    {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
-{$ENDIF DARAJA_LOGGING}
+    {$ENDIF DARAJA_LOGGING}
 
     procedure Trace(const S: string);
-
     function LoadRes: TStream;
-
     function HomePage: string;
-
   public
     (**
      * Create a DefaultHandler.
      *)
     constructor Create; override;
-
     (**
      * Destructor.
      *)
@@ -88,20 +84,16 @@ constructor TdjDefaultHandler.Create;
 begin
   inherited Create;
 
-  // logging -----------------------------------------------------------------
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjDefaultHandler.ClassName);
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 
-{$IFDEF LOG_CREATE}Trace('Created');
-{$ENDIF}
+  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
 end;
 
 destructor TdjDefaultHandler.Destroy;
 begin
-{$IFDEF LOG_DESTROY}Trace('Destroy');
-{$ENDIF}
-
+  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
   inherited;
 end;
 
@@ -121,12 +113,12 @@ end;
 
 procedure TdjDefaultHandler.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 function TdjDefaultHandler.HomePage: string;
