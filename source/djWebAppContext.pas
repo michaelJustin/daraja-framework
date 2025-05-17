@@ -39,9 +39,7 @@ type
   (**
    * Main context handler class.
    *)
-  TdjWebAppContext = class(TdjWebComponentContextHandler)
-  public
-  end;
+  TdjWebAppContext = class(TdjWebComponentContextHandler);
 
 implementation
 

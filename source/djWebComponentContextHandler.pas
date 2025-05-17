@@ -56,7 +56,10 @@ type
     AutoStartSession: Boolean;
 
     procedure Trace(const S: string);
-
+  protected
+    // IHandler interface
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
   protected
     (**
      * @param Target Request target
@@ -66,7 +69,6 @@ type
      *)
     procedure DoHandle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
-
   public
     (**
      * Constructor.
@@ -146,11 +148,6 @@ type
      *)
     function Add(FilterClass: TdjWebFilterClass;
       const UrlPattern: string): TdjWebFilterHolder; overload;
-
-    // IHandler interface
-    procedure Handle(const Target: string; Context: TdjServerContext;
-      Request: TdjRequest; Response: TdjResponse); override;
-
   end;
 
 implementation

@@ -42,9 +42,7 @@ type
    * A subclass of the Indy context class is used for
    * future extensions.
    *)
-  TdjServerContext = class(TIdServerContext)
-  public
-  end;
+  TdjServerContext = class(TIdServerContext);
 
   TdjServerContextClass = class of TdjServerContext;
 

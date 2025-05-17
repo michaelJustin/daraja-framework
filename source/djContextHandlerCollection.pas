@@ -75,7 +75,6 @@ constructor TdjContextHandlerCollection.Create;
 begin
   inherited Create;
 
-  // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjContextHandlerCollection.ClassName);
   {$ENDIF DARAJA_LOGGING}

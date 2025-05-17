@@ -62,8 +62,8 @@ type
     // TdjLifeCycle overrides
     procedure DoStart; override;
     procedure DoStop; override;
-  public // todo
-    // ??? IHandler interface
+  public
+    // IHandler interface
     procedure Handle(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse);
   public

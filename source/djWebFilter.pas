@@ -47,10 +47,10 @@ type
   TdjWebFilter = class(TdjGenericWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
-    {%H-}Logger: ILogger;
+    Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
   public
-
+    constructor Create;
   end;
 
   (**
@@ -59,6 +59,17 @@ type
   TdjWebFilterClass = class of TdjWebFilter;
 
 implementation
+
+{ TdjWebFilter }
+
+constructor TdjWebFilter.Create;
+begin
+  inherited Create;
+
+  {$IFDEF DARAJA_LOGGING}
+  Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilter.ClassName);
+  {$ENDIF DARAJA_LOGGING}
+end;
 
 end.
 

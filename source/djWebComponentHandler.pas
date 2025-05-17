@@ -419,20 +419,20 @@ end;
 
 procedure TdjWebComponentHandler.CheckUniqueName(Holder: TdjWebComponentHolder);
 var
-  I: Integer;
+  CH: TdjWebComponentHolder;
   Msg: string;
 begin
   // fail if there is a different Holder with the same name
-  for I := 0 to WebComponents.Count - 1 do
+  for CH in WebComponents do
   begin
-    if (WebComponents[I].Name = Holder.Name) then
+    if (CH.Name = Holder.Name) then
     begin
       Msg := Format(
         rsTheWebComponentSCanNotBeAddedBecauseClassSIsAlr,
-        [Holder.Name, WebComponents[I].WebComponentClass.ClassName]);
+        [Holder.Name, CH.WebComponentClass.ClassName]);
       Trace(Msg);
 
-      raise EWebComponentException.Create(Msg);
+      raise EWebComponentException.Create(Msg); // todo test
     end;
   end;
 end;
@@ -591,15 +591,15 @@ end;
 
 function TdjWebComponentHandler.FindHolder(WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
 var
-  I: Integer;
+  CH: TdjWebComponentHolder;
 begin
   Result := nil;
 
-  for I := 0 to WebComponents.Count - 1 do
+  for CH in WebComponents do
   begin
-    if WebComponents[I].WebComponentClass = WebComponentClass then
+    if CH.WebComponentClass = WebComponentClass then
     begin
-      Result := WebComponents[I];
+      Result := CH;
       Break;
     end;
   end;

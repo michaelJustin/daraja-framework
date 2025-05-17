@@ -61,9 +61,7 @@ type
     // getter / setter
     function GetHandler: IHandler;
     procedure SetHandler(const Value: IHandler);
-
     procedure Trace(const S: string);
-
   protected
     (**
      * Get a HTTP session.

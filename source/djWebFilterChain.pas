@@ -50,10 +50,10 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    procedure Trace(const S: string);
-  private
     FChain: IWebFilterChain;
     FHolder: TdjWebFilterHolder;
+
+    procedure Trace(const S: string);
   protected
     // IWebFilterChain
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
@@ -76,7 +76,6 @@ constructor TdjWebFilterChain.Create(Holder: TdjWebFilterHolder;
 begin
   inherited Create;
 
-  // logging -----------------------------------------------------------------
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterChain.ClassName);
   {$ENDIF DARAJA_LOGGING}

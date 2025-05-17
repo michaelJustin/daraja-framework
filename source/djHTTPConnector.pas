@@ -60,10 +60,8 @@ type
     HostAndPort: string;
 
     procedure Trace(const S: string);
-
     procedure OnCommand(AContext: TIdContext;
       ARequestInfo: TdjRequest; AResponseInfo: TdjResponse);
-
   protected
     // TdjLifeCycle overrides
     procedure DoStart; override;
@@ -78,7 +76,6 @@ type
      * @param Handler the request handler
      *)
     constructor Create(const Handler: IHandler); virtual;
-
     (**
      * Destructor.
      *)
@@ -86,7 +83,6 @@ type
 
     // properties
     property HTTPServer: TdjHTTPServer read FHTTPServer;
-
   end;
 
 implementation

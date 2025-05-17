@@ -39,8 +39,7 @@ type
   (**
    * Context configuration.
    *)
-  TdjContextConfig = class(TdjAbstractConfig, IContextConfig)
-  end;
+  TdjContextConfig = class(TdjAbstractConfig, IContextConfig);
 
 implementation
 
