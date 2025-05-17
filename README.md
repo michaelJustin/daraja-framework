@@ -12,12 +12,6 @@
 
 In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
 
-### Table of Contents
-
-
-
-
-
 ## Example
 
 A simple "Hello, World!" application.
@@ -95,18 +89,24 @@ https://www.habarisoft.com/daraja_framework.html
 This software uses the following open source packages:
 
 - [Indy - Internet Direct](https://github.com/IndySockets/Indy)
-- [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code optio
+
+For example code, unit testing, and documentation, it uses the following open source packages:
+
+- [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code
 - [Log4D](http://sourceforge.net/projects/log4d/) for logging
 - [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) for unit testing
+- [Doxygen](https://www.doxygen.nl/) Doxygen is a widely-used documentation generator tool in software development.
 
 ## Origins
 
 > "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
 > — ChatGPT, OpenAI (May 2025)
 
-## AGPL Licensing FAQ
+## Licensing
 
-Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a commercial license. The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software. 
+Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a commercial license. The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.
+
+## AGPL Licensing FAQ
 
 <details>
 <summary>Can I use it in my commercial Project?</summary>
