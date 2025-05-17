@@ -12,6 +12,10 @@
 
 In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
 
+## About
+
+Daraja is a compact and flexible HTTP server application framework for Object Pascal, based on the HTTP server included in [Indy - Internet Direct](https://github.com/IndySockets/Indy). The framework uses URL patterns to match requests to your resource handler code, and optional request filtering for pre- and post-processing. It enables developers to create well-structured HTTP server applications, written with 100% open source code.
+
 ## Example
 
 A simple "Hello, World!" application.
