@@ -103,9 +103,30 @@ https://michaeljustin.github.io/daraja-framework/
 
 https://www.habarisoft.com/daraja_framework/3.0.3/docs/DarajaFrameworkGettingStarted.pdf
 
-## Project home page
+## Licensing
 
-https://www.habarisoft.com/daraja_framework.html
+Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a commercial license. The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.
+
+### AGPL licensing FAQ
+
+<details>
+<summary>Can I use it in my commercial Project?</summary>
+Yes, if you open source your whole project (thus also AGPL it) otherwise no.
+</details>
+
+<details>
+<summary>Is it enough to ship the licence texts or do I need to ship the source code (from Daraja) too?</summary>
+You have to supply the whole sourcecode of everything - but a download link should suffice.
+</details>
+
+<details>
+<summary>Do I need to mention the use of Daraja inside my program (like a info message or something)?</summary>
+No.
+</details>
+
+### Commercial license
+
+The commercial license can be obtained from https://www.habarisoft.com/daraja_framework.html
 
 ## Credits
 
@@ -125,24 +146,3 @@ For example code, unit testing, and documentation, it uses the following open so
 
 > "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
 > — ChatGPT, OpenAI (May 2025)
-
-## Licensing
-
-Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a commercial license. The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.
-
-## AGPL Licensing FAQ
-
-<details>
-<summary>Can I use it in my commercial Project?</summary>
-Yes, if you open source your whole project (thus also AGPL it) otherwise no.
-</details>
-
-<details>
-<summary>Is it enough to ship the licence texts or do I need to ship the source code (from Daraja) too?</summary>
-You have to supply the whole sourcecode of everything - but a download link should suffice.
-</details>
-
-<details>
-<summary>Do I need to mention the use of Daraja inside my program (like a info message or something)?</summary>
-No.
-</details>
