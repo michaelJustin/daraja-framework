@@ -104,16 +104,23 @@ Date: Wed, 22 Jan 2025 19:07:14 GMT
 Hello, World!
 ```
 
+<details>
+<summary>Flowchart diagram</summary>
+ 
 ```mermaid
 
 flowchart TD
     A[TdjServer] -->|Receive request| B(Locate TdjWebcomponent)
     B --> C{Invoke HTTP method}
-    C -->|GET| D[run OnGet]
-    C -->|POST| E[run OnPOst]
+    C -->|**GET**| D[**run OnGet**]
+    C -->|POST| E[run OnPost]
     C -->|PUT| F[run OnPut]
 
+    
+
 ```
+
+</details>
 
 ## Documentation
 
