@@ -10,30 +10,33 @@
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_3.png)
 
-# Daraja HTTP Framework
+In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
 
-> "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
-> — ChatGPT, OpenAI (May 2025)
-
-In short, Daraja enables Object Pascal developers to *write well-structured HTTP server applications*.
-
-## Example code
+## Example
 
 A simple "Hello, World!" application.
 
+### Resource definition
+A Daraja Web Component defines the request handling and response building, but it does not specifiy the actual location (HTTP address) of a resource.
+
+The web component in this example handles HTTP GET requests by overriding the OnGet method. The method sets the response content text and content type.
+
 ```Pascal
-type
-  THelloWorldResource = class(TdjWebComponent)
-  public
-    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
-  end;
+THelloWorldResource = class(TdjWebComponent)
+public
+  procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+end;
 
 procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText := 'Hello, World!';
   Response.ContentType := 'text/plain';
 end;
+```
 
+### Context and resource registration
+
+```Pascal
 procedure Demo;
 var
   Server: TdjServer;
@@ -80,6 +83,11 @@ https://www.habarisoft.com/daraja_framework/3.0.3/docs/DarajaFrameworkGettingSta
 ## Project home page
 
 https://www.habarisoft.com/daraja_framework.html
+
+# Origins
+
+> "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
+> — ChatGPT, OpenAI (May 2025)
 
 ## AGPL Licensing FAQ
 
