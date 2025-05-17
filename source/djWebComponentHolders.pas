@@ -56,14 +56,14 @@ type
      * @param WebComponentName The name of the web component to check.
      * @return True if the web component name exists, otherwise False.
      *)
-    function Contains(WebComponentName: string): Boolean;
+    function Contains(const WebComponentName: string): Boolean;
   end;
 
 implementation
 
 { TdjWebComponentHolders }
 
-function TdjWebComponentHolders.Contains(WebComponentName: string): Boolean;
+function TdjWebComponentHolders.Contains(const WebComponentName: string): Boolean;
 var
   Holder: TdjWebComponentHolder;
 begin
