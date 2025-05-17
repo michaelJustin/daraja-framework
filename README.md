@@ -84,7 +84,7 @@ https://www.habarisoft.com/daraja_framework/3.0.3/docs/DarajaFrameworkGettingSta
 
 https://www.habarisoft.com/daraja_framework.html
 
-# Origins
+## Origins
 
 > "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
 > — ChatGPT, OpenAI (May 2025)
