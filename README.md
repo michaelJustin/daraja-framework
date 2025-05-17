@@ -84,6 +84,15 @@ https://www.habarisoft.com/daraja_framework/3.0.3/docs/DarajaFrameworkGettingSta
 
 https://www.habarisoft.com/daraja_framework.html
 
+## Credits
+
+This software uses the following open source packages:
+
+- [Indy - Internet Direct](https://github.com/IndySockets/Indy)
+- [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code optio
+- [Log4D](http://sourceforge.net/projects/log4d/) for logging
+- [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) for unit testing
+
 ## Origins
 
 > "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
