@@ -6,6 +6,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelJustin/daraja-framework)
 [![Doxygen Docs](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
+![GitHub Repo stars](https://img.shields.io/github/stars/michaelJustin/daraja-framework?style=flat)
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_3.png)
 
