@@ -38,7 +38,7 @@ uses
 
 type
   (**
-   * A TContextMap holds a list of context names and their handlers.
+   * A TContextMap holds a map of context names and their handlers.
    *)
   TdjContextMap = class(TObjectDictionary<string, TdjWebComponentContextHandler>);
 
