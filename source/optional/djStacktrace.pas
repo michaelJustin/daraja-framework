@@ -28,6 +28,10 @@
 
 unit djStacktrace;
 
+(*
+ * @note This unit is unsupported demonstration code.
+ *)
+    
 {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
   {$MESSAGE HINT 'Options for development stage enabled'}
