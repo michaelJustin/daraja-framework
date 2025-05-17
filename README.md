@@ -1,6 +1,11 @@
-[![Generate Doxygen Docs (Windows + pas2dox)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
+[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
+![GitHub top language](https://img.shields.io/github/languages/top/michaelJustin/daraja-framework)
+![Static Badge](https://img.shields.io/badge/OS-Windows-blue)
+![GitHub Release](https://img.shields.io/github/v/release/michaelJustin/daraja-framework)
+![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/michaelJustin/daraja-framework)
+![GitHub last commit](https://img.shields.io/github/last-commit/michaelJustin/daraja-framework)
+[![Doxygen Docs](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0) ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/michaelJustin/daraja-framework)
 
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_2.png)
 
