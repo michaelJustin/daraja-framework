@@ -94,7 +94,7 @@
     <PathDelim Value="\"/>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);..\..\..\Indy\Lib\Core"/>
-      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\Protocols;..\..\..\Indy\Lib\System"/>
+      <OtherUnitFiles Value="..\..\source;..\..\source\optional;..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\Protocols;..\..\..\Indy\Lib\System;..\..\..\slf4p\src\main"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>

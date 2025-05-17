@@ -1,4 +1,4 @@
-(*
+﻿(*
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -591,15 +591,15 @@ end;
 
 function TdjWebComponentHandler.FindHolder(WebComponentClass: TdjWebComponentClass): TdjWebComponentHolder;
 var
-  I: Integer;
+  WebComponent: TdjWebComponentHolder;
 begin
   Result := nil;
 
-  for I := 0 to WebComponents.Count - 1 do
+  for WebComponent in WebComponents do
   begin
-    if WebComponents[I].WebComponentClass = WebComponentClass then
+    if WebComponent.WebComponentClass = WebComponentClass then
     begin
-      Result := WebComponents[I];
+      Result := WebComponent;
       Break;
     end;
   end;
