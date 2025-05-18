@@ -45,7 +45,7 @@ type
   { TdjWebComponentContextHandler }
 
   (**
-   * Context Handler for Web Components.
+   * Context Handler for Web Components (and Web Filters).
    *)
   TdjWebComponentContextHandler = class(TdjContextHandler)
   private

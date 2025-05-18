@@ -21,7 +21,7 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
 *)
@@ -36,11 +36,17 @@ uses
   djWebComponentContextHandler;
 
 type
+  { TdjWebAppContext }
+
   (**
    * Main context handler class.
    *)
-  TdjWebAppContext = class(TdjWebComponentContextHandler);
+  TdjWebAppContext = class(TdjWebComponentContextHandler)
+    // pas2dox requires the class declaration to use the end; statement
+  end;
 
 implementation
+
+{ TdjWebAppContext }
 
 end.

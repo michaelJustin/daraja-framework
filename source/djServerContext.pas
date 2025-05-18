@@ -42,7 +42,9 @@ type
    * A subclass of the Indy context class is used for
    * future extensions.
    *)
-  TdjServerContext = class(TIdServerContext);
+  TdjServerContext = class(TIdServerContext)
+    // pas2dox requires the class declaration to use the end; statement
+  end;
 
   TdjServerContextClass = class of TdjServerContext;
 

@@ -112,9 +112,13 @@ type
 
   // note Delphi 2009 AVs if it is a TObjectList<>
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use  TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
-  TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>);
+  // for a workaround use TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  (**
+   * A generic list of TdjWebFilterHolder objects.
+   *)
+  TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>)
+    // pas2dox requires the class declaration to use the end; statement
+  end;
 
 implementation
 
