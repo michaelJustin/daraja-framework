@@ -48,53 +48,26 @@ the project search path
 
 ## Example
 
-A simple "Hello, World!" application.
+These are the basic steps to configure a simple "Hello, World!" application. A simple resource will be defined in a TdjWebComponent which has only one method, `OnGet`. The web component the will be installed in the server.
 
 ### Resource definition
-A Daraja Web Component defines the request handling and response building, but it does not specifiy the actual location (HTTP address) of a resource.
 
+A Daraja Web Component defines the request handling and response building, but it does not specify the actual location (HTTP address) of a resource.
 The web component in this example handles HTTP GET requests by overriding the OnGet method. The method sets the response content text and content type.
 
-```Pascal
-THelloWorldResource = class(TdjWebComponent)
-public
-  procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
-end;
-
-procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
-begin
-  Response.ContentText := 'Hello, World!';
-  Response.ContentType := 'text/plain';
-end;
-```
+https://github.com/michaelJustin/daraja-framework/blob/a047517ead8faad3c30f5096c090863bbd36e92e/demo/01_helloworld/MainUnit.pas#L40-L50
 
 ### Context and resource registration
 
-```Pascal
-procedure Demo;
-var
-  Server: TdjServer;
-  Context: TdjWebAppContext;
-begin
-  Server := TdjServer.Create(80);
-  try
-    Context := TdjWebAppContext.Create('demo');
-    Context.Add(THelloWorldResource, '/hello.txt');
-    Server.Add(Context);
-    Server.Start;
-    WriteLn('Server is running, please open http://127.0.0.1/demo/hello.txt');
-    WriteLn('Hit enter to terminate.');
-    ReadLn;
-  finally
-    Server.Free;
-  end;
-end;
-```
+We want to place the web component in the context `tutorial` and the absolute path `/hello`. We also want to use port 80. 
+The full URL of our resource is `http://127.0.0.1/tutorial/hello`
 
-Tested with curl:
+https://github.com/michaelJustin/daraja-framework/blob/a047517ead8faad3c30f5096c090863bbd36e92e/demo/01_helloworld/MainUnit.pas#L57-L68
+
+#### Test with curl:
 
 ```Console
-curl -i http://127.0.0.1/demo/hello.txt
+curl -i http://127.0.0.1/tutorial/hello
 HTTP/1.1 200 OK
 Connection: keep-alive
 Content-Type: text/plain; charset=ISO-8859-1
