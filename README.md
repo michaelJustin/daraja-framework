@@ -89,8 +89,6 @@ flowchart TD
     C -->|POST| E[run OnPost]
     C -->|PUT| F[run OnPut]
 
-    
-
 ```
 
 </details>
@@ -128,7 +126,7 @@ No.
 
 ### Commercial license
 
-The commercial license can be obtained from https://www.habarisoft.com/daraja_framework.html
+You can be released from the requirements of the AGPL license by purchasing a commercial license. The commercial license can be obtained from https://www.habarisoft.com/daraja_framework.html
 
 ## Credits
 
