@@ -75,7 +75,6 @@ end;
 procedure TdjDefaultWebComponentTests.TestDefaultWebComponent;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
   Server := TdjServer.Create;
@@ -84,8 +83,7 @@ begin
     Context := TdjWebAppContext.Create('test');
 
     // create example component and register it
-    Holder := TdjWebComponentHolder.Create(TExamplePage);
-    Context.AddWebComponent(Holder, '/index.html');
+    Context.AddWebComponent(TExamplePage, '/index.html');
 
     Server.Add(Context);
     Server.Start;
@@ -105,8 +103,7 @@ begin
     end;
 
     // create default web component and register it
-    Holder := TdjWebComponentHolder.Create(TdjDefaultWebComponent);
-    Context.AddWebComponent(Holder, '/');
+    Context.AddWebComponent(TdjDefaultWebComponent, '/');
 
     // test static
     CheckGETResponseEquals('staticcontent', '/test/static.html', '/test/static.html');
@@ -120,18 +117,15 @@ end;
 procedure TdjDefaultWebComponentTests.TestDefaultWebComponentInRootContext;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
-
   Server := TdjServer.Create;
   try
     // create the 'test' context
     Context := TdjWebAppContext.Create('');
 
     // create example component and register it
-    Holder := TdjWebComponentHolder.Create(TExamplePage);
-    Context.AddWebComponent(Holder, '/index.html');
+    Context.AddWebComponent(TExamplePage, '/index.html');
 
     Server.Add(Context);
 
@@ -150,8 +144,7 @@ begin
     end;
 
     // create default web component and register it
-    Holder := TdjWebComponentHolder.Create(TdjDefaultWebComponent);
-    Context.AddWebComponent(Holder, '/');
+    Context.AddWebComponent(TdjDefaultWebComponent, '/');
 
     // test static
     CheckGETResponseEquals('staticcontent', '/static.html', '/static.html');

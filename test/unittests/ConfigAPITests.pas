@@ -183,15 +183,12 @@ end;
 procedure TAPIConfigTests.ConfigAbsolutePath;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
   Server := TdjServer.Create;
   try
-    Holder := TdjWebComponentHolder.Create(TExamplePage);
-
     Context := TdjWebAppContext.Create('web');
-    Context.AddWebComponent(Holder, '/hello.html');
+    Context.AddWebComponent(TExamplePage, '/hello.html');
 
     Server.Add(Context);
     Server.Start;
@@ -461,9 +458,8 @@ begin
   Server := TdjServer.Create;
   try
     Context := TdjWebAppContext.Create('context');
-    Holder := TdjWebComponentHolder.Create(TCmpReturnsInitParams);
+    Holder := Context.AddWebComponent(TCmpReturnsInitParams, '/*');
     Holder.SetInitParameter('test', 'success');
-    Context.AddWebComponent(Holder, '/*');
     Server.Add(Context);
     Server.Start;
 
@@ -567,14 +563,12 @@ end;
 procedure TAPIConfigTests.TestExceptionInInitStopsComponent;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
   Server := TdjServer.Create;
   try
-    Holder := TdjWebComponentHolder.Create(TExceptionInInitComponent);
     Context := TdjWebAppContext.Create('ctx');
-    Context.AddWebComponent(Holder, '/exception');
+    Context.AddWebComponent(TExceptionInInitComponent, '/exception');
     Server.Add(Context);
     Server.Start;
 
@@ -605,14 +599,12 @@ end;
 procedure TAPIConfigTests.TestExceptionInServiceReturns500;
 var
   Server: TdjServer;
-  Holder: TdjWebComponentHolder;
   Context: TdjWebAppContext;
 begin
   Server := TdjServer.Create;
   try
-    Holder := TdjWebComponentHolder.Create(TExceptionComponent);
     Context := TdjWebAppContext.Create('ctx');
-    Context.AddWebComponent(Holder, '/exception');
+    Context.AddWebComponent(TExceptionComponent, '/exception');
     Server.Add(Context);
     Server.Start;
 
