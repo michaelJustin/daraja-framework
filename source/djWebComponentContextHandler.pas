@@ -69,6 +69,16 @@ type
      *)
     procedure DoHandle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
+    (**
+     * Add a Web Filter Holder.
+     *
+     * @param Holder holds information about the Web Filter
+     * @param UrlPattern path specification
+     * @throws Exception if the Web Filter can not be added
+     * @deprecated for removal
+     *)
+    procedure AddWebFilter(Holder: TdjWebFilterHolder;
+      const UrlPattern: string); overload; deprecated;
   public
     (**
      * Constructor.
@@ -113,16 +123,6 @@ type
      * @throws EWebComponentException if the Web Component can not be added
      *)
     procedure AddWebComponent(Holder: TdjWebComponentHolder;
-      const UrlPattern: string); overload;
-
-    (**
-     * Add a Web Filter Holder.
-     *
-     * @param Holder holds information about the Web Filter
-     * @param UrlPattern path specification
-     * @throws Exception if the Web Filter can not be added
-     *)
-    procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const UrlPattern: string); overload;
 
     (**
