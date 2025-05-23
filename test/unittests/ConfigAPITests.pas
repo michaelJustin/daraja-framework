@@ -1345,9 +1345,8 @@ begin
   Context := TdjWebAppContext.Create('web');
   Context.SetInitParameter('a', 'b');
   Context.Add(TExamplePage, '*.filter');
-  FilterHolder := TdjWebFilterHolder.Create(TTestFilterWithInit);
+  FilterHolder := Context.Add(TTestFilterWithInit, '*.filter');
   FilterHolder.SetInitParameter('key', 'Hello, World!');
-  Context.AddWebFilter(FilterHolder, '*.filter');
 
   // run
   Server := TdjServer.Create;
