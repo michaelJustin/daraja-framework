@@ -137,13 +137,11 @@ end;
 procedure TdjWebAppContextTests.Test_AddWebComponent_HolderWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
-  Holder: TdjWebComponentHolder;
 begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Holder := TdjWebComponentHolder.Create(TExamplePage);
-    Context.AddWebComponent(Holder, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
     {$IFDEF FPC}
     ExpectException(EWebComponentException, 'Web Component TExamplePage is already installed in context foo');
@@ -152,7 +150,7 @@ begin
     {$ENDIF}
 
     // same path -> error
-    Context.AddWebComponent(Holder, '/bar');
+    Context.Add(TExamplePage, '/bar');
 
   finally
     Context.Free;
@@ -162,14 +160,11 @@ end;
 procedure TdjWebAppContextTests.Test_AddWebComponent_Two_HoldersWithSameUrlPatternTwice_RaisesException;
 var
   Context: TdjWebAppContext;
-  Holder1, Holder2: TdjWebComponentHolder;
 begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Holder1 := TdjWebComponentHolder.Create(TExamplePage);
-    Holder2 := TdjWebComponentHolder.Create(TExamplePage);
-    Context.AddWebComponent(Holder1, '/bar');
+    Context.AddWebComponent(TExamplePage, '/bar');
 
     {$IFDEF FPC}
     ExpectException(EWebComponentException, 'Mapping key exists');
@@ -178,11 +173,7 @@ begin
     {$ENDIF}
 
     // same path -> error
-    try
-      Context.AddWebComponent(Holder2, '/bar');
-    finally
-      Holder2.Free; // fix leak
-    end;
+    Context.AddWebComponent(TExamplePage, '/bar');
   finally
     Context.Free;
   end;
