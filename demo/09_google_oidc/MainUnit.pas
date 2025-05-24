@@ -56,11 +56,10 @@ var
   FilterHolder: TdjWebFilterHolder;
   Server: TdjServer;
 begin
-  TdjWebFilterHolder.Create(TOpenIDAuthFilter);
-
   Context := TdjWebAppContext.Create('', True);
 
   Context.Add(TRootResource, '/index.html');
+  
   OIDCCallbackHolder := Context.AddWebComponent(TOpenIDCallbackResource, '/openidcallback');
   OIDCCallbackHolder.SetInitParameter('RedirectURI', REDIRECT_URI);
   OIDCCallbackHolder.SetInitParameter('secret.file', SECRET_FILE);
