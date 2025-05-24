@@ -451,7 +451,12 @@ begin
     on E: EWebComponentException do
     begin
       Trace(E.Message);
-      raise;
+
+      raise EWebComponentException.CreateFmt(
+        'Web Component %s is already installed in context %s with URL pattern %s',
+        [Holder.WebComponentClass.ClassName, Holder.GetContext.GetContextPath,
+         UrlPattern]
+        );
     end;
   end;
 

@@ -43,12 +43,6 @@ type
 
     procedure Test_Add_ClassWithSameUrlPatternTwice_RaisesException;
 
-    procedure Test_AddWebComponent_ClassWithSameUrlPatternTwice_RaisesException;
-
-    procedure Test_AddWebComponent_HolderWithSameUrlPatternTwice_RaisesException;
-
-    procedure Test_AddWebComponent_Two_HoldersWithSameUrlPatternTwice_RaisesException;
-
     // todo: Test AddHandler / RemoveHandler
 
   end;
@@ -56,7 +50,7 @@ type
 implementation
 
 uses
-  djWebAppContext, djWebComponentHolder, djTypes, djWebComponent,
+  djWebAppContext, djTypes, djWebComponent,
   SysUtils, Classes;
 
 type
@@ -95,85 +89,17 @@ begin
   Context := TdjWebAppContext.Create('foo');
 
   try
-    Context.Add(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/qux');
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Mapping key exists');
+    ExpectException(EWebComponentException, 'Web Component TExamplePage is already installed in context foo with URL pattern /qux');
     {$ELSE}
     ExpectedException := EWebComponentException;
     {$ENDIF}
 
     // same path -> error
-    Context.Add(TExamplePage, '/bar');
+    Context.Add(TExamplePage, '/qux');
 
-  finally
-    Context.Free;
-  end;
-end;
-
-procedure TdjWebAppContextTests.Test_AddWebComponent_ClassWithSameUrlPatternTwice_RaisesException;
-var
-  Context: TdjWebAppContext;
-begin
-  Context := TdjWebAppContext.Create('foo');
-
-  try
-    Context.Add(TExamplePage, '/bar');
-
-    {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Mapping key exists');
-    {$ELSE}
-    ExpectedException := EWebComponentException;
-    {$ENDIF}
-
-    // same path -> error
-    Context.Add(TExamplePage, '/bar');
-
-  finally
-    Context.Free;
-  end;
-end;
-
-procedure TdjWebAppContextTests.Test_AddWebComponent_HolderWithSameUrlPatternTwice_RaisesException;
-var
-  Context: TdjWebAppContext;
-begin
-  Context := TdjWebAppContext.Create('foo');
-
-  try
-    Context.Add(TExamplePage, '/bar');
-
-    {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Web Component TExamplePage is already installed in context foo');
-    {$ELSE}
-    ExpectedException := EWebComponentException;
-    {$ENDIF}
-
-    // same path -> error
-    Context.Add(TExamplePage, '/bar');
-
-  finally
-    Context.Free;
-  end;
-end;
-
-procedure TdjWebAppContextTests.Test_AddWebComponent_Two_HoldersWithSameUrlPatternTwice_RaisesException;
-var
-  Context: TdjWebAppContext;
-begin
-  Context := TdjWebAppContext.Create('foo');
-
-  try
-    Context.AddWebComponent(TExamplePage, '/bar');
-
-    {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Mapping key exists');
-    {$ELSE}
-    ExpectedException := EWebComponentException;
-    {$ENDIF}
-
-    // same path -> error
-    Context.AddWebComponent(TExamplePage, '/bar');
   finally
     Context.Free;
   end;
