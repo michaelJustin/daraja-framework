@@ -53,6 +53,8 @@ type
 
     procedure ConfigTwoContexts;
 
+    procedure AddWebComponentWithMultipleUrlPattern;
+
     // context
     procedure StopContext;
     procedure StopStartContext;
@@ -759,6 +761,27 @@ begin
 
     CheckGETResponseEquals('example', '/foo/bar');
     CheckGETResponseEquals('Hello universe!', '/foo2/bar2');
+    CheckGETResponse404('/foo2/bar');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.AddWebComponentWithMultipleUrlPattern;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('');
+    Context.Add(TExamplePage, ['/baz', '/qux']);
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example', '/baz');
+    CheckGETResponseEquals('example', '/qux');
     CheckGETResponse404('/foo2/bar');
 
   finally
