@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djAbstractHandler;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djLifeCycle, djServerContext,
@@ -42,9 +40,9 @@ uses
 type
   { TdjAbstractHandler }
 
-  (**
-   * AbstractHandler
-   *)
+  {*
+   * \copydoc IHandler
+   *}
   TdjAbstractHandler = class(TdjLifeCycle, IHandler)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -53,16 +51,18 @@ type
     procedure Trace(const S: string);
   protected
     // TdjLifeCycle overrides
+    /// \private
     procedure DoStart; override;
+    /// \private
     procedure DoStop; override;
   protected
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse); virtual; abstract;
   public
-    (**
+    {*
      * Constructor.
-     *)
+     *}
     constructor Create; override;
   end;
 
@@ -78,10 +78,6 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjAbstractHandler.ClassName);
   {$ENDIF DARAJA_LOGGING}
-
-  {$IFDEF LOG_CREATE}
-  Trace('Created');
-  {$ENDIF}
 end;
 
 procedure TdjAbstractHandler.Trace(const S: string);

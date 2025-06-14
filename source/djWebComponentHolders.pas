@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djWebComponentHolders;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djWebComponentHolder,
@@ -44,18 +44,18 @@ type
 
   { TdjWebComponentHolders }
 
-  (**
+  {*
    * TdjWebComponentHolders is a class that manages a list of TdjWebComponentHolder objects.
    * It inherits from TObjectList to provide functionality for handling collections of components.
-   *)
+   *}
   TdjWebComponentHolders = class(TObjectList<TdjWebComponentHolder>)
   public
-    (**
+    {*
      * Checks if the specified web component name exists.
      *
      * @param WebComponentName The name of the web component to check.
      * @return True if the web component name exists, otherwise False.
-     *)
+     *}
     function Contains(const WebComponentName: string): Boolean;
   end;
 

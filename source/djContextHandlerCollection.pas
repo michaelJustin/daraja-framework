@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djContextHandlerCollection;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djHandlerList, djContextMap
@@ -40,10 +38,10 @@ uses
 type
   { TdjContextHandlerCollection }
 
-  (**
+  {*
    * Multiple contexts may have the same context path and they are
    * called in order until one handles the request.
-   *)
+   *}
   TdjContextHandlerCollection = class(TdjHandlerList)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -55,14 +53,14 @@ type
     procedure Trace(const S: string);
 
   public
-    (**
+    {*
      * Create a collection of context handlers.
-     *)
+     *}
     constructor Create; override;
 
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
   end;
@@ -86,8 +84,6 @@ end;
 
 destructor TdjContextHandlerCollection.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
-
   ContextMap.Free;
 
   inherited;

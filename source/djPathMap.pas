@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,97 +24,93 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djPathMap;
 
 interface
 
-// {$i IdCompilerDefines.inc}
-
 uses
   Classes;
 
 type
-  (**
+  {*
    * @enum TSpecType
    * Declares the path specification types.
-   *)
-  TSpecType = (stUnknown,  //!< Unknown type
-               stExact,    //!< Exact match
-               stPrefix,   //!< Longest prefix match
-               stSuffix,   //!< Longest suffix match
-               stDefault   //!< Default
+   *}
+  TSpecType = (stUnknown,  {*< Unknown type }
+               stExact,    {*< Exact match  }
+               stPrefix,   {*< Longest prefix match }
+               stSuffix,   {*< Longest suffix match }
+               stDefault   {*< Default }
               );
 
   { TdjPathMap }
 
-  (**
+  {*
    * Holds all known web component mappings for a context.
    *
    * Matching is performed in the following order
    * Exact match
    * Longest prefix match
    * Longest suffix match
-   *)
+   *}
   TdjPathMap = class(TStringList)
   protected
-    (**
+    {*
      * Matches a given URL document path against a specified path pattern.
      * @param Path the URL document path
      * @param Spec the path specification
      * @param SpecType the path specification type
      * @return True if the Path matches the Spec (with known SpecType)
-     *)
+     *}
     class function Matches(const Path, Spec: string; SpecType: TSpecType): Boolean; overload;
 
   public
-    (**
+    {*
      * @param Spec the path specification
      * @return the path specification type
-     *)
+     *}
     class function GetSpecType(const Spec: string): TSpecType;
 
-    (**
+    {*
      * Matches the given path against a specified pattern.
      *
      * @param Path The file or directory path to be checked.
      * @param Spec The pattern or specification to match against.
      * @return True if the path matches the specification, otherwise False.
-     *)
+     *}
     class function Matches(const Path, Spec: string): Boolean; overload;
 
-    (**
+    {*
      * Check if a mapping path exists.
      * This procedure throws a EWebComponentException if the URL pattern is already registered for this context.
      *
      * @param UrlPattern a single component mapping path
      * @throws EWebComponentException
-     *)
+     *}
     procedure CheckExists(const UrlPattern: string);
 
-    (**
+    {*
      * Add a web component mapping.
      *
      * @param UrlPattern a single component mapping path
      * @param Value the mapped web component
      * @throws EWebComponentException
-     *)
+     *}
     procedure AddUrlPattern(const UrlPattern: string; Value: TObject); overload;
 
-    (**
+    {*
      * Return all matching mappings for the given path.
      * The best match will be the first entry.
      *
      * @param Path the URL path (without context
      * @result list of matching mappings
-     *)
+     *}
     function GetMatches(const Path: string): TStrings;
   end;
 
-{$IFNDEF DOXYGEN_SKIP}
-
-implementation
+implementation /// \cond
 
 uses
   djTypes,
@@ -307,7 +303,5 @@ begin
   end;
 end;
 
-{$ENDIF DOXYGEN_SKIP}
-
-end.
+end. /// \endcond
 

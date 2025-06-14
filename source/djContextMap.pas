@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,22 +24,22 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djContextMap;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djWebComponentContextHandler,
   Generics.Collections;
 
 type
-  (**
+  {*
    * A TContextMap holds a map of context names and their handlers.
-   *)
+   *}
   TdjContextMap = class(TObjectDictionary<string, TdjWebComponentContextHandler>)
     // pas2dox requires the class declaration to use the end; statement
   end;

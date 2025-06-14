@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djAbstractHandlerContainer;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djAbstractHandler,
@@ -39,9 +39,9 @@ uses
 type
   { TdjAbstractHandlerContainer }
 
-  (**
+  {*
    * This is the base class for handlers that may contain other handlers.
-   *)
+   *}
   TdjAbstractHandlerContainer = class(TdjAbstractHandler, IHandlerContainer)
   protected
     // IHandlerContainer interface

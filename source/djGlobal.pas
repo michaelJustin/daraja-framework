@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,18 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djGlobal;
 
 interface
-
-{$IFNDEF DOXYGEN_SKIP}
-
-// {$i IdCompilerDefines.inc}
 
 const
   DWF_SERVER_VERSION = '3.0.5-SNAPSHOT';
@@ -41,7 +37,7 @@ const
 
 function HTMLEncode(const AData: string): string;
 
-implementation
+implementation /// \cond
 
 // http://stackoverflow.com/a/2971923/80901
 function HTMLEncode(const AData: string): string;
@@ -72,6 +68,4 @@ begin
   SetLength(Result, Pos - 1);
 end;
 
-{$ENDIF DOXYGEN_SKIP}
-
-end.
+end. /// \endcond

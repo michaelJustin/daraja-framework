@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,16 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djAbstractConfig;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djTypes, djInitParameters;
@@ -38,21 +38,21 @@ uses
 type
   { TdjAbstractConfig }
 
-  (**
+  {*
    * Generic configuration class for managing initialization parameters and context.
    * This class implements the IWriteableConfig interface and provides methods
    * to add parameters, retrieve them, and manage the application context.
    * @implements IWriteableConfig
-   *)
+   *}
   TdjAbstractConfig = class(TInterfacedObject, IWriteableConfig, IContextConfig)
   private
-    (**
+    {*
      * Initialization parameters.
-     *)
+     *}
     FParams: TdjInitParameters;
-    (**
+    {*
      * The context.
-     *)
+     *}
     FContext: IContext;
   protected
     // IWriteableConfig interface
@@ -63,23 +63,23 @@ type
     function GetInitParameter(const Key: string): string;
     function GetInitParameterNames: TdjStrings;
   public
-    (**
+    {*
      * Constructor.
      * Initializes the configuration object and allocates resources for parameters.
-     *)
+     *}
     constructor Create;
 
-    (**
+    {*
      * Destructor.
      * Frees allocated resources and cleans up the configuration object.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * Get the current context.
      *
      * @return The context associated with this configuration.
-     *)
+     *}
     function GetContext: IContext;
 
   end;

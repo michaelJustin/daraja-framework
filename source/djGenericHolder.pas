@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djGenericHolder;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djLifeCycle,
@@ -39,21 +39,21 @@ uses
 type
   { TdjGenericHolder }
 
-  (**
+  {*
    * A generic holder class that manages objects of type T.
    * 
    * @tparam T A type parameter constrained to TInterfacedObject.
    * @note This class inherits from TdjLifeCycle.
-   *)
+   *}
   TdjGenericHolder<T: TInterfacedObject> = class(TdjLifeCycle)
   private
     FName: string;
   public
-    (**
+    {*
      * Constructor for creating an instance of the class.
      *
      * @param AClass The class type to be used for initialization.
-     *)
+     *}
     constructor Create(AClass: TInterfacedClass); reintroduce;
     // properties
     property Name: string read FName write FName;

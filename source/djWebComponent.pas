@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,11 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djWebComponent;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djGenericWebComponent, djServerContext,
@@ -42,7 +40,7 @@ uses
 type
   { TdjWebComponent }
 
-  (**
+  {*
    * A base class which can be subclassed to create a HTTP component
    * for a Web site.
    *
@@ -51,7 +49,7 @@ type
    * @li OnPost, for HTTP POST requests
    * @li OnPut, for HTTP PUT requests
    * @li OnDelete, for HTTP DELETE requests
-   *)
+   *}
   TdjWebComponent = class(TdjGenericWebComponent)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -60,68 +58,68 @@ type
 
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
   protected
-    (**
+    {*
      * Called by the server to handle a DELETE request.
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
      * @throws EWebComponentException if an exception occurs
-     *)
+     *}
     procedure OnDelete(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server (via the service method) to allow a component to handle a GET request.
-     *)
+     *}
     procedure OnGet(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server (via the service method) to allow a component to handle a HEAD request.
-     *)
+     *}
     procedure OnHead(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server (via the service method) to allow a component to handle a OPTIONS request.
-     *)
+     *}
     procedure OnOptions(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server to handle a POST request.
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
      * @throws EWebComponentException if an exception occurs
-     *)
+     *}
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server to handle a PUT request.
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
      * @throws EWebComponentException if an exception occurs
-     *)
+     *}
     procedure OnPut(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server to handle a TRACE request.
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
      * @throws EWebComponentException if an exception occurs
-     *)
+     *}
     procedure OnTrace(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Called by the server to handle a PATCH request.
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
      * @throws EWebComponentException if an exception occurs
      * @sa http://tools.ietf.org/html/rfc5789
-     *)
+     *}
     procedure OnPatch(Request: TdjRequest; Response: TdjResponse); virtual;
 
-    (**
+    {*
      * Returns the time the WebComponent object was last modified.
      * If the time is unknown, this method returns 0 (the default).
      *
@@ -132,7 +130,7 @@ type
      *
      * @param Request HTTP request
      * @return the last modified timestamp
-     *)
+     *}
     function OnGetLastModified(Request: TdjRequest): TDateTime; virtual;
 
   public
@@ -143,14 +141,12 @@ type
       TdjResponse); override;
   end;
 
-  (**
+  {*
    * Class reference to TdjWebComponent
-   *)
+   *}
   TdjWebComponentClass = class of TdjWebComponent;
 
-{$IFNDEF DOXYGEN_SKIP}
-
-implementation
+implementation /// \cond
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
@@ -172,12 +168,12 @@ begin
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebComponent.ClassName);
   {$ENDIF DARAJA_LOGGING}
 
-  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+  
 end;
 
 destructor TdjWebComponent.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  
 
   inherited;
 end;
@@ -299,7 +295,5 @@ begin
   end;
 end;
 
-{$ENDIF DOXYGEN_SKIP}
-
-end.
+end. /// \endcond
 

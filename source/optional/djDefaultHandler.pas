@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djDefaultHandler;
 
@@ -41,7 +41,7 @@ uses
 type
   { TdjDefaultHandler }
   
-  (**
+  {*
    * Default Handler.
    *
    * This handler deals with unhandled requests in the server.
@@ -49,7 +49,7 @@ type
    * For requests to '/' a welcome page is served.
    *
    * @note This class is unsupported demonstration code.
-   *)
+   *}
   TdjDefaultHandler = class(TdjAbstractHandler)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -60,13 +60,13 @@ type
     function LoadRes: TStream;
     function HomePage: string;
   public
-    (**
+    {*
      * Create a DefaultHandler.
-     *)
+     *}
     constructor Create; override;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
     // IHandler interface
@@ -90,12 +90,12 @@ begin
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjDefaultHandler.ClassName);
   {$ENDIF DARAJA_LOGGING}
 
-  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+  
 end;
 
 destructor TdjDefaultHandler.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  
   inherited;
 end;
 

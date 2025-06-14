@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djHTTPConnector;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djAbstractConnector, djHTTPServer, djInterfaces, djServerContext,
@@ -38,18 +36,16 @@ uses
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
   djTypes,
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdContext;
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
 type
   { TdjHTTPConnector }
 
-  (**
+  {*
    * HTTP connector.
    *
    * Instances of this class wrap a TdjHTTPServer component.
-   *)
+   *}
   TdjHTTPConnector = class(TdjAbstractConnector)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -64,33 +60,33 @@ type
       ARequestInfo: TdjRequest; AResponseInfo: TdjResponse);
   protected
     // TdjLifeCycle overrides
+    /// \private
     procedure DoStart; override;
+    /// \private
     procedure DoStop; override;
   public
-    (**
+    {*
      * Create a HTTP connector.
      *
      * The handler is a required argument. The connector will
      * call the "Handle" method for incoming requests.
      *
      * @param Handler the request handler
-     *)
+     *}
     constructor Create(const Handler: IHandler); virtual;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
     // properties
     property HTTPServer: TdjHTTPServer read FHTTPServer;
   end;
 
-implementation
+implementation /// \cond
 
 uses
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdSocketHandle, IdIOHandler, IdGlobal, IdException,
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils, Classes;
 
 { TdjHTTPConnector }
@@ -109,17 +105,10 @@ begin
   Trace('Configuring');
 
   FHTTPServer := TdjHTTPServer.Create;
-
-{$IFDEF LOG_CREATE}Trace('Created');
-{$ENDIF}
 end;
 
 destructor TdjHTTPConnector.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}
-  Trace('Destroy');
-  {$ENDIF}
-
   if IsStarted then
   begin
     Stop;
@@ -232,7 +221,7 @@ begin
     begin
       AContext.Connection.IOHandler.DefAnsiEncoding := IndyTextEncoding_UTF8;
     end;
-    {$ENDIF}
+    {$ENDIF FPC}
 
   except
     on E: EIdConnClosedGracefully do
@@ -250,5 +239,5 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond
 

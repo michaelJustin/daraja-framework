@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,35 +21,33 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djLifeCycle;
 
 interface
 
-// {$i IdCompilerDefines.inc}
-
 uses
   djInterfaces,
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
   SyncObjs;
 
 type
   { TdjLifeCycle }
 
-  (**
+  {*
    * Abstract LifeCycle implementation.
-   *)
+   *}
   TdjLifeCycle = class(TInterfacedObject, ILifeCycle)
   private
     FStarted: Boolean;
     FStopped: Boolean;
-    
+
     CS: TCriticalSection;
 
     {$IFDEF DARAJA_LOGGING}
@@ -62,24 +60,24 @@ type
     procedure SetStopped(const Value: Boolean);
 
   protected
-    (**
+    {*
      * Execute the custom start code.
-     *)
+     *}
     procedure DoStart; virtual;
-    
-    (**
+
+    {*
      * Execute the custom stop code.
-     *)
+     *}
     procedure DoStop; virtual;
 
-    (**
+    {*
      * Raises an exception if the lifecycle is in "started" state
-     *)
+     *}
     procedure CheckStarted;
 
-    (**
+    {*
      * Raises an exception if the lifecycle is in "stopped" state
-     *)
+     *}
     procedure CheckStopped;
 
   public
@@ -97,7 +95,7 @@ type
     property Stopped: Boolean read FStopped write SetStopped;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   SysUtils;
@@ -128,16 +126,10 @@ begin
   CS := TCriticalSection.Create;
 
   FStopped := True;
-
-  {$IFDEF LOG_CREATE}Trace('Created');
-  {$ENDIF}
 end;
 
 destructor TdjLifeCycle.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');
-  {$ENDIF}
-
   CS.Free;
 
   inherited;
@@ -243,4 +235,4 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond

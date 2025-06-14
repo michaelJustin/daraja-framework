@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,11 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebFilterHolder;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djWebFilter, djGenericHolder, djServerContext, djWebFilterConfig,
@@ -43,12 +41,12 @@ uses
 type
   { TdjWebFilterHolder }
 
-  (**
+  {*
    * A generic holder class for managing instances of TdjWebFilter.
    *
    * This class is a specialization of TdjGenericHolder, designed to hold and manage
    * objects of type TdjWebFilter.
-   *)
+   *}
   TdjWebFilterHolder = class(TdjGenericHolder<TdjWebFilter>)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -62,65 +60,67 @@ type
     procedure Trace(const S: string);
   protected
     // TdjLifeCycle overrides
+    /// \private
     procedure DoStart; override;
+    /// \private
     procedure DoStop; override;
   public
-    (**
+    {*
      * Constructor for creating an instance of TdjWebFilterHolder.
      *
      * @param WebFilterClass The class reference of type TdjWebFilterClass used to initialize the web filter holder.
-     *)
+     *}
     constructor Create(WebFilterClass: TdjWebFilterClass);
     destructor Destroy; override;
 
-    (**
+    {*
      * Set the context.
      *
      * @param Context the Web Filter context
-     *)
+     *}
     procedure SetContext(const Context: IContext);
 
-    (**
+    {*
      * Set initialization parameter.
      *
      * @param Key init parameter name
      * @param Value init parameter value
-     *)
+     *}
     procedure SetInitParameter(const Key: string; const Value: string);
 
-    (**
+    {*
      * Executes the filter logic for the given server context, request, and response.
      *
      * @param Context The server context in which the filter is executed.
      * @param Request The HTTP request being processed.
      * @param Response The HTTP response to be sent back to the client.
      * @param Chain The filter chain to pass control to the next filter in the chain.
-     *)
+     *}
      procedure DoFilter(Context: TdjServerContext;
        Request: TdjRequest; Response: TdjResponse;
        const Chain: IWebFilterChain);
     // properties
-    (**
+    {*
      * The filter class.
-     *)
+     *}
     property WebFilterClass: TdjWebFilterClass read GetClass;
-    (**
+    {*
      * The instance of the filter.
-     *)
+     *}
     property WebFilter: TdjWebFilter read FWebFilter;
   end;
 
   // note Delphi 2009 AVs if it is a TObjectList<>
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
   // for a workaround use TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
-  (**
+  {*
    * A generic list of TdjWebFilterHolder objects.
-   *)
+   *}
   TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>)
     // pas2dox requires the class declaration to use the end; statement
   end;
 
-implementation
+implementation /// \cond
 
 uses
   SysUtils;
@@ -137,13 +137,11 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjWebFilterHolder.ClassName);
   {$ENDIF DARAJA_LOGGING}
-
-  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
 end;
 
 destructor TdjWebFilterHolder.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+
   inherited;
 end;
 
@@ -247,7 +245,7 @@ begin
   WebFilter.DoFilter(Context, Request, Response, Chain);
 end;
 
-end.
+end. /// \endcond
 
 
 

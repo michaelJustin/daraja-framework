@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djWebFilterMapping;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djWebFilterHolder,
@@ -39,9 +39,9 @@ uses
 type
   { TdjWebFilterMapping }
 
-  (**
+  {*
    * Web Filter Mapping.
-   *)
+   *}
   TdjWebFilterMapping = class(TObject)
   private
     FName: string;
@@ -52,12 +52,12 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    (**
+    {*
      * Determines whether the given path in the current context matches the criteria.
      *
      * @param PathInContext The path within the current context to evaluate.
      * @return True if the path matches the criteria; otherwise, False.
-     *)
+     *}
     function AppliesTo(const PathInContext: string): Boolean;
 
     // properties
@@ -67,9 +67,9 @@ type
     property UrlPatterns: TStrings read FUrlPatterns;
   end;
 
-  (**
+  {*
    * Web Filter Mappings.
-   *)
+   *}
   TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
 
 implementation

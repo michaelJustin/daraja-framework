@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djMultiMap;
 
@@ -36,36 +36,36 @@ uses
 type
   { TdjMultiMap }
 
-  (**
+  {*
    * A generic multi-map implementation that maps strings to lists of objects.
-   * 
-   * This class extends TObjectDictionary, where the key is a string and the value is 
-   * a TObjectList of type T. It provides functionality to manage a collection of 
+   *
+   * This class extends TObjectDictionary, where the key is a string and the value is
+   * a TObjectList of type T. It provides functionality to manage a collection of
    * objects grouped by string keys.
-   * 
+   *
    * @tparam T The type of objects stored in the multi-map. Must be a class type.
-   *)
+   *}
   TdjMultiMap<T: class> = class(TObjectDictionary<string, TObjectList<T>>)
   public
-    (**
+    {*
      * Destructor for the class. Cleans up any resources used by the instance.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * Adds a value to the collection associated with the specified key.
      *
      * @param Key The key to which the value will be associated.
      * @param Value The value to be added to the collection.
-     *)
+     *}
     procedure Add(const Key: string; Value: T);
 
-    (**
+    {*
      * Retrieves the list of values associated with the specified key.
      *
      * @param Key The key whose associated values are to be retrieved.
      * @return A TObjectList containing the values associated with the key.
-     *)
+     *}
     function GetValues(const Key: string): TObjectList<T>;
   end;
 
@@ -81,10 +81,10 @@ var
   Key: String;
   L: TObjectList<T>;
 begin
-  (* for L in Self.Values do
+  {*** for L in Self.Values do
   begin
      L.Free;
-  end; *)
+  end; ***}
   for Key in Self.Keys do
   begin
      if TryGetValue(Key, L) then

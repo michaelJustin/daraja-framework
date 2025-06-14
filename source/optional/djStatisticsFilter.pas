@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djStatisticsFilter;
 
@@ -39,11 +39,11 @@ uses
 type
   { TdjStatisticsFilter }
   
-  (**
+  {*
    * Collects HTTP request statistics.
    *
    * @note This class is unsupported demonstration code.
-   *)
+   *}
   TdjStatisticsFilter = class(TdjWebFilter)
   private
     FResponses2xx: TIdThreadSafeInt64;

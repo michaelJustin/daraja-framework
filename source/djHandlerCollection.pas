@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djHandlerCollection;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djAbstractHandlerContainer, djServerContext,
@@ -40,11 +38,11 @@ uses
 type
   { TdjHandlerCollection }
 
-  (**
+  {*
    * A collection of handlers.
    * For each request, all handler are called, regardless of
    * the response status or exceptions.
-   *)
+   *}
   TdjHandlerCollection = class(TdjAbstractHandlerContainer)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -52,14 +50,16 @@ type
     {$ENDIF DARAJA_LOGGING}
     procedure Trace(const S: string);
   protected
-     (**
+     {*
       * The handler collection.
-      *)
+      *}
      FHandlers: TdjHandlers;
   protected
-     // TdjLifeCycle overrides
-     procedure DoStart; override;
-     procedure DoStop; override;
+    // TdjLifeCycle overrides
+    /// \private
+    procedure DoStart; override;
+    /// \private
+    procedure DoStop; override;
   protected
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext;
@@ -69,17 +69,17 @@ type
     procedure AddHandler(const Handler: IHandler); override;
     procedure RemoveHandler(const Handler: IHandler); override;
   public
-    (**
+    {*
      * Create a TdjHandlerCollection.
-     *)
+     *}
     constructor Create; override;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   SysUtils;
@@ -224,4 +224,4 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond

@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,11 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebComponentHandler;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
@@ -46,14 +44,14 @@ uses
 type
   { TdjWebComponentHandler }
 
-  (**
+  {*
    * Web Component handler.
    *
    * An instance of this class is created per context.
    *
    * It holds a list of web components and their path mappings,
    * and passes incoming requests to the matching web component.
-   *)
+   *}
   TdjWebComponentHandler = class(TdjAbstractHandler)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -94,30 +92,30 @@ type
     property WebComponentMappings: TdjWebComponentMappings read FWebComponentMappings;
   protected
     // TdjLifeCycle overrides
-    (**
+    {*
      * Starts the web component handler.
      * This method is called to initialize and start the handler.
-     *)
+     *}
     procedure DoStart; override;
-    (**
+    {*
      * Stops the web component handler.
      * This method is called to clean up and stop the handler.
-     *)
+     *}
     procedure DoStop; override;
   protected
-    (**
+    {*
      * Finds a web component holder by its target identifier.
      *
      * @param ATarget The identifier of the target component to find.
      * @return A TdjWebComponentHolder instance representing the found component, or nil if not found.
-     *)
+     *}
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
 
-    (**
+    {*
      * Adds a new web component mapping to the handler.
      *
      * @param Mapping The TdjWebComponentMapping instance to be added.
-     *)
+     *}
     procedure AddMapping(Mapping: TdjWebComponentMapping);
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
@@ -130,33 +128,33 @@ type
     constructor Create; override;
     destructor Destroy; override;
 
-    (**
+    {*
      * Sets the context for the component handler.
      *
      * @param Context The context to be set, implementing the IContext interface.
-     *)
+     *}
     procedure SetContext(const Context: IContext);
 
-    (**
+    {*
      * Add a Web Component.
      *
      * @param ComponentClass WebComponent class
      * @param UrlPattern path specification
      *
      * @throws EWebComponentException if the Web Component can not be added
-     *)
+     *}
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
 
-    (**
+    {*
      * Add a Web Component holder with mapping.
      *
      * @param Holder a Web Component holder
      * @param UrlPattern a path spec
-     *)
+     *}
     procedure AddWithMapping(Holder: TdjWebComponentHolder; const UrlPattern: string); overload;
 
-    (**
+    {*
      * Add a Web Filter, specifying a WebFilter class
      * and the mapped path.
      *
@@ -164,35 +162,33 @@ type
      * @param UrlPattern mapped path
      *
      * @throws Exception if the WebFilter can not be added
-     *)
+     *}
     procedure AddWebFilter(Holder: TdjWebFilterHolder;
       const UrlPattern: string); overload;
 
-    (**
+    {*
      * Find a TdjWebComponentHolder for a WebComponentClass.
      *
      * @param WebComponentClass the Web Component class
      * @return a TdjWebComponentHolder with the WebComponentClass or nil
      *         if the WebComponentClass is not registered
-     *)
+     *}
     function FindHolder(WebComponentClass: TdjWebComponentClass):
       TdjWebComponentHolder;
 
-    (**
+    {*
      * Invokes a service for the specified web component.
      *
      * @param Comp The web component instance to handle.
      * @param Context The server context in which the service is invoked.
      * @param Request The incoming request to be processed.
      * @param Response The outgoing response to be sent.
-     *)
+     *}
     class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
   end;
 
-{$IFNDEF DOXYGEN_SKIP}
-
-implementation
+implementation /// \cond
 
 uses
   djContextHandler, djGlobal, djHTTPConstants, djWebFilterChain,
@@ -271,12 +267,12 @@ begin
 
   FPathMap := TdjPathMap.Create;
 
-  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+  
 end;
 
 destructor TdjWebComponentHandler.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+  
 
   if IsStarted then
   begin
@@ -825,7 +821,5 @@ begin
   end;
 end;
 
-{$ENDIF DOXYGEN_SKIP}
-
-end.
+end. /// \endcond
 

@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djWebComponentMapping;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   Classes,
@@ -39,21 +39,21 @@ uses
 type
   { TdjWebComponentMapping }
 
-  (**
+  {*
    * Web Component Mapping.
-   *)
+   *}
   TdjWebComponentMapping = class(TObject)
   private
     FName: string;
     FUrlPatterns: TStrings;
   public
-    (**
+    {*
      * Constructor.
-     *)
+     *}
     constructor Create;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
     // properties
@@ -61,9 +61,9 @@ type
     property UrlPatterns: TStrings read FUrlPatterns;
   end;
 
-  (**
+  {*
    * Web Component Mappings.
-   *)
+   *}
   // note Delphi 2009 AVs if it is a TObjectList<>
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
   // for a workaround
