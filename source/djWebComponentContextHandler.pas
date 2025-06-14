@@ -157,6 +157,17 @@ type
      *)
     function Add(FilterClass: TdjWebFilterClass;
       const UrlPattern: string): TdjWebFilterHolder; overload;
+
+    (**
+     * Add a Web Filter, specifying multiple URL patterns
+     *
+     * @param FilterClass WebFilter class
+     * @param UrlPatterns path specifications
+     * @return the Web Filter holder, which can be used for further configuration.
+     * @throws EWebComponentException if the Web Filter can not be added
+     *)
+    function Add(FilterClass: TdjWebFilterClass;
+      const UrlPatterns: array of string): TdjWebFilterHolder; overload;
   end;
 
 implementation
@@ -299,6 +310,22 @@ function TdjWebComponentContextHandler.Add(FilterClass: TdjWebFilterClass;
   const UrlPattern: string): TdjWebFilterHolder;
 begin
   Result := AddWebFilter(FilterClass, UrlPattern);
+end;
+
+function TdjWebComponentContextHandler.Add(FilterClass: TdjWebFilterClass;
+  const UrlPatterns: array of string): TdjWebFilterHolder;
+var
+  UrlPattern: string;
+begin
+  if Length(UrlPatterns) = 0 then
+    raise EWebComponentException.Create('No URL patterns given');
+
+  Result := nil; // mtch
+
+  for UrlPattern in UrlPatterns do
+  begin
+    Result := Add(FilterClass, UrlPattern);
+  end;
 end;
 
 procedure TdjWebComponentContextHandler.DoHandle(const Target: string;
