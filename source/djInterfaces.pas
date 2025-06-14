@@ -350,10 +350,10 @@ type
     procedure SetContext(const Context: IContext);
   end;
 
-  {$IFNDEF DOXYGEN_SKIP}
+  /// \cond
   // todo move
   TdjHandlers = TList<IHandler>;
-  {$ENDIF DOXYGEN_SKIP}
+  /// \endcond
 
 implementation
 
