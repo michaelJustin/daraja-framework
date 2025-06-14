@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djGenericWebComponent;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djWebComponentConfig, djServerContext, djTypes,
@@ -45,9 +45,9 @@ uses
 type
   { TdjGenericWebComponent }
 
-  (**
+  {*
    * Defines a generic Web Component.
-   *)
+   *}
   TdjGenericWebComponent = class(TInterfacedObject, IWebComponent)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -63,22 +63,22 @@ type
     function GetWebComponentConfig: IWebComponentConfig;
     property Config: IWebComponentConfig read GetWebComponentConfig;
   public
-    (**
+    {*
      * Constructor.
-     *)
+     *}
     constructor Create;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * A convenience method which can be overridden so that there is no need
      * to call inherited Init(config).
-     *)
+     *}
     procedure Init; overload; virtual;
 
-    (**
+    {*
      * Get or create a HTTP session.
      *
      * @note it requires the current TdjServerContext so calling it from one of the
@@ -94,7 +94,7 @@ type
      * @param Create if True, create a session if no one exists
      *
      * @returns HTTP session
-     *)
+     *}
     function GetSession(Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse;
       const Create: Boolean = True): TIdHTTPSession;

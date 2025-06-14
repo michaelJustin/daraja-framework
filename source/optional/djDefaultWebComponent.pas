@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djDefaultWebComponent;
 
@@ -40,11 +40,11 @@ uses
 type
   { TdjDefaultWebComponent }
   
-  (**
+  {*
    * Web Component for static context.
    *
    * @note This class is unsupported demonstration code.
-   *)
+   *}
   TdjDefaultWebComponent = class(TdjWebComponent)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -54,13 +54,13 @@ type
     ContextPath: string;
     StaticResourcePath: string;
     procedure Trace(const S: string);
-    (**
+    {*
      * Called in Init to set the path to static content.
-     *)
+     *}
     procedure SetStaticResourcePath;
-    (**
+    {*
      * Remove the context from the resource URL
-     *)
+     *}
     function StripContext(const Doc: string): string;
   public
     procedure Init(const Config: IWebComponentConfig); override;

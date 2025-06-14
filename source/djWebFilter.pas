@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebFilter;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djGenericWebFilter
@@ -40,10 +40,10 @@ uses
   ;
 
 type
-  (**
+  {*
    * A base class which can be subclassed to create a HTTP filter component
    * for a Web site.
-   *)
+   *}
   TdjWebFilter = class(TdjGenericWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -53,9 +53,9 @@ type
     constructor Create;
   end;
 
-  (**
+  {*
    * Class reference to TdjWebFilter
-   *)
+   *}
   TdjWebFilterClass = class of TdjWebFilter;
 
 implementation

@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebFilterChain;
 
@@ -42,9 +42,9 @@ uses
 type
   { TdjWebFilterChain }
 
-  (**
+  {*
    * Implements the IWebFilterChain interface to manage web filter chains.
-   *)
+   *}
   TdjWebFilterChain = class(TInterfacedObject, IWebFilterChain)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -59,11 +59,11 @@ type
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse);
   public
-    (**
+    {*
      * Initializes a new instance of the TdjWebFilterChain class.
      * @param Holder The holder object of type TdjWebFilterHolder.
      * @param FilterChain The filter chain interface of type IWebFilterChain.
-     *)
+     *}
     constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
   end;
 

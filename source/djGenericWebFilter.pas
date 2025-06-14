@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djGenericWebFilter;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djWebComponentConfig, djWebFilterConfig,
@@ -46,12 +46,12 @@ uses
 type
   { TdjGenericWebFilter }
 
-  (**
+  {*
    * A generic web filter class implementing the IWebFilter interface.
    * 
    * This class provides functionality to filter web requests or responses
    * as part of the Daraja framework.
-   *)
+   *}
   TdjGenericWebFilter = class(TInterfacedObject, IWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -66,27 +66,27 @@ type
       TdjResponse; const Chain: IWebFilterChain); virtual;
     procedure DestroyFilter; virtual;
   public
-    (**
+    {*
      * Constructor.
-     *)
+     *}
     constructor Create;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * A convenience method which can be overridden so that there is no need
      * to call inherited Init(config).
-     *)
+     *}
     procedure Init; overload; virtual;
 
-    (**
+    {*
      * Returns the configuration for this filter.
      *
      * @return The filter configuration object
      * @throws EWebComponentException if the filter is not initialized
-     *)
+     *}
     function GetWebFilterConfig: IWebFilterConfig;
 
     property Config: IWebFilterConfig read GetWebFilterConfig;

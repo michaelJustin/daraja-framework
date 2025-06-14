@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djServer;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djInterfaces, djTypes, djHTTPConnector, djServerBase, djServerInterfaces,
@@ -47,7 +45,7 @@ const
   DEFAULT_BINDING_PORT = 8080;
   DEFAULT_BINDING_IP = '127.0.0.1'; // instead of '0.0.0.0';
 
-  (**
+  {*
    * @mainpage Welcome to Daraja HTTP Framework!
    *
    * @section intro Introduction
@@ -74,14 +72,14 @@ const
    * registered trademarks of Embarcadero Technologies, Inc.
    * and are protected by the laws of the United States and other countries.
    * Other brands and their products are trademarks of their respective holders.
-   *)
+   *}
 
 type
   { TdjServer }
 
-  (**
+  {*
    * Basic server class for the Web Component framework.
-   *)
+   *}
   TdjServer = class(TdjServerBase)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -99,67 +97,69 @@ type
     procedure StopContextHandlers;
   protected
     // TdjLifeCycle overrides
+    /// \private
     procedure DoStart; override;
+    /// \private
     procedure DoStop; override;
   public
-    (**
+    {*
      * Create a TdjServer using the default host and port.
-     *)
+     *}
     constructor Create; overload; override;
 
-    (**
+    {*
      * Create a TdjServer, using the specified port and the default host.
      *
      * @param APort the port to be used.
-     *)
+     *}
     constructor Create(const APort: Integer); reintroduce; overload;
 
-    (**
+    {*
      * Create a TdjServer, using the specfied host and port.
      *
      * @param AHost the host to be used.
      * @param APort the port to be used.
-     *)
+     *}
     constructor Create(const AHost: string;
       const APort: Integer = DEFAULT_BINDING_PORT); reintroduce; overload;
 
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * Add a preconfigured connector.
      *
      * @param Connector the connector
-     *)
+     *}
     procedure AddConnector(const Connector: IConnector); overload;
 
-    (**
+    {*
      * Create and add a connector for a host and port.
      *
      * @param Host the connector host name
      * @param Port the connector port number
-     *)
+     *}
     procedure AddConnector(const Host: string; Port: Integer = DEFAULT_BINDING_PORT); overload;
 
-    (**
+    {*
      * Add a new context.
      *
      * @param Context the context handler.
-     *)
+     *}
     procedure Add(Context: TdjWebComponentContextHandler);
 
-    (**
+    {*
      * The number of connectors.
      *
      * @returns number of connectors
-     *)
+     *}
     function ConnectorCount: Integer;
 
   end;
 
-implementation
+implementation /// \cond
 
 uses
   Generics.Defaults, SysUtils, Classes;
@@ -369,5 +369,5 @@ begin
   inherited;
 end;
 
-end.
+end. /// \endcond
 

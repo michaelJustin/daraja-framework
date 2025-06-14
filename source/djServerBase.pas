@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djServerBase;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djServerContext, djHandlerWrapper,
@@ -42,7 +42,7 @@ uses
 type
   { TdjServerBase }
 
-  (**
+  {*
    * Base server implementation providing core HTTP server functionality.
    *
    * This class serves as a foundation for HTTP servers in the Daraja framework,
@@ -50,7 +50,7 @@ type
    *
    * @sa IHandlerContainer
    * @sa TdjHandlerWrapper
-   *)
+   *}
   TdjServerBase = class(TdjHandlerWrapper, IHandlerContainer)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -61,32 +61,32 @@ type
 
   protected
     // TdjLifeCycle overrides
-    (**
+    {*
      * Start the server.
      *
      * @note This method calls the inherited implementation and logs the server start.
      * @throws EWebComponentException if the server fails to start
-     *)
+     *}
     procedure DoStart; override;
-    (**
+    {*
      * Stop the server.
      *
      * @note This method calls the inherited implementation and logs the server stop.
      * @throws EWebComponentException if the server fails to stop cleanly
-     *)
+     *}
     procedure DoStop; override;
   protected
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext; Request:
       TdjRequest; Response: TdjResponse); override;
   public
-    (**
+    {*
      * Create a ServerBase instance.
-     *)
+     *}
     constructor Create; override;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
   end;
 

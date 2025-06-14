@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djPlatform;
 
@@ -35,7 +35,7 @@ uses
   IdGlobal;
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
 
-// {$i IdCompilerDefines.inc}
+
 
 function GetTickCount: TIdTicks;
 

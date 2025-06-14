@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djHandlerList;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djServerContext, djHandlerCollection,
@@ -40,14 +40,14 @@ uses
 type
   { TdjHandlerList }
 
-  (**
+  {*
    * Iterates handler list and exits when the response code is set.
    * If the response code is still -1, it returns 404
    *
    * This extension of TdjHandlerCollection will call
    * each contained handler in turn until either an
    * exception is thrown or a positive response status is set.
-   *)
+   *}
   TdjHandlerList = class(TdjHandlerCollection)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -60,9 +60,9 @@ type
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
   public
-    (**
+    {*
      * Constructor.
-     *)
+     *}
     constructor Create; override;
   end;
 

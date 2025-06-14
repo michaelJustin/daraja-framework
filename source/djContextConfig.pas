@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,21 +24,21 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djContextConfig;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djAbstractConfig;
 
 type
-  (**
+  {*
    * Context configuration.
-   *)
+   *}
   TdjContextConfig = class(TdjAbstractConfig, IContextConfig);
 
 implementation

@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,7 +24,7 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djNCSALogFilter;
 
@@ -43,12 +43,12 @@ uses
 type
   { TdjNCSALogFilter }
 
-  (**
+  {*
    * Implements NCSA logging.
    *
    * @sa https://en.wikipedia.org/wiki/Common_Log_Format
    * @note This class is unsupported demonstration code.
-   *)
+   *}
   TdjNCSALogFilter = class(TdjWebFilter)
   private
     {$IFDEF DARAJA_LOGGING}

@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebAppContext;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djWebComponentContextHandler;
@@ -38,9 +38,9 @@ uses
 type
   { TdjWebAppContext }
 
-  (**
+  {*
    * Main context handler class.
-   *)
+   *}
   TdjWebAppContext = class(TdjWebComponentContextHandler)
     // pas2dox requires the class declaration to use the end; statement
   end;

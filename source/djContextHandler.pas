@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djContextHandler;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces, djServerContext, djContextConfig, djHandlerWrapper,
@@ -47,12 +47,12 @@ const
 type
   { TdjContext }
 
-  (**
+  {*
    * Handles requests within a specific context path.
    * Manages initialization parameters and context configuration.
    * @implements IContext
    * @implements IWriteableConfig
-   *)
+   *}
   TdjContext = class(TInterfacedObject, IContext, IWriteableConfig)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -61,10 +61,10 @@ type
     FConfig: IContextConfig;
     FContextPath: string;
 
-    (**
+    {*
      * a-z A-Z 0-9 . - _ ~ ! $ & ' ( ) * + , ; = : @
      * and percent-encoded characters
-     *)
+     *}
     procedure ValidateContextPath(const ContextPath: string);
   protected
     // IWriteableConfig interface
@@ -79,20 +79,20 @@ type
     function GetInitParameterNames: TdjStrings;
     procedure Log(const Msg: string);
   public
-    (**
+    {*
      * Initializes a new context with the specified path.
      *
      * @param ContextPath The path for this context.
      * @throws EWebComponentException If the context path contains invalid characters.
-     *)
+     *}
     constructor Create(const ContextPath: string);
   end;
 
   { TdjContextHandler }
 
-  (**
+  {*
    * Context handler.
-   *)
+   *}
   TdjContextHandler = class(TdjHandlerWrapper)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -107,58 +107,58 @@ type
     procedure SetErrorHandler(const Value: IHandler);
   protected
     // TdjLifeCycle overrides
-    (**
+    {*
      * Start the handler.
      * @sa TdjLifeCycle
-     *)
+     *}
     procedure DoStart; override;
-    (**
+    {*
      * Start the handler.
      * @sa TdjLifeCycle
-     *)
+     *}
     procedure DoStop; override;
   protected
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
   protected
-    (**
+    {*
      * Check if the Document matches this context.
      *
      * @param ConnectorName the connector name (like 'host:port'
      * @param Target the target URL document
      *
      * @return True if the context matches the connector name and target URL document
-     *)
+     *}
     function ContextMatches(const ConnectorName, Target: string): Boolean;
 
-    (**
+    {*
      * Creates connector name in the form 'host:port'
      *
      * @returns connector name
-     *)
+     *}
     function ToConnectorName(Context: TdjServerContext): string;
   public
-    (**
+    {*
      * Create a ContextHandler.
-     *)
+     *}
     constructor Create(const ContextPath: string); reintroduce;
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * The internal IContext field.
-     *)
+     *}
     function GetCurrentContext: IContext;
 
-    (**
+    {*
      * Set initialization parameter.
      *
      * @param Key init parameter name
      * @param Value init parameter value
-     *)
+     *}
     procedure SetInitParameter(const Key: string; const Value: string);
 
     // properties

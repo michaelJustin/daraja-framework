@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,17 +21,17 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djStacktrace;
 
-(*
+{*
  * @note This unit is unsupported demonstration code.
- *)
-    
+ *}
+
 {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
   {$MESSAGE HINT 'Options for development stage enabled'}
@@ -62,7 +62,7 @@ unit djStacktrace;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 {$IFDEF DARAJA_JCLDEBUG}
 function GetStackList(

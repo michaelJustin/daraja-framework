@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djWebComponentHolder;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djWebComponent, djGenericHolder, djLifeCycle, djInterfaces,
@@ -43,9 +41,9 @@ uses
 type
   { TdjWebComponentHolder }
 
-  (**
+  {*
    * Holds a WebComponent and configuration data.
-   *)
+   *}
   TdjWebComponentHolder = class(TdjGenericHolder<TdjWebComponent>)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -60,58 +58,61 @@ type
     function GetClass: TdjWebComponentClass;
   protected
     // TdjLifeCycle overrides
+    /// \private
     procedure DoStart; override;
+    /// \private
     procedure DoStop; override;
   public
     // IHandler interface
+    /// \private
     procedure Handle(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse);
   public
-    (**
+    {*
      * Constructor.
      *
      * @param WebComponentClass the Web Component class
-     *)
+     *}
     constructor Create(WebComponentClass: TdjWebComponentClass); overload;
 
-    (**
+    {*
      * Destructor.
-     *)
+     *}
     destructor Destroy; override;
 
-    (**
+    {*
      * Get the context.
-     *)
+     *}
     function GetContext: IContext;
 
-    (**
+    {*
      * Set the context.
      *
      * @param Context the context
-     *)
+     *}
     procedure SetContext(const Context: IContext);
 
-    (**
+    {*
      * Set initialization parameter.
      *
      * @param Key init parameter name
      * @param Value init parameter value
-     *)
+     *}
     procedure SetInitParameter(const Key: string; const Value: string);
 
     // properties
-    (**
+    {*
      * The Web Component Class.
-     *)
+     *}
     property WebComponentClass: TdjWebComponentClass read GetClass;
 
-    (**
+    {*
      * The instance of the Web Component.
-     *)
+     *}
     property WebComponent: TdjWebComponent read GetWebComponent;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   djWebComponentHandler,
@@ -131,12 +132,12 @@ begin
   FConfig := TdjWebComponentConfig.Create;
   FClass := WebComponentClass;
 
-  {$IFDEF LOG_CREATE}Trace('Created');{$ENDIF}
+
 end;
 
 destructor TdjWebComponentHolder.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}Trace('Destroy');{$ENDIF}
+
   inherited;
 end;
 
@@ -235,4 +236,4 @@ begin
   TdjWebComponentHandler.InvokeService(WebComponent, Context, Request, Response);
 end;
 
-end.
+end. /// \endcond

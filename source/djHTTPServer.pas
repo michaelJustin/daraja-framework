@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,13 +24,13 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djHTTPServer;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   {$IFDEF DARAJA_LOGGING}
@@ -47,11 +47,11 @@ const
 type
   { TdjHTTPServer }
 
-  (**
+  {*
    * HTTP Server.
    *
    * Inherits from Indy HTTP Server.
-   *)
+   *}
   TdjHTTPServer = class(TIdCustomHTTPServer)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -69,21 +69,21 @@ type
     procedure Trace(const S: string);
 
   protected
-    (**
+    {*
      * If the server has a connection limit (MaxConnections) set,
      * and a new request exceeds this limit, log as a warning message.
-     *)
+     *}
     procedure DoMaxConnectionsExceeded(AIOHandler: TIdIOHandler); override;
 
   public
-    (**
+    {*
      * Create a HTTP Server.
-     *)
+     *}
     constructor Create;
 
-    (**
+    {*
      * Handler for HTTP requests.
-     *)
+     *}
     property OnCommandGet;
   end;
 

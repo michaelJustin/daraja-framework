@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,42 +24,42 @@
     include: offering paid services to customers as an ASP, shipping Daraja 
     with a closed source product.
 
-*)
+***}
 
 unit djServerInterfaces;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   djInterfaces;
 
 type
-  (**
+  {*
    * Interface for HTTP connectors.
    * @interface IConnector
-   *)
+   *}
   IConnector = interface(ILifeCycle)
     ['{FB350435-6F29-4E28-8EBF-71F8A7FEB6E9}']
-    (**
+    {*
      * Set the port.
-     *)
+     *}
     procedure SetPort(Value: Integer);
     
-    (**
+    {*
      * Set the host.
-     *)
+     *}
     procedure SetHost(const Value: string);
     
-    (**
+    {*
      * Get the port.
-     *)
+     *}
     function GetPort: Integer;
     
-    (**
+    {*
      * Get the host.
-     *)
+     *}
     function GetHost: string;
 
     property Host: string read GetHost write SetHost;

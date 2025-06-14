@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -24,47 +24,47 @@
     include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djTypes;
 
 interface
 
-// {$i IdCompilerDefines.inc}
+
 
 uses
   IdCustomHTTPServer,
   SysUtils, Generics.Collections;
 
 type
-  (**
+  {*
    * @class TdjRequest
    *
    * HTTP request information.
    * Type alias for Indy class TIdHTTPRequestInfo.
-   *)
+   *}
   TdjRequest = TIdHTTPRequestInfo;
 
-  (**
+  {*
    * @class TdjResponse
    *
    * HTTP response information.
    * Type alias for Indy class TIdHTTPResponseInfo.
-   *)
+   *}
   TdjResponse = TIdHTTPResponseInfo;
 
-  (**
+  {*
    * @class EWebComponentException
    *
    * This exception is thrown if an error occurs that interferes with the component's normal operation.
-   *)
+   *}
   EWebComponentException = class(Exception);
 
-  (**
+  {*
    * @class TdjStrings
    *
    * This class holds a list of strings.
-   *)
+   *}
   TdjStrings = TList<string>;
 
 implementation

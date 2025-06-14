@@ -1,4 +1,4 @@
-(*
+{***
 
     Daraja HTTP Framework
     Copyright (c) Michael Justin
@@ -21,16 +21,14 @@
     a commercial license. Buying such a license is mandatory as soon as you
     develop commercial activities involving the Daraja framework without
     disclosing the source code of your own applications. These activities
-    include: offering paid services to customers as an ASP, shipping Daraja 
+    include: offering paid services to customers as an ASP, shipping Daraja
     with a closed source product.
 
-*)
+***}
 
 unit djHandlerWrapper;
 
 interface
-
-// {$i IdCompilerDefines.inc}
 
 uses
   djAbstractHandlerContainer, djServerContext, djInterfaces,
@@ -45,11 +43,11 @@ uses
 type
   { TdjHandlerWrapper }
 
-  (**
+  {*
    * A HandlerWrapper acts as a IHandler but delegates the handle method
    * and life cycle events to a delegate.
    * This is primarily used to implement the Decorator pattern.
-   *)
+   *}
   TdjHandlerWrapper = class(TdjAbstractHandlerContainer)
   private
     {$IFDEF DARAJA_LOGGING}
@@ -63,22 +61,22 @@ type
     procedure SetHandler(const Value: IHandler);
     procedure Trace(const S: string);
   protected
-    (**
+    {*
      * Get a HTTP session.
-     *)
+     *}
     function GetSession(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse; const Create: Boolean): TIdHTTPSession;
   protected
     // TdjLifeCycle overrides
-    (**
+    {*
      * Start the handler.
      * @sa TdjLifeCycle
-     *)
+     *}
     procedure DoStart; override;
-    (**
+    {*
      * Start the handler.
      * @sa TdjLifeCycle
-     *)
+     *}
     procedure DoStop; override;
   protected
     // IHandler interface
@@ -86,14 +84,14 @@ type
       Request: TdjRequest; Response: TdjResponse); override;
   public
     // IHandlerContainer interface todo still public
-    (**
+    {*
      * Add a handler to the container.
      * This implementation of AddHandler calls SetHandler with the passed
      * handler. If this HandlerWrapper had a previous wrapped handler, then
      * it is passed to a call to AddHandler on the passed handler.
      *
      * @param Handler the handler to be added
-     *)
+     *}
     procedure AddHandler(const Handler: IHandler); override;
     procedure RemoveHandler(const Handler: IHandler); override;
   public
@@ -214,20 +212,16 @@ begin
 {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjHandlerWrapper.ClassName);
 {$ENDIF DARAJA_LOGGING}
-
-{$IFDEF LOG_CREATE}
-  Trace('Created');
-{$ENDIF}
 end;
 
 procedure TdjHandlerWrapper.Trace(const S: string);
 begin
-{$IFDEF DARAJA_LOGGING}
+  {$IFDEF DARAJA_LOGGING}
   if Logger.IsTraceEnabled then
   begin
     Logger.Trace(S);
   end;
-{$ENDIF DARAJA_LOGGING}
+  {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjHandlerWrapper.DoStart;
