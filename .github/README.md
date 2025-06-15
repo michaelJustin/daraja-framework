@@ -121,7 +121,7 @@ You have to supply the whole sourcecode of everything - but a download link shou
 
 <details>
 <summary>Do I need to mention the use of Daraja inside my program (like a info message or something)?</summary>
-No.
+No, this is not required.
 </details>
 
 ### Commercial license
