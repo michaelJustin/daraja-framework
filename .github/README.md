@@ -101,7 +101,7 @@ https://michaeljustin.github.io/daraja-framework/
 
 ### Getting started with Daraja
 
-https://www.habarisoft.com/daraja_framework/3.0.4/docs/DarajaFrameworkGettingStarted.pdf
+https://www.habarisoft.com/daraja_framework/3.0.5/docs/DarajaFrameworkGettingStarted.pdf
 
 ## Licensing
 
