@@ -137,10 +137,10 @@ This software uses the following open source packages:
 For example code, unit testing, and documentation, it uses the following open source packages:
 
 - [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code
-- [Log4D](http://sourceforge.net/projects/log4d/) for logging
+- [Log4D](https://sourceforge.net/projects/log4d/) for logging
 - [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) for unit testing
 - [Doxygen](https://www.doxygen.nl/) Doxygen is a widely-used documentation generator tool in software development
-- [pas2dox](http://pas2dox.sourceforge.net) Pas2dox is a pre-processor addon for the Doxygen documentation generator.
+- [pas2dox](https://sourceforge.net/projects/pas2dox/) Pas2dox is a pre-processor addon for the Doxygen documentation generator.
 
 ## Origins
 
