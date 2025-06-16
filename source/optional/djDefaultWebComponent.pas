@@ -54,6 +54,8 @@ type
     ContextPath: string;
     StaticResourcePath: string;
     procedure Trace(const S: string);
+    function BuildAbsolutePath: string;
+    procedure Validate;
     {*
      * Called in Init to set the path to static content.
      *}
@@ -101,7 +103,13 @@ begin
   // calculate the static resource path
   SetStaticResourcePath;
 
-  if DirectoryExists(ExtractFilePath(ParamStr(0)) + StaticResourcePath) then
+  // raises EWebComponentException if static webapp folder is missing
+  Validate;
+end;
+
+procedure TdjDefaultWebComponent.Validate;
+begin
+  if DirectoryExists(BuildAbsolutePath) then
   begin
     Trace('Static content directory found: ' + StaticResourcePath);
   end
@@ -150,7 +158,7 @@ var
 begin
   RelFileName := StripContext(Request.Document);
 
-  FileName := ExtractFilePath(ParamStr(0)) + StaticResourcePath + RelFileName;
+  FileName := BuildAbsolutePath + RelFileName;
 
   if PathDelim = '\' then
   begin
@@ -186,6 +194,11 @@ begin
     Trace('Resource not found: ' + RelFileName);
     {$ENDIF DARAJA_LOGGING}
   end;
+end;
+
+function TdjDefaultWebComponent.BuildAbsolutePath: string;
+begin
+  Result := ExtractFilePath(ParamStr(0)) + StaticResourcePath;
 end;
 
 end.
