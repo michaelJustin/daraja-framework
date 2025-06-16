@@ -41,6 +41,7 @@ type
   published
     procedure TestDefaultWebComponent;
     procedure TestDefaultWebComponentInRootContext;
+    procedure TestMissingFolderDetectedInInit;
   end;
 
 implementation
@@ -131,6 +132,24 @@ begin
     Server.Free;
   end;
 end;
+
+procedure TdjDefaultWebComponentTests.TestMissingFolderDetectedInInit;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('folder_missing');
+    Context.Add(TdjDefaultWebComponent, '/');
+    Server.Add(Context);
+    // ExpectedException := EWebComponentException; there is none
+    Server.Start;
+  finally
+    Server.Free;
+  end;
+end;
+
 
 end.
 
