@@ -101,7 +101,7 @@ https://michaeljustin.github.io/daraja-framework/
 
 ### Getting started with Daraja
 
-https://www.habarisoft.com/daraja_framework/3.0.4/docs/DarajaFrameworkGettingStarted.pdf
+https://www.habarisoft.com/daraja_framework/3.0.5/docs/DarajaFrameworkGettingStarted.pdf
 
 ## Licensing
 
@@ -121,7 +121,7 @@ You have to supply the whole sourcecode of everything - but a download link shou
 
 <details>
 <summary>Do I need to mention the use of Daraja inside my program (like a info message or something)?</summary>
-No.
+No, this is not required.
 </details>
 
 ### Commercial license
@@ -137,10 +137,10 @@ This software uses the following open source packages:
 For example code, unit testing, and documentation, it uses the following open source packages:
 
 - [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code
-- [Log4D](http://sourceforge.net/projects/log4d/) for logging
+- [Log4D](https://sourceforge.net/projects/log4d/) and [slf4p](https://github.com/michaelJustin/slf4p/) for logging
 - [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) for unit testing
 - [Doxygen](https://www.doxygen.nl/) Doxygen is a widely-used documentation generator tool in software development
-- [pas2dox](http://pas2dox.sourceforge.net) Pas2dox is a pre-processor addon for the Doxygen documentation generator.
+- [pas2dox](https://sourceforge.net/projects/pas2dox/) Pas2dox is a pre-processor addon for the Doxygen documentation generator.
 
 ## Origins
 
