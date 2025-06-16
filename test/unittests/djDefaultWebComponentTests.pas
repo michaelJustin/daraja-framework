@@ -47,7 +47,7 @@ type
 implementation
 
 uses
-  djWebAppContext, djWebComponentHolder, djServer, djTypes, djWebComponent,
+  djWebAppContext, djServer, djTypes, djWebComponent,
   djDefaultWebComponent,
   IdHTTP, IdGlobal,
   SysUtils;
