@@ -40,12 +40,7 @@ type
   TdjDefaultWebComponentTests = class(THTTPTestCase)
   published
     procedure TestDefaultWebComponent;
-
     procedure TestDefaultWebComponentInRootContext;
-
-    // procedure DefaultWebComponentMissingResourcePath;
-
-    procedure DefaultWebComponentResNotFound;
   end;
 
 implementation
@@ -53,16 +48,15 @@ implementation
 uses
   djWebAppContext, djWebComponentHolder, djServer, djTypes, djWebComponent,
   djDefaultWebComponent,
-  {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdHTTP, IdGlobal,
-  {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
 type
+  { TExamplePage }
+
   TExamplePage = class(TdjWebComponent)
   public
-    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);
-      override;
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
   end;
 
 { TExamplePage }
@@ -72,6 +66,8 @@ begin
   Response.ContentText := 'example';
 end;
 
+{ TdjDefaultWebComponentTests }
+
 procedure TdjDefaultWebComponentTests.TestDefaultWebComponent;
 var
   Server: TdjServer;
@@ -79,36 +75,26 @@ var
 begin
   Server := TdjServer.Create;
   try
-    // create the 'test' context
+    // create 'test' context
     Context := TdjWebAppContext.Create('test');
-
-    // create example component and register it
-    Context.AddWebComponent(TExamplePage, '/index.html');
+    // register TExamplePage at /index.html
+    Context.Add(TExamplePage, '/index.html');
 
     Server.Add(Context);
     Server.Start;
 
-    // test TExampleWebComponent
-    CheckGETResponseEquals('example', '/test/index.html', '/test/index.html');
+    // GET /index.html should return the String 'example'
+    CheckGETResponseEquals('example', '/test/index.html');
+    // GET /test/static.html should return 404
+    CheckGETResponse404('/test/static.html');
 
-    // test static
-    try
-      CheckGETResponseEquals('staticcontent', '/test/static.html',
-        '/test/static.html');
-    except
-      on E: EIdHTTPProtocolException do
-      begin
-        // expected
-      end;
-    end;
+    // now register TdjDefaultWebComponent to fix it
+    Context.Add(TdjDefaultWebComponent, '/');
 
-    // create default web component and register it
-    Context.AddWebComponent(TdjDefaultWebComponent, '/');
-
-    // test static
-    CheckGETResponseEquals('staticcontent', '/test/static.html', '/test/static.html');
-
-    CheckGETResponse404('/test/missing.html');
+    // GET /test/static.html should now return the String 'staticcontent'
+    CheckGETResponseEquals('staticcontent', '/test/static.html');
+    // GET /index.html should still return the String 'example'
+    CheckGETResponseEquals('example', '/test/index.html');
   finally
     Server.Free;
   end;
@@ -121,92 +107,26 @@ var
 begin
   Server := TdjServer.Create;
   try
-    // create the 'test' context
+    // create ROOT context
     Context := TdjWebAppContext.Create('');
-
-    // create example component and register it
-    Context.AddWebComponent(TExamplePage, '/index.html');
+    // register TExamplePage at /index.html
+    Context.Add(TExamplePage, '/index.html');
 
     Server.Add(Context);
-
     Server.Start;
 
+    // GET /index.html should return the String 'example'
     CheckGETResponseEquals('example', '/index.html', '/index.html');
+    // GET /static.html should return 404
+    CheckGETResponse404('/static.html');
 
-    // test static
-    try
-      CheckGETResponseEquals('staticcontent', '/static.html', '/static.html');
-    except
-      on E: EIdHTTPProtocolException do
-      begin
-        // expected
-      end;
-    end;
-
-    // create default web component and register it
-    Context.AddWebComponent(TdjDefaultWebComponent, '/');
-
-    // test static
-    CheckGETResponseEquals('staticcontent', '/static.html', '/static.html');
-
-    CheckGETResponse404('/test/missing.html');
-
-  finally
-    Server.Free;
-  end;
-end;
-
-(*
-procedure TdjDefaultWebComponentTests.DefaultWebComponentMissingResourcePath;
-var
-  Server: TdjServer;
-  Holder: TdjWebComponentHolder;
-  Context: TdjWebAppContext;
-begin
-  Server := TdjServer.Create;
-  try
-    // create the 'missing' context (directory 'missing' does not exist)
-    Context := TdjWebAppContext.Create('missing');
-    Server.Add(Context);
-
-    // create default web component and register it
-    Holder := TdjWebComponentHolder.Create(TdjDefaultWebComponent);
-
-    // todo this triggers a warning only ok for dynamic environments
-
-    {$IFDEF FPC}
-    // ExpectException(EWebComponentException);
-    {$ELSE}
-    // ExpectedException := EWebComponentException;
-    {$ENDIF}
-    Context.Add(Holder, '/');
-
-    Server.Start;
-
-  finally
-
-    Server.Free;
-  end;
-end;
-*)
-
-procedure TdjDefaultWebComponentTests.DefaultWebComponentResNotFound;
-var
-  Server: TdjServer;
-  Context: TdjWebAppContext;
-begin
-  Server := TdjServer.Create;
-  try
-    Context := TdjWebAppContext.Create('test');
-    // add default web component
+    // register TdjDefaultWebComponent to fix it
     Context.Add(TdjDefaultWebComponent, '/');
 
-    Server.Add(Context);
-
-    Server.Start;
-
-    CheckGETResponse404('/notthere.html');
-
+    // GET /test/static.html should now return the String 'staticcontent'
+    CheckGETResponseEquals('staticcontent', '/static.html', '/static.html');
+    // GET /index.html should still return the String 'example'
+    CheckGETResponseEquals('example', '/index.html', '/index.html');
   finally
     Server.Free;
   end;
