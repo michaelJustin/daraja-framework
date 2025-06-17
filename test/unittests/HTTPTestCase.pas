@@ -78,6 +78,8 @@ type
 
     procedure CheckContentTypeEquals(Expected: string; URL: string = ''; msg: string = '');
 
+    procedure Upload(URL: string; const SourceFile: string);
+
   end;
 
 implementation
@@ -194,6 +196,13 @@ begin
   finally
     Strings.Free;
   end;
+end;
+
+procedure THTTPTestCase.Upload(URL: string; const SourceFile: string);
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Post(URL, SourceFile)
 end;
 
 procedure THTTPTestCase.SetUp;

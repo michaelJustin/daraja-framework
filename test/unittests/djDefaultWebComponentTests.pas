@@ -42,6 +42,9 @@ type
     procedure TestDefaultWebComponent;
     procedure TestDefaultWebComponentInRootContext;
     procedure TestMissingFolderDetectedInInit;
+
+    // other
+    procedure TestUpload;
   end;
 
 implementation
@@ -50,7 +53,30 @@ uses
   djWebAppContext, djServer, djTypes, djWebComponent,
   djDefaultWebComponent,
   IdHTTP, IdGlobal,
-  SysUtils;
+  SysUtils, Classes;
+
+type
+  { TUploadResource }
+
+  TUploadResource = class(TdjWebComponent)
+  public
+    procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+{ TUploadResource }
+
+procedure TUploadResource.OnPost(Request: TdjRequest; Response: TdjResponse);
+var
+  MS: TMemoryStream;
+begin
+  MS := TMemoryStream.Create;
+  try
+    MS.LoadFromStream(Request.PostStream);
+    MS.SaveToFile('.\resources\upload_received.txt');
+  finally
+    MS.Free;
+  end;
+end;
 
 type
   { TExamplePage }
@@ -150,6 +176,23 @@ begin
   end;
 end;
 
+procedure TdjDefaultWebComponentTests.TestUpload;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('');
+    Context.Add(TUploadResource, '/upload');
+    Server.Add(Context);
+    Server.Start;
+    Upload('/upload', '.\resources\upload.txt');
+  finally
+    Server.Free;
+  end;
+
+end;
 
 end.
 
