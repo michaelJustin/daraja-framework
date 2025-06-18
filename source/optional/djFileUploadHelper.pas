@@ -23,11 +23,12 @@ interface
 {$i IdCompilerDefines.inc}
 
 uses
-  IdMessageCoder, djTypes;
+  IdMessageCoder, djTypes,
+  Classes;
 
 type
   TMimeHandler = procedure(const Decoder: TIdMessageDecoder;
-    const VMsgEnd: Boolean; const Response: TdjResponse) of object;
+    const Dest: TMemoryStream; const Response: TdjResponse) of object;
 
 procedure HandleMultipartUpload(Request: TdjRequest; Response:
   TdjResponse; MimeHandler: TMimeHandler);
@@ -36,16 +37,16 @@ implementation
 
 uses
   IdGlobalProtocols, IdGlobal, IdMessageCoderMIME,
-  Classes, SysUtils;
+  SysUtils;
 
-// based on // https://en.delphipraxis.net/topic/10918-multipartform-data-vs-x-www-form-urlencoded-indy-http-server/?do=findComment&comment=87010
+// based on https://en.delphipraxis.net/topic/10918-multipartform-data-vs-x-www-form-urlencoded-indy-http-server/?do=findComment&comment=87010
 procedure HandleMultipartUpload(Request: TdjRequest; Response:
   TdjResponse; MimeHandler: TMimeHandler);
 var
   MsgEnd: Boolean;
   Decoder, NewDecoder: TIdMessageDecoder;
-  Line, Boundary, BoundaryStart, BoundaryEnd: String;
-  Dest: TStream;
+  Line, Boundary, BoundaryStart, BoundaryEnd: string;
+  Dest: TMemoryStream;
 begin
   Boundary := ExtractHeaderSubItem(Request.ContentType, 'boundary', QuoteHTTP);
   BoundaryStart := '--' + Boundary;
@@ -73,7 +74,7 @@ begin
             NewDecoder := Decoder.ReadBody(Dest, MsgEnd);
             try
               // use Dest as needed...
-              MimeHandler(Decoder, MsgEnd, Response);
+              MimeHandler(Decoder, Dest, Response);
             finally
               Decoder.Free;
               Decoder := NewDecoder;

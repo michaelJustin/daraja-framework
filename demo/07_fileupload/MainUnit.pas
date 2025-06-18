@@ -37,8 +37,7 @@ implementation
 uses
   djServer, djWebAppContext, djWebComponent, djTypes, djInterfaces,
   djNCSALogFilter, djFileUploadHelper,
-  IdHTTPServer, IdCustomHTTPServer, IdContext, IdSocketHandle, IdGlobal,
-  IdMessageCoder, IdGlobalProtocols, IdMessageCoderMIME, IdMultiPartFormData,
+  IdMessageCoder,
   Classes, SysUtils;
 
 type
@@ -70,7 +69,7 @@ type
   TUploadPage = class(TdjWebComponent)
   private
     procedure ProcessMimePart(const Decoder: TIdMessageDecoder;
-      const VMsgEnd: Boolean; const Response: TdjResponse);
+      const Dest: TMemoryStream; const Response: TdjResponse);
   public
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -86,33 +85,21 @@ end;
 // http://forums2.atozed.com/viewtopic.php?f=7&t=10924
 // http://embarcadero.newsgroups.archived.at/public.delphi.internet.winsock/201107/1107276163.html
 procedure TUploadPage.ProcessMimePart(const Decoder: TIdMessageDecoder;
-  const VMsgEnd: Boolean; const Response: TdjResponse);
+  const Dest: TMemoryStream; const Response: TdjResponse);
 var
-  LMStream: TMemoryStream;
   UploadFile: string;
 begin
-  LMStream := TMemoryStream.Create;
-  try
-    if Decoder.Filename <> '' then
-    begin
-      try
-        LMStream.LoadFromStream(Decoder.SourceStream);
-        Response.ContentText := Response.ContentText
-          + Format('<p>%s %d bytes</p>' + #13#10,
-            [Decoder.Filename, LMStream.Size]);
+  if Decoder.Filename <> '' then
+  begin
+    Response.ContentText := Response.ContentText
+      + Format('<p>%s %d bytes</p>' + #13#10,
+        [Decoder.Filename, Dest.Size]);
 
-        // write stream to upload folder
-        UploadFile := {GetUploadFolder} '.\' + Decoder.Filename;
-        LMStream.SaveToFile(UploadFile);
-        Response.ContentText := Response.ContentText
-          + '<p>' + UploadFile + ' written</p>';
-
-      except
-        raise;
-      end;
-    end;
-  finally
-    LMStream.Free;
+    Dest.Position := 0;
+    UploadFile := '.\' + Decoder.Filename;
+    Dest.SaveToFile(UploadFile);
+    Response.ContentText := Response.ContentText
+      + '<p>' + UploadFile + ' written</p>';
   end;
 end;
 
