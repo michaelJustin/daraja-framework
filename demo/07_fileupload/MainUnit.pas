@@ -69,8 +69,8 @@ end;
 type
   TUploadPage = class(TdjWebComponent)
   private
-    procedure ProcessMimePart(var VDecoder: TIdMessageDecoder;
-      var VMsgEnd: Boolean; const Response: TIdHTTPResponseInfo);
+    procedure ProcessMimePart(const Decoder: TIdMessageDecoder;
+      const VMsgEnd: Boolean; const Response: TdjResponse);
   public
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -78,44 +78,39 @@ type
 procedure TUploadPage.OnPost(Request: TdjRequest; Response: TdjResponse);
 begin
   HandleMultipartUpload(Request, Response, ProcessMimePart);
-
 end;
 
 // based on code on the Indy and Winsock Forum articles
+// https://en.delphipraxis.net/topic/10918-multipartform-data-vs-x-www-form-urlencoded-indy-http-server/?do=findComment&comment=87010
+// https://stackoverflow.com/questions/27257577/indy-mime-decoding-of-multipart-form-data-requests-returns-trailing-cr-lf
 // http://forums2.atozed.com/viewtopic.php?f=7&t=10924
 // http://embarcadero.newsgroups.archived.at/public.delphi.internet.winsock/201107/1107276163.html
-
-procedure TUploadPage.ProcessMimePart(var VDecoder: TIdMessageDecoder;
-  var VMsgEnd: Boolean; const Response: TIdHTTPResponseInfo);
+procedure TUploadPage.ProcessMimePart(const Decoder: TIdMessageDecoder;
+  const VMsgEnd: Boolean; const Response: TdjResponse);
 var
   LMStream: TMemoryStream;
-  LNewDecoder: TIdMessageDecoder;
   UploadFile: string;
 begin
   LMStream := TMemoryStream.Create;
   try
-    LNewDecoder := VDecoder.ReadBody(LMStream, VMsgEnd);
-    if VDecoder.Filename <> '' then
+    if Decoder.Filename <> '' then
     begin
       try
-        LMStream.Position := 0;
+        LMStream.LoadFromStream(Decoder.SourceStream);
         Response.ContentText := Response.ContentText
           + Format('<p>%s %d bytes</p>' + #13#10,
-            [VDecoder.Filename, LMStream.Size]);
+            [Decoder.Filename, LMStream.Size]);
 
         // write stream to upload folder
-        UploadFile := {GetUploadFolder} '.\' + VDecoder.Filename;
+        UploadFile := {GetUploadFolder} '.\' + Decoder.Filename;
         LMStream.SaveToFile(UploadFile);
         Response.ContentText := Response.ContentText
           + '<p>' + UploadFile + ' written</p>';
 
       except
-        LNewDecoder.Free;
         raise;
       end;
     end;
-    VDecoder.Free;
-    VDecoder := LNewDecoder;
   finally
     LMStream.Free;
   end;

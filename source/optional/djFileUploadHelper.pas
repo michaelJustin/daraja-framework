@@ -26,8 +26,8 @@ uses
   IdMessageCoder, djTypes;
 
 type
-  TMimeHandler = procedure(var VDecoder: TIdMessageDecoder;
-    var VMsgEnd: Boolean; const Response: TdjResponse) of object;
+  TMimeHandler = procedure(const Decoder: TIdMessageDecoder;
+    const VMsgEnd: Boolean; const Response: TdjResponse) of object;
 
 procedure HandleMultipartUpload(Request: TdjRequest; Response:
   TdjResponse; MimeHandler: TMimeHandler);
@@ -35,93 +35,66 @@ procedure HandleMultipartUpload(Request: TdjRequest; Response:
 implementation
 
 uses
-  IdGlobalProtocols, IdGlobal,
-  IdMessageCoderMIME,
+  IdGlobalProtocols, IdGlobal, IdMessageCoderMIME,
   Classes, SysUtils;
 
+// based on // https://en.delphipraxis.net/topic/10918-multipartform-data-vs-x-www-form-urlencoded-indy-http-server/?do=findComment&comment=87010
 procedure HandleMultipartUpload(Request: TdjRequest; Response:
   TdjResponse; MimeHandler: TMimeHandler);
 var
-  LBoundary, LBoundaryStart, LBoundaryEnd: string;
-  LDecoder: TIdMessageDecoder;
-  LLine: string;
-  LBoundaryFound, LIsStartBoundary, LMsgEnd: Boolean;
+  MsgEnd: Boolean;
+  Decoder, NewDecoder: TIdMessageDecoder;
+  Line, Boundary, BoundaryStart, BoundaryEnd: String;
+  Dest: TStream;
 begin
-  LBoundary := ExtractHeaderSubItem(Request.ContentType, 'boundary',
-    QuoteHTTP);
-  if LBoundary = '' then
-  begin
-    Response.ResponseNo := 400;
-    Response.CloseConnection := True;
-    Response.WriteHeader;
-    Exit;
-  end;
+  Boundary := ExtractHeaderSubItem(Request.ContentType, 'boundary', QuoteHTTP);
+  BoundaryStart := '--' + Boundary;
+  BoundaryEnd := BoundaryStart + '--';
 
-  LBoundaryStart := '--' + LBoundary;
-  LBoundaryEnd := LBoundaryStart + '--';
+  repeat
+    Line := ReadLnFromStream(Request.PostStream, -1, True);
+    if Line = BoundaryEnd then Exit;
+  until Line = BoundaryStart;
 
-  LDecoder := TIdMessageDecoderMIME.Create(nil);
-
+  Decoder := TIdMessageDecoderMIME.Create(nil);
   try
-    TIdMessageDecoderMIME(LDecoder).MIMEBoundary := LBoundary;
-    LDecoder.SourceStream := Request.PostStream;
-    LDecoder.FreeSourceStream := False;
-
-    // Copy from
-    // http://stackoverflow.com/questions/27257577/indy-mime-decoding-of-multipart-form-data-requests-returns-trailing-cr-lf
-    // note: this is a workaround, which enforces a specific encoding
-    TIdMessageDecoderMIME(LDecoder).Headers.Values['Content-Transfer-Encoding'] := '8bit';
-    TIdMessageDecoderMIME(LDecoder).BodyEncoded := False;
-
-    LBoundaryFound := False;
-    LIsStartBoundary := False;
+    MsgEnd := False;
     repeat
-      LLine := ReadLnFromStream(Request.PostStream, -1, True);
-      if LLine = LBoundaryStart then
-      begin
-        LBoundaryFound := True;
-        LIsStartBoundary := True;
-      end
-      else if LLine = LBoundaryEnd then
-      begin
-        LBoundaryFound := True;
-      end;
-    until LBoundaryFound;
+      TIdMessageDecoderMIME(Decoder).MIMEBoundary := Boundary;
+      Decoder.SourceStream := Request.PostStream;
+      Decoder.FreeSourceStream := False;
 
-    if (not LBoundaryFound) or (not LIsStartBoundary) then
-    begin
-      Response.ResponseNo := 400;
-      Response.CloseConnection := True;
-      Response.WriteHeader;
-      Exit;
-    end;
-
-    LMsgEnd := False;
-    repeat
-      TIdMessageDecoderMIME(LDecoder).MIMEBoundary := LBoundary;
-      LDecoder.SourceStream := Request.PostStream;
-      LDecoder.FreeSourceStream := False;
-
-      LDecoder.ReadHeader;
-      case LDecoder.PartType of
+      Decoder.ReadHeader;
+      case Decoder.PartType of
         mcptText, mcptAttachment:
-          begin
-            MimeHandler(LDecoder, LMsgEnd, Response);
+        begin
+          Dest := TMemoryStream.Create;
+          try
+            NewDecoder := Decoder.ReadBody(Dest, MsgEnd);
+            try
+              // use Dest as needed...
+              MimeHandler(Decoder, MsgEnd, Response);
+            finally
+              Decoder.Free;
+              Decoder := NewDecoder;
+            end;
+          finally
+            Dest.Free;
           end;
+        end;
         mcptIgnore:
-          begin
-            LDecoder.Free;
-            LDecoder := TIdMessageDecoderMIME.Create(nil);
-          end;
+        begin
+          FreeAndNil(Decoder);
+          Decoder := TIdMessageDecoderMIME.Create(nil);
+        end;
         mcptEOF:
-          begin
-            LDecoder.Free;
-            LMsgEnd := True;
-          end;
+        begin
+          MsgEnd := True;
+        end;
       end;
-    until (LDecoder = nil) or LMsgEnd;
+    until (Decoder = nil) or MsgEnd;
   finally
-    LDecoder.Free;
+    Decoder.Free;
   end;
 end;
 
