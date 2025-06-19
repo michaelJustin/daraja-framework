@@ -75,8 +75,6 @@ type
 
 procedure TUploadPage.OnPost(Request: TdjRequest; Response: TdjResponse);
 begin
-  Response.ContentText := Response.ContentText + Request.Params.Text;
-
   HandleMultipartUpload(Request, Response, ProcessMimePart);
 end;
 
