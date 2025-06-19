@@ -20,8 +20,6 @@ unit djFileUploadHelper;
 
 interface
 
-{$i IdCompilerDefines.inc}
-
 uses
   IdMessageCoder, djTypes,
   Classes;

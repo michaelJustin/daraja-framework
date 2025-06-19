@@ -49,16 +49,14 @@ type
 procedure THomePage.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText :=
-    '<!DOCTYPE html>'
+      '<!DOCTYPE html>'
     + '<html>'
     + '<body>'
-    + ''
     + '<form action="upload" method="post" enctype="multipart/form-data">'
-    + '  Select file to upload:'
+    + '  Select file(s) to upload:'
     + '  <input type="file" multiple name="fileToUpload" id="fileToUpload">'
     + '  <input type="submit" value="Upload File(s)" name="submit">'
     + '</form>'
-    + ''
     + '</body>'
     + '</html>';
   Response.ContentType := 'text/html';
@@ -79,11 +77,6 @@ begin
   HandleMultipartUpload(Request, Response, ProcessMimePart);
 end;
 
-// based on code on the Indy and Winsock Forum articles
-// https://en.delphipraxis.net/topic/10918-multipartform-data-vs-x-www-form-urlencoded-indy-http-server/?do=findComment&comment=87010
-// https://stackoverflow.com/questions/27257577/indy-mime-decoding-of-multipart-form-data-requests-returns-trailing-cr-lf
-// http://forums2.atozed.com/viewtopic.php?f=7&t=10924
-// http://embarcadero.newsgroups.archived.at/public.delphi.internet.winsock/201107/1107276163.html
 procedure TUploadPage.ProcessMimePart(const Decoder: TIdMessageDecoder;
   const Dest: TMemoryStream; const Response: TdjResponse);
 var
