@@ -37,8 +37,7 @@ implementation
 uses
   djServer, djWebAppContext, djWebComponent, djTypes, djInterfaces,
   djNCSALogFilter, djFileUploadHelper,
-  IdHTTPServer, IdCustomHTTPServer, IdContext, IdSocketHandle, IdGlobal,
-  IdMessageCoder, IdGlobalProtocols, IdMessageCoderMIME, IdMultiPartFormData,
+  IdMessageCoder,
   Classes, SysUtils;
 
 type
@@ -50,16 +49,14 @@ type
 procedure THomePage.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   Response.ContentText :=
-    '<!DOCTYPE html>'
+      '<!DOCTYPE html>'
     + '<html>'
     + '<body>'
-    + ''
     + '<form action="upload" method="post" enctype="multipart/form-data">'
-    + '  Select file to upload:'
+    + '  Select file(s) to upload:'
     + '  <input type="file" multiple name="fileToUpload" id="fileToUpload">'
     + '  <input type="submit" value="Upload File(s)" name="submit">'
     + '</form>'
-    + ''
     + '</body>'
     + '</html>';
   Response.ContentType := 'text/html';
@@ -69,8 +66,8 @@ end;
 type
   TUploadPage = class(TdjWebComponent)
   private
-    procedure ProcessMimePart(var VDecoder: TIdMessageDecoder;
-      var VMsgEnd: Boolean; const Response: TIdHTTPResponseInfo);
+    procedure ProcessMimePart(const Decoder: TIdMessageDecoder;
+      const Dest: TMemoryStream; const Response: TdjResponse);
   public
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); override;
   end;
@@ -78,46 +75,24 @@ type
 procedure TUploadPage.OnPost(Request: TdjRequest; Response: TdjResponse);
 begin
   HandleMultipartUpload(Request, Response, ProcessMimePart);
-
 end;
 
-// based on code on the Indy and Winsock Forum articles
-// http://forums2.atozed.com/viewtopic.php?f=7&t=10924
-// http://embarcadero.newsgroups.archived.at/public.delphi.internet.winsock/201107/1107276163.html
-
-procedure TUploadPage.ProcessMimePart(var VDecoder: TIdMessageDecoder;
-  var VMsgEnd: Boolean; const Response: TIdHTTPResponseInfo);
+procedure TUploadPage.ProcessMimePart(const Decoder: TIdMessageDecoder;
+  const Dest: TMemoryStream; const Response: TdjResponse);
 var
-  LMStream: TMemoryStream;
-  LNewDecoder: TIdMessageDecoder;
   UploadFile: string;
 begin
-  LMStream := TMemoryStream.Create;
-  try
-    LNewDecoder := VDecoder.ReadBody(LMStream, VMsgEnd);
-    if VDecoder.Filename <> '' then
-    begin
-      try
-        LMStream.Position := 0;
-        Response.ContentText := Response.ContentText
-          + Format('<p>%s %d bytes</p>' + #13#10,
-            [VDecoder.Filename, LMStream.Size]);
+  if Decoder.Filename <> '' then
+  begin
+    Response.ContentText := Response.ContentText
+      + Format('<p>%s %d bytes</p>' + #13#10,
+        [Decoder.Filename, Dest.Size]);
 
-        // write stream to upload folder
-        UploadFile := {GetUploadFolder} '.\' + VDecoder.Filename;
-        LMStream.SaveToFile(UploadFile);
-        Response.ContentText := Response.ContentText
-          + '<p>' + UploadFile + ' written</p>';
-
-      except
-        LNewDecoder.Free;
-        raise;
-      end;
-    end;
-    VDecoder.Free;
-    VDecoder := LNewDecoder;
-  finally
-    LMStream.Free;
+    Dest.Position := 0;
+    UploadFile := '.\' + Decoder.Filename;
+    Dest.SaveToFile(UploadFile);
+    Response.ContentText := Response.ContentText
+      + '<p>' + UploadFile + ' written</p>';
   end;
 end;
 
