@@ -37,7 +37,7 @@ implementation
 uses
   djServer, djWebAppContext, djWebComponent, djTypes, djInterfaces,
   djNCSALogFilter, djFileUploadHelper,
-  IdMessageCoder,
+  IdMessageCoder, IdGlobalProtocols,
   Classes, SysUtils;
 
 type
@@ -54,6 +54,7 @@ begin
     + '<body>'
     + '<form action="upload" method="post" enctype="multipart/form-data">'
     + '  Select file(s) to upload:'
+    + '  <input type="text" name="fname" id="fname" value="Svifnökkvinn"><br>'
     + '  <input type="file" multiple name="fileToUpload" id="fileToUpload">'
     + '  <input type="submit" value="Upload File(s)" name="submit">'
     + '</form>'
@@ -74,6 +75,8 @@ type
 
 procedure TUploadPage.OnPost(Request: TdjRequest; Response: TdjResponse);
 begin
+  Response.ContentText := Response.ContentText + Request.Params.Text;
+
   HandleMultipartUpload(Request, Response, ProcessMimePart);
 end;
 
@@ -81,9 +84,14 @@ procedure TUploadPage.ProcessMimePart(const Decoder: TIdMessageDecoder;
   const Dest: TMemoryStream; const Response: TdjResponse);
 var
   UploadFile: string;
+  ContentDisposition: string;
+  ParamName: string;
+  ParamValue: string;
+  StringStream: TStringStream;
 begin
   if Decoder.Filename <> '' then
   begin
+
     Response.ContentText := Response.ContentText
       + Format('<p>%s %d bytes</p>' + #13#10,
         [Decoder.Filename, Dest.Size]);
@@ -91,9 +99,27 @@ begin
     Dest.Position := 0;
     UploadFile := '.\' + Decoder.Filename;
     Dest.SaveToFile(UploadFile);
+
     Response.ContentText := Response.ContentText
       + '<p>' + UploadFile + ' written</p>';
+
+  end else begin
+    ContentDisposition := Decoder.Headers.Values['Content-Disposition']; {Do not Localize}
+    ParamName := ExtractHeaderSubItem(ContentDisposition, 'name', QuoteMIME); {do not localize}
+    StringStream := TStringStream.Create('', TEncoding.UTF8);
+    try
+      StringStream.LoadFromStream(Dest);
+      ParamValue := StringStream.DataString;
+    finally
+      StringStream.Free;
+    end;
   end;
+
+  Response.ContentText := Response.ContentText
+      + '<p>' + ParamValue + '</p>';
+
+  Response.ContentType := 'text/html';
+  Response.CharSet := 'utf-8';
 end;
 
 procedure Demo;
