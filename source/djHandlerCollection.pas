@@ -31,8 +31,10 @@ unit djHandlerCollection;
 interface
 
 uses
+  {$IFDEF DARAJA_LOGGING}
+  djLogAPI, djLoggerFactory,
+  {$ENDIF DARAJA_LOGGING}
   djInterfaces, djAbstractHandlerContainer, djServerContext,
-  {$IFDEF DARAJA_LOGGING}djLogAPI, djLoggerFactory,{$ENDIF DARAJA_LOGGING}
   djTypes;
 
 type
@@ -100,10 +102,6 @@ end;
 
 destructor TdjHandlerCollection.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}
-  Trace('Destroy');
-  {$ENDIF}
-
   FHandlers.Free;
 
   inherited;
@@ -111,8 +109,6 @@ end;
 
 procedure TdjHandlerCollection.AddHandler(const Handler: IHandler);
 begin
-  // Trace(Name + ' AddHandler');
-
   FHandlers.Add(Handler);
 
   if Started then
@@ -123,8 +119,6 @@ end;
 
 procedure TdjHandlerCollection.RemoveHandler(const Handler: IHandler);
 begin
-  // Trace('RemoveHandler');
-
   if Handler.IsStarted then
   begin
     Handler.Stop;
@@ -147,8 +141,6 @@ procedure TdjHandlerCollection.DoStart;
 var
   H: IHandler;
 begin
-  // Trace('Start ' + FName);
-
   for H in FHandlers do
   begin
     try
@@ -170,8 +162,6 @@ procedure TdjHandlerCollection.DoStop;
 var
   H: IHandler;
 begin
-  // Trace('Stop ' + FName);
-
   try
     inherited DoStop;
   except

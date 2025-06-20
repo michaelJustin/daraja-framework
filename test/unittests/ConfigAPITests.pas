@@ -49,7 +49,7 @@ type
 
     // Multiple contexts may have the same context path and they are
     // called in order until one handles the request.
-    procedure AddTwoContextWithSameName;
+    procedure AddTwoContextWithSameNameRaisesException;
 
     procedure ConfigTwoContexts;
 
@@ -270,7 +270,7 @@ begin
   end;
 end;
 
-procedure TAPIConfigTests.AddTwoContextWithSameName;
+procedure TAPIConfigTests.AddTwoContextWithSameNameRaisesException;
 var
   Server: TdjServer;
   Context: TdjWebAppContext;
@@ -280,13 +280,18 @@ begin
     Context := TdjWebAppContext.Create('foo');
     Context.Add(TExamplePage, '/bar');
     Server.Add(Context);
+
     Context := TdjWebAppContext.Create('foo');
     Context.Add(TExamplePage, '/bar2');
-    Server.Add(Context);
-    Server.Start;
 
-    CheckGETResponseEquals('example', '/foo/bar');
-    CheckGETResponseEquals('example', '/foo/bar2');
+    {$IFDEF FPC}
+    ExpectException(EWebComponentException, 'Context path "foo" is already registered.');
+    {$ELSE}
+    ExpectedException := EWebComponentException;
+    {$ENDIF}
+
+    Server.Add(Context);
+
 
   finally
     Server.Free;

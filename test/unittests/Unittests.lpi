@@ -38,7 +38,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="14">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -84,9 +84,17 @@
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\..\source\djAbstractHolder.pas"/>
+        <Filename Value="..\..\source\djInterfaces.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="ConfigAPITests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="..\..\source\optional\djDefaultWebComponent.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit13>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -114,7 +122,7 @@
     </Linking>
     <Other>
       <CompilerMessages>
-        <IgnoredMessages idx6058="True" idx5091="True" idx5071="True" idx5062="True" idx5024="True" idx4046="True" idx3124="True" idx3123="True"/>
+        <IgnoredMessages idx6058="True" idx5093="True" idx5091="True" idx5071="True" idx5062="True" idx5024="True" idx4046="True" idx3124="True" idx3123="True"/>
       </CompilerMessages>
     </Other>
   </CompilerOptions>

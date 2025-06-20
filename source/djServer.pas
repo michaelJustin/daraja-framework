@@ -39,7 +39,7 @@ uses
   {$IFDEF FPC}
   LazUTF8,
   {$ENDIF}
-  Generics.Collections;
+  Classes, Generics.Collections;
 
 const
   DEFAULT_BINDING_PORT = 8080;
@@ -90,7 +90,7 @@ type
     ConnectorMap: TObjectDictionary<string, IConnector>;
     ConnectorList: TdjStrings;
     ContextHandlers: IHandlerContainer;
-
+    ContextNames: TStrings;
     procedure Trace(const S: string);
     procedure StartConnectors;
     procedure StopConnectors;
@@ -147,6 +147,7 @@ type
      * Add a new context.
      *
      * @param Context the context handler.
+     * @throws EWebComponentException if an error occurs that interferes with the component's normal operation.
      *}
     procedure Add(Context: TdjWebComponentContextHandler);
 
@@ -162,7 +163,7 @@ type
 implementation /// \cond
 
 uses
-  Generics.Defaults, SysUtils, Classes;
+  Generics.Defaults, SysUtils;
 
 { TdjServer }
 
@@ -183,12 +184,9 @@ begin
   ConnectorList := TdjStrings.Create;
 
   ContextHandlers := TdjContextHandlerCollection.Create;
+  ContextNames := TStringList.Create;
 
   AddHandler(ContextHandlers);
-
-{$IFDEF LOG_CREATE}
-  Trace('Created');
-{$ENDIF}
 end;
 
 constructor TdjServer.Create(const AHost: string;
@@ -209,10 +207,6 @@ end;
 
 destructor TdjServer.Destroy;
 begin
-{$IFDEF LOG_DESTROY}
-  Trace('Destroy');
-{$ENDIF}
-
   if IsStarted then
   begin
     Stop;
@@ -220,6 +214,8 @@ begin
 
   ConnectorMap.Free;
   ConnectorList.Free;
+
+  ContextNames.Free;
 
   inherited;
 end;
@@ -262,6 +258,16 @@ end;
 procedure TdjServer.Add(Context: TdjWebComponentContextHandler);
 begin
   Trace('Add context ' + Context.ContextPath);
+
+  if ContextNames.IndexOf(Context.ContextPath) < 0 then
+  begin
+    ContextNames.Add(Context.ContextPath);
+  end else begin
+    raise EWebComponentException.CreateFmt('Context path "%s" is already registered.',
+      [Context.ContextPath]);
+
+    Context.Free; // avoid leak
+  end;
 
   ContextHandlers.AddHandler(Context);
 end;
@@ -319,7 +325,6 @@ begin
   end;
   {$ENDIF DARAJA_LOGGING}
 end;
-
 
 procedure TdjServer.DoStart;
 begin
