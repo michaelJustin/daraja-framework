@@ -31,38 +31,32 @@ unit djContextHandlerCollection;
 interface
 
 uses
-  djHandlerList, djContextMap
-  {$IFDEF DARAJA_LOGGING},djLogAPI, djLoggerFactory{$ENDIF DARAJA_LOGGING}
-  ;
+  {$IFDEF DARAJA_LOGGING}
+  djLogAPI, djLoggerFactory,
+  {$ENDIF DARAJA_LOGGING}
+  djHandlerList,
+  Classes;
 
 type
   { TdjContextHandlerCollection }
 
   {*
-   * Multiple contexts may have the same context path and they are
-   * called in order until one handles the request.
+   * Multiple contexts with the same name are not allowed.
    *}
   TdjContextHandlerCollection = class(TdjHandlerList)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
-    ContextMap: TdjContextMap;
-
-    procedure Trace(const S: string);
-
   public
     {*
      * Create a collection of context handlers.
      *}
     constructor Create; override;
-
     {*
      * Destructor.
      *}
     destructor Destroy; override;
-
   end;
 
 implementation
@@ -76,27 +70,11 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger('dj.' + TdjContextHandlerCollection.ClassName);
   {$ENDIF DARAJA_LOGGING}
-
-  ContextMap := TdjContextMap.Create;
-
-  Trace('Created');
 end;
 
 destructor TdjContextHandlerCollection.Destroy;
 begin
-  ContextMap.Free;
-
   inherited;
-end;
-
-procedure TdjContextHandlerCollection.Trace(const S: string);
-begin
-  {$IFDEF DARAJA_LOGGING}
-  if Logger.IsTraceEnabled then
-  begin
-    Logger.Trace(S);
-  end;
-  {$ENDIF DARAJA_LOGGING}
 end;
 
 end.

@@ -35,7 +35,7 @@ uses
   djLogAPI, djLogOverSimpleLogger, SimpleLogger,
   Forms,
   Interfaces,
-  djGlobal,
+  djGlobal, djInterfaces, djDefaultWebComponent,
   djPathMapTests,
   djWebAppContextTests,
   djWebComponentHolderTests,

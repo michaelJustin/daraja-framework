@@ -36,7 +36,6 @@ uses
   djContextConfig in '..\..\source\djContextConfig.pas',
   djContextHandler in '..\..\source\djContextHandler.pas',
   djContextHandlerCollection in '..\..\source\djContextHandlerCollection.pas',
-  djContextMap in '..\..\source\djContextMap.pas',
   djDefaultHandler in '..\..\source\optional\djDefaultHandler.pas',
   djDefaultWebComponent in '..\..\source\optional\djDefaultWebComponent.pas',
   djGenericHolder in '..\..\source\djGenericHolder.pas',
