@@ -41,16 +41,28 @@ type
   { TdjDefaultWebComponent }
   
   {*
-   * Web Component for static context.
+   * Web Component for static content.
+   *
+   * After registration in a context, this web component will serve
+   * requests for resources which have not been resolved by any other
+   * registered web component, but exists in the file system.
+   *
+   * For a request to a resource
+   *   http://host:port/<context-root>/path/to/file.ext
+   * the static file must exist at
+   *   <server-root>/webapps/<context-root>/path/to/file.ext
+   *
+   * If the file does not exist, a HTTP 404 error will be returned.
    *
    * @note This class is unsupported demonstration code.
+   *
+   * See TdjDefaultWebComponentTests for usage examples.
    *}
   TdjDefaultWebComponent = class(TdjWebComponent)
   private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
     ContextPath: string;
     StaticResourcePath: string;
     procedure Trace(const S: string);
@@ -115,7 +127,6 @@ begin
   end
   else
   begin
-
     {$IFDEF DARAJA_LOGGING}
     Logger.Warn('Static content directory not found: ' + StaticResourcePath);
     {$ELSE}
@@ -168,11 +179,11 @@ begin
 
   if FileExists(FileName) then
   begin
-
     Response.ResponseNo := HTTP_OK;
     Response.ContentType :=
       Response.HTTPServer.MIMETable.GetFileMIMEType(FileName);
 
+    // TODO: why is HTML handled differently here?
     if Response.ContentType = 'text/html' then
     begin
       Response.ContentStream := TFileStream.Create(FileName, fmOpenRead or
