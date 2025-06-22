@@ -7,3 +7,4 @@ Please note: the example uses a first draft of a subclass of the Indy component 
 
 Also, this demo has not been tested intensively with other form input fields (text, checkboxes etc.).
 
+References: https://datatracker.ietf.org/doc/html/rfc7578 Returning Values from Forms: multipart/form-data (which obsoletes RFC 2388)
