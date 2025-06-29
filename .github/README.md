@@ -8,8 +8,6 @@
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelJustin/daraja-framework?style=flat)
 
-⭐ Star us on GitHub — it motivates us a lot!
-
 ![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_3.png)
 
 In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
@@ -101,7 +99,7 @@ https://michaeljustin.github.io/daraja-framework/
 
 ### Getting started with Daraja
 
-https://www.habarisoft.com/daraja_framework/3.0.5/docs/DarajaFrameworkGettingStarted.pdf
+https://www.habarisoft.com/daraja_framework/3.0.6/docs/DarajaFrameworkGettingStarted.pdf
 
 ## Licensing
 
