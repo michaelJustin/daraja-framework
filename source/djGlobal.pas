@@ -31,7 +31,7 @@ unit djGlobal;
 interface
 
 const
-  DWF_SERVER_VERSION = '3.0.6-SNAPSHOT';
+  DWF_SERVER_VERSION = '3.0.6';
   DWF_SERVER_FULL_NAME = 'Daraja HTTP Framework ' + DWF_SERVER_VERSION;
   DWF_SERVER_COPYRIGHT = 'Copyright (c) Michael Justin';
 
