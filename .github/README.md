@@ -1,4 +1,4 @@
-![GitHub top language](https://img.shields.io/github/languages/top/michaelJustin/daraja-framework)
+[![Pascal](https://img.shields.io/badge/language-Object%20Pascal-blue.svg)]()
 ![Static Badge](https://img.shields.io/badge/OS-Windows-blue)
 [![Delphi](https://img.shields.io/badge/Delphi-2009+-blue.svg)]()
 [![Lazarus](https://img.shields.io/badge/Lazarus-4.0+-blue.svg)]()
