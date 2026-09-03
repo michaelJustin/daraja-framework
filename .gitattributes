@@ -1,0 +1,6 @@
+# Shell scripts must stay LF or they break when run.
+*.sh text eol=lf
+
+# Windows batch files must stay CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf

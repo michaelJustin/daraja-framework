@@ -1,0 +1,52 @@
+name: Unit tests
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'source/**'
+      - 'test/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    paths:
+      - 'source/**'
+      - 'test/**'
+      - '.github/workflows/tests.yml'
+  workflow_dispatch:
+
+jobs:
+  fpc:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout daraja-framework
+        uses: actions/checkout@v4
+        with:
+          path: daraja-framework
+
+      - name: Checkout Indy (dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: IndySockets/Indy
+          path: Indy
+
+      - name: Checkout slf4p (dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: michaelJustin/slf4p
+          path: slf4p
+
+      - name: Install Lazarus / FPC
+        uses: gcarreno/setup-lazarus@v3
+        with:
+          lazarus-version: stable
+
+      - name: Build the test runner (Console build mode)
+        working-directory: daraja-framework/test/unittests
+        run: lazbuild -B --build-mode=Console Unittests.lpi
+        shell: bash
+
+      - name: Run the test suite (headless)
+        working-directory: daraja-framework/test/unittests
+        run: ./UnittestsConsole.exe --all --format=plain
+        shell: bash

@@ -85,14 +85,17 @@ begin
   // optional feature
   Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
 
-  if not UseConsoleTestRunner then
-  begin
-    Tests.AddTest(TTestSuite.Create(TSessionTests));
-    {$IFDEF DARAJA_TEST_HTTPS}
-    Tests.AddTest(TTestSuite.Create(THttpsTests));
-    {$ENDIF DARAJA_TEST_HTTPS}
-    Tests.AddTest(TTestSuite.Create(TAPIConfigTests));
-  end;
+  // Integration suites: these start a real HTTP server on the loopback
+  // interface. They run in every runner (console and GUI). Set the
+  // DARAJA_SKIP_SERVER_TESTS define to exclude them on environments where
+  // binding a listening socket is not possible.
+  {$IFNDEF DARAJA_SKIP_SERVER_TESTS}
+  Tests.AddTest(TTestSuite.Create(TSessionTests));
+  Tests.AddTest(TTestSuite.Create(TAPIConfigTests));
+  {$IFDEF DARAJA_TEST_HTTPS}
+  Tests.AddTest(TTestSuite.Create(THttpsTests));
+  {$ENDIF DARAJA_TEST_HTTPS}
+  {$ENDIF DARAJA_SKIP_SERVER_TESTS}
 
   RegisterTest('', Tests);
 end;
@@ -103,17 +106,21 @@ begin
   RegisterTests('', [TdjWebComponentHolderTests.Suite]);
   RegisterTests('', [TdjWebComponentHandlerTests.Suite]);
   RegisterTests('', [TdjWebAppContextTests.Suite]);
+  RegisterTests('', [TdjWebFilterTests.Suite]);
   // optional feature
   RegisterTests('', [TdjDefaultWebComponentTests.Suite]);
 
-  if not UseConsoleTestRunner then
-  begin
-    RegisterTests('', [TAPIConfigTests.Suite]);
-    {$IFDEF DARAJA_TEST_HTTPS}
-    RegisterTests('', [THttpsTests.Suite]);
-    {$ENDIF DARAJA_TEST_HTTPS}
-    RegisterTests('', [TSessionTests.Suite]);
-  end;
+  // Integration suites: these start a real HTTP server on the loopback
+  // interface. They run in every runner (text and GUI). Set the
+  // DARAJA_SKIP_SERVER_TESTS define to exclude them on environments where
+  // binding a listening socket is not possible.
+  {$IFNDEF DARAJA_SKIP_SERVER_TESTS}
+  RegisterTests('', [TSessionTests.Suite]);
+  RegisterTests('', [TAPIConfigTests.Suite]);
+  {$IFDEF DARAJA_TEST_HTTPS}
+  RegisterTests('', [THttpsTests.Suite]);
+  {$ENDIF DARAJA_TEST_HTTPS}
+  {$ENDIF DARAJA_SKIP_SERVER_TESTS}
 end;
 {$ENDIF}
 
