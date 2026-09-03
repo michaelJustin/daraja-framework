@@ -31,6 +31,7 @@ uses
 {$IFDEF LINUX}
   cthreads,
 {$ENDIF}
+  SysUtils,
   LazUTF8,
   djLogAPI, djLogOverSimpleLogger, SimpleLogger,
   Forms,
@@ -41,6 +42,7 @@ uses
   djWebComponentHolderTests,
   djWebComponentHandlerTests,
   djDefaultWebComponentTests,
+  djWebFilterTests,
   ConfigAPITests,
   HttpsTests,
   TestHelper,
@@ -57,6 +59,11 @@ begin
   GIdIconvUseTransliteration := True;
   {$ENDIF}
 
+  // The upload tests read and write .\resources\ relative to the working
+  // directory. Pin it to the executable location (which is test\unittests\,
+  // next to resources\ and webapps\) so the runner can be started from anywhere.
+  SetCurrentDir(ExtractFileDir(ParamStr(0)));
+
   ConfigureLogging;
 
   RegisterUnitTests;
@@ -64,11 +71,9 @@ begin
   if UseConsoleTestRunner then
   begin
     // Launch console Test Runner --------------------------------------------
+    // Exit code: bit 0 set on failures, bit 1 set on errors (see FPCUnit
+    // TProgressWriter.GetExitCode), so scripts and CI can detect a red run.
     consoletestrunner.TTestRunner.Create(nil).Run;
-
-    {$IFNDEF LINUX}
-    ReadLn;
-    {$ENDIF}
   end else begin
     // Launch GUI Test Runner ------------------------------------------------
     Application.Initialize;

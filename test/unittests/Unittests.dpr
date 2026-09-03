@@ -74,6 +74,7 @@ uses
   djWebAppContextTests in 'djWebAppContextTests.pas',
   djWebComponentHandlerTests in 'djWebComponentHandlerTests.pas',
   djWebComponentHolderTests in 'djWebComponentHolderTests.pas',
+  djWebFilterTests in 'djWebFilterTests.pas',
   HTTPTestCase in 'HTTPTestCase.pas',
   TestSessions in 'TestSessions.pas',
   UnicodeText in 'UnicodeText.pas',
@@ -89,12 +90,20 @@ uses
   djWebFilterMapping in '..\..\source\djWebFilterMapping.pas';
 
 begin
+  // The upload tests read and write .\resources\ relative to the working
+  // directory. Pin it to the executable location so the runner can be started
+  // from anywhere.
+  SetCurrentDir(ExtractFileDir(ParamStr(0)));
+
   ConfigureLogging;
 
   RegisterUnitTests;
 
   if FindCmdLineSwitch('text-mode', ['-', '/'], true) then
-    TextTestRunner.RunRegisteredTests(rxbContinue)
+    // rxbHaltOnFailures makes the process exit with a non-zero code
+    // (ErrorCount + FailureCount) when the run is red, so scripts and CI
+    // can detect failures.
+    TextTestRunner.RunRegisteredTests(rxbHaltOnFailures)
   else
   begin
     ReportMemoryLeaksOnShutDown := True;
