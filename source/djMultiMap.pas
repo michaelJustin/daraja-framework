@@ -81,15 +81,10 @@ var
   Key: String;
   L: TObjectList<T>;
 begin
-  {*** for L in Self.Values do
-  begin
-     L.Free;
-  end; ***}
   for Key in Self.Keys do
   begin
      if TryGetValue(Key, L) then
      begin
-       // L.OwnsObjects := False;
        L.Free;
      end;
   end;
@@ -103,7 +98,7 @@ var
 begin
   if not TryGetValue(Key, L) then
   begin
-    L := TObjectList<T>.Create(TComparer<T>.Default, False);
+    L := TObjectList<T>.Create(TComparer<T>.Default, True);
     inherited Add(Key, L);
   end;
   L.Add(Value);
@@ -122,4 +117,3 @@ begin
 end;
 
 end.
-
