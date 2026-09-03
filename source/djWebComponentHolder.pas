@@ -135,6 +135,8 @@ end;
 
 destructor TdjWebComponentHolder.Destroy;
 begin
+  // Release the FConfig interface reference
+  FConfig := nil;
 
   inherited;
 end;

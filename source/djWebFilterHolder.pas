@@ -139,6 +139,8 @@ end;
 
 destructor TdjWebFilterHolder.Destroy;
 begin
+  // Release the FConfig interface reference
+  FConfig := nil;
 
   inherited;
 end;
@@ -241,6 +243,3 @@ begin
 end;
 
 end. /// \endcond
-
-
-
