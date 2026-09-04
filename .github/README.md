@@ -1,7 +1,7 @@
-[![Pascal](https://img.shields.io/badge/language-Object%20Pascal-blue.svg)]()
-![Static Badge](https://img.shields.io/badge/OS-Windows-blue)
-[![Delphi](https://img.shields.io/badge/Delphi-2009+-blue.svg)]()
-[![Lazarus](https://img.shields.io/badge/Lazarus-4.0+-blue.svg)]()
+![Object Pascal](https://img.shields.io/badge/language-Object%20Pascal-blue.svg)
+![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)
+![Delphi 2009+](https://img.shields.io/badge/Delphi-2009+-blue.svg)
+![Lazarus 4.0+](https://img.shields.io/badge/Lazarus-4.0+-blue.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelJustin/daraja-framework)
 [![Doxygen Docs](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
@@ -46,21 +46,21 @@ the project search path
 
 ## Example
 
-These are the basic steps to configure a simple "Hello, World!" application. A simple resource will be defined in a TdjWebComponent which has only one method, `OnGet`. The web component the will be installed in the server.
+These are the basic steps to configure a simple "Hello, World!" application. A simple resource will be defined in a TdjWebComponent which has only one method, `OnGet`. The web component will then be installed in the server.
 
 ### Resource definition
 
 A Daraja Web Component defines the request handling and response building, but it does not specify the actual location (HTTP address) of a resource.
 The web component in this example handles HTTP GET requests by overriding the OnGet method. The method sets the response content text and content type.
 
-https://github.com/michaelJustin/daraja-framework/blob/a047517ead8faad3c30f5096c090863bbd36e92e/demo/01_helloworld/MainUnit.pas#L40-L50
+https://github.com/michaelJustin/daraja-framework/blob/15da5806f044a7c9580f22ffa9e881fad96076e4/demo/01_helloworld/MainUnit.pas#L41-L50
 
 ### Context and resource registration
 
 We want to place the web component in the context `tutorial` and the absolute path `/hello`. We also want to use port 80. 
 The full URL of our resource is `http://127.0.0.1/tutorial/hello`
 
-https://github.com/michaelJustin/daraja-framework/blob/a047517ead8faad3c30f5096c090863bbd36e92e/demo/01_helloworld/MainUnit.pas#L57-L68
+https://github.com/michaelJustin/daraja-framework/blob/15da5806f044a7c9580f22ffa9e881fad96076e4/demo/01_helloworld/MainUnit.pas#L52-L69
 
 #### Test with curl:
 
@@ -75,11 +75,12 @@ Date: Wed, 22 Jan 2025 19:07:14 GMT
 Hello, World!
 ```
 
+(The `charset=ISO-8859-1` is appended automatically by Indy; the example code only sets `text/plain`.)
+
 <details>
 <summary>Flowchart diagram</summary>
  
 ```mermaid
-
 flowchart TD
     A[TdjServer] -->|Receive request| B(Locate TdjWebcomponent)
     B --> C{Invoke HTTP method}
