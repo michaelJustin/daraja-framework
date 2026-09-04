@@ -5,8 +5,8 @@ files feeds two project files:
 
 | Project | Compiler | Runner |
 |---------|----------|--------|
-| `Unittests.lpi` | Free Pascal / Lazarus | FPCUnit (console or GUI) |
-| `Unittests.dpr` | Delphi | DUnit (text or GUI) |
+| `Unittests.lpi` | Free Pascal / Lazarus | FPCUnit |
+| `Unittests.dpr` | Delphi | DUnit |
 
 ## Dependencies
 
@@ -19,58 +19,93 @@ Both builds expect these checkouts as **siblings of the repository directory**
 For Delphi, use this Indy checkout, **not** the one bundled with the IDE — older
 bundled Indy versions lack `hcPATCH` and will not compile the framework.
 
-## Free Pascal / Lazarus
+## Quick start
+
+From `test/unittests/`:
 
 ```
-lazbuild -B test/unittests/Unittests.lpi
-cd test/unittests
-Unittests.exe --all --format=plain
+run-fpc.cmd          # Windows, Free Pascal / Lazarus
+./run-fpc.sh         # POSIX, Free Pascal / Lazarus
+run-delphi.cmd       # Windows, Delphi
 ```
 
-Any command-line argument selects the console runner; with no arguments the GUI
-runner opens.
+Each script builds from scratch, runs the **whole** suite headless, prints a
+plain-text report, and exits non-zero if anything failed. No IDE, no
+interaction, no environment setup beyond the dependencies above.
 
-Note: the `.lpi` sets `GraphicApplication=True`, so a run whose output is piped
-or redirected produces **no stdout**. To capture console output, temporarily set
-`<GraphicApplication Value="False"/>` in the `.lpi`, rebuild, then revert.
+- `run-fpc` needs `lazbuild` on `PATH`, or set `LAZBUILD` to its full path.
+- `run-delphi` defaults to RAD Studio 2009 at
+  `C:\Program Files (x86)\CodeGear\RAD Studio\6.0`; override `BDS` and `INDY` if
+  your layout differs.
 
-## Delphi
+Extra arguments are forwarded to the runner, e.g.
+`run-fpc.cmd --suite=TdjPathMapTests` or
+`run-fpc.cmd --format=xml --file=results.xml`.
 
-Build from the `test/unittests/` directory (adjust the two paths for your
-machine):
+## What the scripts do
+
+### Free Pascal
 
 ```
-set RS=C:\Program Files (x86)\CodeGear\RAD Studio\6.0
-set I=..\..\..\Indy\Lib
-"%RS%\bin\dcc32.exe" -B -Q ^
-  "-U%RS%\lib;%I%\Core;%I%\Protocols;%I%\System;..\..\source;..\..\source\optional;..\..\..\slf4p\src\main" ^
-  "-I%I%\Core;%I%\System" -N0<dcu-output-dir> -E. Unittests.dpr
+lazbuild -B --build-mode=Console Unittests.lpi
+UnittestsConsole.exe --all --format=plain
+```
+
+The project has two build modes:
+
+- **Default** — GUI test runner (`Unittests.exe`), for interactive use.
+- **Console** — console-subsystem binary (`UnittestsConsole.exe`) whose stdout
+  works under redirection and which never waits for input. This is the one used
+  for scripted / CI runs.
+
+Exit code: bit 0 set on failures, bit 1 set on errors.
+
+### Delphi
+
+```
+dcc32 -B -Q -U<...;Indy Lib;source;slf4p> -I<Indy Core;Indy System> -E. Unittests.dpr
 Unittests.exe -text-mode
 ```
 
-- `-I` (include search path) is required for `IdCompilerDefines.inc`.
-- `-E.` puts the exe in `test/unittests/` — see the working-directory note below.
-- Without `-text-mode` the DUnit GUI runner opens.
-- Two harmless Indy warnings are expected (W1036 `LCloseConnection`, W1035 SSPI).
+`Unittests.dpr` runs the DUnit **text** runner with `-text-mode` and the DUnit
+**GUI** runner otherwise. The text runner uses `rxbHaltOnFailures`, so the
+process exits with `ErrorCount + FailureCount`.
 
-## Running the full suite
+The `-I` include path is required for `IdCompilerDefines.inc`. Two harmless Indy
+warnings are expected (W1036 `LCloseConnection`, W1035 SSPI).
 
-`TestHelper.RegisterUnitTests` only registers the session, HTTPS and API-config
-suites when `not UseConsoleTestRunner` — i.e. when **no** command-line argument
-is passed. Every CLI invocation passes an argument, so the console / text runner
-sees only the small subset (~16–17 tests).
+## Running a subset
 
-To run the full suite from the command line, temporarily remove the
-`if not UseConsoleTestRunner` guard in `TestHelper.RegisterUnitTests` (there is
-one in the FPC branch and one in the `{$ELSE}` Delphi branch), rebuild, run, then
-revert. Alternatively, run the GUI runner, which always registers everything.
+- FPCUnit: `--suite=<TestCaseClass>` (optionally `.<TestMethod>`), or `--list`.
+- DUnit text runner: registered-test selection is not available on the command
+  line; use the GUI runner, or temporarily narrow `RegisterUnitTests`.
 
-Full suite size: **67 tests** (FPC) / **66 tests** (Delphi — the FPC-only
-`TdjWebFilterTests` is not in the Delphi project).
+## Optional / opt-out suites
 
-## Working directory
+- The **HTTPS** suite (`THttpsTests`) is compiled only when `DARAJA_TEST_HTTPS`
+  is defined (it needs the OpenSSL DLLs).
+- The integration suites that start a loopback HTTP server (`TSessionTests`,
+  `TAPIConfigTests`) run everywhere by default. Define `DARAJA_SKIP_SERVER_TESTS`
+  to exclude them on environments where binding a listening socket is not
+  possible.
 
-`TdjDefaultWebComponent` resolves the `webapps\` folder relative to
-`ExtractFilePath(ParamStr(0))` (the executable's location), not the current
-directory. The test executable must therefore sit in `test/unittests/` (next to
-`webapps/`), or `TdjDefaultWebComponentTests` will get 404 responses.
+## GUI runners
+
+Build the default mode (`lazbuild -B Unittests.lpi`, or the Delphi project
+without `-text-mode`) and run the executable with no arguments.
+
+## Continuous integration
+
+[`.github/workflows/tests.yml`](.github/workflows/tests.yml) checks out the two
+dependencies as siblings, installs Lazarus, and runs the Free Pascal suite
+headless on every push and pull request that touches `source/` or `test/`.
+
+## Notes
+
+- The runners `SetCurrentDir` to the executable's own folder at startup, so the
+  `.\resources\` paths used by the upload tests resolve regardless of where the
+  runner is launched from.
+- `TdjDefaultWebComponent` resolves `webapps\` relative to
+  `ExtractFilePath(ParamStr(0))`, so the test executable must be built into
+  `test/unittests/` (next to `webapps/`). All project files and scripts already
+  do this.

@@ -98,6 +98,10 @@ test/unittests/dunit.ini
 test/unittests/Unittests.dbg
 test/unittests/ppas.bat
 
+# The test project file is tracked: it carries the dependency search paths
+# needed to build the suite from a clean checkout (see UNIT-TESTS.md).
+!test/unittests/Unittests.dproj
+
 client_secret.json
 
 DarajaFrameworkGettingStarted.pdf
