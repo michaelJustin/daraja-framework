@@ -22,6 +22,7 @@ jobs:
         os: [windows-latest, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
 
     steps:
       - name: Checkout daraja-framework
@@ -48,11 +49,36 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y lazarus libgtk2.0-dev
 
-      - name: Install Lazarus / FPC (Windows)
+      # On Windows the setup-lazarus action installs Lazarus + FPC from the
+      # SourceForge Windows installer into ${RUNNER_TEMP}/installers/lazarus,
+      # which also stalls for many minutes when SourceForge throttles the
+      # runners. Cache that tree (it is self-contained, including its own
+      # fpc.cfg) and skip the download on a hit. Bump the key suffix when the
+      # Lazarus / FPC version changes.
+      - name: Cache Lazarus / FPC (Windows)
         if: runner.os == 'Windows'
+        id: cache-lazarus
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/installers/lazarus
+          key: lazarus-${{ runner.os }}-stable-4.4-fpc-3.2.2
+
+      - name: Install Lazarus / FPC (Windows)
+        if: runner.os == 'Windows' && steps.cache-lazarus.outputs.cache-hit != 'true'
+        timeout-minutes: 10
         uses: gcarreno/setup-lazarus@v3
         with:
           lazarus-version: stable
+
+      # On a cache hit setup-lazarus did not run, so add the same two
+      # directories it would have put on PATH (the IDE/lazbuild dir and the
+      # bundled FPC bin dir).
+      - name: Add cached Lazarus to PATH (Windows)
+        if: runner.os == 'Windows' && steps.cache-lazarus.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          echo "${RUNNER_TEMP}/installers/lazarus" >> "$GITHUB_PATH"
+          echo "${RUNNER_TEMP}/installers/lazarus/fpc/3.2.2/bin/x86_64-win64" >> "$GITHUB_PATH"
 
       # The ConsoleCI build mode is the Console mode plus
       # -dDARAJA_SKIP_SERVER_TESTS, which excludes the loopback-HTTP-server

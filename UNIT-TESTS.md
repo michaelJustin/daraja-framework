@@ -117,10 +117,12 @@ without `-text-mode`) and run the executable with no arguments.
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml) checks out the two
 dependencies as siblings and runs the Free Pascal suite headless on both
 `windows-latest` and `ubuntu-latest` for every push and pull request that
-touches `source/` or `test/`. Windows installs Lazarus via `setup-lazarus`;
-Linux installs it from the Ubuntu archive (the action's SourceForge download
-stalls on the hosted Linux runners) and runs the console runner under `xvfb`
-(the runner links the LCL). Delphi is not covered in CI.
+touches `source/` or `test/`. Windows installs Lazarus via `setup-lazarus`,
+with the installed tree cached (keyed on the Lazarus / FPC version) so the
+SourceForge download only happens when the cache misses; Linux installs it
+from the Ubuntu archive (the action's SourceForge download stalls on the
+hosted Linux runners) and runs the console runner under `xvfb` (the runner
+links the LCL). Delphi is not covered in CI.
 
 CI builds the `ConsoleCI` mode, so the loopback-server integration suites
 (`TSessionTests`, `TAPIConfigTests`) do **not** run in CI. Run `run-fpc` /
