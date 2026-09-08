@@ -55,6 +55,13 @@ uses
 {$R *.res}
 
 begin
+  // When built with heap trace (Console build mode, -gh), write the leak
+  // report to heaptrace.log next to the executable. Must run before any
+  // allocation. See UNIT-TESTS.md.
+  {$IF DECLARED(SetHeapTraceOutput)}
+  SetHeapTraceOutput('heaptrace.log');
+  {$ENDIF}
+
   {$IFDEF LINUX}
   GIdIconvUseTransliteration := True;
   {$ENDIF}
@@ -81,8 +88,4 @@ begin
     TestRunner.Caption := DWF_SERVER_FULL_NAME + ' FPCUnit tests';
     Application.Run;
   end;
-
-  {$IFNDEF LINUX}
-  // SetHeapTraceOutput('heaptrace.log');
-  {$ENDIF}
 end.

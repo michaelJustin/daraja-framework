@@ -60,6 +60,21 @@ The project has two build modes:
 
 Exit code: bit 0 set on failures, bit 1 set on errors.
 
+#### Always check `heaptrace.log`
+
+The **Console** build mode is compiled with heap tracing (`-gh`), and the runner
+calls `SetHeapTraceOutput('heaptrace.log')`, so every `run-fpc` run rewrites
+`test/unittests/heaptrace.log` with the FPC leak report.
+
+A green test run is **not** enough — also open `heaptrace.log` and confirm the
+`unfreed memory blocks` count has not grown. A handful of blocks allocated from
+Indy unit initialisation (`IdThread`/`IdStack` `..._init$` frames) are expected
+and can be ignored; any block whose call trace points into `source/` or a test
+unit is a regression and must be fixed before merging.
+
+The heap report does not affect the process exit code, so scripts and CI that
+only check the exit status will miss leaks.
+
 ### Delphi
 
 ```

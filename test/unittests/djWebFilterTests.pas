@@ -66,11 +66,12 @@ end;
 procedure TdjWebFilterTests.TestCreate;
 var
   Context: TdjWebAppContext;
-  // Filter: IWebFilter;
+  Filter: IWebFilter;
 begin
   Context := TdjWebAppContext.Create('x-ctx');
   try
-    (* Filter := *) TTestFilter.Create;
+    Filter := TTestFilter.Create;
+    Check(Assigned(Filter), 'Filter created');
   finally
     Context.Free;
   end;
