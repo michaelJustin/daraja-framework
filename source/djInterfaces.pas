@@ -50,6 +50,9 @@ type
 
     {*
      * Stops the component.
+     *
+     * @note Unlike Start, a failure in the custom stop code is logged and
+     * swallowed rather than re-raised; the component is still marked stopped.
      *}
     procedure Stop;
 

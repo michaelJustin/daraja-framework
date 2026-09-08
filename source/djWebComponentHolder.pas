@@ -174,7 +174,7 @@ procedure TdjWebComponentHolder.DoStart;
 begin
   inherited;
 
-  CheckStarted;
+  CheckNotStarted;
 
   Assert(FConfig <> nil);
   Assert(FConfig.GetContext <> nil);

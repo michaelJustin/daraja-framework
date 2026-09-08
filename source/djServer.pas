@@ -334,7 +334,7 @@ end;
 
 procedure TdjServer.DoStart;
 begin
-  CheckStarted;
+  CheckNotStarted;
   // Trace('Starting server');
 
   // add default connector
@@ -362,7 +362,7 @@ end;
 
 procedure TdjServer.DoStop;
 begin
-  CheckStopped;
+  CheckNotStopped;
   StopContextHandlers;
   StopConnectors;
 

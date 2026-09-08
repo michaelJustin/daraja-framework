@@ -38,6 +38,13 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   caller had to free. Callers replace `L := Config.GetInitParameterNames; try
   ... finally L.Free; end;` with a plain `for Name in Config.GetInitParameterNames
   do`. (#436)
+- **Breaking:** `TdjLifeCycle.Started` and `TdjLifeCycle.Stopped` are now
+  read-only properties (they were read/write, and writing one silently flipped
+  the other). Use `Start` / `Stop` to change lifecycle state, or `IsStarted` /
+  `IsStopped` to query it. The protected guards `CheckStarted` / `CheckStopped`
+  are renamed `CheckNotStarted` / `CheckNotStopped` — they raise when the
+  lifecycle is *already* in that state, and the old names read like the opposite
+  assertion. (#438)
 
 ### Removed
 
@@ -67,6 +74,10 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - `TdjWebComponentHandler.AddWebFilter` leaves ownership of the holder with
   the caller on any failure (`WebFilters.Extract`); the holder is then freed
   by `TdjWebComponentContextHandler.AddWebFilter`, closing a leak. (#424)
+- `TdjLifeCycle.Stop` now marks the component stopped even when the custom
+  `DoStop` code raises (the exception is still logged and swallowed, as
+  before), so a failed stop can no longer leave it reporting as started.
+  `ILifeCycle.Stop` documents this swallow-and-still-stop behaviour. (#438)
 
 ### Documentation
 

@@ -169,7 +169,7 @@ procedure TdjWebFilterHolder.DoStart;
 begin
   inherited;
 
-  CheckStarted;
+  CheckNotStarted;
 
   Assert(FConfig <> nil);
   Assert(FConfig.GetContext <> nil);
@@ -242,7 +242,7 @@ end;
 procedure TdjWebFilterHolder.DoFilter(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
 begin
-  CheckStopped;
+  CheckNotStopped;
 
   WebFilter.DoFilter(Context, Request, Response, Chain);
 end;

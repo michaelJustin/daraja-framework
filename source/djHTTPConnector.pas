@@ -120,7 +120,7 @@ procedure TdjHTTPConnector.DoStart;
 var
   Binding: TIdSocketHandle;
 begin
-  CheckStarted;
+  CheckNotStarted;
 
   // create binding
   {$IFDEF DARAJA_LOGGING}
@@ -154,7 +154,7 @@ begin
 
     HTTPServer.Active := True;
 
-    Started := True;
+    // TdjLifeCycle.Start sets the started flag once DoStart returns.
 
     {$IFDEF DARAJA_LOGGING}
     Logger.Info('Accepting requests at %s', [HostAndPort]);

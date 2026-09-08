@@ -51,9 +51,6 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    procedure SetStarted(const Value: Boolean);
-    procedure SetStopped(const Value: Boolean);
-
   protected
     {*
      * Execute the custom start code.
@@ -66,14 +63,14 @@ type
     procedure DoStop; virtual;
 
     {*
-     * Raises an exception if the lifecycle is in "started" state
+     * Raises an exception if the lifecycle is already in "started" state.
      *}
-    procedure CheckStarted;
+    procedure CheckNotStarted;
 
     {*
-     * Raises an exception if the lifecycle is in "stopped" state
+     * Raises an exception if the lifecycle is already in "stopped" state.
      *}
-    procedure CheckStopped;
+    procedure CheckNotStopped;
 
   public
     // ILifeCycle interface
@@ -85,9 +82,9 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
 
-    // properties
-    property Started: Boolean read FStarted write SetStarted;
-    property Stopped: Boolean read FStopped write SetStopped;
+    // properties (read-only; use Start / Stop to change lifecycle state)
+    property Started: Boolean read FStarted;
+    property Stopped: Boolean read FStopped;
   end;
 
 implementation /// \cond
@@ -97,13 +94,13 @@ uses
 
 { TdjLifeCycle }
 
-procedure TdjLifeCycle.CheckStarted;
+procedure TdjLifeCycle.CheckNotStarted;
 begin
   if Started then
     raise Exception.Create('Component started already!');
 end;
 
-procedure TdjLifeCycle.CheckStopped;
+procedure TdjLifeCycle.CheckNotStopped;
 begin
   if Stopped then
     raise Exception.Create('Component stopped already!');
@@ -142,18 +139,6 @@ begin
   Result := FStopped;
 end;
 
-procedure TdjLifeCycle.SetStarted(const Value: Boolean);
-begin
-  FStarted := Value;
-  FStopped := not Value;
-end;
-
-procedure TdjLifeCycle.SetStopped(const Value: Boolean);
-begin
-  FStopped := Value;
-  FStarted := not Value;
-end;
-
 // methods
 
 procedure TdjLifeCycle.DoStart;
@@ -177,7 +162,8 @@ begin
       // Trace('Starting ...');
       DoStart;
       // Trace('Started');
-      Started := True;
+      FStarted := True;
+      FStopped := False;
     except
       on E: Exception do
       begin
@@ -204,15 +190,19 @@ begin
       // Trace('Stopping ...');
       DoStop;
       // Trace('Stopped');
-      Stopped := True;
     except
       on E: Exception do
       begin
+        // Unlike Start, a failed DoStop is logged and swallowed, not
+        // re-raised. The component is still marked stopped below so it
+        // cannot be left in a half-started state.
         {$IFDEF DARAJA_LOGGING}
         Logger.Error('Stop failed', E);
         {$ENDIF DARAJA_LOGGING}
       end;
     end;
+    FStopped := True;
+    FStarted := False;
   finally
     CS.Leave;
   end;
