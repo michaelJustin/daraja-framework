@@ -3,8 +3,7 @@ name: Generate Doxygen Docs
 on:
   push:
     branches: [master]
-    paths:
-      - 'source/**/*.pas'
+    tags: ['v*']
   workflow_dispatch:
 
 jobs:
@@ -22,7 +21,11 @@ jobs:
         run: echo "C:\\Program Files\\doxygen\\bin" >> $env:GITHUB_PATH
 
       - name: Generate Doxygen documentation with pas2dox
-        run: doxygen make\\doxygen.cfg
+        shell: bash
+        run: |
+          VER=$(awk -F"'" '/DWF_SERVER_VERSION/ {print $2; exit}' source/djGlobal.pas)
+          echo "Building documentation for version: $VER"
+          ( cat make/doxygen.cfg; echo "PROJECT_NUMBER=$VER" ) | doxygen -
 
       - name: Upload Doxygen warnings
         uses: actions/upload-artifact@v4
