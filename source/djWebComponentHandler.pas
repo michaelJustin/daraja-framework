@@ -34,12 +34,11 @@ uses
   djInterfaces, djAbstractHandler, djWebComponent, djServerContext,
   djWebComponentHolder, djWebComponentHolders,
   djWebComponentMapping, djPathMap,
-  djWebFilterHolder, djWebFilterMapping, djMultiMap,
+  djWebFilterHolder, djWebFilterMapping,
   {$IFDEF DARAJA_LOGGING}
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
-  djTypes,
-  Generics.Collections;
+  djTypes;
 
 type
   { TdjWebComponentHandler }
@@ -66,12 +65,9 @@ type
 
     FWebFilterHolders: TdjWebFilterHolders;
     FWebFilterMappings: TdjWebFilterMappings;
-    FWebFilterNameMap: TObjectDictionary<string, TdjWebFilterHolder>;
-    FWebFilterNameMappings: TdjMultiMap<TdjWebFilterMapping>;
+    // a non-owning, filtered view of FWebFilterMappings (URL-pattern mappings)
     FWebFilterPathMappings: TdjWebFilterMappings;
 
-    procedure SetFilters(Holders: TdjWebFilterHolders);
-    procedure InitializeHolders(Holders: TdjWebFilterHolders);
     function StripContext(const Doc: string): string;
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
     procedure CheckUniqueFilterName(Holder: TdjWebFilterHolder);
@@ -84,7 +80,6 @@ type
       Holder: TdjWebComponentHolder): IWebFilterChain;
     function NewFilterChain(Holder: TdjWebFilterHolder;
       Chain: IWebFilterChain): IWebFilterChain;
-    procedure UpdateNameMappings;
     procedure UpdateMappings;
 
     // properties
@@ -265,17 +260,11 @@ begin
   FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
 
-  FWebFilterNameMap := TObjectDictionary<string, TdjWebFilterHolder>.Create;
-
   FPathMap := TdjPathMap.Create;
-
-  
 end;
 
 destructor TdjWebComponentHandler.Destroy;
 begin
-  
-
   if IsStarted then
   begin
     Stop;
@@ -289,13 +278,8 @@ begin
   FWebFilterHolders.Free;
   FWebFilterMappings.Free;
 
-  FWebFilterNameMap.Free;
-  FWebFilterNameMappings.Free;
-
-  if FWebFilterPathMappings <> nil then
-  begin // todo why can it be nil here? TestMapFilterTwiceToSameWebComponentRaisesException
-    FWebFilterPathMappings.OwnsObjects := False;
-  end;
+  // FWebFilterPathMappings is a non-owning view; the mappings belong to
+  // FWebFilterMappings, freed above
   FWebFilterPathMappings.Free;
 
   inherited;
@@ -333,7 +317,6 @@ var
 begin
   inherited;
 
-  UpdateNameMappings;
   UpdateMappings;
 
   for FH in WebFilters do
@@ -533,13 +516,6 @@ begin
   if not WebFilters.Contains(Holder) then
   begin
     WebFilters.Add(Holder);
-    try
-      SetFilters(WebFilters);
-    except
-      // leave ownership of Holder with the caller on any failure path
-      WebFilters.Extract(Holder);
-      raise;
-    end;
   end;
 
   Mapping := TdjWebFilterMapping.Create;
@@ -548,22 +524,6 @@ begin
   Mapping.UrlPatterns.Add(UrlPattern);
 
   FWebFilterMappings.Add(Mapping);
-end;
-
-procedure TdjWebComponentHandler.SetFilters(Holders: TdjWebFilterHolders);
-begin
-  InitializeHolders(Holders);
-  UpdateNameMappings;
-end;
-
-procedure TdjWebComponentHandler.InitializeHolders(Holders: TdjWebFilterHolders);
-//var
-//  Holder: TdjWebFilterHolder;
-begin
-//  for Holder in Holders do
-//  begin
-//    // already set. Holder.SetContext(WebComponentContext);
-//  end;
 end;
 
 function TdjWebComponentHandler.StripContext(const Doc: string): string;
@@ -766,25 +726,8 @@ var
   Chain: IWebFilterChain;
   FilterMapping: TdjWebFilterMapping;
   ChainEnd: TChainEnd;
-  NameMappings: TdjWebFilterMappings;
 begin
   Chain := nil;
-
-  if (FWebFilterNameMappings <> nil) and (FWebFilterNameMappings.Count > 0) then
-  begin
-    NameMappings := FWebFilterNameMappings.GetValues(Holder.Name);
-
-    for FilterMapping in NameMappings do
-    begin
-       if Chain = nil then
-       begin
-         ChainEnd := TChainEnd.Create(Holder);
-         Chain := NewFilterChain(FilterMapping.WebFilterHolder, ChainEnd);
-       end else begin
-         Chain := NewFilterChain(FilterMapping.WebFilterHolder, Chain);
-       end;
-    end;
-  end;
 
   if (PathInContext <> '') {todo: test} and (FWebFilterPathMappings <> nil) then
   begin
@@ -812,48 +755,21 @@ begin
   Result := TdjWebFilterChain.Create(Holder, Chain);
 end;
 
-procedure TdjWebComponentHandler.UpdateNameMappings;
-var
-  WebFilterHolder: TdjWebFilterHolder;
-begin
-  FWebFilterNameMap.Clear;
-
-  for WebFilterHolder in WebFilters do
-  begin
-    FWebFilterNameMap.Add(WebFilterHolder.Name, WebFilterHolder);
-  end;
-end;
-
 procedure TdjWebComponentHandler.UpdateMappings;
 var
   FilterMapping: TdjWebFilterMapping;
-  WebFilterHolder: TdjWebFilterHolder;
-  WebComponentNames: TStrings;
-  WebComponentName: string;
 begin
+  // rebuild the non-owning URL-pattern view of FWebFilterMappings
   FWebFilterPathMappings.Free;
-  FWebFilterPathMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
-  FWebFilterNameMappings.Free;
-  FWebFilterNameMappings := TdjMultiMap<TdjWebFilterMapping>.Create;
+  FWebFilterPathMappings := TdjWebFilterMappings.Create(
+    TComparer<TdjWebFilterMapping>.Default);
+  FWebFilterPathMappings.OwnsObjects := False;
 
   for FilterMapping in FWebFilterMappings do
   begin
-    WebFilterHolder := FWebFilterNameMap[FilterMapping.WebFilterName];
-    // if = nil ...
-    FilterMapping.WebFilterHolder := WebFilterHolder;
-
     if FilterMapping.UrlPatterns.Count > 0 then
     begin
       FWebFilterPathMappings.Add(FilterMapping);
-    end;
-
-    WebComponentNames := FilterMapping.WebComponentNames;
-    if WebComponentNames.Count > 0 then
-    begin
-      for WebComponentName in WebComponentNames do
-      begin
-        FWebFilterNameMappings.Add(WebComponentName, FilterMapping);
-      end;
     end;
   end;
 end;

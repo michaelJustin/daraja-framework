@@ -73,7 +73,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="13">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -115,21 +115,17 @@
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="..\..\source\djMultiMap.pas"/>
+        <Filename Value="..\..\source\djInterfaces.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\..\source\djInterfaces.pas"/>
+        <Filename Value="ConfigAPITests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
       <Unit12>
-        <Filename Value="ConfigAPITests.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit12>
-      <Unit13>
         <Filename Value="..\..\source\optional\djDefaultWebComponent.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit13>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

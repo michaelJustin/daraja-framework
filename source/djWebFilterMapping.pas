@@ -46,7 +46,6 @@ type
   private
     FName: string;
     FUrlPatterns: TStrings;
-    FWebComponentNames: TStrings;
     FHolder: TdjWebFilterHolder;
   public
     constructor Create;
@@ -63,7 +62,6 @@ type
     // properties
     property WebFilterHolder: TdjWebFilterHolder read FHolder write FHolder;
     property WebFilterName: string read FName write FName;
-    property WebComponentNames: TStrings read FWebComponentNames;
     property UrlPatterns: TStrings read FUrlPatterns;
   end;
 
@@ -85,12 +83,10 @@ begin
   inherited;
 
   FUrlPatterns := TStringList.Create;
-  FWebComponentNames := TStringList.Create;
 end;
 
 destructor TdjWebFilterMapping.Destroy;
 begin
-  FWebComponentNames.Free;
   FUrlPatterns.Free;
 
   inherited;
