@@ -41,11 +41,15 @@ jobs:
           repository: michaelJustin/slf4p
           path: slf4p
 
-      - name: Install GTK2 development files (Linux LCL link dependency)
+      # On Linux, install from the Ubuntu archive (FPC 3.2.2 + Lazarus).
+      # The setup-lazarus action pulls .deb files from SourceForge, which
+      # regularly stalls for many minutes on the hosted runners.
+      - name: Install FPC and Lazarus (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libgtk2.0-dev
+        run: sudo apt-get update && sudo apt-get install -y lazarus libgtk2.0-dev
 
-      - name: Install Lazarus / FPC
+      - name: Install Lazarus / FPC (Windows)
+        if: runner.os == 'Windows'
         uses: gcarreno/setup-lazarus@v3
         with:
           lazarus-version: stable
