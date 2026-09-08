@@ -47,6 +47,7 @@ uses
   HttpsTests,
   {$ENDIF DARAJA_TEST_HTTPS}
   djDefaultWebComponentTests,
+  djLifeCycleTests,
   djPathMapTests,
   djWebAppContextTests,
   djWebComponentHandlerTests,
@@ -77,6 +78,7 @@ var
   Tests: TTestSuite;
 begin
   Tests := TTestSuite.Create(DWF_SERVER_FULL_NAME);
+  Tests.AddTest(TTestSuite.Create(TdjLifeCycleTests));
   Tests.AddTest(TTestSuite.Create(TdjPathMapTests));
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHolderTests));
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHandlerTests));
@@ -102,6 +104,7 @@ end;
 {$ELSE}
 procedure RegisterUnitTests;
 begin
+  RegisterTests('', [TdjLifeCycleTests.Suite]);
   RegisterTests('', [TdjPathMapTests.Suite]);
   RegisterTests('', [TdjWebComponentHolderTests.Suite]);
   RegisterTests('', [TdjWebComponentHandlerTests.Suite]);

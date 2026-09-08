@@ -38,6 +38,7 @@ uses
   Forms,
   Interfaces,
   djGlobal, djInterfaces, djDefaultWebComponent,
+  djLifeCycleTests,
   djPathMapTests,
   djWebAppContextTests,
   djWebComponentHolderTests,

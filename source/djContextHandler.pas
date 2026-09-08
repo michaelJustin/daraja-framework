@@ -334,7 +334,7 @@ end;
 
 procedure TdjContextHandler.SetInitParameter(const Key, Value: string);
 begin
-  CheckStarted;
+  CheckNotStarted;
   (FContext as IWriteableConfig).Add(Key, Value);
 end;
 
