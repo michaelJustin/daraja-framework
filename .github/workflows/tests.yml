@@ -49,6 +49,7 @@ jobs:
         uses: gcarreno/setup-lazarus@v3
         with:
           lazarus-version: stable
+          with-cache: true
 
       # DARAJA_SKIP_SERVER_TESTS excludes the loopback-HTTP-server integration
       # suites (TSessionTests, TAPIConfigTests) to keep the CI run fast. Their
