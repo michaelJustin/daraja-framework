@@ -101,8 +101,6 @@ begin
   Logger := TdjLoggerFactory.GetLogger(TdjHTTPServer);
   {$ENDIF DARAJA_LOGGING}
 
-  // Trace('Configuring HTTP server');
-
   {$IFDEF DARAJA_LOGGING}
   Logger.Info('Indy version: ' + GetIndyVersion);
   {$ENDIF DARAJA_LOGGING}
@@ -128,7 +126,6 @@ begin
 
   // register context class
   ContextClass := TdjServerContext;
-  // Trace('Context class: ' + TdjServerContext.ClassName);
 end;
 
 procedure TdjHTTPServer.MyOnException(AContext: TIdContext;
@@ -154,12 +151,10 @@ end;
 
 procedure TdjHTTPServer.MySessionStart(Sender: TIdHTTPSession);
 begin
-  // Trace('Session start ' + Sender.RemoteHost);
 end;
 
 procedure TdjHTTPServer.MySessionEnd(Sender: TIdHTTPSession);
 begin
-  // Trace('Session end ' + Sender.RemoteHost);
 end;
 
 procedure TdjHTTPServer.DoMaxConnectionsExceeded(AIOHandler: TIdIOHandler);

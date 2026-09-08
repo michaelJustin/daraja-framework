@@ -99,8 +99,6 @@ begin
 
   Assert(Assigned(Handler));
 
-  // Trace('Configuring');
-
   FHTTPServer := TdjHTTPServer.Create;
 end;
 
@@ -137,7 +135,6 @@ begin
   // detect IPv6
   if Pos(':', Host) > 0 then
   begin
-    // Trace('Using IPv6 binding');
     Binding.IPVersion := Id_IPv6;
   end;
 
@@ -223,7 +220,6 @@ begin
     begin
       // The server side of this connection has disconnected normally but
       // the client has attempted to read or write to the connection.
-      // Trace(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
     end;
     on E: Exception do
     begin
