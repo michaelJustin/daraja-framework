@@ -73,7 +73,6 @@ type
     procedure SetName(const AName: string);
   protected
     // IContext interface
-    procedure Init(const Config: IContextConfig);
     function GetContextConfig: IContextConfig;
     function GetContextPath: string;
     function GetInitParameter(const Key: string): string;
@@ -245,12 +244,6 @@ begin
         [ContextPath]);
     end;
   end;
-end;
-
-procedure TdjContext.Init(const Config: IContextConfig);
-begin
-  // iow: does it decrease the reference count?
-  FConfig := Config; // TODO check if it is ok to overwrite the field here with a new one
 end;
 
 procedure TdjContext.Add(const Key, Value: string);

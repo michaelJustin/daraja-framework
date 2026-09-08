@@ -112,13 +112,6 @@ type
   IContext = interface(IInterface)
     ['{19E32FEB-0348-42B2-8977-F03A0032473C}']
     {*
-     * Initializes the context with the given configuration.
-     *
-     * @param Config The context configuration to use.
-     *}
-    procedure Init(const Config: IContextConfig);
-
-    {*
      * Get the context configuration.
      * @return the context configuration
      *}
