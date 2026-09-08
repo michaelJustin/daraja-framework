@@ -30,7 +30,10 @@ makedox.cmd
 
 Output goes to `docs/html/` (`OUTPUT_DIRECTORY = docs/html`); the entry point is
 `docs/html/index.html`. Warnings are written to `warnings.log` in the repo root.
-The CI job runs on every push to `master` that touches `source/**/*.pas`.
+The CI job runs on every push to `master` and on every `v*` tag; it appends
+`PROJECT_NUMBER` from `DWF_SERVER_VERSION` in `source/djGlobal.pas` so the site
+always shows the version being built (the `PROJECT_NUMBER` in `doxygen.cfg` is
+only used for local builds).
 
 ### What gets documented
 
