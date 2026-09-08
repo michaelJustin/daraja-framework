@@ -37,7 +37,10 @@ uses
 
 type
   {*
-   * Initialization parameters.
+   * Initialization parameters: a map of string keys to string values.
+   *
+   * Following the Servlet model, parameter names are compared case-sensitively
+   * and iteration order is unspecified.
    *}
   TdjInitParameters = TDictionary<string, string>;
 
