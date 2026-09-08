@@ -211,7 +211,6 @@ end;
 
 procedure TdjWebComponentHolder.DoStop;
 begin
-  // Trace('Destroy instance of ' + FClass.ClassName);
   try
     WebComponent.Free;
     FWebComponent := nil;

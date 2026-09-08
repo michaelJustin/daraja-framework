@@ -238,8 +238,6 @@ var
 begin
   ConnectorName := '[' + Connector.Host + ']:' + IntToStr(Connector.Port);
 
-  // Trace('Add connector ' + ConnectorName);
-
   ConnectorMap.Add(ConnectorName, Connector);
   ConnectorList.Add(ConnectorName);
 
@@ -297,7 +295,6 @@ begin
     Logger.Trace('Connector %s started', [ConnectorName]);
     {$ENDIF DARAJA_LOGGING}
   end;
-//  Trace('All connectors started');
 end;
 
 procedure TdjServer.StopConnectors;
@@ -324,7 +321,6 @@ begin
   finally
     Keys.Free
   end;
-  // Trace('All connectors stopped');
 end;
 
 procedure TdjServer.StopContextHandlers;
@@ -335,12 +331,10 @@ end;
 procedure TdjServer.DoStart;
 begin
   CheckNotStarted;
-  // Trace('Starting server');
 
   // add default connector
   if ConnectorList.Count = 0 then
   begin
-    // Trace('Add default connector');
     AddConnector(FDefaultHost, FDefaultPort);
   end;
 

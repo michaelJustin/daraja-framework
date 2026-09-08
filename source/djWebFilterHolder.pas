@@ -210,7 +210,6 @@ end;
 
 procedure TdjWebFilterHolder.DoStop;
 begin
-  // Trace('Destroy instance of ' + FClass.ClassName);
   try
     // Destroy (and ensure that Free will be called)
     try

@@ -115,15 +115,11 @@ end;
 procedure TdjServerBase.DoStart;
 begin
   inherited;
-
-  // Trace('Server started');
 end;
 
 procedure TdjServerBase.DoStop;
 begin
   inherited;
-
-  // Trace('Server stopped');
 end;
 
 end.

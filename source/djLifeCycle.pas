@@ -159,9 +159,7 @@ begin
   CS.Enter;
   try
     try
-      // Trace('Starting ...');
       DoStart;
-      // Trace('Started');
       FStarted := True;
       FStopped := False;
     except
@@ -187,9 +185,7 @@ begin
   CS.Enter;
   try
     try
-      // Trace('Stopping ...');
       DoStop;
-      // Trace('Stopped');
     except
       on E: Exception do
       begin

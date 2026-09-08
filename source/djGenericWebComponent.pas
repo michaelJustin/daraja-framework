@@ -140,7 +140,6 @@ begin
 
   if not Assigned(Result) and Create then
   begin
-    // Trace('Create a new session');
     C := Context as TIdServerContext;
     S := C.Server as TIdCustomHTTPServer;
     Result := S.CreateSession(Context, Response, Request);
@@ -184,7 +183,6 @@ end;
 procedure TdjGenericWebComponent.Service(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
-  // Trace('Service');
 end;
 
 end.

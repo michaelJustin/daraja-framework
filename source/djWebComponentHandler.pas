@@ -476,18 +476,9 @@ begin
     end;
   end;
 
-  // validate and store context
-  // CheckStoreContext(Holder.GetContext);
-
   Holder.SetContext(Self.WebComponentContext);
 
   Assert(Holder.GetContext <> nil);
-
-  // Assign name (if empty)
-  //if Holder.Name = '' then
-  //begin
-  //  Holder.Name := Holder.WebComponentClass.ClassName;
-  //end;
 
   // add the Web Component to list unless it is already there
   if WebComponents.IndexOf(Holder) = -1 then
@@ -622,8 +613,6 @@ var
   Msg2: string;
 begin
   try
-    // Trace('Invoke ' + Comp.ClassName + '.Service');
-
     // invoke service method
     Comp.Service(Context, Request, Response);
 
@@ -643,21 +632,6 @@ begin
           + HTMLEncode(EIdHTTPProtocolException(E).ErrorMessage)
           + '</p>';
       end;
-
-      {$IFDEF DARAJA_LOGGING}
-      // Logger.Warn(Msg, E);
-      {$ENDIF DARAJA_LOGGING}
-
-      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-      {$IFDEF DARAJA_LOGGING}
-      {$IFDEF DARAJA_MADEXCEPT}
-      // Logger.Warn(string(madStackTrace.StackTrace));
-      {$ENDIF DARAJA_MADEXCEPT}
-      {$IFDEF DARAJA_JCLDEBUG}
-      //Logger.Warn(djStackTrace.GetStackList);
-      {$ENDIF DARAJA_JCLDEBUG}
-      {$ENDIF DARAJA_LOGGING}
-      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
       Response.ContentText := '<!DOCTYPE html>' + #10
         + '<html>' + #10

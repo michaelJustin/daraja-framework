@@ -130,8 +130,6 @@ begin
       'Static resource path not found (%s)',
       [StaticResourcePath]);
   end;
-
-  // Trace('Initialized');
 end;
 
 function TdjDefaultWebComponent.StripContext(const Doc: string): string;
