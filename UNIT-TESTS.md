@@ -101,8 +101,9 @@ warnings are expected (W1036 `LCloseConnection`, W1035 SSPI).
   is defined (it needs the OpenSSL DLLs).
 - The integration suites that start a loopback HTTP server (`TSessionTests`,
   `TAPIConfigTests`) run everywhere by default. Define `DARAJA_SKIP_SERVER_TESTS`
-  to exclude them on environments where binding a listening socket is not
-  possible.
+  (e.g. `lazbuild --opt=-dDARAJA_SKIP_SERVER_TESTS ...`) to exclude them where
+  binding a listening socket is not possible or not wanted. **CI defines it** —
+  see below.
 
 ## GUI runners
 
@@ -114,6 +115,10 @@ without `-text-mode`) and run the executable with no arguments.
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml) checks out the two
 dependencies as siblings, installs Lazarus, and runs the Free Pascal suite
 headless on every push and pull request that touches `source/` or `test/`.
+
+CI builds with `-dDARAJA_SKIP_SERVER_TESTS`, so the loopback-server integration
+suites (`TSessionTests`, `TAPIConfigTests`) do **not** run in CI. Run
+`run-fpc` / `run-delphi` locally before merging to exercise them.
 
 ## Notes
 
