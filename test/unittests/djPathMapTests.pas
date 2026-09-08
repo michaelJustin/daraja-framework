@@ -133,6 +133,14 @@ begin
       MatchList.Free;
     end;
 
+    // the bare prefix path also matches (Servlet semantics: '/foo/*' -> '/foo')
+    MatchList := PS.GetMatches('/foo');
+    try
+      CheckEquals('/foo/*', Trim(MatchList.Text));
+    finally
+      MatchList.Free;
+    end;
+
     MatchList := PS.GetMatches('/foo/bar');
     try
       CheckEquals('/foo/*', Trim(MatchList.Text));

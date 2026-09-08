@@ -176,8 +176,12 @@ begin
     SpecType of
     stPrefix:
       begin
+        // '/foo/*' -> '/foo/'
         Tmp := StringReplace(Spec, '/*', '/', []);
-        Result := Pos(Tmp, Path) = 1;
+        // matches '/foo/' and anything below it, and also the bare '/foo'
+        // (Servlet path mapping semantics)
+        Result := (Pos(Tmp, Path) = 1)
+          or (Path = Copy(Tmp, 1, Length(Tmp) - 1));
       end;
     stSuffix:
       begin
