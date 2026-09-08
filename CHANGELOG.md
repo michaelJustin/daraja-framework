@@ -76,10 +76,10 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 
 ### Internal
 
-- The FPC `Console` test runner is built in CI with
-  `-dDARAJA_SKIP_SERVER_TESTS`; the loopback-HTTP-server suites
-  (`TSessionTests`, `TAPIConfigTests`) run via the local `run-fpc` /
-  `run-delphi` scripts instead. (#452)
+- The FPC unit-test suite runs in CI on both Windows and Linux. A new
+  `ConsoleCI` build mode carries `-dDARAJA_SKIP_SERVER_TESTS`, so the
+  loopback-HTTP-server suites (`TSessionTests`, `TAPIConfigTests`) run via
+  the local `run-fpc` / `run-delphi` scripts instead. (#452)
 - The Doxygen workflow derives `PROJECT_NUMBER` from `source/djGlobal.pas`
   and runs on every push to `master` and on version tags. (#456)
 - Version constant set to `3.2.0-SNAPSHOT`. (#451)

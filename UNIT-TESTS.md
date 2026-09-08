@@ -101,9 +101,11 @@ warnings are expected (W1036 `LCloseConnection`, W1035 SSPI).
   is defined (it needs the OpenSSL DLLs).
 - The integration suites that start a loopback HTTP server (`TSessionTests`,
   `TAPIConfigTests`) run everywhere by default. Define `DARAJA_SKIP_SERVER_TESTS`
-  (e.g. `lazbuild --opt=-dDARAJA_SKIP_SERVER_TESTS ...`) to exclude them where
-  binding a listening socket is not possible or not wanted. **CI defines it** —
-  see below.
+  to exclude them where binding a listening socket is not possible or not
+  wanted. The **`ConsoleCI`** build mode is the `Console` mode with that define
+  baked in (`lazbuild -B --build-mode=ConsoleCI Unittests.lpi` &rarr;
+  `UnittestsConsoleCI`); CI builds it. A `lazbuild --opt=-d...` flag would also
+  work with a recent Lazarus, but Lazarus 3.0's `lazbuild` rejects `--opt`.
 
 ## GUI runners
 
@@ -113,12 +115,16 @@ without `-text-mode`) and run the executable with no arguments.
 ## Continuous integration
 
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml) checks out the two
-dependencies as siblings, installs Lazarus, and runs the Free Pascal suite
-headless on every push and pull request that touches `source/` or `test/`.
+dependencies as siblings and runs the Free Pascal suite headless on both
+`windows-latest` and `ubuntu-latest` for every push and pull request that
+touches `source/` or `test/`. Windows installs Lazarus via `setup-lazarus`;
+Linux installs it from the Ubuntu archive (the action's SourceForge download
+stalls on the hosted Linux runners) and runs the console runner under `xvfb`
+(the runner links the LCL). Delphi is not covered in CI.
 
-CI builds with `-dDARAJA_SKIP_SERVER_TESTS`, so the loopback-server integration
-suites (`TSessionTests`, `TAPIConfigTests`) do **not** run in CI. Run
-`run-fpc` / `run-delphi` locally before merging to exercise them.
+CI builds the `ConsoleCI` mode, so the loopback-server integration suites
+(`TSessionTests`, `TAPIConfigTests`) do **not** run in CI. Run `run-fpc` /
+`run-delphi` locally before merging to exercise them.
 
 ## Notes
 
