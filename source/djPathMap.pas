@@ -122,6 +122,10 @@ procedure TdjPathMap.AddUrlPattern(const UrlPattern: string; Value: TObject);
 begin
   CheckExists(UrlPattern);
 
+  // keep entries in ascending order so GetMatches can return the
+  // longest (most specific) match first
+  Sorted := True;
+
   AddObject(UrlPattern, Value);
 end;
 
@@ -277,8 +281,6 @@ function TdjPathMap.GetMatches(const Path: string): TStrings;
   end;
 
 begin
-  Self.Sorted := True; // ascending order to have longest matches first
-
   Result := TStringList.Create;
 
   {
