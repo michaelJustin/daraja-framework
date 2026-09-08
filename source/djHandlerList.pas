@@ -69,7 +69,7 @@ type
 implementation
 
 uses
-  djInterfaces,
+  djInterfaces, djGlobal,
   SysUtils;
 
 { TdjHandlerList }
@@ -115,11 +115,16 @@ begin
     {$ENDIF DARAJA_LOGGING}
 
     Response.ResponseNo := 404;
-    Response.ContentText := Format(
-      '<html> %d %s</html>',
-      [ Response.ResponseNo,
-        Response.ResponseText
-      ]);
+    Response.ContentType := 'text/html';
+    Response.ContentText :=
+      '<!DOCTYPE html>' + #10
+      + '<html>' + #10
+      + '<head><title>404 Not Found</title></head>' + #10
+      + '<body>' + #10
+      + '  <h1>404 Not Found</h1>' + #10
+      + '  <p>No resource is mapped to ' + HTMLEncode(Target) + '</p>' + #10
+      + '</body>' + #10
+      + '</html>';
   end;
 end;
 
