@@ -76,8 +76,6 @@ type
     procedure ValidateMappingUrlPattern(const UrlPattern: string;
       Holder: TdjWebComponentHolder);
     function FindMapping(const WebComponentName: string): TdjWebComponentMapping; // overload;
-    function GetFilterChain(const PathInContext: string; Request: TdjRequest;
-      Holder: TdjWebComponentHolder): IWebFilterChain;
     function NewFilterChain(Holder: TdjWebFilterHolder;
       Chain: IWebFilterChain): IWebFilterChain;
     procedure UpdateMappings;
@@ -112,6 +110,18 @@ type
      * @param Mapping The TdjWebComponentMapping instance to be added.
      *}
     procedure AddMapping(Mapping: TdjWebComponentMapping);
+
+    {*
+     * Builds the filter chain that applies to a request path.
+     *
+     * @param PathInContext The request path relative to the context. An empty
+     *        path yields no chain.
+     * @param Request The HTTP request being processed.
+     * @param Holder The web component holder at the end of the chain.
+     * @return The filter chain, or nil if no filter is mapped to the path.
+     *}
+    function GetFilterChain(const PathInContext: string; Request: TdjRequest;
+      Holder: TdjWebComponentHolder): IWebFilterChain;
 
     property WebComponents: TdjWebComponentHolders read FWebComponentHolders;
     property WebFilters: TdjWebFilterHolders read FWebFilterHolders;
@@ -421,7 +431,7 @@ begin
       Logger.Trace(Msg);
       {$ENDIF DARAJA_LOGGING}
 
-      raise EWebComponentException.Create(Msg); // todo test
+      raise EWebComponentException.Create(Msg);
     end;
   end;
 end;
@@ -729,7 +739,8 @@ var
 begin
   Chain := nil;
 
-  if (PathInContext <> '') {todo: test} and (FWebFilterPathMappings <> nil) then
+  // an empty request path (e.g. the bare context root) never maps to a filter
+  if (PathInContext <> '') and (FWebFilterPathMappings <> nil) then
   begin
     for FilterMapping in FWebFilterPathMappings do
     begin

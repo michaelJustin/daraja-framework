@@ -46,6 +46,8 @@ type
     procedure TestTwoContextsFails;
     procedure TestAddSamePathMapTwiceFails;
     procedure TestTwoComponentsSamePathMapFails;
+    procedure TestAddTwoComponentsWithSameNameFails;
+    procedure TestFilterChainForEmptyPathIsNil;
   end;
 
 implementation
@@ -53,7 +55,8 @@ implementation
 uses
   Classes, SysUtils,
   djWebComponentHolder, djWebComponent, djWebAppContext,
-  djWebComponentHandler, djTypes;
+  djWebComponentHandler, djWebFilterHolder, djWebFilter, djInterfaces,
+  djServerContext, djTypes;
 
 type
   TExamplePage = class(TdjWebComponent)
@@ -65,6 +68,12 @@ type
   public
   end;
 
+  TNopFilter = class(TdjWebFilter)
+  public
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
   { TExamplePage }
 
 procedure TExamplePage.OnGet(Request: TdjRequest; Response: TdjResponse);
@@ -73,10 +82,18 @@ begin
 
 end;
 
+procedure TNopFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
+  Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  //
+end;
+
 type
   TTestdjWebComponentHandler = class(TdjWebComponentHandler)
   public
     function FindComponent(const ATarget: string): TdjWebComponentHolder;
+    function FilterChainFor(const APath: string;
+      AHolder: TdjWebComponentHolder): IWebFilterChain;
   end;
 
 { TTestdjWebComponentHandler }
@@ -85,6 +102,12 @@ function TTestdjWebComponentHandler.FindComponent(const
   ATarget: string): TdjWebComponentHolder;
 begin
   Result := inherited;
+end;
+
+function TTestdjWebComponentHandler.FilterChainFor(const APath: string;
+  AHolder: TdjWebComponentHolder): IWebFilterChain;
+begin
+  Result := GetFilterChain(APath, nil, AHolder);
 end;
 
 procedure TdjWebComponentHandlerTests.TestAddTwoComponents;
@@ -302,6 +325,84 @@ begin
       Handler.AddWithMapping(H1, '/index.html');
       // add the same component with different path map
       Handler.AddWithMapping(H1, '/other.html');
+    finally
+      Handler.Free;
+    end;
+  finally
+    Context.Free;
+  end;
+end;
+
+procedure TdjWebComponentHandlerTests.TestAddTwoComponentsWithSameNameFails;
+var
+  Context: TdjWebAppContext;
+  H1, H2: TdjWebComponentHolder;
+  Handler: TTestdjWebComponentHandler;
+begin
+  Context := TdjWebAppContext.Create('');
+  try
+    Handler := TTestdjWebComponentHandler.Create;
+    try
+      Handler.SetContext(Context.GetCurrentContext);
+
+      H1 := TdjWebComponentHolder.Create(TExamplePage);
+      H1.Name := 'Duplicate';
+      H1.SetContext(Context.GetCurrentContext);
+      Handler.AddWithMapping(H1, '/a.html');
+
+      // a different holder registered under the same name is rejected
+      H2 := TdjWebComponentHolder.Create(TOtherPage);
+      try
+        H2.Name := 'Duplicate';
+        H2.SetContext(Context.GetCurrentContext);
+
+        {$IFDEF FPC}
+        ExpectException(EWebComponentException);
+        {$ELSE}
+        ExpectedException := EWebComponentException;
+        {$ENDIF}
+
+        Handler.AddWithMapping(H2, '/b.html');
+      finally
+        H2.Free;
+      end;
+    finally
+      Handler.Free;
+    end;
+  finally
+    Context.Free;
+  end;
+end;
+
+procedure TdjWebComponentHandlerTests.TestFilterChainForEmptyPathIsNil;
+var
+  Context: TdjWebAppContext;
+  H1: TdjWebComponentHolder;
+  FH: TdjWebFilterHolder;
+  Handler: TTestdjWebComponentHandler;
+begin
+  Context := TdjWebAppContext.Create('');
+  try
+    Handler := TTestdjWebComponentHandler.Create;
+    try
+      Handler.SetContext(Context.GetCurrentContext);
+
+      H1 := TdjWebComponentHolder.Create(TExamplePage);
+      H1.SetContext(Context.GetCurrentContext);
+      Handler.AddWithMapping(H1, '/index.html');
+
+      FH := TdjWebFilterHolder.Create(TNopFilter);
+      Handler.AddWebFilter(FH, '/*');
+
+      Handler.Start;
+
+      // a real request path resolves to a filter chain
+      Check(Handler.FilterChainFor('/index.html', H1) <> nil,
+        'a filter mapped to /* should build a chain for /index.html');
+
+      // an empty request path short-circuits (the PathInContext <> '' guard)
+      Check(Handler.FilterChainFor('', H1) = nil,
+        'an empty request path must not build a filter chain');
     finally
       Handler.Free;
     end;
