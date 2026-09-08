@@ -41,12 +41,17 @@ jobs:
           repository: michaelJustin/slf4p
           path: slf4p
 
-      # On Linux, install from the Ubuntu archive (FPC 3.2.2 + Lazarus).
+      # On Linux, install from the Ubuntu archive (FPC 3.2.2 + Lazarus 3.0).
       # The setup-lazarus action pulls .deb files from SourceForge, which
-      # regularly stalls for many minutes on the hosted runners.
+      # regularly stalls for many minutes on the hosted runners. The cache
+      # action restores the .debs on a hit (~15s vs ~2min) and falls back to
+      # a normal apt install on a miss.
       - name: Install FPC and Lazarus (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y lazarus libgtk2.0-dev
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: lazarus libgtk2.0-dev
+          version: 1
 
       - name: Install Lazarus / FPC (Windows)
         if: runner.os == 'Windows'
