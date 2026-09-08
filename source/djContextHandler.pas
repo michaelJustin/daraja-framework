@@ -70,6 +70,7 @@ type
     // IWriteableConfig interface
     procedure Add(const Key: string; const Value: string);
     procedure SetContext(const Context: IContext);
+    procedure SetName(const AName: string);
   protected
     // IContext interface
     procedure Init(const Config: IContextConfig);
@@ -260,6 +261,11 @@ end;
 procedure TdjContext.SetContext(const Context: IContext);
 begin
   // do nothing, we are in the context
+end;
+
+procedure TdjContext.SetName(const AName: string);
+begin
+  // do nothing, a context has no filter name
 end;
 
 procedure TdjContext.Log(const Msg: string);

@@ -178,6 +178,8 @@ begin
   Logger.Trace('Create instance of class ' + FClass.ClassName);
   {$ENDIF DARAJA_LOGGING}
 
+  (FConfig as IWriteableConfig).SetName(Name);
+
   FWebFilter := FClass.Create;
 
   try
