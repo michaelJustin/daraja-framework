@@ -1,15 +1,27 @@
 ![Object Pascal](https://img.shields.io/badge/language-Object%20Pascal-blue.svg)
-![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)
 ![Delphi 2009+](https://img.shields.io/badge/Delphi-2009+-blue.svg)
 ![Lazarus 4.x](https://img.shields.io/badge/Lazarus-4.x-blue.svg)
+![Windows: Delphi and FPC](https://img.shields.io/badge/Windows-Delphi%20%7C%20FPC%2FLazarus-blue)
+![Linux: FPC only](https://img.shields.io/badge/Linux-FPC%2FLazarus-blue)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelJustin/daraja-framework)
+[![Unit tests](https://github.com/michaelJustin/daraja-framework/actions/workflows/tests.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/tests.yml)
 [![Doxygen Docs](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
 ![GitHub Repo stars](https://img.shields.io/github/stars/michaelJustin/daraja-framework?style=flat)
 
-![](https://www.habarisoft.com/images/daraja_logo_landscape_2016_3.png)
+![Daraja HTTP Framework](daraja_logo_landscape.png)
 
 In short, Daraja enables Object Pascal developers to write *well-structured HTTP server applications*.
+
+## Contents
+
+- [About](#about)
+- [Features](#features)
+- [Usage](#usage)
+- [Example](#example)
+- [Documentation](#documentation)
+- [Licensing](#licensing)
+- [Credits](#credits)
 
 ## About
 
@@ -153,7 +165,7 @@ Hello, World!
 
 ### API docs
 
-https://michaeljustin.github.io/daraja-framework/
+[API reference (Doxygen)](https://michaeljustin.github.io/daraja-framework/)
 
 ### Getting started with Daraja
 
@@ -196,11 +208,10 @@ This software uses the following open source packages:
 
 For example code, unit testing, and documentation, it uses the following open source packages:
 
-- [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) for example code
-- [Log4D](https://sourceforge.net/projects/log4d/) and [slf4p](https://github.com/michaelJustin/slf4p/) for logging
-- [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) for unit testing
-- [Doxygen](https://www.doxygen.nl/) Doxygen is a widely-used documentation generator tool in software development
-- [pas2dox](https://sourceforge.net/projects/pas2dox/) Pas2dox is a pre-processor addon for the Doxygen documentation generator.
+- [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects) &mdash; example code
+- [Log4D](https://sourceforge.net/projects/log4d/) and [slf4p](https://github.com/michaelJustin/slf4p/) &mdash; logging
+- [DUnit](https://dunit.sourceforge.net/) and [FPCUnit](https://wiki.freepascal.org/fpcunit) &mdash; unit testing
+- [Doxygen](https://www.doxygen.nl/) and [pas2dox](https://sourceforge.net/projects/pas2dox/) &mdash; API documentation generation
 
 ## Origins
 
