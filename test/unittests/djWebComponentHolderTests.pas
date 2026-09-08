@@ -38,6 +38,7 @@ type
   TdjWebComponentHolderTests = class(TTestCase)
   published
     procedure TestCreate;
+    procedure TestGetInitParameterNames;
   end;
 
 implementation
@@ -76,6 +77,27 @@ begin
     finally
       Holder.Free;
     end;
+  finally
+    Context.Free;
+  end;
+end;
+
+procedure TdjWebComponentHolderTests.TestGetInitParameterNames;
+var
+  Context: TdjWebAppContext;
+  Names: TdjStringArray;
+begin
+  Context := TdjWebAppContext.Create('names-ctx');
+  try
+    Context.SetInitParameter('alpha', '1');
+    Context.SetInitParameter('beta', '2');
+
+    Names := Context.GetCurrentContext.GetInitParameterNames;
+
+    // returned by value: nothing for the caller to free. Order is unspecified.
+    CheckEquals(2, Length(Names), 'parameter count');
+    CheckTrue((Names[0] = 'alpha') or (Names[1] = 'alpha'), 'alpha missing');
+    CheckTrue((Names[0] = 'beta') or (Names[1] = 'beta'), 'beta missing');
   finally
     Context.Free;
   end;

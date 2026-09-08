@@ -32,6 +32,12 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - The fallback 404 page from `TdjHandlerList` is now a well-formed minimal
   HTML document with a `text/html` content type and the HTML-encoded target
   (previously it had empty status text and no content type). (#431)
+- **Breaking:** `GetInitParameterNames` on `IContext`, `IWebComponentConfig`,
+  `IContextConfig` and `IWebFilterConfig` now returns a `TdjStringArray`
+  (`array of string`, returned by value) instead of a `TList<string>` that the
+  caller had to free. Callers replace `L := Config.GetInitParameterNames; try
+  ... finally L.Free; end;` with a plain `for Name in Config.GetInitParameterNames
+  do`. (#436)
 
 ### Removed
 

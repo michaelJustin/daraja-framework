@@ -67,6 +67,13 @@ type
    *}
   TdjStrings = TList<string>;
 
+  {*
+   * @class TdjStringArray
+   *
+   * A plain dynamic array of strings, returned by value.
+   *}
+  TdjStringArray = array of string;
+
 implementation
 
 end.

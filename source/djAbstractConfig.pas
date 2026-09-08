@@ -66,7 +66,7 @@ type
   protected
     // IContextConfig interface todo more generic.
     function GetInitParameter(const Key: string): string;
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
     function GetName: string;
   public
     {*
@@ -127,15 +127,17 @@ begin
   FParams.TryGetValue(Key, Result);
 end;
 
-function TdjAbstractConfig.GetInitParameterNames: TdjStrings;
+function TdjAbstractConfig.GetInitParameterNames: TdjStringArray;
 var
   S: string;
+  I: Integer;
 begin
-  Result := TdjStrings.Create;
-
+  SetLength(Result, FParams.Count);
+  I := 0;
   for S in FParams.Keys do
   begin
-    Result.Add(S);
+    Result[I] := S;
+    Inc(I);
   end;
 end;
 
