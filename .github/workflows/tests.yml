@@ -16,7 +16,12 @@ on:
 
 jobs:
   fpc:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout daraja-framework
@@ -36,6 +41,10 @@ jobs:
           repository: michaelJustin/slf4p
           path: slf4p
 
+      - name: Install GTK2 development files (Linux LCL link dependency)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libgtk2.0-dev
+
       - name: Install Lazarus / FPC
         uses: gcarreno/setup-lazarus@v3
         with:
@@ -49,7 +58,18 @@ jobs:
         run: lazbuild -B --build-mode=Console --opt=-dDARAJA_SKIP_SERVER_TESTS Unittests.lpi
         shell: bash
 
+      # The runner links the LCL through the Interfaces unit, whose
+      # initialization opens the (gtk2) display even though no window is
+      # shown, so on Linux it runs under xvfb. FPC keeps the .exe suffix
+      # from the project's target filename on every platform.
       - name: Run the test suite (headless)
         working-directory: daraja-framework/test/unittests
-        run: ./UnittestsConsole.exe --all --format=plain
         shell: bash
+        run: |
+          exe=./UnittestsConsole
+          [ -f "$exe.exe" ] && exe="$exe.exe"
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run --auto-servernum "$exe" --all --format=plain
+          else
+            "$exe" --all --format=plain
+          fi
