@@ -35,9 +35,14 @@ uses
   djLogAPI, djLoggerFactory,
   {$ENDIF DARAJA_LOGGING}
   djInterfaces, djAbstractHandlerContainer, djServerContext,
-  djTypes;
+  djTypes, Generics.Collections;
 
 type
+  /// \cond
+  // internal: the backing list type for TdjHandlerCollection.FHandlers
+  TdjHandlers = TList<IHandler>;
+  /// \endcond
+
   { TdjHandlerCollection }
 
   {*

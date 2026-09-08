@@ -40,7 +40,7 @@ type
   // note Delphi 2009 AVs if it is a TObjectList<>
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
   // for a workaround
-  // use  TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
+  // use TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
 
   { TdjWebComponentHolders }
 
