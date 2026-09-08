@@ -15,6 +15,18 @@ In short, Daraja enables Object Pascal developers to write *well-structured HTTP
 
 __Daraja__ is a compact and flexible HTTP server application framework for Object Pascal, based on the HTTP server included in [Indy - Internet Direct](https://github.com/IndySockets/Indy). The framework uses URL patterns to match requests to your resource handler code, and optional request filtering for pre- and post-processing. It enables developers to create well-structured HTTP server applications, written with 100% open source code.
 
+## Features
+
+ - **URL-pattern routing** &mdash; map requests to handler classes by exact, prefix, suffix or default patterns
+ - **Web components** &mdash; handle requests by overriding per-method hooks (`OnGet`, `OnPost`, `OnPut`, ...)
+ - **Filter chains** &mdash; pluggable pre- and post-processing of requests and responses
+ - **Contexts** &mdash; group resources under a base path with their own init parameters
+ - **HTTP sessions** &mdash; server-side session state with configurable timeout
+ - **Static content** &mdash; serve files from a directory with path-traversal protection
+ - **Optional helpers** &mdash; NCSA access logging and request-statistics filters
+ - **Dual compiler support** &mdash; one codebase for Delphi 2009+ and Lazarus 4.x / FPC 3.2.x
+ - **AGPL or commercial** &mdash; 100% open source, with a commercial license available
+
 ## Usage
 
 <details>
@@ -31,6 +43,31 @@ The minimum requirements are:
  - [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects)
  - [Log4D](http://sourceforge.net/projects/log4d/)
   
+</details>
+
+<details>
+<summary>Get the source</summary>
+
+Daraja and its dependencies are expected to sit **side by side in the same parent
+directory**:
+
+```
+Projects/
+├── daraja-framework/      this repository
+├── Indy/                  https://github.com/IndySockets/Indy  (10.6.2 or 10.6.3)
+└── slf4p/                 https://github.com/michaelJustin/slf4p
+```
+
+```Console
+mkdir Projects && cd Projects
+git clone https://github.com/michaelJustin/daraja-framework.git
+git clone https://github.com/IndySockets/Indy.git
+git clone https://github.com/michaelJustin/slf4p.git
+```
+
+The demo and test project files use relative paths (`..\..\..\Indy\...`,
+`..\..\..\slf4p\src\main`) that rely on this layout.
+
 </details>
 
 <details>
@@ -53,14 +90,49 @@ These are the basic steps to configure a simple "Hello, World!" application. A s
 A Daraja Web Component defines the request handling and response building, but it does not specify the actual location (HTTP address) of a resource.
 The web component in this example handles HTTP GET requests by overriding the OnGet method. The method sets the response content text and content type.
 
-https://github.com/michaelJustin/daraja-framework/blob/15da5806f044a7c9580f22ffa9e881fad96076e4/demo/01_helloworld/MainUnit.pas#L41-L50
+```pascal
+type
+  THelloWorldResource = class(TdjWebComponent)
+  public
+    procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'Hello, World!';
+  Response.ContentType := 'text/plain';
+end;
+```
 
 ### Context and resource registration
 
 We want to place the web component in the context `tutorial` and the absolute path `/hello`. We also want to use port 80. 
 The full URL of our resource is `http://127.0.0.1/tutorial/hello`
 
-https://github.com/michaelJustin/daraja-framework/blob/15da5806f044a7c9580f22ffa9e881fad96076e4/demo/01_helloworld/MainUnit.pas#L52-L69
+```pascal
+procedure Demo;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create(80);
+  try
+    Context := TdjWebAppContext.Create('tutorial');
+    Context.Add(THelloWorldResource, '/hello');
+    Server.Add(Context);
+    Server.Start;
+    WriteLn('Server is running, please open http://127.0.0.1/tutorial/hello');
+    WriteLn('Hit enter to terminate.');
+    ReadLn;
+  finally
+    Server.Free;
+  end;
+end;
+```
+
+Full source: [demo/01_helloworld/MainUnit.pas](../demo/01_helloworld/MainUnit.pas).
+More runnable examples &mdash; sessions, filters, static content, server-sent
+events, OpenID Connect &mdash; are in [demo/](../demo/).
 
 #### Test with curl:
 
@@ -77,21 +149,6 @@ Hello, World!
 
 (The `charset=ISO-8859-1` is appended automatically by Indy; the example code only sets `text/plain`.)
 
-<details>
-<summary>Flowchart diagram</summary>
- 
-```mermaid
-flowchart TD
-    A[TdjServer] -->|Receive request| B(Locate TdjWebcomponent)
-    B --> C{Invoke HTTP method}
-    C -->|**GET**| D[**run OnGet**]
-    C -->|POST| E[run OnPost]
-    C -->|PUT| F[run OnPut]
-
-```
-
-</details>
-
 ## Documentation
 
 ### API docs
@@ -101,6 +158,10 @@ https://michaeljustin.github.io/daraja-framework/
 ### Getting started with Daraja
 
 [DarajaFrameworkGettingStarted.pdf](https://www.habarisoft.com/daraja_framework/3.1.0/DarajaFrameworkGettingStarted.pdf) (version 3.1.0)
+
+### Changelog
+
+See [CHANGELOG.md](../CHANGELOG.md) for the release history.
 
 ## Licensing
 
