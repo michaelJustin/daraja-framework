@@ -72,7 +72,7 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 
 - Init parameters are documented as following the Servlet model: names are
   case-sensitive, `GetInitParameterNames` returns them in an unspecified
-  order in a caller-owned list, and a duplicate key raises. Stated on
+  order, and a duplicate key raises. Stated on
   `TdjInitParameters`, the `IContext` / `I*Config` methods and the
   `SetInitParameter` / `Add` doc-comments. (#437)
 - Documented the HEAD/OPTIONS/conditional-GET limitations on
