@@ -54,23 +54,26 @@ jobs:
         with:
           lazarus-version: stable
 
-      # DARAJA_SKIP_SERVER_TESTS excludes the loopback-HTTP-server integration
-      # suites (TSessionTests, TAPIConfigTests) to keep the CI run fast. Their
-      # coverage is exercised by the local run-fpc / run-delphi scripts.
-      - name: Build the test runner (Console build mode)
+      # The ConsoleCI build mode is the Console mode plus
+      # -dDARAJA_SKIP_SERVER_TESTS, which excludes the loopback-HTTP-server
+      # integration suites (TSessionTests, TAPIConfigTests) to keep the CI
+      # run fast. Their coverage is exercised by the local run-fpc /
+      # run-delphi scripts. The define lives in the build mode rather than a
+      # lazbuild --opt flag because Lazarus 3.0's lazbuild rejects --opt.
+      - name: Build the test runner (ConsoleCI build mode)
         working-directory: daraja-framework/test/unittests
-        run: lazbuild -B --build-mode=Console --opt=-dDARAJA_SKIP_SERVER_TESTS Unittests.lpi
+        run: lazbuild -B --build-mode=ConsoleCI Unittests.lpi
         shell: bash
 
       # The runner links the LCL through the Interfaces unit, whose
       # initialization opens the (gtk2) display even though no window is
-      # shown, so on Linux it runs under xvfb. FPC keeps the .exe suffix
-      # from the project's target filename on every platform.
+      # shown, so on Linux it runs under xvfb. FPC adds the .exe suffix on
+      # Windows only.
       - name: Run the test suite (headless)
         working-directory: daraja-framework/test/unittests
         shell: bash
         run: |
-          exe=./UnittestsConsole
+          exe=./UnittestsConsoleCI
           [ -f "$exe.exe" ] && exe="$exe.exe"
           if [ "$RUNNER_OS" = "Linux" ]; then
             xvfb-run --auto-servernum "$exe" --all --format=plain
