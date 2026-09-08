@@ -133,7 +133,7 @@ type
     {*
      * Gets the value of an initialization parameter.
      *
-     * @param Key The parameter name.
+     * @param Key The parameter name. Parameter names are case-sensitive.
      * @return The parameter value or empty string if not found.
      *}
     function GetInitParameter(const Key: string): string;
@@ -141,6 +141,8 @@ type
     {*
      * Gets all initialization parameter names.
      *
+     * @note The caller owns the returned list and must free it. The order of
+     *       the names is unspecified.
      * @return A list containing all parameter names.
      *}
     function GetInitParameterNames: TdjStrings;
@@ -160,13 +162,15 @@ type
   IWebComponentConfig = interface(IInterface)
     ['{2F61659D-1EF3-4C7A-BDEF-7349A1B4E690}']
     {*
+     * @note The caller owns the returned list and must free it. The order of
+     *       the names is unspecified.
      * @return Names of all initialization parameters
      *}
     function GetInitParameterNames: TdjStrings;
 
     {*
      * Gets an initialization parameter.
-     * @param Key Parameter name
+     * @param Key Parameter name (case-sensitive)
      * @return Parameter value or empty string if not found
      *}
     function GetInitParameter(const Key: string): string;
@@ -184,13 +188,15 @@ type
   IContextConfig = interface(IInterface)
     ['{5304AF56-8180-4B71-9EEF-A50CDB97E67F}']
     {*
+     * @note The caller owns the returned list and must free it. The order of
+     *       the names is unspecified.
      * @return Names of all initialization parameters
      *}
     function GetInitParameterNames: TdjStrings;
 
     {*
      * Gets an initialization parameter.
-     * @param Key Parameter name
+     * @param Key Parameter name (case-sensitive)
      * @return Parameter value or empty string if not found
      *}
     function GetInitParameter(const Key: string): string;
@@ -274,13 +280,15 @@ type
     function GetFilterName: string;
 
     {*
+     * @note The caller owns the returned list and must free it. The order of
+     *       the names is unspecified.
      * @return Names of all initialization parameters
      *}
     function GetInitParameterNames: TdjStrings;
 
     {*
      * Gets an initialization parameter.
-     * @param Key Parameter name
+     * @param Key Parameter name (case-sensitive)
      * @return Parameter value or empty string if not found
      *}
     function GetInitParameter(const Key: string): string;
@@ -337,8 +345,9 @@ type
     ['{A3074743-C2EF-44C6-BD28-27E62F82E598}']
     {*
      * Adds a key-value pair to configuration.
-     * @param Key Parameter name
+     * @param Key Parameter name (case-sensitive)
      * @param Value Parameter value
+     * @throws EWebComponentException if the key is already present
      *}
     procedure Add(const Key: string; const Value: string);
 

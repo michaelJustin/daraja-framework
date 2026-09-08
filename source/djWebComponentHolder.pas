@@ -93,8 +93,9 @@ type
     {*
      * Set initialization parameter.
      *
-     * @param Key init parameter name
+     * @param Key init parameter name (case-sensitive)
      * @param Value init parameter value
+     * @throws EWebComponentException if the key is already set
      *}
     procedure SetInitParameter(const Key: string; const Value: string);
 
