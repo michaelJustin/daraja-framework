@@ -213,6 +213,7 @@ begin
   // Trace('Destroy instance of ' + FClass.ClassName);
   try
     WebComponent.Free;
+    FWebComponent := nil;
   except
     on E: Exception do
     begin

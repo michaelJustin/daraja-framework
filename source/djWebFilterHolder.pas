@@ -201,6 +201,7 @@ begin
       {$ENDIF DARAJA_LOGGING}
 
       WebFilter.Free;
+      FWebFilter := nil;
       raise;
     end;
   end;
@@ -223,6 +224,7 @@ begin
     end;
 
     WebFilter.Free;
+    FWebFilter := nil;
   except
     on E: Exception do
     begin
