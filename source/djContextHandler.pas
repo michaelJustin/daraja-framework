@@ -112,7 +112,7 @@ type
      *}
     procedure DoStart; override;
     {*
-     * Start the handler.
+     * Stop the handler.
      * @sa TdjLifeCycle
      *}
     procedure DoStop; override;
@@ -213,9 +213,8 @@ procedure TdjContext.ValidateContextPath(const ContextPath: string);
 var
   Ch: Char;
 begin
-  Assert(Pos('\', ContextPath) = 0);
-  Assert(Pos('/', ContextPath) = 0);
-
+  // '/' and '\' are not in the whitelist below, so the case statement rejects
+  // them with EWebComponentException like any other invalid character.
   for Ch in ContextPath do
   begin
     case Ch of

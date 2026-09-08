@@ -39,14 +39,16 @@ type
   { TdjWebAppContext }
 
   {*
-   * Main context handler class.
+   * The context handler class used by applications.
+   *
+   * It is currently a straight alias of TdjWebComponentContextHandler, kept as
+   * the documented public name and an extension point for web-application
+   * specific behaviour.
    *}
   TdjWebAppContext = class(TdjWebComponentContextHandler)
     // pas2dox requires the class declaration to use the end; statement
   end;
 
 implementation
-
-{ TdjWebAppContext }
 
 end.

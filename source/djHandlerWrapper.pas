@@ -71,7 +71,7 @@ type
      *}
     procedure DoStart; override;
     {*
-     * Start the handler.
+     * Stop the handler.
      * @sa TdjLifeCycle
      *}
     procedure DoStop; override;
@@ -170,21 +170,21 @@ end;
 
 procedure TdjHandlerWrapper.RemoveHandler(const Handler: IHandler);
 var
-  Old: IHandler;
   C: IHandlerContainer;
 begin
-  Old := FHandler;
+  if not Assigned(FHandler) then
+  begin
+    raise Exception.Create('Can not remove handler');
+  end;
 
-  if Assigned(Old) then
+  if Handler = FHandler then
   begin
-    Supports(Handler, IHandlerContainer, C);
-    if Assigned(C) then
-    begin
-      C.RemoveHandler(Handler);
-    end;
-  end else if Assigned(Old) and (Handler = Old) then
+    SetHandler(nil);
+  end
+  else if Supports(FHandler, IHandlerContainer, C) then
   begin
-    SetHandler(nil)
+    // the wrapped handler is a container: delegate inward
+    C.RemoveHandler(Handler);
   end
   else
   begin

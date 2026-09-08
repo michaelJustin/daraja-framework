@@ -49,6 +49,14 @@ type
    * @li OnPost, for HTTP POST requests
    * @li OnPut, for HTTP PUT requests
    * @li OnDelete, for HTTP DELETE requests
+   *
+   * @note Method handling notes and current limitations:
+   * @li every On* handler that is not overridden responds with 405 Method Not
+   *     Allowed. In particular HEAD and OPTIONS are not derived from OnGet -
+   *     override OnHead / OnOptions explicitly if you need them.
+   * @li an unrecognised HTTP method responds with 501 Not Implemented.
+   * @li conditional GET is supported through OnGetLastModified only
+   *     (If-Modified-Since); there is no ETag / If-None-Match handling.
    *}
   TdjWebComponent = class(TdjGenericWebComponent)
   strict private
@@ -157,6 +165,7 @@ uses
 const
   RESOURCE_LAST_MODIFIED_DEFAULT = 0;
   HTTP_ERROR_METHOD_NOT_ALLOWED = 405;
+  HTTP_ERROR_NOT_IMPLEMENTED = 501;
 
 { TdjWebComponent }
 
@@ -291,6 +300,7 @@ begin
         {$IFDEF DARAJA_LOGGING}
         Logger.Error('Unknown HTTP method');
         {$ENDIF DARAJA_LOGGING}
+        Response.ResponseNo := HTTP_ERROR_NOT_IMPLEMENTED;
     end;
   end;
 end;

@@ -130,6 +130,9 @@ type
     {*
      * Add a preconfigured connector.
      *
+     * Ownership: the connector is held by an interface reference and is
+     * released when the server is destroyed. Do not free it yourself.
+     *
      * @param Connector the connector
      *}
     procedure AddConnector(const Connector: IConnector); overload;
@@ -145,8 +148,13 @@ type
     {*
      * Add a new context.
      *
+     * Ownership: the server takes ownership of the context. It is destroyed
+     * together with the server; do not free it yourself. If a context with the
+     * same path is already registered, the passed context is freed and an
+     * EWebComponentException is raised.
+     *
      * @param Context the context handler.
-     * @throws EWebComponentException if an error occurs that interferes with the component's normal operation.
+     * @throws EWebComponentException if the context path is already registered.
      *}
     procedure Add(Context: TdjWebComponentContextHandler);
 
@@ -337,24 +345,13 @@ begin
   end;
 
   try
-    try
-      // start HTTP connectors
-      StartConnectors;
-    except
-      on E: Exception do
-      begin
-        {$IFDEF DARAJA_LOGGING}
-        Logger.Error('Could not start connectors.');
-        {$ENDIF DARAJA_LOGGING}
-        raise;
-      end;
-    end;
-
+    // start HTTP connectors
+    StartConnectors;
   except
     on E: Exception do
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Error('Could not start server.');
+      Logger.Error('Could not start connectors.');
       {$ENDIF DARAJA_LOGGING}
       raise;
     end;

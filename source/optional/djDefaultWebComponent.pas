@@ -54,7 +54,11 @@ type
    *
    * If the file does not exist, a HTTP 404 error will be returned.
    *
-   * @note This class is unsupported demonstration code.
+   * Requests that would resolve outside the static content directory (path
+   * traversal, e.g. "../") are rejected with HTTP 404.
+   *
+   * @note This class is unsupported demonstration code. Review it carefully
+   *       before serving untrusted content from disk.
    *
    * See TdjDefaultWebComponentTests for usage examples.
    *}
@@ -86,7 +90,7 @@ implementation
 uses
   djContextHandler, // to access ROOT_CONTEXT
   djHTTPConstants,
-  SysUtils, Classes;
+  StrUtils, SysUtils, Classes;
 
 { TdjDefaultWebComponent }
 
@@ -155,6 +159,8 @@ procedure TdjDefaultWebComponent.Service(Context: TdjServerContext;
 var
   RelFileName: string;
   FileName: string;
+  BaseDir: string;
+  InsideBase: Boolean;
 begin
   RelFileName := StripContext(Request.Document);
 
@@ -164,6 +170,27 @@ begin
   begin
     // on Winoid systems replace slash with backslash
     FileName := StringReplace(FileName, '/', PathDelim, [rfReplaceAll]);
+  end;
+
+  // resolve '..' / '.' and make sure the request cannot escape the static
+  // content directory (path traversal protection)
+  FileName := ExpandFileName(FileName);
+  BaseDir := IncludeTrailingPathDelimiter(ExpandFileName(BuildAbsolutePath));
+  {$IFDEF MSWINDOWS}
+  InsideBase := StartsText(BaseDir, FileName);
+  {$ELSE}
+  InsideBase := StartsStr(BaseDir, FileName);
+  {$ENDIF}
+  if not InsideBase then
+  begin
+    Response.ResponseNo := 404;
+
+    {$IFDEF DARAJA_LOGGING}
+    Logger.Warn('Rejected path outside static content directory: %s',
+      [Request.Document]);
+    {$ENDIF DARAJA_LOGGING}
+
+    Exit;
   end;
 
   if FileExists(FileName) then

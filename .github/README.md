@@ -1,7 +1,7 @@
 ![Object Pascal](https://img.shields.io/badge/language-Object%20Pascal-blue.svg)
 ![OS: Windows](https://img.shields.io/badge/OS-Windows-blue)
 ![Delphi 2009+](https://img.shields.io/badge/Delphi-2009+-blue.svg)
-![Lazarus 4.0+](https://img.shields.io/badge/Lazarus-4.0+-blue.svg)
+![Lazarus 4.x](https://img.shields.io/badge/Lazarus-4.x-blue.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/michaelJustin/daraja-framework)
 [![Doxygen Docs](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/doxygen.yml)
 [![pages-build-deployment](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/michaelJustin/daraja-framework/actions/workflows/pages/pages-build-deployment)
@@ -100,7 +100,7 @@ https://michaeljustin.github.io/daraja-framework/
 
 ### Getting started with Daraja
 
-https://www.habarisoft.com/daraja_framework/3.1.0/DarajaFrameworkGettingStarted.pdf
+[DarajaFrameworkGettingStarted.pdf](../docs/DarajaFrameworkGettingStarted.pdf) (in this repository)
 
 ## Licensing
 

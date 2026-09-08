@@ -502,10 +502,24 @@ procedure TdjWebComponentHandler.AddWebFilter(
 var
   Mapping: TdjWebFilterMapping;
 begin
+  // validate the pattern before touching any state, so a bad pattern fails at
+  // registration time instead of raising during request handling
+  if TdjPathMap.GetSpecType(UrlPattern) = stUnknown then
+  begin
+    raise EWebComponentException.CreateFmt(
+      rsInvalidMappingSForWebComponentS, [UrlPattern, Holder.Name]);
+  end;
+
   if not WebFilters.Contains(Holder) then
   begin
     WebFilters.Add(Holder);
-    SetFilters(WebFilters);
+    try
+      SetFilters(WebFilters);
+    except
+      // leave ownership of Holder with the caller on any failure path
+      WebFilters.Extract(Holder);
+      raise;
+    end;
   end;
 
   Mapping := TdjWebFilterMapping.Create;

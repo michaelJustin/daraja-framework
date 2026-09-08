@@ -42,6 +42,7 @@ type
     procedure TestDefaultWebComponent;
     procedure TestDefaultWebComponentInRootContext;
     procedure TestMissingFolderDetectedInInit;
+    procedure TestPathTraversalIsRejected;
 
     // other
     procedure TestUpload;
@@ -171,6 +172,27 @@ begin
     Server.Add(Context);
     // ExpectedException := EWebComponentException; there is none
     Server.Start;
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TdjDefaultWebComponentTests.TestPathTraversalIsRejected;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('test');
+    Context.Add(TdjDefaultWebComponent, '/');
+    Server.Add(Context);
+    Server.Start;
+
+    // %2e%2e decodes to '..' on the server but the client does not collapse it.
+    // resources\upload.txt exists two levels above webapps\test - the request
+    // must NOT be served.
+    CheckGETResponse404('/test/%2e%2e/%2e%2e/resources/upload.txt');
   finally
     Server.Free;
   end;

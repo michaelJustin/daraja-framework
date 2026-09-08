@@ -119,6 +119,7 @@ type
     //procedure TestOneFilterAndTwoWebComponents;
 
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
+    procedure TestInvalidFilterUrlPatternRaisesException;
     //procedure TestMapFilterWithUnknownComponentNameRaisesException;
     //procedure TestWebFilterHolderInit;
     //procedure TestWebFilterHolderInitHavingTwoInstances;
@@ -1427,6 +1428,25 @@ begin
     CheckGETResponseEquals('from init 1 2 3', '/web/page.filter');
   finally
     Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestInvalidFilterUrlPatternRaisesException;
+var
+  Context: TdjWebAppContext;
+begin
+  Context := TdjWebAppContext.Create('web');
+  try
+    Context.Add(TExamplePage, '*.html');
+
+    {$IFDEF FPC}
+    ExpectException(EWebComponentException, '');
+    {$ELSE}
+    ExpectedException := EWebComponentException;
+    {$ENDIF}
+    Context.Add(TTestFilter, 'not-a-valid-pattern');
+  finally
+    Context.Free;
   end;
 end;
 
