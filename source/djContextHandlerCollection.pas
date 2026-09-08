@@ -31,50 +31,21 @@ unit djContextHandlerCollection;
 interface
 
 uses
-  {$IFDEF DARAJA_LOGGING}
-  djLogAPI, djLoggerFactory,
-  {$ENDIF DARAJA_LOGGING}
-  djHandlerList,
-  Classes;
+  djHandlerList;
 
 type
   { TdjContextHandlerCollection }
 
   {*
-   * Multiple contexts with the same name are not allowed.
+   * A TdjHandlerList of context handlers.
+   *
+   * Contexts are tried in registration order and the first one that produces a
+   * response wins. Uniqueness of context paths is enforced by TdjServer.Add.
    *}
   TdjContextHandlerCollection = class(TdjHandlerList)
-  strict private
-    {$IFDEF DARAJA_LOGGING}
-    Logger: ILogger;
-    {$ENDIF DARAJA_LOGGING}
-  public
-    {*
-     * Create a collection of context handlers.
-     *}
-    constructor Create; override;
-    {*
-     * Destructor.
-     *}
-    destructor Destroy; override;
+    // pas2dox requires the class declaration to use the end; statement
   end;
 
 implementation
-
-{ TdjContextHandlerCollection }
-
-constructor TdjContextHandlerCollection.Create;
-begin
-  inherited Create;
-
-  {$IFDEF DARAJA_LOGGING}
-  Logger := TdjLoggerFactory.GetLogger(TdjContextHandlerCollection);
-  {$ENDIF DARAJA_LOGGING}
-end;
-
-destructor TdjContextHandlerCollection.Destroy;
-begin
-  inherited;
-end;
 
 end.

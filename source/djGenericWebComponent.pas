@@ -80,9 +80,9 @@ type
     {*
      * Get or create a HTTP session.
      *
-     * @note it requires the current TdjServerContext so calling it from one of the
-     * HTTP method handlers is not possible. It can be called from
-     * the Servive method.
+     * @note it requires the current TdjServerContext, so it cannot be called
+     * from one of the HTTP method handlers (OnGet etc.). It can be called from
+     * the Service method.
      *
      * @note if the context was created with the Auto Session option,
      * this method will always return a session independent of the Create parameter

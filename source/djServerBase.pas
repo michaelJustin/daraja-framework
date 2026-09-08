@@ -99,27 +99,17 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger := TdjLoggerFactory.GetLogger(TdjServerBase);
   {$ENDIF DARAJA_LOGGING}
-
-  {$IFDEF LOG_CREATE}
-  Trace('Created');
-  {$ENDIF}
 end;
 
 destructor TdjServerBase.Destroy;
 begin
-  {$IFDEF LOG_DESTROY}
-  Trace('Destroy');
-  {$ENDIF}
-
   inherited;
 end;
 
 procedure TdjServerBase.Handle(const Target: string; Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
-
   inherited;
-
 end;
 
 procedure TdjServerBase.DoStart;
