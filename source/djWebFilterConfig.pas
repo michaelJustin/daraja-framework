@@ -53,7 +53,7 @@ implementation
 
 function TdjWebFilterConfig.GetFilterName: string;
 begin
-  Result := ''; // TODO
+  Result := GetName;
 end;
 
 end.

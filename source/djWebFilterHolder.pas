@@ -178,6 +178,8 @@ begin
   Logger.Trace('Create instance of class ' + FClass.ClassName);
   {$ENDIF DARAJA_LOGGING}
 
+  (FConfig as IWriteableConfig).SetName(Name);
+
   FWebFilter := FClass.Create;
 
   try
@@ -199,6 +201,7 @@ begin
       {$ENDIF DARAJA_LOGGING}
 
       WebFilter.Free;
+      FWebFilter := nil;
       raise;
     end;
   end;
@@ -221,6 +224,7 @@ begin
     end;
 
     WebFilter.Free;
+    FWebFilter := nil;
   except
     on E: Exception do
     begin

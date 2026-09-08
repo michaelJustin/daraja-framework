@@ -348,6 +348,12 @@ type
      * @throws EWebComponentException if the context is nil or if the context is already set and differs from the new context.
      *}
     procedure SetContext(const Context: IContext);
+
+    {*
+     * Sets the name reported by IWebFilterConfig.GetFilterName.
+     * @param AName the filter name
+     *}
+    procedure SetName(const AName: string);
   end;
 
   /// \cond

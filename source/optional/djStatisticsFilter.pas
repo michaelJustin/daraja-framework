@@ -56,7 +56,7 @@ type
     FRequests: TIdThreadSafeInt64;
 
     function GetRequests: Int64;
-    function GetRequestsActive: Integer;
+    function GetRequestsActive: Int64;
     function GetResponses1xx: Int64;
     function GetResponses2xx: Int64;
     function GetResponses3xx: Int64;
@@ -70,7 +70,7 @@ type
       TdjResponse; const Chain: IWebFilterChain); override;
 
     property Requests: Int64 read GetRequests;
-    property RequestsActive: Integer read GetRequestsActive;
+    property RequestsActive: Int64 read GetRequestsActive;
     property Responses1xx: Int64 read GetResponses1xx;
     property Responses2xx: Int64 read GetResponses2xx;
     property Responses3xx: Int64 read GetResponses3xx;
@@ -120,7 +120,7 @@ begin
   Result := FRequests.Value;
 end;
 
-function TdjStatisticsFilter.GetRequestsActive: Integer;
+function TdjStatisticsFilter.GetRequestsActive: Int64;
 begin
   Result := FRequestsActive.Value;
 end;

@@ -54,14 +54,20 @@ type
      * The context.
      *}
     FContext: IContext;
+    {*
+     * The configuration name (e.g. the filter name).
+     *}
+    FName: string;
   protected
     // IWriteableConfig interface
     procedure Add(const Key: string; const Value: string);
     procedure SetContext(const Context: IContext);
+    procedure SetName(const AName: string);
   protected
     // IContextConfig interface todo more generic.
     function GetInitParameter(const Key: string): string;
     function GetInitParameterNames: TdjStrings;
+    function GetName: string;
   public
     {*
      * Constructor.
@@ -131,6 +137,16 @@ begin
   begin
     Result.Add(S);
   end;
+end;
+
+function TdjAbstractConfig.GetName: string;
+begin
+  Result := FName;
+end;
+
+procedure TdjAbstractConfig.SetName(const AName: string);
+begin
+  FName := AName;
 end;
 
 procedure TdjAbstractConfig.SetContext(const Context: IContext);

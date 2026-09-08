@@ -115,6 +115,7 @@ type
     procedure TestFilterWithInit;
     procedure TestFilterV3WithInit;
     procedure TestFilterInitCanReadContextConfiguration;
+    procedure TestFilterInitCanReadFilterName;
     //procedure TestOneFilterAndTwoWebComponents;
 
     procedure TestMapFilterTwiceToSameWebComponentRaisesException;
@@ -1121,6 +1122,17 @@ type
       Response: TdjResponse; const Chain: IWebFilterChain); override;
   end;
 
+  { TFilterReadsFilterName }
+
+  TFilterReadsFilterName = class(TdjWebFilter)
+  strict private
+    FFilterName: string;
+  public
+    procedure Init(const Config: IWebFilterConfig); override;
+    procedure DoFilter(Context: TdjServerContext; Request: TdjRequest;
+      Response: TdjResponse; const Chain: IWebFilterChain); override;
+  end;
+
   { TTestFilterA }
 
   TTestFilterA = class(TdjWebFilter)
@@ -1152,6 +1164,20 @@ procedure TFilterWithInitReadsContextConfiguration.DoFilter(
 begin
   Chain.DoFilter(Context, Request, Response);
   Response.ContentText := StaticContent;
+end;
+
+{ TFilterReadsFilterName }
+
+procedure TFilterReadsFilterName.Init(const Config: IWebFilterConfig);
+begin
+  FFilterName := Config.GetFilterName;
+end;
+
+procedure TFilterReadsFilterName.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  Chain.DoFilter(Context, Request, Response);
+  Response.ContentText := 'filter name=' + FFilterName;
 end;
 
 { TTestFilter }
@@ -1399,6 +1425,27 @@ begin
     Server.Add(Context);
     Server.Start;
     CheckGETResponseEquals('from init 1 2 3', '/web/page.filter');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestFilterInitCanReadFilterName;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // configure
+  Context := TdjWebAppContext.Create('web');
+  Context.Add(TExamplePage, '*.filter');
+  Context.Add(TFilterReadsFilterName, '*.filter');
+
+  // run
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+    CheckGETResponseEquals('filter name=TFilterReadsFilterName', '/web/page.filter');
   finally
     Server.Free;
   end;

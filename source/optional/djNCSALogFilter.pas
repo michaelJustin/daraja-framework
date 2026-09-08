@@ -81,7 +81,8 @@ begin
   Result := FormatDateTime('dd/mmm/yyyy:hh:nn:ss', AValue, AFS);
 
   AOffset := OffsetFromUTC;
-  DecodeTime(AOffset, AHour, AMin, ASec, AMSec);
+  // DecodeTime does not handle a negative TDateTime, so decode the magnitude
+  DecodeTime(Abs(AOffset), AHour, AMin, ASec, AMSec);
 
   Bias := MinsPerHour * AHour + AMin;
 
