@@ -134,11 +134,10 @@ type
     {*
      * Gets all initialization parameter names.
      *
-     * @note The caller owns the returned list and must free it. The order of
-     *       the names is unspecified.
-     * @return A list containing all parameter names.
+     * @note The order of the names is unspecified.
+     * @return An array containing all parameter names.
      *}
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
 
     {*
      * Logs a message to the configured logging system.
@@ -155,11 +154,10 @@ type
   IWebComponentConfig = interface(IInterface)
     ['{2F61659D-1EF3-4C7A-BDEF-7349A1B4E690}']
     {*
-     * @note The caller owns the returned list and must free it. The order of
-     *       the names is unspecified.
+     * @note The order of the names is unspecified.
      * @return Names of all initialization parameters
      *}
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
 
     {*
      * Gets an initialization parameter.
@@ -181,11 +179,10 @@ type
   IContextConfig = interface(IInterface)
     ['{5304AF56-8180-4B71-9EEF-A50CDB97E67F}']
     {*
-     * @note The caller owns the returned list and must free it. The order of
-     *       the names is unspecified.
+     * @note The order of the names is unspecified.
      * @return Names of all initialization parameters
      *}
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
 
     {*
      * Gets an initialization parameter.
@@ -273,11 +270,10 @@ type
     function GetFilterName: string;
 
     {*
-     * @note The caller owns the returned list and must free it. The order of
-     *       the names is unspecified.
+     * @note The order of the names is unspecified.
      * @return Names of all initialization parameters
      *}
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
 
     {*
      * Gets an initialization parameter.

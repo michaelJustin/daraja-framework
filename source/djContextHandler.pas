@@ -76,7 +76,7 @@ type
     function GetContextConfig: IContextConfig;
     function GetContextPath: string;
     function GetInitParameter(const Key: string): string;
-    function GetInitParameterNames: TdjStrings;
+    function GetInitParameterNames: TdjStringArray;
     procedure Log(const Msg: string);
   public
     {*
@@ -204,7 +204,7 @@ begin
   Result := FConfig.GetInitParameter(Key);
 end;
 
-function TdjContext.GetInitParameterNames: TdjStrings;
+function TdjContext.GetInitParameterNames: TdjStringArray;
 begin
   Result := FConfig.GetInitParameterNames;
 end;
