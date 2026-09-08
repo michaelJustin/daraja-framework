@@ -112,13 +112,6 @@ type
   IContext = interface(IInterface)
     ['{19E32FEB-0348-42B2-8977-F03A0032473C}']
     {*
-     * Initializes the context with the given configuration.
-     *
-     * @param Config The context configuration to use.
-     *}
-    procedure Init(const Config: IContextConfig);
-
-    {*
      * Get the context configuration.
      * @return the context configuration
      *}
@@ -337,10 +330,10 @@ type
     procedure DestroyFilter;
   end;
 
-  {*
-   * Interface for writable configuration objects that can be modified at runtime.
-   * @interface IWriteableConfig
-   *}
+  /// \cond
+  // Internal: used only for framework-internal casts when populating a config
+  // object. Not part of the application-facing API, so it is kept out of the
+  // generated documentation.
   IWriteableConfig = interface(IInterface)
     ['{A3074743-C2EF-44C6-BD28-27E62F82E598}']
     {*
@@ -364,6 +357,7 @@ type
      *}
     procedure SetName(const AName: string);
   end;
+  /// \endcond
 
   /// \cond
   // todo move

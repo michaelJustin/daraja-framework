@@ -35,6 +35,10 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 
 ### Removed
 
+- `IContext.Init` / `TdjContext.Init(const Config: IContextConfig)`. It was
+  never called anywhere in the framework and carried a `TODO` questioning
+  whether overwriting the config field was safe; the API docs implied a context
+  lifecycle step that does not exist. (#426, #446)
 - The never-completed "map a web filter to a named web component" machinery
   (`TdjMultiMap`, `TdjWebFilterMapping.WebComponentNames`, the name branch of
   the filter chain). It had no public API and had been dead since June 2024.
@@ -73,6 +77,8 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - Fixed doc-comment copy/paste errors (`Servive`, "Start the handler" on a
   `DoStop`). (#445)
 - Added this `CHANGELOG.md`. (#441)
+- The internal `IWriteableConfig` interface is excluded from the generated API
+  documentation; it exists only for framework-internal casts. (#446)
 
 ### Internal
 
