@@ -41,9 +41,12 @@ jobs:
         with:
           lazarus-version: stable
 
+      # DARAJA_SKIP_SERVER_TESTS excludes the loopback-HTTP-server integration
+      # suites (TSessionTests, TAPIConfigTests) to keep the CI run fast. Their
+      # coverage is exercised by the local run-fpc / run-delphi scripts.
       - name: Build the test runner (Console build mode)
         working-directory: daraja-framework/test/unittests
-        run: lazbuild -B --build-mode=Console Unittests.lpi
+        run: lazbuild -B --build-mode=Console --opt=-dDARAJA_SKIP_SERVER_TESTS Unittests.lpi
         shell: bash
 
       - name: Run the test suite (headless)
