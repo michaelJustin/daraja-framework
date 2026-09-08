@@ -73,7 +73,7 @@ begin
   MS := TMemoryStream.Create;
   try
     MS.LoadFromStream(Request.PostStream);
-    MS.SaveToFile('.\resources\upload_received.txt');
+    MS.SaveToFile('resources/upload_received.txt');
   finally
     MS.Free;
   end;
@@ -209,7 +209,7 @@ begin
     Context.Add(TUploadResource, '/upload');
     Server.Add(Context);
     Server.Start;
-    Upload('/upload', '.\resources\upload.txt');
+    Upload('/upload', 'resources/upload.txt');
   finally
     Server.Free;
   end;
