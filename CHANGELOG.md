@@ -10,6 +10,19 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraja-framework/milestone/17)._
 
+### Removed
+
+- The never-completed "map a web filter to a named web component" machinery
+  (`TdjMultiMap`, `TdjWebFilterMapping.WebComponentNames`, the name branch of
+  the filter chain). It had no public API and had been dead since June 2024.
+  This also removes the shared-object-ownership hazard behind #411. (#425, #411)
+
+### Fixed
+
+- `TdjWebComponentHandler` no longer double-owns web filter mappings:
+  `FWebFilterPathMappings` is now an explicitly non-owning view of
+  `FWebFilterMappings`. (#411)
+
 ## [3.1.2] - 2026-09-08
 
 ### Fixed
