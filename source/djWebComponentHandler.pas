@@ -74,6 +74,7 @@ type
     procedure InitializeHolders(Holders: TdjWebFilterHolders);
     function StripContext(const Doc: string): string;
     procedure CheckUniqueName(Holder: TdjWebComponentHolder);
+    procedure CheckUniqueFilterName(Holder: TdjWebFilterHolder);
     procedure CreateOrUpdateMapping(const UrlPattern: string; Holder:
       TdjWebComponentHolder);
     procedure ValidateMappingUrlPattern(const UrlPattern: string;
@@ -216,6 +217,8 @@ resourcestring
     +'name';
   rsUpdateMappingForWebComponent = 'Update mapping for Web Component "%s" -'
     +'> %s,%s';
+  rsTheWebFilterSCanNotBeAdded = 'The Web Filter "%s" can not be added because '
+    +'a different filter with the same name is already registered';
 
 type
 
@@ -440,6 +443,21 @@ begin
   end;
 end;
 
+procedure TdjWebComponentHandler.CheckUniqueFilterName(Holder: TdjWebFilterHolder);
+var
+  FH: TdjWebFilterHolder;
+begin
+  // fail if a different holder with the same name is already registered
+  for FH in WebFilters do
+  begin
+    if (FH <> Holder) and (FH.Name = Holder.Name) then
+    begin
+      raise EWebComponentException.CreateFmt(rsTheWebFilterSCanNotBeAdded,
+        [Holder.Name]);
+    end;
+  end;
+end;
+
 procedure TdjWebComponentHandler.AddMapping(Mapping: TdjWebComponentMapping);
 begin
   WebComponentMappings.Add(Mapping);
@@ -502,13 +520,15 @@ procedure TdjWebComponentHandler.AddWebFilter(
 var
   Mapping: TdjWebFilterMapping;
 begin
-  // validate the pattern before touching any state, so a bad pattern fails at
+  // validate before touching any state, so a bad registration fails at
   // registration time instead of raising during request handling
   if TdjPathMap.GetSpecType(UrlPattern) = stUnknown then
   begin
     raise EWebComponentException.CreateFmt(
       rsInvalidMappingSForWebComponentS, [UrlPattern, Holder.Name]);
   end;
+
+  CheckUniqueFilterName(Holder);
 
   if not WebFilters.Contains(Holder) then
   begin

@@ -1481,9 +1481,9 @@ begin
   Context.Add(TTestFilter, '*.html');
 
   {$IFDEF FPC}
-  ExpectException(EListError, '');
+  ExpectException(EWebComponentException, '');
   {$ELSE}
-  ExpectedException := EListError;
+  ExpectedException := EWebComponentException;
   {$ENDIF}
   try
     Context.Add(TTestFilter, '*.html');
