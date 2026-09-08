@@ -33,6 +33,7 @@ uses
 {$ENDIF}
   SysUtils,
   LazUTF8,
+  IdGlobal,
   djLogAPI, djLogOverSimpleLogger, SimpleLogger,
   Forms,
   Interfaces,
@@ -62,7 +63,10 @@ begin
   SetHeapTraceOutput('heaptrace.log');
   {$ENDIF}
 
-  {$IFDEF LINUX}
+  // On Unix, Indy transcodes through iconv; allow transliteration so headers
+  // with non-representable characters degrade instead of raising. The global
+  // only exists when Indy is built with iconv support.
+  {$IF DEFINED(UNIX) AND DECLARED(GIdIconvUseTransliteration)}
   GIdIconvUseTransliteration := True;
   {$ENDIF}
 
