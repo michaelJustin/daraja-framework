@@ -8,7 +8,7 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
-_Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraja-framework/milestone/17)._
+## [3.2.0] - 2026-09-09
 
 ### Security
 
@@ -161,7 +161,7 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   `CheckGETResponseHeaderEquals` helpers in `HTTPTestCase` (#466).
 - The Doxygen workflow derives `PROJECT_NUMBER` from `source/djGlobal.pas`
   and runs on every push to `master` and on version tags. (#456)
-- Version constant set to `3.2.0-SNAPSHOT`. (#451)
+- Version constant set to `3.2.0`. (#451)
 
 ## [3.1.2] - 2026-09-08
 
@@ -204,7 +204,8 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - Requires slf4p 1.0.8.
 - `TdjLoggerFactory.GetLogger` calls use a class reference. (#396)
 
-[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.2...HEAD
+[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.2...v3.2.0
 [3.1.2]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.0.6...v3.1.0
