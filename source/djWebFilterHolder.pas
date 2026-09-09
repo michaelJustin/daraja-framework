@@ -109,21 +109,30 @@ type
     property WebFilter: TdjWebFilter read FWebFilter;
   end;
 
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   {*
    * A generic list of TdjWebFilterHolder objects.
    *}
   TdjWebFilterHolders = class(TObjectList<TdjWebFilterHolder>)
-    // pas2dox requires the class declaration to use the end; statement
+  public
+    {*
+     * Creates an owning list. Passes an explicit comparer to the base
+     * constructor: on Delphi 2009 TObjectList&lt;T&gt;.Remove raises an AV
+     * with the implicitly created one.
+     *}
+    constructor Create;
   end;
 
 implementation /// \cond
 
 uses
-  SysUtils;
+  SysUtils, Generics.Defaults;
+
+{ TdjWebFilterHolders }
+
+constructor TdjWebFilterHolders.Create;
+begin
+  inherited Create(TComparer<TdjWebFilterHolder>.Default);
+end;
 
 { TdjWebFilterHolder }
 

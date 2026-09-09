@@ -206,7 +206,6 @@ uses
   {$ENDIF}
   {$ENDIF}
   IdHTTP,
-  Generics.Defaults,
   SysUtils, Classes;
 
 resourcestring
@@ -264,11 +263,11 @@ begin
   Logger := TdjLoggerFactory.GetLogger(TdjWebComponentHandler);
   {$ENDIF DARAJA_LOGGING}
 
-  FWebComponentHolders := TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default); // todo: add a constructor to avoid repeated TComparer code
-  FWebComponentMappings := TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
+  FWebComponentHolders := TdjWebComponentHolders.Create;
+  FWebComponentMappings := TdjWebComponentMappings.Create;
 
-  FWebFilterHolders := TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
-  FWebFilterMappings := TdjWebFilterMappings.Create(TComparer<TdjWebFilterMapping>.Default);
+  FWebFilterHolders := TdjWebFilterHolders.Create;
+  FWebFilterMappings := TdjWebFilterMappings.Create;
 
   FPathMap := TdjPathMap.Create;
 end;
@@ -746,8 +745,7 @@ var
 begin
   // rebuild the non-owning URL-pattern view of FWebFilterMappings
   FWebFilterPathMappings.Free;
-  FWebFilterPathMappings := TdjWebFilterMappings.Create(
-    TComparer<TdjWebFilterMapping>.Default);
+  FWebFilterPathMappings := TdjWebFilterMappings.Create;
   FWebFilterPathMappings.OwnsObjects := False;
 
   for FilterMapping in FWebFilterMappings do
