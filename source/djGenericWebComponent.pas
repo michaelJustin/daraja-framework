@@ -55,7 +55,7 @@ type
     {$ENDIF DARAJA_LOGGING}
     FConfig: IWebComponentConfig;
   public
-    // IWebComponent interface todo protected?
+    // IWebComponent interface
     procedure Init(const Config: IWebComponentConfig); overload; virtual;
     procedure Service(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse); virtual;
