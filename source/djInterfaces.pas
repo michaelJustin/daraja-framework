@@ -34,7 +34,7 @@ interface
 
 uses
   djServerContext, djTypes,
-  SysUtils, Generics.Collections;
+  SysUtils;
 
 type
   {*
@@ -356,11 +356,6 @@ type
      *}
     procedure SetName(const AName: string);
   end;
-  /// \endcond
-
-  /// \cond
-  // todo move
-  TdjHandlers = TList<IHandler>;
   /// \endcond
 
 implementation

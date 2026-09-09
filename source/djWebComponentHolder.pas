@@ -220,7 +220,8 @@ begin
       {$IFDEF DARAJA_LOGGING}
       Logger.Warn('TdjWebComponentHolder.Stop: ' + E.Message, E);
       {$ENDIF DARAJA_LOGGING}
-      // TODO raise ?;
+      // Swallowed on purpose: TdjLifeCycle.Stop logs and continues so a
+      // failing stop cannot leave the component half-started.
     end;
   end;
 

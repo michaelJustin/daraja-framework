@@ -111,7 +111,8 @@ type
 
   // note Delphi 2009 AVs if it is a TObjectList<>
   // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround use TdjWeFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
+  // for a workaround
+  // use TdjWebFilterHolders.Create(TComparer<TdjWebFilterHolder>.Default);
   {*
    * A generic list of TdjWebFilterHolder objects.
    *}
@@ -231,7 +232,8 @@ begin
       {$IFDEF DARAJA_LOGGING}
       Logger.Warn('TdjWebFilterHolder.Stop: ' + E.Message, E);
       {$ENDIF DARAJA_LOGGING}
-      // TODO raise ?;
+      // Swallowed on purpose: TdjLifeCycle.Stop logs and continues so a
+      // failing stop cannot leave the filter half-started.
     end;
   end;
 
