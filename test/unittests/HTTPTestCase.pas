@@ -75,7 +75,14 @@ type
     procedure CheckCachedGETResponseEquals(IfModifiedSince: TDateTime; Expected: string; URL: string = ''; msg: string = '');
     procedure CheckCachedGETResponseIs304(IfModifiedSince: TDateTime; URL: string = ''; msg: string = '');
 
+    // GET the URL, then GET it again echoing back the Last-Modified response
+    // header as If-Modified-Since; checks that the second response is 304.
+    procedure CheckConditionalGETIs304(URL: string = ''; msg: string = '');
+
     procedure CheckContentTypeEquals(Expected: string; URL: string = ''; msg: string = '');
+
+    // GET the URL and compare a single response header value.
+    procedure CheckGETResponseHeaderEquals(const HeaderName, Expected: string; URL: string = ''; msg: string = '');
 
     procedure Upload(URL: string; const SourceFile: string);
 
@@ -129,6 +136,23 @@ begin
   CheckEquals(304, Actual, msg);
 end;
 
+procedure THTTPTestCase.CheckConditionalGETIs304(URL: string = ''; msg: string = '');
+var
+  LastMod: TDateTime;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Get(URL);
+  LastMod := IdHTTP.Response.LastModified;
+  CheckTrue(LastMod > 0, 'server did not send a Last-Modified header');
+
+  IdHTTP.Request.LastModified := LastMod;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Get(URL);
+  CheckEquals(304, IdHTTP.ResponseCode, msg);
+end;
+
 procedure THTTPTestCase.CheckContentTypeEquals(Expected: string; URL: string;
   msg: string);
 begin
@@ -136,6 +160,15 @@ begin
 
   IdHTTP.Get(URL);
   CheckEquals(Expected, IdHTTP.Response.ContentType, msg);
+end;
+
+procedure THTTPTestCase.CheckGETResponseHeaderEquals(const HeaderName,
+  Expected: string; URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Get(URL);
+  CheckEquals(Expected, IdHTTP.Response.RawHeaders.Values[HeaderName], msg);
 end;
 
 procedure THTTPTestCase.CheckGETResponse200(URL: string; msg: string);

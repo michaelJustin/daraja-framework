@@ -90,7 +90,7 @@ implementation
 uses
   djContextHandler, // to access ROOT_CONTEXT
   djHTTPConstants,
-  StrUtils, SysUtils, Classes;
+  StrUtils, SysUtils;
 
 { TdjDefaultWebComponent }
 
@@ -197,16 +197,14 @@ begin
     Response.ContentType :=
       Response.HTTPServer.MIMETable.GetFileMIMEType(FileName);
 
-    // TODO: why is HTML handled differently here?
-    if Response.ContentType = 'text/html' then
-    begin
-      Response.ContentStream := TFileStream.Create(FileName, fmOpenRead or
-        fmShareDenyNone);
-    end
-    else
-    begin
-      Response.SmartServeFile(Context, Request, FileName);
-    end;
+    // Serve every file type the same way. SmartServeFile adds conditional GET
+    // (304 Not Modified via If-Modified-Since), sets Last-Modified, and uses
+    // the operating system file transfer fast path. Set an explicit "inline"
+    // Content-Disposition first: otherwise SmartServeFile falls back to
+    // "attachment; filename=..." and the browser downloads index.html instead
+    // of rendering it.
+    Response.ContentDisposition := 'inline';
+    Response.SmartServeFile(Context, Request, FileName);
 
     {$IFDEF DARAJA_LOGGING}
     Logger.Trace('Resource found: %s', [RelFileName]);

@@ -43,6 +43,9 @@ type
     procedure TestDefaultWebComponentInRootContext;
     procedure TestMissingFolderDetectedInInit;
     procedure TestPathTraversalIsRejected;
+    procedure TestHtmlServedInline;
+    procedure TestNonHtmlServedInline;
+    procedure TestStaticFileSupportsConditionalGet;
 
     // other
     procedure TestUpload;
@@ -193,6 +196,68 @@ begin
     // resources\upload.txt exists two levels above webapps\test - the request
     // must NOT be served.
     CheckGETResponse404('/test/%2e%2e/%2e%2e/resources/upload.txt');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TdjDefaultWebComponentTests.TestHtmlServedInline;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('test');
+    Context.Add(TdjDefaultWebComponent, '/');
+    Server.Add(Context);
+    Server.Start;
+
+    // HTML must render in the browser, not download: Content-Disposition
+    // is "inline", never "attachment; filename=...".
+    CheckGETResponseHeaderEquals('Content-Disposition', 'inline',
+      '/test/static.html');
+    CheckGETResponseEquals('staticcontent', '/test/static.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TdjDefaultWebComponentTests.TestNonHtmlServedInline;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('test');
+    Context.Add(TdjDefaultWebComponent, '/');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckContentTypeEquals('text/plain', '/test/data.txt');
+    CheckGETResponseHeaderEquals('Content-Disposition', 'inline',
+      '/test/data.txt');
+    CheckGETResponseEquals('plain text payload', '/test/data.txt');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TdjDefaultWebComponentTests.TestStaticFileSupportsConditionalGet;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('test');
+    Context.Add(TdjDefaultWebComponent, '/');
+    Server.Add(Context);
+    Server.Start;
+
+    // a repeat request with If-Modified-Since gets 304 Not Modified
+    CheckConditionalGETIs304('/test/static.html');
   finally
     Server.Free;
   end;
