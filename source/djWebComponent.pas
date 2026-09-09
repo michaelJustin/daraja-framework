@@ -52,8 +52,8 @@ type
    *
    * @note Method handling notes and current limitations:
    * @li every On* handler that is not overridden responds with 405 Method Not
-   *     Allowed. In particular HEAD and OPTIONS are not derived from OnGet -
-   *     override OnHead / OnOptions explicitly if you need them.
+   *     Allowed, with one exception: HEAD is derived from OnGet (see OnHead).
+   *     OPTIONS is not derived - override OnOptions explicitly if you need it.
    * @li an unrecognised HTTP method responds with 501 Not Implemented.
    * @li conditional GET is supported through OnGetLastModified only
    *     (If-Modified-Since); there is no ETag / If-None-Match handling.
@@ -65,6 +65,8 @@ type
     {$ENDIF DARAJA_LOGGING}
 
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
+
+    procedure SetHeadContentLength(Response: TdjResponse);
   protected
     {*
      * Called by the server to handle a DELETE request.
@@ -82,6 +84,20 @@ type
 
     {*
      * Called by the server (via the service method) to allow a component to handle a HEAD request.
+     *
+     * The default implementation runs the same code path as a GET request,
+     * including the OnGetLastModified conditional handling, and the response
+     * body is suppressed. A component which overrides OnGet therefore answers
+     * HEAD requests with the GET headers and no content. If OnGet is not
+     * overridden either, the response is 405 Method Not Allowed.
+     *
+     * @note because the GET path runs in full, an expensive OnGet does its work
+     * for a HEAD request too, and any side effect of OnGet is triggered by a
+     * HEAD request as well. Override this method to handle HEAD separately.
+     *
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *}
     procedure OnHead(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -158,7 +174,7 @@ implementation /// \cond
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
-  IdCustomHTTPServer, IdGlobalProtocols,
+  IdCustomHTTPServer, IdGlobal, IdGlobalProtocols,
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
@@ -199,7 +215,11 @@ end;
 
 procedure TdjWebComponent.OnHead(Request: TdjRequest; Response: TdjResponse);
 begin
-  Response.ResponseNo := HTTP_ERROR_METHOD_NOT_ALLOWED;
+  // Derive HEAD from the GET path: the headers are identical, and the connector
+  // suppresses the response body of a HEAD request (Service restores the
+  // Content-Length afterwards). If OnGet is not overridden either, its default
+  // 405 response is returned unchanged.
+  DoCachedGet(Request, Response);
 end;
 
 procedure TdjWebComponent.OnOptions(Request: TdjRequest; Response: TdjResponse);
@@ -259,6 +279,48 @@ begin
   end;
 end;
 
+// The connector suppresses the body of a HEAD response, and in doing so also
+// skips its own Content-Length calculation, leaving "Content-Length: 0". This
+// restores the length that the same response would have carried as a GET,
+// mirroring the calculation in TIdHTTPResponseInfo.WriteHeader.
+procedure TdjWebComponent.SetHeadContentLength(Response: TdjResponse);
+var
+  LCharSet: string;
+begin
+  // the handler has set a length itself
+  if Response.ContentLength <> -1 then Exit;
+
+  // a non-identity transfer coding must not be sent with a Content-Length
+  if (Response.TransferEncoding <> '')
+    and not SameText(Response.TransferEncoding, 'identity') then Exit;
+
+  // responses which never carry a body
+  if ((Response.ResponseNo div 100) = 1)
+    or (Response.ResponseNo = 204)
+    or (Response.ResponseNo = 304) then Exit;
+
+  if Response.ContentText <> '' then
+  begin
+    LCharSet := Response.CharSet;
+    if LCharSet = '' then
+    begin
+      // no content type was set, so the connector falls back to its default
+      if SizeOf(Char) > 1 then
+      begin
+        LCharSet := 'utf-8';
+      end else begin
+        LCharSet := 'ISO-8859-1';
+      end;
+    end;
+    Response.ContentLength :=
+      CharsetToEncoding(LCharSet).GetByteCount(Response.ContentText);
+  end
+  else if Assigned(Response.ContentStream) then
+  begin
+    Response.ContentLength := Response.ContentStream.Size;
+  end;
+end;
+
 procedure TdjWebComponent.Service(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
@@ -266,6 +328,7 @@ begin
     hcHEAD:
       begin
         OnHead(Request, Response);
+        SetHeadContentLength(Response);
       end;
     hcGET:
       begin

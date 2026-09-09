@@ -35,6 +35,13 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   responses therefore gain conditional GET (`304 Not Modified`),
   `Last-Modified` and the OS file-transfer fast path, and still render in the
   browser rather than being offered as a download. (#466)
+- `TdjWebComponent.OnHead` is derived from the GET handler instead of always
+  responding `405 Method Not Allowed`. A component which overrides `OnGet` now
+  answers `HEAD` requests with the GET headers — including the `Content-Length`
+  the GET would have produced and the `OnGetLastModified` conditional handling
+  — and no body. A component which overrides neither still returns 405. Note
+  that the GET handler runs in full for a `HEAD` request, so its cost and any
+  side effects apply; override `OnHead` to handle `HEAD` separately. (#428)
 - `TdjWebComponent.Service`: an unrecognised HTTP method now responds
   `501 Not Implemented` instead of falling through to 404. (#423)
 - `TdjPathMap`: a prefix pattern `/foo/*` now also matches the bare path
