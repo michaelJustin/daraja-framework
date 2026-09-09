@@ -64,7 +64,7 @@ type
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
 
-    procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
+    procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse);
 
     procedure SetHeadContentLength(Response: TdjResponse);
   protected
