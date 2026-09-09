@@ -104,8 +104,10 @@ warnings are expected (W1036 `LCloseConnection`, W1035 SSPI).
   to exclude them where binding a listening socket is not possible or not
   wanted. The **`ConsoleCI`** build mode is the `Console` mode with that define
   baked in (`lazbuild -B --build-mode=ConsoleCI Unittests.lpi` &rarr;
-  `UnittestsConsoleCI`); CI builds it. A `lazbuild --opt=-d...` flag would also
-  work with a recent Lazarus, but Lazarus 3.0's `lazbuild` rejects `--opt`.
+  `UnittestsConsoleCI`); CI builds it. The define lives in a build mode rather
+  than a `lazbuild --opt=-d...` flag because `--opt` was rejected by the
+  `lazbuild` of the day (Lazarus 3.0); newer versions accept it, but the build
+  mode keeps the CI invocation working on either.
 
 ## GUI runners
 
@@ -116,9 +118,11 @@ without `-text-mode`) and run the executable with no arguments.
 
 [`.github/workflows/tests.yml`](.github/workflows/tests.yml) checks out the two
 dependencies as siblings and runs the Free Pascal suite headless on both
-`windows-latest` and `ubuntu-latest` for every push and pull request that
-touches `source/` or `test/`. Windows installs Lazarus via `setup-lazarus`,
-with the installed tree cached (keyed on the Lazarus / FPC version) so the
+`windows-latest` and `ubuntu-latest`. It triggers on every push to `master`
+and on every pull request that touches `source/`, `test/` or the workflow
+file itself, and can be started by hand (`workflow_dispatch`). Windows
+installs Lazarus via `setup-lazarus` (the `stable` version), with the
+installed tree cached (keyed on the Lazarus / FPC version) so the
 SourceForge download only happens when the cache misses; Linux installs it
 from the Ubuntu archive (the action's SourceForge download stalls on the
 hosted Linux runners) and runs the console runner under `xvfb` (the runner
