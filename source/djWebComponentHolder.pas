@@ -160,7 +160,8 @@ end;
 procedure TdjWebComponentHolder.SetContext(const Context: IContext);
 begin
   Assert(Context <> nil);
-  Assert(Context.GetContextConfig <> nil); // TODO check this happens before Context init is called
+  // always non-nil: TdjContext creates its config in the constructor
+  Assert(Context.GetContextConfig <> nil);
   (FConfig as IWriteableConfig).SetContext(Context);
 end;
 
