@@ -103,5 +103,3 @@ test/unittests/ppas.bat
 !test/unittests/Unittests.dproj
 
 client_secret.json
-
-DarajaFrameworkGettingStarted.pdf
