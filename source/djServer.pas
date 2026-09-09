@@ -52,6 +52,7 @@ const
    *
    * Daraja is a flexible HTTP server framework for Object Pascal, based on the stand-alone HTTP server in the free open source library Internet Direct (Indy).
    * Daraja provides the core foundation for serving HTTP resources of all content-types such as HTML pages, images, scripts, web service responses etc. by mapping resource paths to your own code. Your code then can create the response content, or let the framework serve a static file.
+   * It enables developers to create well-structured HTTP server applications, written with 100% open source code, targeting both Delphi 2009+ and Lazarus 4.x / FPC 3.2.x from the same codebase.
    *
    * It allows to compose web applications with these building blocks:
    *
@@ -62,6 +63,56 @@ const
    * Copyright (c) Michael Justin
    * https://www.habarisoft.com/
    * Mail: mailto:info@habarisoft.com
+   *
+   * @section features Features
+   *
+   * @li URL-pattern routing &mdash; map requests to handler classes by exact, prefix, suffix or default patterns
+   * @li Web components &mdash; handle requests by overriding per-method hooks (OnGet, OnPost, OnPut, ...)
+   * @li Filter chains &mdash; pluggable pre- and post-processing of requests and responses
+   * @li Contexts &mdash; group resources under a base path with their own init parameters, see TdjWebAppContext
+   * @li HTTP sessions &mdash; server-side session state with configurable timeout
+   * @li Static content &mdash; serve files from a directory with path-traversal protection (TdjDefaultWebComponent, in the unsupported source/optional folder)
+   * @li Optional helpers &mdash; NCSA access logging and request-statistics filters
+   * @li Dual compiler support &mdash; one codebase for Delphi 2009+ and Lazarus 4.x / FPC 3.2.x
+   * @li AGPL or commercial &mdash; 100% open source, with a commercial license available
+   *
+   * @section example Example
+   *
+   * A minimal "Hello, World!" web component, handling HTTP GET requests:
+   *
+   * @code
+   * type
+   *   THelloWorldResource = class(TdjWebComponent)
+   *   public
+   *     procedure OnGet(Request: TdjRequest; Response: TdjResponse); override;
+   *   end;
+   *
+   * procedure THelloWorldResource.OnGet(Request: TdjRequest; Response: TdjResponse);
+   * begin
+   *   Response.ContentText := 'Hello, World!';
+   *   Response.ContentType := 'text/plain';
+   * end;
+   * @endcode
+   *
+   * The component is then registered under a context and served by a TdjServer instance.
+   * See the demo/01_helloworld demo application for the full, runnable example, and the
+   * demo folder for more examples covering sessions, filters, static content, server-sent
+   * events and OpenID Connect.
+   *
+   * @section documentation Documentation
+   *
+   * @li This site is the API reference, generated from the doc comments in the source folder.
+   * @li A getting started guide is available at <a target="_blank" href="https://www.habarisoft.com/daraja_framework/3.1.0/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
+   * @li The project README, on <a target="_blank" href="https://github.com/michaelJustin/daraja-framework">GitHub</a>, covers installation, dependencies and the release changelog.
+   *
+   * @section licensing Licensing
+   *
+   * Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a
+   * commercial license. The GNU Affero General Public License is a free, copyleft license for
+   * software and other kinds of works, specifically designed to ensure cooperation with the
+   * community in the case of network server software.
+   * You can be released from the requirements of the AGPL license by purchasing a commercial
+   * license, obtainable from <a target="_blank" href="https://www.habarisoft.com/daraja_framework.html">habarisoft.com</a>.
    *
    * @section trademarks Trademarks
    *
