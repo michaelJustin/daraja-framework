@@ -1,7 +1,7 @@
 {***
 
     Daraja HTTP Framework
-    Copyright (c) Michael Justin
+    Copyright (c) 2016 Michael Justin
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +33,7 @@ interface
 const
   DWF_SERVER_VERSION = '3.2.0-SNAPSHOT';
   DWF_SERVER_FULL_NAME = 'Daraja HTTP Framework ' + DWF_SERVER_VERSION;
-  DWF_SERVER_COPYRIGHT = 'Copyright (c) Michael Justin';
+  DWF_SERVER_COPYRIGHT = 'Copyright (c) 2016 Michael Justin';
 
 function HTMLEncode(const AData: string): string;
 
