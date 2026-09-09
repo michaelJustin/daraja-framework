@@ -64,13 +64,27 @@ type
   {*
    * Web Component Mappings.
    *}
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentMappings.Create(TComparer<TdjWebComponentMapping>.Default);
-  TdjWebComponentMappings = TObjectList<TdjWebComponentMapping>;
+  TdjWebComponentMappings = class(TObjectList<TdjWebComponentMapping>)
+  public
+    {*
+     * Creates an owning list. Passes an explicit comparer to the base
+     * constructor: on Delphi 2009 TObjectList&lt;T&gt;.Remove raises an AV
+     * with the implicitly created one.
+     *}
+    constructor Create;
+  end;
 
 implementation
+
+uses
+  Generics.Defaults;
+
+{ TdjWebComponentMappings }
+
+constructor TdjWebComponentMappings.Create;
+begin
+  inherited Create(TComparer<TdjWebComponentMapping>.Default);
+end;
 
 { TdjWebComponentMapping }
 

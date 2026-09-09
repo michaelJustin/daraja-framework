@@ -37,11 +37,6 @@ uses
   Generics.Collections;
 
 type
-  // note Delphi 2009 AVs if it is a TObjectList<>
-  // see http://stackoverflow.com/questions/289825/why-is-tlist-remove-producing-an-eaccessviolation-error
-  // for a workaround
-  // use TdjWebComponentHolders.Create(TComparer<TdjWebComponentHolder>.Default);
-
   { TdjWebComponentHolders }
 
   {*
@@ -50,6 +45,12 @@ type
    *}
   TdjWebComponentHolders = class(TObjectList<TdjWebComponentHolder>)
   public
+    {*
+     * Creates an owning list. Passes an explicit comparer to the base
+     * constructor: on Delphi 2009 TObjectList&lt;T&gt;.Remove raises an AV
+     * with the implicitly created one.
+     *}
+    constructor Create;
     {*
      * Checks if the specified web component name exists.
      *
@@ -61,7 +62,15 @@ type
 
 implementation
 
+uses
+  Generics.Defaults;
+
 { TdjWebComponentHolders }
+
+constructor TdjWebComponentHolders.Create;
+begin
+  inherited Create(TComparer<TdjWebComponentHolder>.Default);
+end;
 
 function TdjWebComponentHolders.Contains(const WebComponentName: string): Boolean;
 var

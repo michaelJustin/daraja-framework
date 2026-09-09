@@ -68,13 +68,28 @@ type
   {*
    * Web Filter Mappings.
    *}
-  TdjWebFilterMappings = TObjectList<TdjWebFilterMapping>;
+  TdjWebFilterMappings = class(TObjectList<TdjWebFilterMapping>)
+  public
+    {*
+     * Creates an owning list. Passes an explicit comparer to the base
+     * constructor: on Delphi 2009 TObjectList&lt;T&gt;.Remove raises an AV
+     * with the implicitly created one.
+     *}
+    constructor Create;
+  end;
 
 implementation
 
 uses
   djPathMap,
   Generics.Defaults;
+
+{ TdjWebFilterMappings }
+
+constructor TdjWebFilterMappings.Create;
+begin
+  inherited Create(TComparer<TdjWebFilterMapping>.Default);
+end;
 
 { TdjWebFilterMapping }
 
