@@ -184,7 +184,9 @@ begin
 
   ValidateContextPath(ContextPath);
 
-  // TODO check why creation is needed here (actually it is accessed before init is called)
+  // FConfig must exist before the first GetContextConfig / Add call, which run
+  // at configuration time (adding a component or an init parameter). A context
+  // has no separate init step, so the constructor is the only place for this.
   FConfig := TdjContextConfig.Create;
   FContextPath := ContextPath;
 end;

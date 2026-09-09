@@ -29,6 +29,12 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   already registered now raises `EWebComponentException` with a clear message
   instead of letting a raw `EListError` escape, matching `TdjServer.Add`
   (context) and the web-filter name check. (#433)
+- `TdjDefaultWebComponent` serves every static file the same way: it sets
+  `Content-Disposition: inline` and hands the file to Indy's `SmartServeFile`,
+  instead of special-casing `text/html` with a plain content stream. HTML
+  responses therefore gain conditional GET (`304 Not Modified`),
+  `Last-Modified` and the OS file-transfer fast path, and still render in the
+  browser rather than being offered as a download. (#466)
 - `TdjWebComponent.Service`: an unrecognised HTTP method now responds
   `501 Not Implemented` instead of falling through to 404. (#423)
 - `TdjPathMap`: a prefix pattern `/foo/*` now also matches the bare path
@@ -56,6 +62,18 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   are renamed `CheckNotStarted` / `CheckNotStopped` — they raise when the
   lifecycle is *already* in that state, and the old names read like the opposite
   assertion. (#438)
+- The holder and mapping list types (`TdjWebComponentHolders`,
+  `TdjWebFilterHolders`, `TdjWebComponentMappings`, `TdjWebFilterMappings`) now
+  have a parameterless `Create` that applies the Delphi 2009 `TObjectList<T>`
+  comparer workaround internally, so call sites no longer repeat
+  `Create(TComparer<T>.Default)`. `TdjWebComponentMappings` and
+  `TdjWebFilterMappings` are classes now, not bare aliases. (#466)
+- `TdjHandlers` (`TList<IHandler>`) moved from `djInterfaces` to
+  `djHandlerCollection`, its only user; `djInterfaces` no longer pulls in
+  `Generics.Collections`. (#466)
+- `TdjWebComponentHandler.GetFilterChain` moved from `strict private` to
+  `protected`, joining `FindComponent` / `AddMapping` as documented extension
+  points. (#465)
 
 ### Removed
 
@@ -73,6 +91,11 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - Dead code: broken `{$IFDEF LOG_CREATE}` `Trace` blocks in `TdjServerBase`,
   the empty `TdjContextHandlerCollection` constructor/destructor, and the
   commented-out deprecated methods in `TdjWebComponentContextHandler`. (#439)
+- More dead code: the ~25 commented-out `// Trace(...)` lines calling a helper
+  the framework no longer has, and in `TdjWebComponentHandler` the
+  commented-out `CheckStoreContext` call, the "assign name if empty" block and
+  the empty `{$IFDEF}` scaffolding around three `Logger.Warn` calls in the
+  500-error handler. No behaviour change. (#463)
 
 ### Fixed
 
@@ -107,6 +130,16 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
 - Added this `CHANGELOG.md`. (#441)
 - The internal `IWriteableConfig` interface is excluded from the generated API
   documentation; it exists only for framework-internal casts. (#446)
+- The config-before-init `TODO` comments in `TdjContext` and
+  `TdjWebComponentHolder` are replaced by a note stating the invariant: the
+  config is created in the constructor because `GetContextConfig` / `Add` run
+  at configuration time, before the context is started. (#464)
+- Stray `TODO` markers in `source/` resolved as comment-only changes: the
+  `DoStop` "raise?" markers now state that the exception is swallowed on
+  purpose (matching `TdjLifeCycle.Stop`, #438), and the four unresolved
+  member-visibility musings in `djHandlerWrapper`, `djGenericWebComponent`,
+  `djGenericWebFilter` and `djAbstractConfig` are dropped. (#466)
+- Added a `README.md` to the demo projects that lacked one.
 
 ### Internal
 
@@ -114,6 +147,11 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   `ConsoleCI` build mode carries `-dDARAJA_SKIP_SERVER_TESTS`, so the
   loopback-HTTP-server suites (`TSessionTests`, `TAPIConfigTests`) run via
   the local `run-fpc` / `run-delphi` scripts instead. (#452)
+- New test coverage: `CheckUniqueName` rejecting a second holder under a name
+  already in use, and `GetFilterChain` short-circuiting on an empty request
+  path (#465); `Content-Disposition: inline` for HTML and non-HTML static
+  files and a `304` on a conditional GET, with `CheckConditionalGETIs304` /
+  `CheckGETResponseHeaderEquals` helpers in `HTTPTestCase` (#466).
 - The Doxygen workflow derives `PROJECT_NUMBER` from `source/djGlobal.pas`
   and runs on every push to `master` and on version tags. (#456)
 - Version constant set to `3.2.0-SNAPSHOT`. (#451)
