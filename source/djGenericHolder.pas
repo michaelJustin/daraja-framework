@@ -59,7 +59,7 @@ type
     property Name: string read FName write FName;
   end;
 
-implementation
+implementation /// \cond
 
 constructor TdjGenericHolder<T>.Create(AClass: TInterfacedClass);
 begin
@@ -72,4 +72,4 @@ begin
 end;
 
 
-end.
+end. /// \endcond

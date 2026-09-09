@@ -39,12 +39,12 @@ uses
 
 function GetTickCount: TIdTicks;
 
-implementation
+implementation /// \cond
 
 function GetTickCount: TIdTicks;
 begin
   Result := IdGlobal.Ticks64;
 end;
 
-end.
+end. /// \endcond
 

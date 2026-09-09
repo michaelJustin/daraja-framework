@@ -98,7 +98,7 @@ type
     property Handler: IHandler read GetHandler write SetHandler;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
@@ -233,5 +233,5 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond
 

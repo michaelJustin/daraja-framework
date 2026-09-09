@@ -74,7 +74,7 @@ type
    *}
   TdjStringArray = array of string;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond
 

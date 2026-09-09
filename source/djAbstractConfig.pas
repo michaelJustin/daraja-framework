@@ -90,7 +90,7 @@ type
 
   end;
 
-implementation
+implementation /// \cond
 
 { TdjAbstractConfig }
 
@@ -162,5 +162,5 @@ begin
   FContext := Context;
 end;
 
-end.
+end. /// \endcond
 

@@ -78,7 +78,7 @@ type
     constructor Create;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   djPathMap,
@@ -124,5 +124,5 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond
 

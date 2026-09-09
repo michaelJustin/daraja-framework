@@ -74,7 +74,7 @@ type
     constructor Create;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   Generics.Defaults;
@@ -100,5 +100,5 @@ begin
   inherited;
 end;
 
-end.
+end. /// \endcond
 

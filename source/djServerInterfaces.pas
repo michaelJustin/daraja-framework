@@ -66,7 +66,7 @@ type
     property Port: Integer read GetPort write SetPort;
   end;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond
 

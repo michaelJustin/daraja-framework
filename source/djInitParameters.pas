@@ -44,6 +44,6 @@ type
    *}
   TdjInitParameters = TDictionary<string, string>;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond

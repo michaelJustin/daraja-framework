@@ -34,6 +34,6 @@ const
   HTTP_OK = 200;
   HTTP_INTERNAL_SERVER_ERROR = 500;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond

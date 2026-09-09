@@ -65,7 +65,7 @@ type
     constructor Create; override;
   end;
 
-implementation
+implementation /// \cond
 
 { TdjAbstractHandler }
 
@@ -93,4 +93,4 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-end.
+end. /// \endcond

@@ -41,7 +41,7 @@ type
    *}
   TdjContextConfig = class(TdjAbstractConfig, IContextConfig);
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond
 

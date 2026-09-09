@@ -60,7 +60,7 @@ type
     function Contains(const WebComponentName: string): Boolean;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   Generics.Defaults;
@@ -87,4 +87,4 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond
