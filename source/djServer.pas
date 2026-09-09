@@ -102,7 +102,7 @@ const
    * @section documentation Documentation
    *
    * @li This site is the API reference, generated from the doc comments in the source folder.
-   * @li A getting started guide is available at <a target="_blank" href="https://www.habarisoft.com/daraja_framework/3.1.0/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
+   * @li A getting started guide is available at <a target="_blank" href="https://github.com/michaelJustin/daraja-framework/blob/master/docs/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
    * @li The project README, on <a target="_blank" href="https://github.com/michaelJustin/daraja-framework">GitHub</a>, covers installation, dependencies and the release changelog.
    *
    * @section licensing Licensing
