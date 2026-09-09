@@ -111,6 +111,11 @@ type
     // (since 1.2.10)
     procedure TestCachedGetRequest;
 
+    // test that HEAD is derived from the GET handler (issue #428)
+    procedure TestHeadRequestUsesGetHandler;
+    procedure TestHeadRequestWithoutGetHandlerReturns405;
+    procedure TestCachedHeadRequest;
+
     procedure TestOnlyAFilter;
     procedure TestFilter;
     procedure TestTwoFilters;
@@ -1168,6 +1173,67 @@ begin
 
     // set "If-Modified-Since" header to Now to get "304 resource not modified"
     CheckCachedGETResponseIs304(Now, '/cached/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a component which overrides OnGet only must answer HEAD requests with the
+// GET headers and no body (issue #428)
+procedure TAPIConfigTests.TestHeadRequestUsesGetHandler;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('get');
+    Context.Add(TGetComponent, '/hello');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckHEADMatchesGET('/get/hello');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// if OnGet is not overridden either, HEAD still returns 405 (issue #428)
+procedure TAPIConfigTests.TestHeadRequestWithoutGetHandlerReturns405;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('get');
+    Context.Add(TNoMethodComponent, '/hello');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckHEADResponse405('/get/hello');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// HEAD runs the cached GET path, so it honors If-Modified-Since (issue #428)
+procedure TAPIConfigTests.TestCachedHeadRequest;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('cached');
+    Context.Add(TCachedGetComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckCachedHEADResponseIs304(Now, '/cached/index.html');
 
   finally
     Server.Free;

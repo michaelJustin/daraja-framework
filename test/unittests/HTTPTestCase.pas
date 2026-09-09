@@ -79,6 +79,16 @@ type
     // header as If-Modified-Since; checks that the second response is 304.
     procedure CheckConditionalGETIs304(URL: string = ''; msg: string = '');
 
+    // GET the URL, then send a HEAD request for it; checks that HEAD answers
+    // 200 with the same Content-Length and Content-Type as the GET, and that
+    // no response body is sent.
+    procedure CheckHEADMatchesGET(URL: string = ''; msg: string = '');
+
+    procedure CheckHEADResponse405(URL: string = ''; msg: string = '');
+
+    // send a HEAD request with an If-Modified-Since header; checks for 304.
+    procedure CheckCachedHEADResponseIs304(IfModifiedSince: TDateTime; URL: string = ''; msg: string = '');
+
     procedure CheckContentTypeEquals(Expected: string; URL: string = ''; msg: string = '');
 
     // GET the URL and compare a single response header value.
@@ -150,6 +160,54 @@ begin
   IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
 
   IdHTTP.Get(URL);
+  CheckEquals(304, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckHEADMatchesGET(URL: string = ''; msg: string = '');
+var
+  Body: string;
+  GetLength: Integer;
+  GetContentType: string;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  Body := IdHTTP.Get(URL);
+  GetLength := IdHTTP.Response.ContentLength;
+  GetContentType := IdHTTP.Response.ContentType;
+
+  IdHTTP.Head(URL);
+
+  CheckEquals(200, IdHTTP.ResponseCode, msg);
+  CheckEquals(GetLength, Integer(IdHTTP.Response.ContentLength),
+    'HEAD Content-Length differs from GET');
+  CheckEquals(GetContentType, IdHTTP.Response.ContentType,
+    'HEAD Content-Type differs from GET');
+
+  // a body sent in response to HEAD would still be in the connection buffer
+  // and would desynchronize this follow-up request on the same connection
+  CheckEquals(Body, IdHTTP.Get(URL), 'a response body was sent for HEAD');
+end;
+
+procedure THTTPTestCase.CheckHEADResponse405(URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  // TIdHTTP.Head has no "allowed response codes" parameter
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Head(URL);
+  CheckEquals(405, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckCachedHEADResponseIs304(IfModifiedSince: TDateTime;
+  URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Request.LastModified := IfModifiedSince;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Head(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
 end;
 
