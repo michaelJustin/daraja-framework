@@ -99,6 +99,10 @@ type
     procedure TestIPv6ConnectionToLoopback;
 
     procedure TestAddConnector;
+    procedure TestAddDuplicateConnectorRaisesException;
+    procedure TestRemoveConnector;
+    procedure TestRemoveUnknownConnectorRaisesException;
+    procedure TestEnumerateConnectors;
     procedure TestThreadPool;
 
     procedure TestBindErrorRaisesException;
@@ -136,7 +140,7 @@ implementation
 uses
   djWebAppContext, djInterfaces, djWebComponent, djWebComponentHolder,
   djWebComponentContextHandler, djServer, djDefaultHandler,
-  djHTTPConnector, djContextHandlerCollection, djHandlerList, djTypes,
+  djHTTPConnector, djServerInterfaces, djContextHandlerCollection, djHandlerList, djTypes,
   djAbstractHandler, djServerContext, djWebFilter, djWebFilterHolder,
   djWebFilterConfig,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
@@ -881,6 +885,96 @@ begin
     end;
   finally
     Intercept.Free
+  end;
+end;
+
+procedure TAPIConfigTests.TestAddDuplicateConnectorRaisesException;
+var
+  Server: TdjServer;
+begin
+  Server := TdjServer.Create;
+  try
+    Server.AddConnector('127.0.0.1', 8080);
+
+    {$IFDEF FPC}
+    ExpectException(EWebComponentException, '');
+    {$ELSE}
+    ExpectedException := EWebComponentException;
+    {$ENDIF}
+    Server.AddConnector('127.0.0.1', 8080);
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestRemoveConnector;
+var
+  Server: TdjServer;
+  Connector: IConnector;
+begin
+  Server := TdjServer.Create;
+  try
+    Connector := TdjHTTPConnector.Create(Server.Handler);
+    Connector.Host := '127.0.0.1';
+    Connector.Port := 8080;
+    Server.AddConnector(Connector);
+    CheckEquals(1, Server.ConnectorCount);
+
+    Server.RemoveConnector(Connector);
+    CheckEquals(0, Server.ConnectorCount);
+
+    // removable and re-addable
+    Server.AddConnector(Connector);
+    CheckEquals(1, Server.ConnectorCount);
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestRemoveUnknownConnectorRaisesException;
+var
+  Server: TdjServer;
+  Connector: IConnector;
+begin
+  Server := TdjServer.Create;
+  try
+    Connector := TdjHTTPConnector.Create(Server.Handler);
+    Connector.Host := '127.0.0.1';
+    Connector.Port := 9999;
+
+    {$IFDEF FPC}
+    ExpectException(EWebComponentException, '');
+    {$ELSE}
+    ExpectedException := EWebComponentException;
+    {$ENDIF}
+    Server.RemoveConnector(Connector);
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestEnumerateConnectors;
+var
+  Server: TdjServer;
+  I: Integer;
+  Ports: string;
+begin
+  Server := TdjServer.Create;
+  try
+    Server.AddConnector('127.0.0.1', 8181);
+    Server.AddConnector('127.0.0.1', 8080);
+    Server.AddConnector('127.0.0.1', 8282);
+
+    CheckEquals(3, Server.ConnectorCount);
+
+    Ports := '';
+    for I := 0 to Server.ConnectorCount - 1 do
+      Ports := Ports + IntToStr(Server.GetConnector(I).Port) + ' ';
+
+    // preserves insertion order
+    CheckEquals('8181 8080 8282 ', Ports);
+  finally
+    Server.Free;
   end;
 end;
 
