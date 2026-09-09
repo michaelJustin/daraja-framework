@@ -1,7 +1,7 @@
 {***
 
     Daraja HTTP Framework
-    Copyright (c) Michael Justin
+    Copyright (c) 2016 Michael Justin
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ const
    * @li a \link TdjWebFilter Web Filter base class \endlink for request interception and modification (pre- and postprocessing)
    * @li a HTTP server run time environment, based on <a target="_blank" href="http://www.indyproject.org/">Internet Direct (Indy)</a>
    *
-   * Copyright (c) Michael Justin
+   * Copyright (c) 2016 Michael Justin
    * https://www.habarisoft.com/
    * Mail: mailto:info@habarisoft.com
    *
@@ -102,7 +102,7 @@ const
    * @section documentation Documentation
    *
    * @li This site is the API reference, generated from the doc comments in the source folder.
-   * @li A getting started guide is available at <a target="_blank" href="https://www.habarisoft.com/daraja_framework/3.1.0/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
+   * @li A getting started guide is available at <a target="_blank" href="https://github.com/michaelJustin/daraja-framework/blob/master/docs/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
    * @li The project README, on <a target="_blank" href="https://github.com/michaelJustin/daraja-framework">GitHub</a>, covers installation, dependencies and the release changelog.
    *
    * @section licensing Licensing

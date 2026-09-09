@@ -1,7 +1,7 @@
 {***
 
     Daraja HTTP Framework
-    Copyright (c) Michael Justin
+    Copyright (c) 2016 Michael Justin
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,7 @@ type
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
 
-    procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse); virtual;
+    procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse);
 
     procedure SetHeadContentLength(Response: TdjResponse);
   protected
