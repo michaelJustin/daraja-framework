@@ -185,6 +185,8 @@ type
      * released when the server is destroyed. Do not free it yourself.
      *
      * @param Connector the connector
+     * @throws EWebComponentException if a connector for the same host and port
+     *   is already registered.
      *}
     procedure AddConnector(const Connector: IConnector); overload;
 
@@ -193,8 +195,30 @@ type
      *
      * @param Host the connector host name
      * @param Port the connector port number
+     * @throws EWebComponentException if a connector for the same host and port
+     *   is already registered.
      *}
     procedure AddConnector(const Host: string; Port: Integer = DEFAULT_BINDING_PORT); overload;
+
+    {*
+     * Remove a previously added connector.
+     *
+     * If the server is started, the connector is stopped before it is removed.
+     *
+     * @param Connector the connector to remove
+     * @throws EWebComponentException if the connector is not registered.
+     *}
+    procedure RemoveConnector(const Connector: IConnector);
+
+    {*
+     * The connector at the given position, in the order the connectors were
+     * added. Use together with ConnectorCount to enumerate the connectors.
+     *
+     * @param Index zero-based position, 0 <= Index < ConnectorCount
+     * @returns the connector
+     * @throws EWebComponentException if Index is out of range.
+     *}
+    function GetConnector(Index: Integer): IConnector;
 
     {*
      * Add a new context.
@@ -289,6 +313,12 @@ var
 begin
   ConnectorName := '[' + Connector.Host + ']:' + IntToStr(Connector.Port);
 
+  if ConnectorMap.ContainsKey(ConnectorName) then
+  begin
+    raise EWebComponentException.CreateFmt(
+      'A connector for "%s" is already registered.', [ConnectorName]);
+  end;
+
   ConnectorMap.Add(ConnectorName, Connector);
   ConnectorList.Add(ConnectorName);
 
@@ -296,6 +326,38 @@ begin
   begin
     Connector.Start;
   end;
+end;
+
+procedure TdjServer.RemoveConnector(const Connector: IConnector);
+var
+  ConnectorName: string;
+begin
+  ConnectorName := '[' + Connector.Host + ']:' + IntToStr(Connector.Port);
+
+  if not ConnectorMap.ContainsKey(ConnectorName) then
+  begin
+    raise EWebComponentException.CreateFmt(
+      'No connector for "%s" is registered.', [ConnectorName]);
+  end;
+
+  if IsStarted then
+  begin
+    Connector.Stop;
+  end;
+
+  ConnectorList.Delete(ConnectorList.IndexOf(ConnectorName));
+  ConnectorMap.Remove(ConnectorName);
+end;
+
+function TdjServer.GetConnector(Index: Integer): IConnector;
+begin
+  if (Index < 0) or (Index >= ConnectorList.Count) then
+  begin
+    raise EWebComponentException.CreateFmt(
+      'Connector index %d out of range (0..%d).', [Index, ConnectorList.Count - 1]);
+  end;
+
+  Result := ConnectorMap[ConnectorList[Index]];
 end;
 
 procedure TdjServer.AddConnector(const Host: string; Port: Integer =

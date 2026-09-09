@@ -16,8 +16,19 @@ _Work tracked under the [3.2.0 milestone](https://github.com/michaelJustin/daraj
   path are resolved and the result is verified to stay inside the static
   content directory, otherwise a 404 is returned. (#419)
 
+### Added
+
+- `TdjServer.RemoveConnector` removes a previously added connector (stopping it
+  first if the server is running), and `TdjServer.GetConnector(Index)` returns
+  the connector at a position so the connectors can be enumerated together with
+  `ConnectorCount`. (#433)
+
 ### Changed
 
+- `TdjServer.AddConnector`: adding a second connector for a `host:port` that is
+  already registered now raises `EWebComponentException` with a clear message
+  instead of letting a raw `EListError` escape, matching `TdjServer.Add`
+  (context) and the web-filter name check. (#433)
 - `TdjDefaultWebComponent` serves every static file the same way: it sets
   `Content-Disposition: inline` and hands the file to Indy's `SmartServeFile`,
   instead of special-casing `text/html` with a plain content stream. HTML
