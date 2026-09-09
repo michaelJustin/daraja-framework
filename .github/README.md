@@ -34,10 +34,14 @@ __Daraja__ is a compact and flexible HTTP server application framework for Objec
  - **Filter chains** &mdash; pluggable pre- and post-processing of requests and responses
  - **Contexts** &mdash; group resources under a base path with their own init parameters
  - **HTTP sessions** &mdash; server-side session state with configurable timeout
- - **Static content** &mdash; serve files from a directory with path-traversal protection
+ - **Static content** &mdash; serve files from a directory with path-traversal protection (`TdjDefaultWebComponent`, see the note below)
  - **Optional helpers** &mdash; NCSA access logging and request-statistics filters
  - **Dual compiler support** &mdash; one codebase for Delphi 2009+ and Lazarus 4.x / FPC 3.2.x
  - **AGPL or commercial** &mdash; 100% open source, with a commercial license available
+
+The static-content web component and the helper filters live in
+[`source/optional/`](../source/optional/), which is unsupported example code:
+review it before using it to serve untrusted content.
 
 ## Usage
 
