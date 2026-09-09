@@ -49,6 +49,6 @@ type
     // pas2dox requires the class declaration to use the end; statement
   end;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond

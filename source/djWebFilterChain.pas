@@ -65,7 +65,7 @@ type
     constructor Create(Holder: TdjWebFilterHolder; const FilterChain: IWebFilterChain);
   end;
 
-implementation
+implementation /// \cond
 
 { TdjWebFilterChain }
 
@@ -96,5 +96,5 @@ begin
   FHolder.DoFilter(Context, Request, Response, FChain);
 end;
 
-end.
+end. /// \endcond
 

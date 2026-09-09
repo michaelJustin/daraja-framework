@@ -91,7 +91,7 @@ type
     property Config: IWebFilterConfig read GetWebFilterConfig;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
@@ -169,5 +169,5 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-end.
+end. /// \endcond
 

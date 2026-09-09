@@ -66,7 +66,7 @@ type
     constructor Create; override;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   djInterfaces, djGlobal,
@@ -128,4 +128,4 @@ begin
   end;
 end;
 
-end.
+end. /// \endcond

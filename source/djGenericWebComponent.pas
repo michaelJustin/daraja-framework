@@ -99,7 +99,7 @@ type
       const Create: Boolean = True): TIdHTTPSession;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   IdCustomTCPServer;
@@ -185,5 +185,5 @@ procedure TdjGenericWebComponent.Service(Context: TdjServerContext;
 begin
 end;
 
-end.
+end. /// \endcond
 

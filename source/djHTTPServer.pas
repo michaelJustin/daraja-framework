@@ -82,7 +82,7 @@ type
     property OnCommandGet;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   djServerContext,
@@ -164,5 +164,5 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-end.
+end. /// \endcond
 

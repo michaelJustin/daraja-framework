@@ -124,7 +124,9 @@ conditional-section markers which use `\`. The vocabulary actually used in
 | `@li <text>` | bullet list item (used in the overview and class summaries) |
 | `@sa <ref>` | "see also"; may point at a URL (e.g. an RFC) |
 | `@mainpage`, `@section <id> <title>`, `@subsection` | structure of the overview page in `djServer.pas` |
-| `@enum <Name>`, `@interface <Name>` | tell the C-mode parser what the following entity is |
+| `@enum <Name>`, `@interface <Name>`, `@class <Name>` | tell the C-mode parser what the following entity is (`@class` is used for the type aliases and the exception class in `djTypes.pas`) |
+| `@implements <Interface>` | the interfaces a class realises, e.g. on `TdjAbstractConfig` and `TdjContext` |
+| `@tparam <Name> <text>` | generic type parameter (only `TdjGenericHolder<T>`) |
 | `\link <target> <text> \endlink` | cross-reference with custom link text |
 
 `MARKDOWN_SUPPORT = YES` (with `MARKDOWN_STRICT = YES`), so Markdown formatting
@@ -145,7 +147,8 @@ is available inside comment blocks. Raw HTML is also accepted — the overview u
   ```
 
 * Individual internal members are marked `/// \private` (for example the
-  `TdjLifeCycle` overrides `DoStart` / `DoStop`).
+  `DoStart` / `DoStop` overrides in `TdjServer`, `TdjAbstractHandler`,
+  `TdjHandlerCollection`, `TdjHTTPConnector` and `TdjWebComponentHolder`).
 
 * Internal type aliases are wrapped in `/// \cond` … `/// \endcond`.
 

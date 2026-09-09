@@ -49,8 +49,8 @@ type
     procedure RemoveHandler(const Handler: IHandler); virtual; abstract;
   end;
 
-implementation
+implementation /// \cond
 
 { TdjAbstractHandlerContainer }
 
-end.
+end. /// \endcond

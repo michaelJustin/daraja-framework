@@ -87,7 +87,7 @@ type
     destructor Destroy; override;
   end;
 
-implementation
+implementation /// \cond
 
 { TdjServerBase }
 
@@ -122,5 +122,5 @@ begin
   inherited;
 end;
 
-end.
+end. /// \endcond
 

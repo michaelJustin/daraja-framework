@@ -166,7 +166,7 @@ type
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   SysUtils;
@@ -366,5 +366,5 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-end.
+end. /// \endcond
 

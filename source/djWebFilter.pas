@@ -58,7 +58,7 @@ type
    *}
   TdjWebFilterClass = class of TdjWebFilter;
 
-implementation
+implementation /// \cond
 
 { TdjWebFilter }
 
@@ -71,5 +71,5 @@ begin
   {$ENDIF DARAJA_LOGGING}
 end;
 
-end.
+end. /// \endcond
 

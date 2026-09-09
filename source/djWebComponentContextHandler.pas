@@ -135,7 +135,7 @@ type
       const UrlPattern: string): TdjWebFilterHolder; overload;
   end;
 
-implementation
+implementation /// \cond
 
 uses
   Classes, SysUtils;
@@ -261,5 +261,5 @@ begin
 end;
 
 
-end.
+end. /// \endcond
 

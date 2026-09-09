@@ -47,7 +47,7 @@ type
     function GetFilterName: string;
   end;
 
-implementation
+implementation /// \cond
 
 { TdjWebFilterConfig }
 
@@ -56,6 +56,6 @@ begin
   Result := GetName;
 end;
 
-end.
+end. /// \endcond
 
 

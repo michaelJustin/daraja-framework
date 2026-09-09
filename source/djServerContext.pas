@@ -48,6 +48,6 @@ type
 
   TdjServerContextClass = class of TdjServerContext;
 
-implementation
+implementation /// \cond
 
-end.
+end. /// \endcond
