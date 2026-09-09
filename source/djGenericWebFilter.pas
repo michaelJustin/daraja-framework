@@ -59,7 +59,7 @@ type
     {$ENDIF DARAJA_LOGGING}
     FConfig: IWebFilterConfig;
   public
-    // IWebFilter interface todo protected?
+    // IWebFilter interface
     procedure Init(const Config: IWebFilterConfig); overload; virtual;
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); virtual;

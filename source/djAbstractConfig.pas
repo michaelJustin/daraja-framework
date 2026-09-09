@@ -64,7 +64,7 @@ type
     procedure SetContext(const Context: IContext);
     procedure SetName(const AName: string);
   protected
-    // IContextConfig interface todo more generic.
+    // IContextConfig interface
     function GetInitParameter(const Key: string): string;
     function GetInitParameterNames: TdjStringArray;
     function GetName: string;

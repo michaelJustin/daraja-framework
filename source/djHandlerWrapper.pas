@@ -80,7 +80,7 @@ type
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
   public
-    // IHandlerContainer interface todo still public
+    // IHandlerContainer interface
     {*
      * Add a handler to the container.
      * This implementation of AddHandler calls SetHandler with the passed
