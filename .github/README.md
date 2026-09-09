@@ -221,3 +221,6 @@ For example code, unit testing, and documentation, it uses the following open so
 
 > "Daraja" means "bridge" in Swahili. The Daraja Framework serves as a bridge between incoming HTTP requests and the Object Pascal code that handles them, enabling seamless integration between web traffic and application logic.
 > — ChatGPT, OpenAI (May 2025)
+
+> "Daraja" is Swahili for "bridge" — a fitting name, since the framework is the bridge between an incoming HTTP request and the Object Pascal code that answers it: it matches each request by URL pattern and passes it to your handler class.
+> — Claude Sonnet 5, Anthropic (September 2026)
