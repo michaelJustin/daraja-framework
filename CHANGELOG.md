@@ -8,6 +8,10 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Internal
+
+- Version constant set to `3.2.1-SNAPSHOT`.
+
 ## [3.2.0] - 2026-09-09
 
 ### Security
