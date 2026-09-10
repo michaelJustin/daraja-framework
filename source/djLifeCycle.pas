@@ -47,7 +47,7 @@ type
   strict private
     FStarted: Boolean;
     FStopped: Boolean;
-    CS: TCriticalSection;
+    FCS: TCriticalSection;
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
@@ -115,14 +115,14 @@ begin
   Logger := TdjLoggerFactory.GetLogger(TdjLifeCycle);
   {$ENDIF DARAJA_LOGGING}
 
-  CS := TCriticalSection.Create;
+  FCS := TCriticalSection.Create;
 
   FStopped := True;
 end;
 
 destructor TdjLifeCycle.Destroy;
 begin
-  CS.Free;
+  FCS.Free;
 
   inherited;
 end;
@@ -156,7 +156,7 @@ begin
   if IsStarted then
     Exit;
 
-  CS.Enter;
+  FCS.Enter;
   try
     try
       DoStart;
@@ -173,7 +173,7 @@ begin
       end;
     end;
   finally
-    CS.Leave;
+    FCS.Leave;
   end;
 end;
 
@@ -182,7 +182,7 @@ begin
   if Stopped then
     Exit;
 
-  CS.Enter;
+  FCS.Enter;
   try
     try
       DoStop;
@@ -200,7 +200,7 @@ begin
     FStopped := True;
     FStarted := False;
   finally
-    CS.Leave;
+    FCS.Leave;
   end;
 end;
 

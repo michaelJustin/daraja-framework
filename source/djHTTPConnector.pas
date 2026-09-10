@@ -52,7 +52,7 @@ type
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
     FHTTPServer: TdjHTTPServer;
-    HostAndPort: string;
+    FHostAndPort: string;
     procedure OnCommand(AContext: TIdContext;
       ARequestInfo: TdjRequest; AResponseInfo: TdjResponse);
   protected
@@ -142,7 +142,7 @@ begin
   Logger.Trace('Starting Indy HTTP server');
   {$ENDIF DARAJA_LOGGING}
 
-  HostAndPort := 'http://' + Host + ':' + IntToStr(Port);
+  FHostAndPort := 'http://' + Host + ':' + IntToStr(Port);
 
   try
     // command handler
@@ -154,14 +154,14 @@ begin
     // TdjLifeCycle.Start sets the started flag once DoStart returns.
 
     {$IFDEF DARAJA_LOGGING}
-    Logger.Info('Accepting requests at %s', [HostAndPort]);
+    Logger.Info('Accepting requests at %s', [FHostAndPort]);
     {$ENDIF DARAJA_LOGGING}
 
   except
     on E: Exception do
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Info('Could not start HTTP connector at %s', [HostAndPort]);
+      Logger.Info('Could not start HTTP connector at %s', [FHostAndPort]);
       Logger.Error(E.Message, E);
       {$ENDIF DARAJA_LOGGING}
       raise;
@@ -174,7 +174,7 @@ begin
   if IsStarted then
   begin
     {$IFDEF DARAJA_LOGGING}
-    Logger.Trace('Stopping HTTP connector at %s', [HostAndPort]);
+    Logger.Trace('Stopping HTTP connector at %s', [FHostAndPort]);
     {$ENDIF DARAJA_LOGGING}
 
     try

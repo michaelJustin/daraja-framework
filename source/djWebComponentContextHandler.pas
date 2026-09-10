@@ -52,8 +52,8 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    WebComponentHandler: TdjWebComponentHandler;
-    AutoStartSession: Boolean;
+    FWebComponentHandler: TdjWebComponentHandler;
+    FAutoStartSession: Boolean;
   protected
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext;
@@ -152,13 +152,13 @@ begin
   Logger := TdjLoggerFactory.GetLogger(TdjWebComponentContextHandler);
   {$ENDIF DARAJA_LOGGING}
 
-  Self.AutoStartSession := Sessions;
+  Self.FAutoStartSession := Sessions;
 
-  WebComponentHandler := TdjWebComponentHandler.Create;
+  FWebComponentHandler := TdjWebComponentHandler.Create;
 
-  WebComponentHandler.SetContext(Self.GetCurrentContext);
+  FWebComponentHandler.SetContext(Self.GetCurrentContext);
 
-  inherited AddHandler(WebComponentHandler);
+  inherited AddHandler(FWebComponentHandler);
 
   {$IFDEF LOG_CREATE}
   Logger.Trace('Created');
@@ -179,7 +179,7 @@ function TdjWebComponentContextHandler.AddWebComponent(ComponentClass: TdjWebCom
 var
   Holder: TdjWebComponentHolder;
 begin
-  Holder := WebComponentHandler.FindHolder(ComponentClass);
+  Holder := FWebComponentHandler.FindHolder(ComponentClass);
 
   if Holder = nil then
   begin
@@ -189,7 +189,7 @@ begin
       [ComponentClass.ClassName]);
     {$ENDIF DARAJA_LOGGING}
 
-    Holder := WebComponentHandler.AddWebComponent(ComponentClass, UrlPattern);
+    Holder := FWebComponentHandler.AddWebComponent(ComponentClass, UrlPattern);
     // set context of Holder to propagate it to WebComponentConfig
     Holder.SetContext(GetCurrentContext);
   end
@@ -201,7 +201,7 @@ begin
       [ComponentClass.ClassName, UrlPattern]);
     {$ENDIF DARAJA_LOGGING}
 
-    WebComponentHandler.AddWithMapping(Holder, UrlPattern);
+    FWebComponentHandler.AddWithMapping(Holder, UrlPattern);
   end;
 
   Result := Holder;
@@ -220,7 +220,7 @@ var
 begin
   Holder := TdjWebFilterHolder.Create(FilterClass);
   try
-    WebComponentHandler.AddWebFilter(Holder, UrlPattern);
+    FWebComponentHandler.AddWebFilter(Holder, UrlPattern);
   except
     Holder.Free;
     raise;
@@ -241,7 +241,7 @@ begin
   Logger.Trace('Context %s handles %s', [ContextPath, Target]);
   {$ENDIF DARAJA_LOGGING}
 
-  (WebComponentHandler as IHandler).Handle(Target, Context, Request, Response);
+  (FWebComponentHandler as IHandler).Handle(Target, Context, Request, Response);
 end;
 
 procedure TdjWebComponentContextHandler.Handle(const Target: string;
@@ -252,7 +252,7 @@ begin
     Exit;
   end;
 
-  if AutoStartSession then
+  if FAutoStartSession then
   begin
     GetSession(Context, Request, Response, True);
   end;
