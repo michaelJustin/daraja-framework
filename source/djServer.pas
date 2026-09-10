@@ -138,10 +138,10 @@ type
     {$ENDIF DARAJA_LOGGING}
     FDefaultHost: string;
     FDefaultPort: Integer;
-    ConnectorMap: TObjectDictionary<string, IConnector>;
-    ConnectorList: TdjStrings;
-    ContextHandlers: IHandlerContainer;
-    ContextNames: TStrings;
+    FConnectorMap: TObjectDictionary<string, IConnector>;
+    FConnectorList: TdjStrings;
+    FContextHandlers: IHandlerContainer;
+    FContextNames: TStrings;
     procedure StartConnectors;
     procedure StopConnectors;
     procedure StopContextHandlers;
@@ -261,14 +261,14 @@ begin
   FDefaultHost := DEFAULT_BINDING_IP;
   FDefaultPort := DEFAULT_BINDING_PORT;
 
-  ConnectorMap := TObjectDictionary<string, IConnector>.Create;
+  FConnectorMap := TObjectDictionary<string, IConnector>.Create;
 
-  ConnectorList := TdjStrings.Create;
+  FConnectorList := TdjStrings.Create;
 
-  ContextHandlers := TdjContextHandlerCollection.Create;
-  ContextNames := TStringList.Create;
+  FContextHandlers := TdjContextHandlerCollection.Create;
+  FContextNames := TStringList.Create;
 
-  AddHandler(ContextHandlers);
+  AddHandler(FContextHandlers);
 end;
 
 constructor TdjServer.Create(const AHost: string;
@@ -294,17 +294,17 @@ begin
     Stop;
   end;
 
-  ConnectorMap.Free;
-  ConnectorList.Free;
+  FConnectorMap.Free;
+  FConnectorList.Free;
 
-  ContextNames.Free;
+  FContextNames.Free;
 
   inherited;
 end;
 
 function TdjServer.ConnectorCount: Integer;
 begin
-  Result := ConnectorList.Count;
+  Result := FConnectorList.Count;
 end;
 
 procedure TdjServer.AddConnector(const Connector: IConnector);
@@ -313,14 +313,14 @@ var
 begin
   ConnectorName := '[' + Connector.Host + ']:' + IntToStr(Connector.Port);
 
-  if ConnectorMap.ContainsKey(ConnectorName) then
+  if FConnectorMap.ContainsKey(ConnectorName) then
   begin
     raise EWebComponentException.CreateFmt(
       'A connector for "%s" is already registered.', [ConnectorName]);
   end;
 
-  ConnectorMap.Add(ConnectorName, Connector);
-  ConnectorList.Add(ConnectorName);
+  FConnectorMap.Add(ConnectorName, Connector);
+  FConnectorList.Add(ConnectorName);
 
   if IsStarted then
   begin
@@ -334,7 +334,7 @@ var
 begin
   ConnectorName := '[' + Connector.Host + ']:' + IntToStr(Connector.Port);
 
-  if not ConnectorMap.ContainsKey(ConnectorName) then
+  if not FConnectorMap.ContainsKey(ConnectorName) then
   begin
     raise EWebComponentException.CreateFmt(
       'No connector for "%s" is registered.', [ConnectorName]);
@@ -345,19 +345,19 @@ begin
     Connector.Stop;
   end;
 
-  ConnectorList.Delete(ConnectorList.IndexOf(ConnectorName));
-  ConnectorMap.Remove(ConnectorName);
+  FConnectorList.Delete(FConnectorList.IndexOf(ConnectorName));
+  FConnectorMap.Remove(ConnectorName);
 end;
 
 function TdjServer.GetConnector(Index: Integer): IConnector;
 begin
-  if (Index < 0) or (Index >= ConnectorList.Count) then
+  if (Index < 0) or (Index >= FConnectorList.Count) then
   begin
     raise EWebComponentException.CreateFmt(
-      'Connector index %d out of range (0..%d).', [Index, ConnectorList.Count - 1]);
+      'Connector index %d out of range (0..%d).', [Index, FConnectorList.Count - 1]);
   end;
 
-  Result := ConnectorMap[ConnectorList[Index]];
+  Result := FConnectorMap[FConnectorList[Index]];
 end;
 
 procedure TdjServer.AddConnector(const Host: string; Port: Integer =
@@ -381,9 +381,9 @@ begin
   Logger.Trace('Add context %s', [Context.ContextPath]);
   {$ENDIF DARAJA_LOGGING}
 
-  if ContextNames.IndexOf(Context.ContextPath) < 0 then
+  if FContextNames.IndexOf(Context.ContextPath) < 0 then
   begin
-    ContextNames.Add(Context.ContextPath);
+    FContextNames.Add(Context.ContextPath);
   end else begin
     ContextPath := Context.ContextPath; // needed for exception message
     Context.Free; // avoid leak
@@ -391,7 +391,7 @@ begin
       [ContextPath]);
   end;
 
-  ContextHandlers.AddHandler(Context);
+  FContextHandlers.AddHandler(Context);
 end;
 
 procedure TdjServer.StartConnectors;
@@ -399,9 +399,9 @@ var
   ConnectorName: string;
   Connector: IConnector;
 begin
-  for ConnectorName in ConnectorList do
+  for ConnectorName in FConnectorList do
   begin
-    Connector := ConnectorMap[ConnectorName];
+    Connector := FConnectorMap[ConnectorName];
     Connector.Start;
 
     {$IFDEF DARAJA_LOGGING}
@@ -416,14 +416,14 @@ var
   Connector: IConnector;
   Keys: TdjStrings;
 begin
-  Keys := TdjStrings.Create(ConnectorList);
+  Keys := TdjStrings.Create(FConnectorList);
 
   try
     Keys.Reverse;
 
     for ConnectorName in Keys do
     begin
-      Connector := ConnectorMap[ConnectorName];
+      Connector := FConnectorMap[ConnectorName];
       Connector.Stop;
 
       {$IFDEF DARAJA_LOGGING}
@@ -438,7 +438,7 @@ end;
 
 procedure TdjServer.StopContextHandlers;
 begin
-  ContextHandlers.Stop;
+  FContextHandlers.Stop;
 end;
 
 procedure TdjServer.DoStart;
@@ -446,7 +446,7 @@ begin
   CheckNotStarted;
 
   // add default connector
-  if ConnectorList.Count = 0 then
+  if FConnectorList.Count = 0 then
   begin
     AddConnector(FDefaultHost, FDefaultPort);
   end;

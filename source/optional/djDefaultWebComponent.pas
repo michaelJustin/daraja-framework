@@ -67,8 +67,8 @@ type
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-    ContextPath: string;
-    StaticResourcePath: string;
+    FContextPath: string;
+    FStaticResourcePath: string;
     function BuildAbsolutePath: string;
     procedure Validate;
     {*
@@ -103,7 +103,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   // copy the context path
-  ContextPath := Config.GetContext.GetContextPath;
+  FContextPath := Config.GetContext.GetContextPath;
 
   // calculate the static resource path
   SetStaticResourcePath;
@@ -117,38 +117,38 @@ begin
   if DirectoryExists(BuildAbsolutePath) then
   begin
     {$IFDEF DARAJA_LOGGING}
-    Logger.Trace('Static content directory found: %s', [StaticResourcePath]);
+    Logger.Trace('Static content directory found: %s', [FStaticResourcePath]);
     {$ENDIF DARAJA_LOGGING}
   end
   else
   begin
     {$IFDEF DARAJA_LOGGING}
-    Logger.Warn('Static content directory not found: %s', [StaticResourcePath]);
+    Logger.Warn('Static content directory not found: %s', [FStaticResourcePath]);
     {$ENDIF DARAJA_LOGGING}
 
     raise EWebComponentException.CreateFmt(
       'Static resource path not found (%s)',
-      [StaticResourcePath]);
+      [FStaticResourcePath]);
   end;
 end;
 
 function TdjDefaultWebComponent.StripContext(const Doc: string): string;
 begin
-  if ContextPath = ROOT_CONTEXT then
+  if FContextPath = ROOT_CONTEXT then
     Result := Doc
   else
-    Result := Copy(Doc, Length(ContextPath) + 2, MAXINT);
+    Result := Copy(Doc, Length(FContextPath) + 2, MAXINT);
 end;
 
 procedure TdjDefaultWebComponent.SetStaticResourcePath;
 begin
-  if ContextPath = ROOT_CONTEXT then
+  if FContextPath = ROOT_CONTEXT then
   begin
-    StaticResourcePath := WEBAPPS + '/ROOT';
+    FStaticResourcePath := WEBAPPS + '/ROOT';
   end
   else
   begin
-    StaticResourcePath := WEBAPPS + '/' + ContextPath;
+    FStaticResourcePath := WEBAPPS + '/' + FContextPath;
   end;
 end;
 
@@ -222,7 +222,7 @@ end;
 
 function TdjDefaultWebComponent.BuildAbsolutePath: string;
 begin
-  Result := ExtractFilePath(ParamStr(0)) + StaticResourcePath;
+  Result := ExtractFilePath(ParamStr(0)) + FStaticResourcePath;
 end;
 
 end.
