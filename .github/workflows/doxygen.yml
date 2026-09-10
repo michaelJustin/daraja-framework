@@ -14,9 +14,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Cache Doxygen install
+        id: cache-doxygen
+        uses: actions/cache@v4
+        with:
+          path: C:\Program Files\doxygen
+          key: doxygen-install-${{ runner.os }}-v1
+
       - name: Install Doxygen via Chocolatey
-        run: choco install doxygen.install -y
-        
+        if: steps.cache-doxygen.outputs.cache-hit != 'true'
+        run: choco install doxygen.install -y --no-progress
+
       - name: Add Doxygen to PATH
         run: echo "C:\\Program Files\\doxygen\\bin" >> $env:GITHUB_PATH
 
