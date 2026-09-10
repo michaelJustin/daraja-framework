@@ -26,18 +26,18 @@ jobs:
 
     steps:
       - name: Checkout daraja-framework
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: daraja-framework
 
       - name: Checkout Indy (dependency)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: IndySockets/Indy
           path: Indy
 
       - name: Checkout slf4p (dependency)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: michaelJustin/slf4p
           path: slf4p
@@ -58,7 +58,7 @@ jobs:
       - name: Cache Lazarus / FPC (Windows)
         if: runner.os == 'Windows'
         id: cache-lazarus
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ runner.temp }}/installers/lazarus
           key: lazarus-${{ runner.os }}-stable-4.4-fpc-3.2.2
