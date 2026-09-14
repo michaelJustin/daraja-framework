@@ -1,9 +1,9 @@
 name: Generate Doxygen Docs (Linux)
 
 on:
-  push:
-    branches: [master]
-    tags: ['v*']
+  # push:
+  #   branches: [master]
+  #  tags: ['v*']
   workflow_dispatch:
 
 jobs:
