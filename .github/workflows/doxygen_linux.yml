@@ -1,0 +1,69 @@
+name: Generate Doxygen Docs (Linux)
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
+
+      - name: Cache pas2dox build
+        id: cache-pas2dox
+        uses: actions/cache@v4
+        with:
+          path: pas2dox-bin
+          # Bump the "v1" suffix if you ever need to force a rebuild
+          key: pas2dox-0.50rc1-${{ runner.os }}-v1
+
+      # NOTE: SourceForge's pas2dox-0.50rc1 release does not publish a
+      # precompiled Linux binary (only a Windows .exe, a macOS .dmg.bz2,
+      # and this source tarball), so it is built from source here instead.
+      - name: Build pas2dox 0.50rc1 from source
+        if: steps.cache-pas2dox.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get install -y flex g++
+          curl -L -o pas2dox.tar.gz \
+            "https://sourceforge.net/projects/pas2dox/files/pas2dox/pas2dox-0.50rc1/pas2dox-0.50rc1.tar.gz/download"
+          mkdir pas2dox-src
+          tar xzf pas2dox.tar.gz -C pas2dox-src
+
+          SRC_DIR=$(dirname "$(find pas2dox-src -name 'pas2dox.l' | head -1)")
+          cd "$SRC_DIR"
+          flex -i -opas2dox.cpp pas2dox.l
+          g++ pas2dox.cpp -o pas2dox
+
+          mkdir -p "$GITHUB_WORKSPACE/pas2dox-bin"
+          cp pas2dox "$GITHUB_WORKSPACE/pas2dox-bin/pas2dox"
+
+      - name: Generate Doxygen documentation with pas2dox
+        shell: bash
+        run: |
+          chmod +x pas2dox-bin/pas2dox
+          VER=$(awk -F"'" '/DWF_SERVER_VERSION/ {print $2; exit}' source/djGlobal.pas)
+          echo "Building documentation for version: $VER"
+          ( cat make/doxygen.cfg
+            echo "INPUT_FILTER = $GITHUB_WORKSPACE/pas2dox-bin/pas2dox"
+            echo "PROJECT_NUMBER=$VER" ) | doxygen -
+
+      - name: Upload Doxygen warnings
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-warnings
+          path: warnings.log
+
+      #- name: Deploy to GitHub Pages
+      #  uses: peaceiris/actions-gh-pages@v3
+      #  with:
+      #    github_token: ${{ secrets.GITHUB_TOKEN }}
+      #    publish_dir: ./docs/html
+      #    publish_branch: gh-pages
+      #    force_orphan: true
