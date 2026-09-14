@@ -22,7 +22,7 @@ jobs:
         with:
           path: pas2dox-bin
           # Bump the "v1" suffix if you ever need to force a rebuild
-          key: pas2dox-0.50rc1-${{ runner.os }}-v1
+          key: pas2dox-0.50rc1-${{ runner.os }}-v2
 
       # NOTE: SourceForge's pas2dox-0.50rc1 release does not publish a
       # precompiled Linux binary (only a Windows .exe, a macOS .dmg.bz2,
@@ -38,6 +38,19 @@ jobs:
 
           SRC_DIR=$(dirname "$(find pas2dox-src -name 'pas2dox.l' | head -1)")
           cd "$SRC_DIR"
+
+          # --- Compatibility patches for modern flex/g++ ---
+          # 1) Bare 'tolower' is ambiguous between ::tolower(int) and the
+          #    locale-aware std::tolower overloads pulled in by modern
+          #    libstdc++, so std::transform's template deduction fails.
+          #    Wrap it in an explicit lambda instead.
+          sed -i 's/, tolower);/, [](unsigned char c){ return std::tolower(c); });/g' pas2dox.l
+
+          # 2) yy_flex_realloc was renamed to yyrealloc in flex >= 2.5.31 and
+          #    no longer exists. The dummy function that referenced it was
+          #    just a no-op workaround for older toolchains, so empty it out.
+          sed -i 's/{ yy_flex_realloc(0,0); }/{ \/* removed: yy_flex_realloc not present in modern flex *\/ }/' pas2dox.l
+
           flex -i -opas2dox.cpp pas2dox.l
           g++ pas2dox.cpp -o pas2dox
 
@@ -60,10 +73,10 @@ jobs:
           name: doxygen-warnings
           path: warnings.log
 
-      #- name: Deploy to GitHub Pages
-      #  uses: peaceiris/actions-gh-pages@v3
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    publish_dir: ./docs/html
-      #    publish_branch: gh-pages
-      #    force_orphan: true
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
+          publish_branch: gh-pages
+          force_orphan: true
