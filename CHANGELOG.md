@@ -56,6 +56,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   handling omitted the `Date` and `Last-Modified` headers that a `200`
   response to the same request would have carried; it now sends both (and
   `ETag`, if the component supplies one), per RFC 7232 Section 4.1. (#430)
+- A failed `TdjLifeCycle.Start` left `FStarted` / `FStopped` at their
+  pre-`Start` values without undoing whatever `DoStart` had partially started
+  (e.g. connectors already bound before a later one failed), so `Destroy`'s
+  `if IsStarted then Stop` never reached them and they leaked for the
+  lifetime of the process. `Start` now best-effort rolls back via `DoStop` on
+  a `DoStart` failure before re-raising the original exception. (#498)
 
 ### Internal
 
