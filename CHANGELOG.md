@@ -65,6 +65,10 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Internal
 
+- `HTTPTestCase` (test helper base class): extracted the URL-normalization
+  logic duplicated across nearly every `Check*` method into `ResolveURL`,
+  and the `hoNoProtocolErrorException` toggle duplicated across nine methods
+  into `AllowErrorResponseCodes`. No behavior change. (#509)
 - Version constant set to `3.2.1-SNAPSHOT`.
 
 ## [3.2.0] - 2026-09-09
