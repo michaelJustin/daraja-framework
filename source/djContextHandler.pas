@@ -83,7 +83,7 @@ type
      * Initializes a new context with the specified path.
      *
      * @param ContextPath The path for this context.
-     * @throws EWebComponentException If the context path contains invalid characters.
+     * @throws EDarajaConfigException If the context path contains invalid characters.
      *}
     constructor Create(const ContextPath: string);
   end;
@@ -156,7 +156,7 @@ type
      *
      * @param Key init parameter name (case-sensitive)
      * @param Value init parameter value
-     * @throws EWebComponentException if the key is already set
+     * @throws EDarajaConfigException if the key is already set
      *}
     procedure SetInitParameter(const Key: string; const Value: string);
 
@@ -216,7 +216,7 @@ var
   Ch: Char;
 begin
   // '/' and '\' are not in the whitelist below, so the case statement rejects
-  // them with EWebComponentException like any other invalid character.
+  // them with EDarajaConfigException like any other invalid character.
   for Ch in ContextPath do
   begin
     case Ch of
@@ -242,7 +242,7 @@ begin
       '@': ;
       '%': ;
     else
-      raise EWebComponentException.CreateFmt('Invalid context name "%s"',
+      raise EDarajaConfigException.CreateFmt('Invalid context name "%s"',
         [ContextPath]);
     end;
   end;

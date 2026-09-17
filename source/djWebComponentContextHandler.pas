@@ -91,7 +91,7 @@ type
      * @param ComponentClass WebComponent class
      * @param UrlPattern path specification
      * @return the Web Component holder, which can be used for further configuration.
-     * @throws EWebComponentException if the Web Component can not be added
+     * @throws EDarajaMappingException if the Web Component can not be added
      *}
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
@@ -102,7 +102,7 @@ type
      * @param ComponentClass WebComponent class
      * @param UrlPattern path specification
      * @return the Web Component holder, which can be used for further configuration.
-     * @throws EWebComponentException if the Web Component can not be added
+     * @throws EDarajaMappingException if the Web Component can not be added
      *}
     function Add(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;

@@ -54,11 +54,35 @@ type
   TdjResponse = TIdHTTPResponseInfo;
 
   {*
-   * @class EWebComponentException
+   * @class EDarajaException
    *
-   * This exception is thrown if an error occurs that interferes with the component's normal operation.
+   * Common base class for all exceptions raised by the Daraja framework.
    *}
-  EWebComponentException = class(Exception);
+  EDarajaException = class(Exception);
+
+  {*
+   * @class EDarajaConfigException
+   *
+   * Raised for invalid or inconsistent configuration, e.g. a context that
+   * is nil, already set, or a static resource path that does not exist.
+   *}
+  EDarajaConfigException = class(EDarajaException);
+
+  {*
+   * @class EDarajaMappingException
+   *
+   * Raised for invalid or conflicting URL pattern / component / filter /
+   * connector registrations, and for lookups that fail to find a match.
+   *}
+  EDarajaMappingException = class(EDarajaException);
+
+  {*
+   * @class EDarajaLifecycleException
+   *
+   * Raised when a component or filter is used before it has been
+   * initialized, or otherwise used outside of its expected lifecycle state.
+   *}
+  EDarajaLifecycleException = class(EDarajaException);
 
   {*
    * @class TdjStrings

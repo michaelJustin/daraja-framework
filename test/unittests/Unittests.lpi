@@ -241,7 +241,7 @@
         <Name Value="EIdHTTPProtocolException"/>
       </Item14>
       <Item15>
-        <Name Value="EWebComponentException"/>
+        <Name Value="EDarajaException"/>
       </Item15>
       <Item16>
         <Name Value="EUnitTestException"/>

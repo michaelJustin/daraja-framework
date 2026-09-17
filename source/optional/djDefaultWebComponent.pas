@@ -108,7 +108,7 @@ begin
   // calculate the static resource path
   SetStaticResourcePath;
 
-  // raises EWebComponentException if static webapp folder is missing
+  // raises EDarajaConfigException if static webapp folder is missing
   Validate;
 end;
 
@@ -126,7 +126,7 @@ begin
     Logger.Warn('Static content directory not found: %s', [FStaticResourcePath]);
     {$ENDIF DARAJA_LOGGING}
 
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaConfigException.CreateFmt(
       'Static resource path not found (%s)',
       [FStaticResourcePath]);
   end;

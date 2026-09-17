@@ -8,6 +8,16 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the single `EWebComponentException` with an exception hierarchy:
+  `EDarajaException` is now the common base, with `EDarajaConfigException`,
+  `EDarajaMappingException` and `EDarajaLifecycleException` for configuration,
+  registration/mapping and lifecycle errors respectively, so callers can
+  distinguish the cause of a failure. `EWebComponentException` is removed;
+  code catching it should catch `EDarajaException` or one of the specific
+  subclasses instead. (#435)
+
 ### Internal
 
 - Version constant set to `3.2.1-SNAPSHOT`.

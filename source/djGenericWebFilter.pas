@@ -84,7 +84,7 @@ type
      * Returns the configuration for this filter.
      *
      * @return The filter configuration object
-     * @throws EWebComponentException if the filter is not initialized
+     * @throws EDarajaLifecycleException if the filter is not initialized
      *}
     function GetWebFilterConfig: IWebFilterConfig;
 
@@ -156,7 +156,7 @@ function TdjGenericWebFilter.GetWebFilterConfig: IWebFilterConfig;
 begin
   if not Assigned(FConfig) then
   begin
-    raise EWebComponentException.Create('Filter is not initialized.');
+    raise EDarajaLifecycleException.Create('Filter is not initialized.');
   end;
 
   Result := FConfig;

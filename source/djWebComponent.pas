@@ -73,7 +73,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnDelete(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -97,7 +97,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnHead(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -111,7 +111,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnPost(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -120,7 +120,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnPut(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -129,7 +129,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnTrace(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -138,7 +138,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      * @sa http://tools.ietf.org/html/rfc5789
      *}
     procedure OnPatch(Request: TdjRequest; Response: TdjResponse); virtual;

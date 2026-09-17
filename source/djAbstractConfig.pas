@@ -116,7 +116,7 @@ end;
 procedure TdjAbstractConfig.Add(const Key: string; const Value: string);
 begin
   if FParams.ContainsKey(Key) then
-    raise EWebComponentException.
+    raise EDarajaConfigException.
       CreateFmt('Duplicate key %s in configuration', [Key]);
 
   FParams.Add(Key, Value);
@@ -154,10 +154,10 @@ end;
 procedure TdjAbstractConfig.SetContext(const Context: IContext);
 begin
   if Context = nil then
-    raise EWebComponentException.Create('Context can not be set to nil');
+    raise EDarajaConfigException.Create('Context can not be set to nil');
 
   if (FContext <> nil) and (Context <> FContext) then
-    raise EWebComponentException.Create('Context must not be changed');
+    raise EDarajaConfigException.Create('Context must not be changed');
 
   FContext := Context;
 end;
