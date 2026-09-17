@@ -175,6 +175,27 @@ begin
         Logger.Error('Start failed: %s %s in %s',
           [E.Message, E.ClassName, Self.ClassName]);
         {$ENDIF DARAJA_LOGGING}
+
+        // Best-effort rollback: DoStart may have partially started
+        // sub-resources (e.g. connectors) before failing. FStarted is
+        // still False, so Destroy's "if IsStarted then Stop" would never
+        // reach them, leaking whatever did start. DoStop's CheckNotStopped
+        // requires FStopped = False, so flip it temporarily; any exception
+        // from the rollback itself is swallowed, since the original
+        // DoStart failure is what the caller needs to see.
+        FStopped := False;
+        try
+          DoStop;
+        except
+          on E2: Exception do
+          begin
+            {$IFDEF DARAJA_LOGGING}
+            Logger.Error('Rollback after failed Start also failed', E2);
+            {$ENDIF DARAJA_LOGGING}
+          end;
+        end;
+        FStopped := True;
+
         raise;
       end;
     end;

@@ -112,6 +112,7 @@ type
     procedure TestThreadPool;
 
     procedure TestBindErrorRaisesException;
+    procedure TestFailedStartStopsPartiallyStartedConnectors;
 
     // test overriding the TdjWebComponent.OnGetLastModified method
     // (since 1.2.10)
@@ -578,6 +579,56 @@ begin
     end;
   finally
     Server1.Free;
+  end;
+end;
+
+// https://github.com/michaelJustin/daraja-framework/issues/498 -------------
+// a failed Start must roll back whatever DoStart managed to start before
+// failing, so nothing is left running (and leaked) behind a server whose
+// IsStarted is False.
+procedure TAPIConfigTests.TestFailedStartStopsPartiallyStartedConnectors;
+var
+  Server: TdjServer;
+  Connector1: IConnector;
+  ProbeServer: TdjServer;
+begin
+  Server := TdjServer.Create;
+  try
+    Server.AddConnector('127.0.0.1', 8080);
+    Server.AddConnector('127.0.0.1', 8181);
+
+    Connector1 := Server.GetConnector(0);
+
+    // Make connector 2 collide with connector 1's port only now, i.e. after
+    // both were registered without tripping AddConnector's duplicate-name
+    // check. StartConnectors then binds connector 1 successfully and fails
+    // to bind connector 2, which is the scenario from the issue.
+    Server.GetConnector(1).Port := 8080;
+
+    try
+      Server.Start;
+      Fail('Expected Start to raise when the second connector fails to bind');
+    except
+      on E: Exception do
+        ; // expected: DoStart fails while starting connector 2
+    end;
+
+    CheckFalse(Server.IsStarted,
+      'Server must not be marked as started after a failed Start');
+    CheckFalse(Connector1.IsStarted,
+      'Connector 1 must be rolled back (stopped) after the failed Start, ' +
+      'not left running/leaked (issue #498)');
+
+    // Prove there is no leak: a fresh server can now bind the same port.
+    ProbeServer := TdjServer.Create('127.0.0.1', 8080);
+    try
+      ProbeServer.Start;
+      ProbeServer.Stop;
+    finally
+      ProbeServer.Free;
+    end;
+  finally
+    Server.Free;
   end;
 end;
 
