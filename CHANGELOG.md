@@ -65,6 +65,10 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Internal
 
+- New test coverage: `TdjHandlerCollection`'s per-handler exception isolation
+  on `Start`/`Handle`, and its start/stop-on-mutation behavior in
+  `AddHandler`/`RemoveHandler`; `TdjContextHandler.ContextMatches`'
+  path-prefix and connector-name whitelist matching. (#501)
 - Version constant set to `3.2.1-SNAPSHOT`.
 
 ## [3.2.0] - 2026-09-09
