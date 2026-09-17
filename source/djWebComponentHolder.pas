@@ -52,6 +52,7 @@ type
     FConfig: IWebComponentConfig;
     FClass: TdjWebComponentClass;
     FWebComponent: TdjWebComponent;
+    FLoadOnStartup: Integer;
     function GetWebComponent: TdjWebComponent;
     function GetClass: TdjWebComponentClass;
   protected
@@ -109,6 +110,15 @@ type
      * The instance of the Web Component.
      *}
     property WebComponent: TdjWebComponent read GetWebComponent;
+
+    {*
+     * Controls the order in which Web Components are initialized when their
+     * context starts, mirroring the Servlet spec's load-on-startup element:
+     * components with a lower value are started first. Components with the
+     * same value (the default, 0) are started in registration order. Has no
+     * effect once the holder has already started.
+     *}
+    property LoadOnStartup: Integer read FLoadOnStartup write FLoadOnStartup;
   end;
 
 implementation /// \cond

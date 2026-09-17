@@ -48,6 +48,8 @@ type
     procedure TestTwoComponentsSamePathMapFails;
     procedure TestAddTwoComponentsWithSameNameFails;
     procedure TestFilterChainForEmptyPathIsNil;
+    procedure TestLoadOnStartupOrder;
+    procedure TestLoadOnStartupDefaultIsRegistrationOrder;
   end;
 
 implementation
@@ -57,6 +59,11 @@ uses
   djWebComponentHolder, djWebComponent, djWebAppContext,
   djWebComponentHandler, djWebFilterHolder, djWebFilter, djInterfaces,
   djServerContext, djTypes;
+
+var
+  // records the order in which TOrderRecordingPage.Init is called; reset at
+  // the start of each test that uses it
+  StartupOrder: TStrings;
 
 type
   TExamplePage = class(TdjWebComponent)
@@ -74,12 +81,54 @@ type
       {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
   end;
 
+  TPageA = class(TdjWebComponent)
+  public
+    procedure Init; override;
+  end;
+
+  TPageB = class(TdjWebComponent)
+  public
+    procedure Init; override;
+  end;
+
+  TPageC = class(TdjWebComponent)
+  public
+    procedure Init; override;
+  end;
+
   { TExamplePage }
 
 procedure TExamplePage.OnGet(Request: TdjRequest; Response: TdjResponse);
 begin
   inherited;
 
+end;
+
+{ TPageA }
+
+procedure TPageA.Init;
+begin
+  inherited;
+
+  StartupOrder.Add(Self.ClassName);
+end;
+
+{ TPageB }
+
+procedure TPageB.Init;
+begin
+  inherited;
+
+  StartupOrder.Add(Self.ClassName);
+end;
+
+{ TPageC }
+
+procedure TPageC.Init;
+begin
+  inherited;
+
+  StartupOrder.Add(Self.ClassName);
 end;
 
 procedure TNopFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -408,6 +457,99 @@ begin
     end;
   finally
     Context.Free;
+  end;
+end;
+
+procedure TdjWebComponentHandlerTests.TestLoadOnStartupOrder;
+var
+  Context: TdjWebAppContext;
+  HA, HB, HC: TdjWebComponentHolder;
+  Handler: TTestdjWebComponentHandler;
+begin
+  StartupOrder := TStringList.Create;
+  try
+    Context := TdjWebAppContext.Create('');
+    try
+      Handler := TTestdjWebComponentHandler.Create;
+      try
+        Handler.SetContext(Context.GetCurrentContext);
+
+        // registered in the order A, B, C but load-on-startup asks for
+        // C, A, B
+        HA := TdjWebComponentHolder.Create(TPageA);
+        HA.SetContext(Context.GetCurrentContext);
+        HA.LoadOnStartup := 2;
+        Handler.AddWithMapping(HA, '/a.html');
+
+        HB := TdjWebComponentHolder.Create(TPageB);
+        HB.SetContext(Context.GetCurrentContext);
+        HB.LoadOnStartup := 3;
+        Handler.AddWithMapping(HB, '/b.html');
+
+        HC := TdjWebComponentHolder.Create(TPageC);
+        HC.SetContext(Context.GetCurrentContext);
+        HC.LoadOnStartup := 1;
+        Handler.AddWithMapping(HC, '/c.html');
+
+        Handler.Start;
+
+        CheckEquals(3, StartupOrder.Count);
+        CheckEquals('TPageC', StartupOrder[0]);
+        CheckEquals('TPageA', StartupOrder[1]);
+        CheckEquals('TPageB', StartupOrder[2]);
+      finally
+        Handler.Free;
+      end;
+    finally
+      Context.Free;
+    end;
+  finally
+    StartupOrder.Free;
+  end;
+end;
+
+procedure TdjWebComponentHandlerTests.TestLoadOnStartupDefaultIsRegistrationOrder;
+var
+  Context: TdjWebAppContext;
+  HA, HB, HC: TdjWebComponentHolder;
+  Handler: TTestdjWebComponentHandler;
+begin
+  StartupOrder := TStringList.Create;
+  try
+    Context := TdjWebAppContext.Create('');
+    try
+      Handler := TTestdjWebComponentHandler.Create;
+      try
+        Handler.SetContext(Context.GetCurrentContext);
+
+        // none set LoadOnStartup: default (0) for all, so registration
+        // order must be preserved
+        HA := TdjWebComponentHolder.Create(TPageA);
+        HA.SetContext(Context.GetCurrentContext);
+        Handler.AddWithMapping(HA, '/a.html');
+
+        HB := TdjWebComponentHolder.Create(TPageB);
+        HB.SetContext(Context.GetCurrentContext);
+        Handler.AddWithMapping(HB, '/b.html');
+
+        HC := TdjWebComponentHolder.Create(TPageC);
+        HC.SetContext(Context.GetCurrentContext);
+        Handler.AddWithMapping(HC, '/c.html');
+
+        Handler.Start;
+
+        CheckEquals(3, StartupOrder.Count);
+        CheckEquals('TPageA', StartupOrder[0]);
+        CheckEquals('TPageB', StartupOrder[1]);
+        CheckEquals('TPageC', StartupOrder[2]);
+      finally
+        Handler.Free;
+      end;
+    finally
+      Context.Free;
+    end;
+  finally
+    StartupOrder.Free;
   end;
 end;
 
