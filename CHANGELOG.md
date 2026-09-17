@@ -8,6 +8,13 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Added
+
+- `TdjWebComponentHolder.LoadOnStartup`: an integer property, mirroring the
+  Servlet spec's `load-on-startup` element, that controls the order in which
+  Web Components are initialized when their context starts — lower values
+  first, ties (including the default, 0) broken by registration order. (#492)
+
 ### Changed
 
 - `TdjWebComponent.OnOptions` now defaults to `200` with an `Allow` header

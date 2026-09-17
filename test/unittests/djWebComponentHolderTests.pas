@@ -39,6 +39,7 @@ type
   published
     procedure TestCreate;
     procedure TestGetInitParameterNames;
+    procedure TestLoadOnStartupDefault;
   end;
 
 implementation
@@ -100,6 +101,21 @@ begin
     CheckTrue((Names[0] = 'beta') or (Names[1] = 'beta'), 'beta missing');
   finally
     Context.Free;
+  end;
+end;
+
+procedure TdjWebComponentHolderTests.TestLoadOnStartupDefault;
+var
+  Holder: TdjWebComponentHolder;
+begin
+  Holder := TdjWebComponentHolder.Create(TExamplePage);
+  try
+    CheckEquals(0, Holder.LoadOnStartup, 'default LoadOnStartup');
+
+    Holder.LoadOnStartup := 5;
+    CheckEquals(5, Holder.LoadOnStartup);
+  finally
+    Holder.Free;
   end;
 end;
 

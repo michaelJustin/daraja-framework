@@ -323,6 +323,9 @@ procedure TdjWebComponentHandler.DoStart;
 var
   FH: TdjWebFilterHolder;
   CH: TdjWebComponentHolder;
+  Ordered: array of TdjWebComponentHolder;
+  I, J: Integer;
+  Tmp: TdjWebComponentHolder;
 begin
   inherited;
 
@@ -334,7 +337,28 @@ begin
     FH.Start;
   end;
 
-  for CH in WebComponents do
+  // start Web Components in ascending LoadOnStartup order (Servlet spec
+  // load-on-startup semantics); a stable insertion sort preserves
+  // registration order for holders with equal (e.g. the default) values
+  SetLength(Ordered, WebComponents.Count);
+  for I := 0 to WebComponents.Count - 1 do
+  begin
+    Ordered[I] := WebComponents[I];
+  end;
+
+  for I := 1 to High(Ordered) do
+  begin
+    Tmp := Ordered[I];
+    J := I - 1;
+    while (J >= 0) and (Ordered[J].LoadOnStartup > Tmp.LoadOnStartup) do
+    begin
+      Ordered[J + 1] := Ordered[J];
+      Dec(J);
+    end;
+    Ordered[J + 1] := Tmp;
+  end;
+
+  for CH in Ordered do
   begin
     CH.Start;
   end;
