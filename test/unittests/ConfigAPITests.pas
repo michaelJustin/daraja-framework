@@ -116,6 +116,11 @@ type
     procedure TestHeadRequestWithoutGetHandlerReturns405;
     procedure TestCachedHeadRequest;
 
+    // test that OPTIONS and 405 responses carry an Allow header (issue #429)
+    procedure TestOptionsRequestListsOverriddenMethods;
+    procedure TestOptionsRequestWithoutOverridesListsOptionsOnly;
+    procedure TestMethodNotAllowedResponseIncludesAllowHeader;
+
     procedure TestOnlyAFilter;
     procedure TestFilter;
     procedure TestTwoFilters;
@@ -1234,6 +1239,66 @@ begin
     Server.Start;
 
     CheckCachedHEADResponseIs304(Now, '/cached/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// OPTIONS lists the overridden On* handlers, plus the implied HEAD (issue #429)
+procedure TAPIConfigTests.TestOptionsRequestListsOverriddenMethods;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('get');
+    Context.Add(TGetComponent, '/hello');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckOPTIONSAllowHeaderEquals('GET, HEAD, OPTIONS', '/get/hello');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a component with no overrides still answers OPTIONS, listing OPTIONS only (issue #429)
+procedure TAPIConfigTests.TestOptionsRequestWithoutOverridesListsOptionsOnly;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('get');
+    Context.Add(TNoMethodComponent, '/hello');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckOPTIONSAllowHeaderEquals('OPTIONS', '/get/hello');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a 405 response (from a not-overridden handler) carries an Allow header (issue #429)
+procedure TAPIConfigTests.TestMethodNotAllowedResponseIncludesAllowHeader;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('get');
+    Context.Add(TGetComponent, '/hello');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckPOSTResponse405AllowHeaderEquals('GET, HEAD, OPTIONS', '/get/hello');
 
   finally
     Server.Free;

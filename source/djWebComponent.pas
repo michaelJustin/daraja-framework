@@ -53,7 +53,12 @@ type
    * @note Method handling notes and current limitations:
    * @li every On* handler that is not overridden responds with 405 Method Not
    *     Allowed, with one exception: HEAD is derived from OnGet (see OnHead).
-   *     OPTIONS is not derived - override OnOptions explicitly if you need it.
+   * @li a 405 response, whether from a not-overridden handler or set
+   *     explicitly, always carries an Allow header listing the methods this
+   *     component supports.
+   * @li OPTIONS is answered by the framework itself unless OnOptions is
+   *     overridden: the default response is 200 with an Allow header and no
+   *     body (see OnOptions).
    * @li an unrecognised HTTP method responds with 501 Not Implemented.
    * @li conditional GET is supported through OnGetLastModified only
    *     (If-Modified-Since); there is no ETag / If-None-Match handling.
@@ -67,6 +72,8 @@ type
     procedure DoCachedGet(Request: TdjRequest; Response: TdjResponse);
 
     procedure SetHeadContentLength(Response: TdjResponse);
+
+    function GetAllowedMethods: string;
   protected
     {*
      * Called by the server to handle a DELETE request.
@@ -103,6 +110,14 @@ type
 
     {*
      * Called by the server (via the service method) to allow a component to handle a OPTIONS request.
+     *
+     * The default implementation responds with 200 and an Allow header
+     * listing the HTTP methods this component supports (i.e. the On*
+     * handlers that are overridden), with no response body.
+     *
+     * @param Request The HTTP request to process
+     * @param Response The HTTP response to fill
+     * @throws EWebComponentException if an exception occurs
      *}
     procedure OnOptions(Request: TdjRequest; Response: TdjResponse); virtual;
 
@@ -183,6 +198,18 @@ const
   HTTP_ERROR_METHOD_NOT_ALLOWED = 405;
   HTTP_ERROR_NOT_IMPLEMENTED = 501;
 
+type
+  TdjRequestHandlerMethod = procedure(Request: TdjRequest; Response: TdjResponse) of object;
+
+// True if Handler is not the TdjWebComponent base implementation, i.e. a
+// subclass has overridden it. Self.<Handler> resolves through the VMT to the
+// actual (possibly overridden) implementation, while the class-qualified
+// @TdjWebComponent.<Handler> is always the base implementation's address.
+function IsOverridden(Handler: TdjRequestHandlerMethod; BaseImplementation: Pointer): Boolean;
+begin
+  Result := TMethod(Handler).Code <> BaseImplementation;
+end;
+
 { TdjWebComponent }
 
 constructor TdjWebComponent.Create;
@@ -224,7 +251,9 @@ end;
 
 procedure TdjWebComponent.OnOptions(Request: TdjRequest; Response: TdjResponse);
 begin
-  Response.ResponseNo := HTTP_ERROR_METHOD_NOT_ALLOWED;
+  Response.ResponseNo := 200;
+  Response.CustomHeaders.Values['Allow'] := GetAllowedMethods;
+  Response.ContentLength := 0;
 end;
 
 procedure TdjWebComponent.OnPost(Request: TdjRequest; Response: TdjResponse);
@@ -321,6 +350,42 @@ begin
   end;
 end;
 
+function TdjWebComponent.GetAllowedMethods: string;
+
+  procedure AddMethod(var Methods: string; const AName: string);
+  begin
+    if Methods <> '' then
+      Methods := Methods + ', ';
+    Methods := Methods + AName;
+  end;
+
+begin
+  Result := '';
+
+  if IsOverridden(OnGet, @TdjWebComponent.OnGet) then
+  begin
+    AddMethod(Result, 'GET');
+    AddMethod(Result, 'HEAD');
+  end
+  else if IsOverridden(OnHead, @TdjWebComponent.OnHead) then
+    AddMethod(Result, 'HEAD');
+
+  if IsOverridden(OnPost, @TdjWebComponent.OnPost) then
+    AddMethod(Result, 'POST');
+  if IsOverridden(OnPut, @TdjWebComponent.OnPut) then
+    AddMethod(Result, 'PUT');
+  if IsOverridden(OnDelete, @TdjWebComponent.OnDelete) then
+    AddMethod(Result, 'DELETE');
+  if IsOverridden(OnPatch, @TdjWebComponent.OnPatch) then
+    AddMethod(Result, 'PATCH');
+  if IsOverridden(OnTrace, @TdjWebComponent.OnTrace) then
+    AddMethod(Result, 'TRACE');
+
+  // OPTIONS is always supported, whether by the default implementation or
+  // an override.
+  AddMethod(Result, 'OPTIONS');
+end;
+
 procedure TdjWebComponent.Service(Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
@@ -365,6 +430,14 @@ begin
         {$ENDIF DARAJA_LOGGING}
         Response.ResponseNo := HTTP_ERROR_NOT_IMPLEMENTED;
     end;
+  end;
+
+  // RFC 7231 requires a 405 response to carry an Allow header listing the
+  // methods this component does support, whether the 405 came from a
+  // not-overridden On* handler above or was set explicitly by a handler.
+  if Response.ResponseNo = HTTP_ERROR_METHOD_NOT_ALLOWED then
+  begin
+    Response.CustomHeaders.Values['Allow'] := GetAllowedMethods;
   end;
 end;
 

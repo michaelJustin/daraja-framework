@@ -10,6 +10,11 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Changed
 
+- `TdjWebComponent.OnOptions` now defaults to `200` with an `Allow` header
+  listing the HTTP methods the component supports (i.e. the `On*` handlers it
+  overrides, plus the implied `HEAD`), and no response body, instead of
+  `405 Method Not Allowed`. A `405` response — whether from a not-overridden
+  handler or set explicitly — now also carries the same `Allow` header. (#429)
 - Replaced the single `EWebComponentException` with an exception hierarchy:
   `EDarajaException` is now the common base, with `EDarajaConfigException`,
   `EDarajaMappingException` and `EDarajaLifecycleException` for configuration,
