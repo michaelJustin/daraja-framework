@@ -20,6 +20,13 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `Init`); if that `Init` raises, the triggering request gets a `500`
   response and the component is retried, not permanently unavailable, on the
   next request. (#496)
+- `TdjWebComponent.OnGetETag`: an overridable method, alongside
+  `OnGetLastModified`, that lets a Web Component supply an ETag for
+  conditional GET/HEAD. When a request carries `If-None-Match`, it alone
+  decides whether the response is `304 Not Modified`, per RFC 7232 Section
+  3.3; `If-Modified-Since` is only consulted when the request has no
+  `If-None-Match`. Matching is weak (a leading `W/` is ignored on either
+  side), and `If-None-Match: *` matches any current representation. (#430)
 
 ### Changed
 
@@ -45,6 +52,10 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   was swallowed, leaving the holder marked as started with a half-initialized
   component instead of stopped; it now propagates so the holder is correctly
   left not started. (#496)
+- A `304 Not Modified` response from `TdjWebComponent`'s conditional GET/HEAD
+  handling omitted the `Date` and `Last-Modified` headers that a `200`
+  response to the same request would have carried; it now sends both (and
+  `ETag`, if the component supplies one), per RFC 7232 Section 4.1. (#430)
 
 ### Internal
 

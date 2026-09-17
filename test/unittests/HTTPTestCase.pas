@@ -79,6 +79,25 @@ type
     // header as If-Modified-Since; checks that the second response is 304.
     procedure CheckConditionalGETIs304(URL: string = ''; msg: string = '');
 
+    // GET the URL, then GET it again echoing back the ETag response header
+    // as If-None-Match; checks that the second response is 304.
+    procedure CheckConditionalGETWithETagIs304(URL: string = ''; msg: string = '');
+
+    // send a GET with the given If-None-Match header; checks for 304.
+    procedure CheckIfNoneMatchGETResponseIs304(const IfNoneMatch: string; URL: string = ''; msg: string = '');
+
+    // send a GET with the given If-None-Match header; checks the response body.
+    procedure CheckIfNoneMatchGETResponseEquals(const IfNoneMatch, Expected: string; URL: string = ''; msg: string = '');
+
+    // send a GET with both an If-Modified-Since and an If-None-Match header;
+    // checks the response code (used to prove which one wins, issue #430).
+    procedure CheckGETResponseCodeWithConditionalHeaders(IfModifiedSince: TDateTime;
+      const IfNoneMatch: string; ExpectedCode: Integer; URL: string = ''; msg: string = '');
+
+    // like CheckCachedGETResponseIs304, but also checks that the 304
+    // response carries Date and Last-Modified headers (issue #430).
+    procedure CheckCachedGETResponseIs304WithDateAndLastModified(IfModifiedSince: TDateTime; URL: string = ''; msg: string = '');
+
     // GET the URL, then send a HEAD request for it; checks that HEAD answers
     // 200 with the same Content-Length and Content-Type as the GET, and that
     // no response body is sent.
@@ -153,6 +172,19 @@ begin
   CheckEquals(304, Actual, msg);
 end;
 
+procedure THTTPTestCase.CheckCachedGETResponseIs304WithDateAndLastModified(IfModifiedSince: TDateTime; URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Request.LastModified := IfModifiedSince;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Get(URL);
+  CheckEquals(304, IdHTTP.ResponseCode, msg);
+  CheckTrue(IdHTTP.Response.RawHeaders.Values['Date'] <> '', '304 response missing Date header');
+  CheckTrue(IdHTTP.Response.RawHeaders.Values['Last-Modified'] <> '', '304 response missing Last-Modified header');
+end;
+
 procedure THTTPTestCase.CheckConditionalGETIs304(URL: string = ''; msg: string = '');
 var
   LastMod: TDateTime;
@@ -168,6 +200,64 @@ begin
 
   IdHTTP.Get(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckConditionalGETWithETagIs304(URL: string = ''; msg: string = '');
+var
+  ETag: string;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  // clear any If-None-Match left over from an earlier check on this IdHTTP
+  // instance, so this first request is a plain, unconditional GET
+  IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := '';
+  IdHTTP.Get(URL);
+  ETag := IdHTTP.Response.ETag;
+  CheckTrue(ETag <> '', 'server did not send an ETag header');
+
+  // Custom headers are not typed properties, so they survive as-is across
+  // SetHeaders (unlike RawHeaders, which SetHeaders rebuilds from scratch).
+  IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := ETag;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Get(URL);
+  CheckEquals(304, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckIfNoneMatchGETResponseIs304(const IfNoneMatch: string; URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Get(URL);
+  CheckEquals(304, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckIfNoneMatchGETResponseEquals(const IfNoneMatch, Expected: string; URL: string = ''; msg: string = '');
+var
+  Actual: string;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
+  Actual := IdHTTP.Get(URL);
+
+  CheckEquals(Expected, Actual, msg);
+end;
+
+procedure THTTPTestCase.CheckGETResponseCodeWithConditionalHeaders(IfModifiedSince: TDateTime;
+  const IfNoneMatch: string; ExpectedCode: Integer; URL: string = ''; msg: string = '');
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.Request.LastModified := IfModifiedSince;
+  IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  IdHTTP.Get(URL);
+  CheckEquals(ExpectedCode, IdHTTP.ResponseCode, msg);
 end;
 
 procedure THTTPTestCase.CheckHEADMatchesGET(URL: string = ''; msg: string = '');

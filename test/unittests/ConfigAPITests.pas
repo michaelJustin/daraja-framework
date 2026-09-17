@@ -122,6 +122,14 @@ type
     procedure TestHeadRequestWithoutGetHandlerReturns405;
     procedure TestCachedHeadRequest;
 
+    // test overriding the TdjWebComponent.OnGetETag method (issue #430)
+    procedure TestETagResponseHeaderIsSent;
+    procedure TestETagConditionalGetIs304WhenETagMatches;
+    procedure TestETagConditionalGetIsFreshWhenETagDiffers;
+    procedure TestIfNoneMatchWildcardIs304;
+    procedure TestIfNoneMatchTakesPrecedenceOverIfModifiedSince;
+    procedure TestNotModifiedResponseIncludesDateAndLastModified;
+
     // test that OPTIONS and 405 responses carry an Allow header (issue #429)
     procedure TestOptionsRequestListsOverriddenMethods;
     procedure TestOptionsRequestWithoutOverridesListsOptionsOnly;
@@ -899,6 +907,54 @@ begin
   Result := Now;
 end;
 
+// ---
+type
+  TETagComponent = class(TdjWebComponent)
+  public
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);  override;
+    function OnGetETag({%H-}Request: TdjRequest): string; override;
+  end;
+
+{ TETagComponent }
+
+procedure TETagComponent.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'ETagGET';
+end;
+
+function TETagComponent.OnGetETag(Request: TdjRequest): string;
+begin
+  Result := '"fixed-etag-value"';
+end;
+
+// a component whose Last-Modified and ETag disagree, so tests can tell
+// which one the framework actually used to decide a 304 (issue #430)
+type
+  TCachedGetWithETagComponent = class(TdjWebComponent)
+  public
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse);  override;
+    function OnGetLastModified({%H-}Request: TdjRequest): TDateTime; override;
+    function OnGetETag({%H-}Request: TdjRequest): string; override;
+  end;
+
+{ TCachedGetWithETagComponent }
+
+procedure TCachedGetWithETagComponent.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'CachedGETWithETag';
+end;
+
+function TCachedGetWithETagComponent.OnGetLastModified(Request: TdjRequest): TDateTime;
+begin
+  // always "fresh" by date, so a 304 can only come from If-None-Match
+  Result := Date - 1;
+end;
+
+function TCachedGetWithETagComponent.OnGetETag(Request: TdjRequest): string;
+begin
+  Result := '"fixed-etag-value"';
+end;
+
 procedure TAPIConfigTests.TestNoMatchingContextReturns404;
 var
   Server: TdjServer;
@@ -1468,6 +1524,139 @@ begin
     Server.Start;
 
     CheckCachedHEADResponseIs304(Now, '/cached/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a component overriding OnGetETag sends an ETag header (issue #430)
+procedure TAPIConfigTests.TestETagResponseHeaderIsSent;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('etag');
+    Context.Add(TETagComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseHeaderEquals('ETag', '"fixed-etag-value"', '/etag/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a matching If-None-Match yields 304, whether by an exact match or a
+// round-tripped ETag (issue #430)
+procedure TAPIConfigTests.TestETagConditionalGetIs304WhenETagMatches;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('etag');
+    Context.Add(TETagComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckIfNoneMatchGETResponseIs304('"fixed-etag-value"', '/etag/index.html');
+    CheckConditionalGETWithETagIs304('/etag/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a non-matching If-None-Match still returns the full, fresh response
+// (issue #430)
+procedure TAPIConfigTests.TestETagConditionalGetIsFreshWhenETagDiffers;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('etag');
+    Context.Add(TETagComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckIfNoneMatchGETResponseEquals('"some-other-etag"', 'ETagGET', '/etag/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// If-None-Match: * matches any current representation (issue #430)
+procedure TAPIConfigTests.TestIfNoneMatchWildcardIs304;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('etag');
+    Context.Add(TETagComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckIfNoneMatchGETResponseIs304('*', '/etag/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// RFC 7232 Section 3.3: If-None-Match alone decides the outcome; a
+// non-matching If-None-Match forces a fresh response even when
+// If-Modified-Since would, by itself, have produced a 304 (issue #430)
+procedure TAPIConfigTests.TestIfNoneMatchTakesPrecedenceOverIfModifiedSince;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('cached');
+    Context.Add(TCachedGetWithETagComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    // If-Modified-Since matches the component's Last-Modified (Date - 1),
+    // but If-None-Match does not match its ETag: the response must be fresh.
+    CheckGETResponseCodeWithConditionalHeaders(Date - 1, '"some-other-etag"', 200,
+      '/cached/index.html');
+
+    // both match: 304.
+    CheckGETResponseCodeWithConditionalHeaders(Date - 1, '"fixed-etag-value"', 304,
+      '/cached/index.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+// a 304 response must carry Date and Last-Modified, not just the status
+// line (issue #430)
+procedure TAPIConfigTests.TestNotModifiedResponseIncludesDateAndLastModified;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('cached');
+    Context.Add(TCachedGetComponent, '*.html');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckCachedGETResponseIs304WithDateAndLastModified(Now, '/cached/index.html');
 
   finally
     Server.Free;

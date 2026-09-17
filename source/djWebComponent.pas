@@ -60,8 +60,12 @@ type
    *     overridden: the default response is 200 with an Allow header and no
    *     body (see OnOptions).
    * @li an unrecognised HTTP method responds with 501 Not Implemented.
-   * @li conditional GET is supported through OnGetLastModified only
-   *     (If-Modified-Since); there is no ETag / If-None-Match handling.
+   * @li conditional GET/HEAD is supported through OnGetLastModified
+   *     (If-Modified-Since) and OnGetETag (If-None-Match). If a request
+   *     carries If-None-Match, it alone decides the outcome, per RFC 7232
+   *     Section 3.3; If-Modified-Since is only consulted when the request has
+   *     no If-None-Match. A 304 response carries Date, and Last-Modified /
+   *     ETag whenever the component supplies them.
    *}
   TdjWebComponent = class(TdjGenericWebComponent)
   strict private
@@ -93,10 +97,11 @@ type
      * Called by the server (via the service method) to allow a component to handle a HEAD request.
      *
      * The default implementation runs the same code path as a GET request,
-     * including the OnGetLastModified conditional handling, and the response
-     * body is suppressed. A component which overrides OnGet therefore answers
-     * HEAD requests with the GET headers and no content. If OnGet is not
-     * overridden either, the response is 405 Method Not Allowed.
+     * including the OnGetLastModified / OnGetETag conditional handling, and
+     * the response body is suppressed. A component which overrides OnGet
+     * therefore answers HEAD requests with the GET headers and no content.
+     * If OnGet is not overridden either, the response is 405 Method Not
+     * Allowed.
      *
      * @note because the GET path runs in full, an expensive OnGet does its work
      * for a HEAD request too, and any side effect of OnGet is triggered by a
@@ -172,6 +177,23 @@ type
      *}
     function OnGetLastModified(Request: TdjRequest): TDateTime; virtual;
 
+    {*
+     * Returns the entity tag (ETag) of the resource a GET/HEAD request would
+     * return. If unknown, this method returns '' (the default), which means
+     * no ETag is offered and no If-None-Match comparison is done.
+     *
+     * WebComponents that support HTTP GET requests and can cheaply compute a
+     * stable identifier for their current representation should override
+     * this method. The returned value is sent as the ETag header, quoted per
+     * RFC 7232 if not already (e.g. '"abc123"'), and compared against a
+     * request's If-None-Match header using a weak comparison (a leading
+     * 'W/' is ignored on both sides).
+     *
+     * @param Request HTTP request
+     * @return the entity tag, or '' if unknown
+     *}
+    function OnGetETag(Request: TdjRequest): string; virtual;
+
   public
     constructor Create;
     destructor Destroy; override;
@@ -195,11 +217,66 @@ uses
 
 const
   RESOURCE_LAST_MODIFIED_DEFAULT = 0;
+  RESOURCE_ETAG_DEFAULT = '';
   HTTP_ERROR_METHOD_NOT_ALLOWED = 405;
   HTTP_ERROR_NOT_IMPLEMENTED = 501;
 
 type
   TdjRequestHandlerMethod = procedure(Request: TdjRequest; Response: TdjResponse) of object;
+
+// Strips a leading weak-comparison marker ('W/') from an ETag, so callers
+// can compare the opaque tags regardless of strength (RFC 7232 Section 2.3).
+function StripWeakPrefix(const ETag: string): string;
+begin
+  if (Length(ETag) >= 2) and (ETag[1] = 'W') and (ETag[2] = '/') then
+    Result := Copy(ETag, 3, MaxInt)
+  else
+    Result := ETag;
+end;
+
+// True if ResourceETag matches one of the (possibly weak, comma-separated)
+// entity tags in an If-None-Match header value, or that value is '*'.
+//
+// Split by hand rather than with TStringList.DelimitedText: its CSV-style
+// quoting would strip the very double quotes that make each entry a valid
+// RFC 7232 quoted entity tag.
+function ETagMatchesIfNoneMatch(const IfNoneMatch, ResourceETag: string): Boolean;
+var
+  S, Target, Tag: string;
+  I, Start: Integer;
+  InQuotes: Boolean;
+begin
+  Result := False;
+  if ResourceETag = '' then Exit;
+
+  S := Trim(IfNoneMatch);
+  if S = '*' then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  Target := StripWeakPrefix(Trim(ResourceETag));
+
+  InQuotes := False;
+  Start := 1;
+  for I := 1 to Length(S) + 1 do
+  begin
+    if (I <= Length(S)) and (S[I] = '"') then
+      InQuotes := not InQuotes;
+
+    if (not InQuotes) and ((I > Length(S)) or (S[I] = ',')) then
+    begin
+      Tag := Trim(Copy(S, Start, I - Start));
+      if SameStr(StripWeakPrefix(Tag), Target) then
+      begin
+        Result := True;
+        Exit;
+      end;
+      Start := I + 1;
+    end;
+  end;
+end;
 
 // True if Handler is not the TdjWebComponent base implementation, i.e. a
 // subclass has overridden it. Self.<Handler> resolves through the VMT to the
@@ -281,31 +358,59 @@ begin
   Result := RESOURCE_LAST_MODIFIED_DEFAULT;
 end;
 
+function TdjWebComponent.OnGetETag(Request: TdjRequest): string;
+begin
+  Result := RESOURCE_ETAG_DEFAULT;
+end;
+
 procedure TdjWebComponent.DoCachedGet(Request: TdjRequest;
   Response: TdjResponse);
 var
   ResourceDate : TDateTime;
+  ResourceETag : string;
   ReqDate : TDateTime;
+  IfNoneMatch : string;
+  NotModified : Boolean;
 begin
   ResourceDate := OnGetLastModified(Request);
+  ResourceETag := OnGetETag(Request);
 
-  if ResourceDate = RESOURCE_LAST_MODIFIED_DEFAULT then
+  if (ResourceDate = RESOURCE_LAST_MODIFIED_DEFAULT)
+    and (ResourceETag = RESOURCE_ETAG_DEFAULT) then
   begin
     OnGet(Request, Response);
+    Exit;
+  end;
+
+  // RFC 7232 Section 3.3: a recipient MUST ignore If-Modified-Since if the
+  // request contains an If-None-Match header, since the latter is more
+  // accurate (e.g. it supports multiple representations / "*").
+  IfNoneMatch := Request.RawHeaders.Values['If-None-Match'];
+  if IfNoneMatch <> '' then
+  begin
+    NotModified := ETagMatchesIfNoneMatch(IfNoneMatch, ResourceETag);
   end else begin
     ReqDate := GMTToLocalDateTime(Request.RawHeaders.Values['If-Modified-Since']);
     // if the file date in the If-Modified-Since header is within 2 seconds of the
     // actual file, then we will send a 304.
-    if (ReqDate <> 0) and (Abs(ReqDate - ResourceDate) < 2 * (1 / (24 * 60 * 60))) then
-    begin
-      Response.ResponseNo := 304;
-    end else begin
-      Response.Date := Now;
-      Response.LastModified := ResourceDate;
-
-      OnGet(Request, Response);
-    end;
+    NotModified := (ResourceDate <> RESOURCE_LAST_MODIFIED_DEFAULT)
+      and (ReqDate <> 0)
+      and (Abs(ReqDate - ResourceDate) < 2 * (1 / (24 * 60 * 60)));
   end;
+
+  // RFC 7232 Section 4.1: a 304 response carries the same Date, ETag and
+  // Last-Modified header fields a 200 response to the same request would
+  // have carried.
+  Response.Date := Now;
+  if ResourceDate <> RESOURCE_LAST_MODIFIED_DEFAULT then
+    Response.LastModified := ResourceDate;
+  if ResourceETag <> RESOURCE_ETAG_DEFAULT then
+    Response.ETag := ResourceETag;
+
+  if NotModified then
+    Response.ResponseNo := 304
+  else
+    OnGet(Request, Response);
 end;
 
 // The connector suppresses the body of a HEAD response, and in doing so also
