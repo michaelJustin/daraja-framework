@@ -69,6 +69,10 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   logic duplicated across nearly every `Check*` method into `ResolveURL`,
   and the `hoNoProtocolErrorException` toggle duplicated across nine methods
   into `AllowErrorResponseCodes`. No behavior change. (#509)
+- New test coverage: `TdjHandlerCollection`'s per-handler exception isolation
+  on `Start`/`Handle`, and its start/stop-on-mutation behavior in
+  `AddHandler`/`RemoveHandler`; `TdjContextHandler.ContextMatches`'
+  path-prefix and connector-name whitelist matching. (#501)
 - Version constant set to `3.2.1-SNAPSHOT`.
 
 ## [3.2.0] - 2026-09-09
