@@ -158,6 +158,12 @@ begin
 
   FCS.Enter;
   try
+    // re-check: another thread may have finished starting this instance
+    // while we were waiting for the lock (e.g. two requests racing to
+    // first-touch a lazily-loaded web component)
+    if IsStarted then
+      Exit;
+
     try
       DoStart;
       FStarted := True;

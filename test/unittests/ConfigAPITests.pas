@@ -70,6 +70,12 @@ type
     procedure TestExceptionInInitStopsComponent;
     procedure TestExceptionInServiceReturns500;
 
+    // lazy (negative LoadOnStartup) load-on-startup (issue #496)
+    procedure TestNegativeLoadOnStartupNotStartedAtServerStart;
+    procedure TestNegativeLoadOnStartupStartsOnFirstRequest;
+    procedure TestConcurrentFirstRequestsInitLazyComponentOnce;
+    procedure TestFailingLazyInitReturns500ThenRetries;
+
     // context match
     procedure TestNoMatchingContextReturns404;
 
@@ -155,9 +161,9 @@ uses
   djWebFilterConfig,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdServerInterceptLogFile, IdSchedulerOfThreadPool, IdGlobal, IdException,
-  IdResourceStrings,
+  IdResourceStrings, IdHTTP,
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
-  SysUtils, Classes;
+  SysUtils, Classes, SyncObjs;
 
 type
   EUnitTestException = class(Exception);
@@ -593,9 +599,232 @@ begin
     Server.Add(Context);
     Server.Start;
 
-    // Test the component
-    CheckGETResponse405('/ctx/exception');
+    // The exception in Init() must not leave the component wedged in a
+    // half-started state; the request that triggered it gets a 500.
+    CheckGETResponse500('/ctx/exception');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+// lazy (negative LoadOnStartup) load-on-startup: issue #496 ------------------
+
+type
+  TLazyPage = class(TdjWebComponent)
+  public
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure TLazyPage.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'lazy';
+end;
+
+procedure TAPIConfigTests.TestNegativeLoadOnStartupNotStartedAtServerStart;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebComponentHolder;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Holder := Context.AddWebComponent(TLazyPage, '/lazy');
+    Holder.LoadOnStartup := -1;
+    Server.Add(Context);
+    Server.Start;
+
+    CheckFalse(Holder.IsStarted,
+      'a component with a negative LoadOnStartup must not be started at server start');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestNegativeLoadOnStartupStartsOnFirstRequest;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebComponentHolder;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Holder := Context.AddWebComponent(TLazyPage, '/lazy');
+    Holder.LoadOnStartup := -1;
+    Server.Add(Context);
+    Server.Start;
+
+    CheckFalse(Holder.IsStarted);
+
+    CheckGETResponseEquals('lazy', '/ctx/lazy');
+
+    CheckTrue(Holder.IsStarted,
+      'the first matching request must Init the component on demand');
+  finally
+    Server.Free;
+  end;
+end;
+
+// a thread that performs a single GET request against a fixed URL, using its
+// own TIdHTTP instance so several of these can safely race each other
+type
+  TGetRequestThread = class(TThread)
+  private
+    FURL: string;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(const URL: string);
+  end;
+
+constructor TGetRequestThread.Create(const URL: string);
+begin
+  inherited Create(False);
+  FURL := URL;
+  FreeOnTerminate := False;
+end;
+
+procedure TGetRequestThread.Execute;
+var
+  HTTP: TIdHTTP;
+begin
+  HTTP := TIdHTTP.Create;
+  try
+    try
+      HTTP.Get(FURL);
+    except
+      // ignored: this test only cares how many times Init actually ran
+    end;
+  finally
+    HTTP.Free;
+  end;
+end;
+
+var
+  // guards ConcurrentInitCount, incremented from TConcurrentLazyPage.Init,
+  // which may run concurrently on the server's worker threads
+  ConcurrentInitCS: TCriticalSection;
+  ConcurrentInitCount: Integer;
+
+type
+  TConcurrentLazyPage = class(TdjWebComponent)
+  public
+    procedure Init; override;
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure TConcurrentLazyPage.Init;
+begin
+  inherited;
+
+  // widen the race window so concurrent first requests actually overlap
+  Sleep(50);
+
+  ConcurrentInitCS.Enter;
+  try
+    Inc(ConcurrentInitCount);
+  finally
+    ConcurrentInitCS.Leave;
+  end;
+end;
+
+procedure TConcurrentLazyPage.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'ok';
+end;
+
+procedure TAPIConfigTests.TestConcurrentFirstRequestsInitLazyComponentOnce;
+const
+  ThreadCount = 10;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebComponentHolder;
+  Threads: array[0..ThreadCount - 1] of TGetRequestThread;
+  I: Integer;
+begin
+  ConcurrentInitCount := 0;
+  ConcurrentInitCS := TCriticalSection.Create;
+  try
+    Server := TdjServer.Create;
+    try
+      Context := TdjWebAppContext.Create('ctx');
+      Holder := Context.AddWebComponent(TConcurrentLazyPage, '/lazy');
+      Holder.LoadOnStartup := -1;
+      Server.Add(Context);
+      Server.Start;
+
+      for I := 0 to ThreadCount - 1 do
+      begin
+        Threads[I] := TGetRequestThread.Create('http://127.0.0.1:8080/ctx/lazy');
+      end;
+
+      for I := 0 to ThreadCount - 1 do
+      begin
+        Threads[I].WaitFor;
+        Threads[I].Free;
+      end;
+
+      CheckEquals(1, ConcurrentInitCount,
+        'concurrent first requests must construct/Init the lazy component exactly once');
+    finally
+      Server.Free;
+    end;
+  finally
+    ConcurrentInitCS.Free;
+  end;
+end;
+
+var
+  // reset at the start of TestFailingLazyInitReturns500ThenRetries
+  FailingLazyInitAttempts: Integer;
+
+type
+  TFailingLazyPage = class(TdjWebComponent)
+  public
+    procedure Init; override;
+    procedure OnGet({%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
+  end;
+
+procedure TFailingLazyPage.Init;
+begin
+  inherited;
+
+  Inc(FailingLazyInitAttempts);
+  raise EUnitTestException.Create('lazy init failure');
+end;
+
+procedure TFailingLazyPage.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  // unreachable: Init always raises
+end;
+
+procedure TAPIConfigTests.TestFailingLazyInitReturns500ThenRetries;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Holder: TdjWebComponentHolder;
+begin
+  FailingLazyInitAttempts := 0;
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Holder := Context.AddWebComponent(TFailingLazyPage, '/lazy');
+    Holder.LoadOnStartup := -1;
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponse500('/ctx/lazy');
+    CheckFalse(Holder.IsStarted,
+      'a failed lazy Init must not leave the holder half-started');
+    CheckEquals(1, FailingLazyInitAttempts);
+
+    // the next request must retry Init from scratch, not stay permanently
+    // wedged from the first failure
+    CheckGETResponse500('/ctx/lazy');
+    CheckEquals(2, FailingLazyInitAttempts);
   finally
     Server.Free;
   end;
@@ -1755,8 +1984,9 @@ begin
     Server.Add(Context);
     Server.Start;
 
-    // Test the component
-    CheckGETResponse405('/web/exception.html');
+    // Test the component: same as TestExceptionInInitStopsComponent, but
+    // routed through a filter chain.
+    CheckGETResponse500('/web/exception.html');
   finally
     Server.Free;
   end;

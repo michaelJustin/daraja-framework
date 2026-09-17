@@ -358,9 +358,27 @@ begin
     Ordered[J + 1] := Tmp;
   end;
 
+  // components with a negative LoadOnStartup are not started here; they
+  // are instead started lazily, on the first matching request (see
+  // FindComponent / Handle)
   for CH in Ordered do
   begin
-    CH.Start;
+    if CH.LoadOnStartup < 0 then
+    begin
+      Continue;
+    end;
+
+    try
+      CH.Start;
+    except
+      on E: Exception do
+      begin
+        // A failing Init must not prevent the other components from
+        // starting; TdjLifeCycle.Start already logged the failure, and the
+        // holder is left in its "not started" state so a later request can
+        // retry it (see Handle).
+      end;
+    end;
   end;
 end;
 
@@ -516,7 +534,7 @@ begin
   // add the URL pattern to the FPathMap
   FPathMap.AddUrlPattern(UrlPattern, Holder);
 
-  if Started and not Holder.IsStarted then
+  if Started and not Holder.IsStarted and (Holder.LoadOnStartup >= 0) then
   begin
     Holder.Start;
   end;
@@ -576,8 +594,6 @@ function TdjWebComponentHandler.FindComponent(const ATarget: string):
 var
   Matches: TStrings;
   Path: string;
-  I: Integer;
-  Tmp: TdjWebComponentHolder;
 begin
   Result := nil;
   Path := StripContext(ATarget);
@@ -592,20 +608,16 @@ begin
     end
     else
     begin
-      // find first non-stopped Web Component
-      for I := 0 to Matches.Count - 1 do
-      begin
-        Tmp := (Matches.Objects[I] as TdjWebComponentHolder);
-        if Tmp.Started then
-        begin
-          {$IFDEF DARAJA_LOGGING}
-          Logger.Trace('Match found: Web Component "%s"', [Tmp.Name]);
-          {$ENDIF DARAJA_LOGGING}
+      // The best-matching holder is returned whether or not it has been
+      // started yet: a holder with a negative LoadOnStartup is started on
+      // demand by Handle. A holder whose eager Init previously failed is
+      // also still "not started" and gets a fresh Init attempt here rather
+      // than being permanently unreachable.
+      Result := (Matches.Objects[0] as TdjWebComponentHolder);
 
-          Result := Tmp;
-          Break;
-        end;
-      end;
+      {$IFDEF DARAJA_LOGGING}
+      Logger.Trace('Match found: Web Component "%s"', [Result.Name]);
+      {$ENDIF DARAJA_LOGGING}
     end;
   finally
     Matches.Free;
@@ -710,6 +722,14 @@ begin
   begin
     Response.ResponseNo := HTTP_OK;
     try
+      // lazy (negative LoadOnStartup) or previously-failed components are
+      // started here, on first matching request; a failure is caught below
+      // and reported as a 500 without leaving the holder wedged
+      if not Holder.IsStarted then
+      begin
+        Holder.Start;
+      end;
+
       if Chain <> nil then begin
         Chain.DoFilter(Context, Request, Response);
       end else begin
