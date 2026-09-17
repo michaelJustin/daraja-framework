@@ -117,7 +117,7 @@ type
      *
      * @param Request The HTTP request to process
      * @param Response The HTTP response to fill
-     * @throws EWebComponentException if an exception occurs
+     * @throws EDarajaException if an exception occurs
      *}
     procedure OnOptions(Request: TdjRequest; Response: TdjResponse); virtual;
 
