@@ -14,6 +14,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   Servlet spec's `load-on-startup` element, that controls the order in which
   Web Components are initialized when their context starts — lower values
   first, ties (including the default, 0) broken by registration order. (#492)
+- A negative `LoadOnStartup` now defers initialization of a Web Component
+  until the first request that matches it, instead of starting it eagerly at
+  context start. Concurrent first requests are safe (only one triggers
+  `Init`); if that `Init` raises, the triggering request gets a `500`
+  response and the component is retried, not permanently unavailable, on the
+  next request. (#496)
 
 ### Changed
 
@@ -29,6 +35,16 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   distinguish the cause of a failure. `EWebComponentException` is removed;
   code catching it should catch `EDarajaException` or one of the specific
   subclasses instead. (#435)
+
+### Fixed
+
+- `TdjLifeCycle.Start` could run `DoStart` twice for the same instance when
+  two threads called `Start` concurrently before either had finished; it now
+  re-checks the started state after acquiring its lock. (#496)
+- A `TdjWebComponent.Init` exception during `TdjWebComponentHolder.DoStart`
+  was swallowed, leaving the holder marked as started with a half-initialized
+  component instead of stopped; it now propagates so the holder is correctly
+  left not started. (#496)
 
 ### Internal
 

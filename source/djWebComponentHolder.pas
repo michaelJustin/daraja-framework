@@ -117,6 +117,14 @@ type
      * components with a lower value are started first. Components with the
      * same value (the default, 0) are started in registration order. Has no
      * effect once the holder has already started.
+     *
+     * A negative value means the component is not started at context start;
+     * instead it is initialized lazily, on the first request that maps to
+     * it. Concurrent first requests are safe: only one of them performs the
+     * initialization, the others wait for it to finish. If that
+     * initialization raises, the request that triggered it receives a 500
+     * response and the holder remains not started, so the next request
+     * retries initialization instead of being permanently unavailable.
      *}
     property LoadOnStartup: Integer read FLoadOnStartup write FLoadOnStartup;
   end;
@@ -211,11 +219,13 @@ begin
         FClass.ClassName, E.ClassName, E.Message]);
       {$ENDIF DARAJA_LOGGING}
 
-      {$IFDEF DARAJA_LOGGING}
-      Logger.Trace('Stop the Web Component "%s"', [Name]);
-      {$ENDIF DARAJA_LOGGING}
-
-      Self.Stop;
+      // Discard the half-initialized instance and re-raise so the caller
+      // (TdjLifeCycle.Start) leaves this holder in its original "not
+      // started" state instead of marking it started with a broken
+      // WebComponent. This lets a later request retry Init from scratch
+      // rather than being permanently wedged.
+      FreeAndNil(FWebComponent);
+      raise;
     end;
   end;
 end;
