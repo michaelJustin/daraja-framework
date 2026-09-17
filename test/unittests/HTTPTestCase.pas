@@ -94,6 +94,13 @@ type
     // GET the URL and compare a single response header value.
     procedure CheckGETResponseHeaderEquals(const HeaderName, Expected: string; URL: string = ''; msg: string = '');
 
+    // send an OPTIONS request; checks for 200, no response body, and the
+    // given Allow header value.
+    procedure CheckOPTIONSAllowHeaderEquals(const Expected: string; URL: string = ''; msg: string = '');
+
+    // POST to the URL; checks for 405 and the given Allow header value.
+    procedure CheckPOSTResponse405AllowHeaderEquals(const Expected: string; URL: string = ''; msg: string = '');
+
     procedure Upload(URL: string; const SourceFile: string);
 
   end;
@@ -227,6 +234,41 @@ begin
 
   IdHTTP.Get(URL);
   CheckEquals(Expected, IdHTTP.Response.RawHeaders.Values[HeaderName], msg);
+end;
+
+procedure THTTPTestCase.CheckOPTIONSAllowHeaderEquals(const Expected: string;
+  URL: string = ''; msg: string = '');
+var
+  Body: string;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  Body := IdHTTP.Options(URL);
+
+  CheckEquals(200, IdHTTP.ResponseCode, msg);
+  CheckEquals('', Body, 'OPTIONS response must not carry a body');
+  CheckEquals(Expected, IdHTTP.Response.RawHeaders.Values['Allow'], msg);
+end;
+
+procedure THTTPTestCase.CheckPOSTResponse405AllowHeaderEquals(const Expected: string;
+  URL: string = ''; msg: string = '');
+var
+  Strings: TStrings;
+begin
+  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+
+  Strings := TStringList.Create;
+  try
+    Strings.Add('send=send');
+    IdHTTP.Post(URL, Strings);
+  finally
+    Strings.Free;
+  end;
+
+  CheckEquals(405, IdHTTP.ResponseCode, msg);
+  CheckEquals(Expected, IdHTTP.Response.RawHeaders.Values['Allow'], msg);
 end;
 
 procedure THTTPTestCase.CheckGETResponse200(URL: string; msg: string);
