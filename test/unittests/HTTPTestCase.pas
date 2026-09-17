@@ -122,6 +122,14 @@ type
 
     procedure Upload(URL: string; const SourceFile: string);
 
+  strict private
+    // prefix a path-only URL with the default test server base URL
+    function ResolveURL(const URL: string): string;
+
+    // allow the IdHTTP instance to receive non-2xx responses without
+    // raising an EIdHTTPProtocolException
+    procedure AllowErrorResponseCodes;
+
   end;
 
 implementation
@@ -134,11 +142,24 @@ resourcestring
 
 { THTTPTestCase }
 
+function THTTPTestCase.ResolveURL(const URL: string): string;
+begin
+  if Pos('http', URL) <> 1 then
+    Result := StrHttp127001 + URL
+  else
+    Result := URL;
+end;
+
+procedure THTTPTestCase.AllowErrorResponseCodes;
+begin
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+end;
+
 procedure THTTPTestCase.CheckGETResponseEquals(Expected: string; URL: string = ''; msg: string = '');
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   Actual := IdHTTP.Get(URL{$IFDEF STRING_IS_ANSI}, DestEncoding{$ENDIF});
 
@@ -149,7 +170,7 @@ procedure THTTPTestCase.CheckCachedGETResponseEquals(IfModifiedSince: TDateTime;
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.RawHeaders.Values['If-Modified-Since'] := LocalDateTimeToGMT(IfModifiedSince);
   Actual := IdHTTP.Get(URL{$IFDEF STRING_IS_ANSI}, DestEncoding{$ENDIF});
@@ -161,10 +182,10 @@ procedure THTTPTestCase.CheckCachedGETResponseIs304(IfModifiedSince: TDateTime; 
 var
   Actual: Integer;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.LastModified := IfModifiedSince;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL{$IFDEF STRING_IS_ANSI}, DestEncoding{$ENDIF});
   Actual := IdHTTP.ResponseCode;
@@ -174,10 +195,10 @@ end;
 
 procedure THTTPTestCase.CheckCachedGETResponseIs304WithDateAndLastModified(IfModifiedSince: TDateTime; URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.LastModified := IfModifiedSince;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
@@ -189,14 +210,14 @@ procedure THTTPTestCase.CheckConditionalGETIs304(URL: string = ''; msg: string =
 var
   LastMod: TDateTime;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL);
   LastMod := IdHTTP.Response.LastModified;
   CheckTrue(LastMod > 0, 'server did not send a Last-Modified header');
 
   IdHTTP.Request.LastModified := LastMod;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
@@ -206,7 +227,7 @@ procedure THTTPTestCase.CheckConditionalGETWithETagIs304(URL: string = ''; msg: 
 var
   ETag: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   // clear any If-None-Match left over from an earlier check on this IdHTTP
   // instance, so this first request is a plain, unconditional GET
@@ -218,7 +239,7 @@ begin
   // Custom headers are not typed properties, so they survive as-is across
   // SetHeaders (unlike RawHeaders, which SetHeaders rebuilds from scratch).
   IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := ETag;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
@@ -226,10 +247,10 @@ end;
 
 procedure THTTPTestCase.CheckIfNoneMatchGETResponseIs304(const IfNoneMatch: string; URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
@@ -239,7 +260,7 @@ procedure THTTPTestCase.CheckIfNoneMatchGETResponseEquals(const IfNoneMatch, Exp
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
   Actual := IdHTTP.Get(URL);
@@ -250,11 +271,11 @@ end;
 procedure THTTPTestCase.CheckGETResponseCodeWithConditionalHeaders(IfModifiedSince: TDateTime;
   const IfNoneMatch: string; ExpectedCode: Integer; URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.LastModified := IfModifiedSince;
   IdHTTP.Request.CustomHeaders.Values['If-None-Match'] := IfNoneMatch;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Get(URL);
   CheckEquals(ExpectedCode, IdHTTP.ResponseCode, msg);
@@ -266,7 +287,7 @@ var
   GetLength: Integer;
   GetContentType: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   Body := IdHTTP.Get(URL);
   GetLength := IdHTTP.Response.ContentLength;
@@ -287,10 +308,10 @@ end;
 
 procedure THTTPTestCase.CheckHEADResponse405(URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   // TIdHTTP.Head has no "allowed response codes" parameter
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Head(URL);
   CheckEquals(405, IdHTTP.ResponseCode, msg);
@@ -299,10 +320,10 @@ end;
 procedure THTTPTestCase.CheckCachedHEADResponseIs304(IfModifiedSince: TDateTime;
   URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Request.LastModified := IfModifiedSince;
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   IdHTTP.Head(URL);
   CheckEquals(304, IdHTTP.ResponseCode, msg);
@@ -311,7 +332,7 @@ end;
 procedure THTTPTestCase.CheckContentTypeEquals(Expected: string; URL: string;
   msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL);
   CheckEquals(Expected, IdHTTP.Response.ContentType, msg);
@@ -320,7 +341,7 @@ end;
 procedure THTTPTestCase.CheckGETResponseHeaderEquals(const HeaderName,
   Expected: string; URL: string = ''; msg: string = '');
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL);
   CheckEquals(Expected, IdHTTP.Response.RawHeaders.Values[HeaderName], msg);
@@ -331,7 +352,7 @@ procedure THTTPTestCase.CheckOPTIONSAllowHeaderEquals(const Expected: string;
 var
   Body: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   Body := IdHTTP.Options(URL);
 
@@ -345,9 +366,9 @@ procedure THTTPTestCase.CheckPOSTResponse405AllowHeaderEquals(const Expected: st
 var
   Strings: TStrings;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
-  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoNoProtocolErrorException];
+  AllowErrorResponseCodes;
 
   Strings := TStringList.Create;
   try
@@ -363,7 +384,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse200(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL);
   CheckEquals(200, IdHTTP.ResponseCode, msg);
@@ -371,7 +392,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse404(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL, [404]);
   CheckEquals(404, IdHTTP.ResponseCode, msg);
@@ -379,7 +400,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse405(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL, [405]);
   CheckEquals(405, IdHTTP.ResponseCode, msg);
@@ -387,7 +408,7 @@ end;
 
 procedure THTTPTestCase.CheckGETResponse500(URL: string; msg: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Get(URL, [500]);
   CheckEquals(500, IdHTTP.ResponseCode, msg);
@@ -397,7 +418,7 @@ procedure THTTPTestCase.CheckGETResponseContains(Expected: string; URL: string =
 var
   Actual: string;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   Actual := IdHTTP.Get(URL);
 
@@ -409,7 +430,7 @@ procedure THTTPTestCase.CheckPOSTResponseEquals(Expected: string; URL: string;
 var
   Strings: TStrings;
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   Strings := TStringList.Create;
   try
@@ -422,7 +443,7 @@ end;
 
 procedure THTTPTestCase.Upload(URL: string; const SourceFile: string);
 begin
-  if Pos('http', URL) <> 1 then URL := StrHttp127001 + URL;
+  URL := ResolveURL(URL);
 
   IdHTTP.Post(URL, SourceFile)
 end;
