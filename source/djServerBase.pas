@@ -62,14 +62,14 @@ type
      * Start the server.
      *
      * @note This method calls the inherited implementation and logs the server start.
-     * @throws EWebComponentException if the server fails to start
+     * @throws EDarajaLifecycleException if the server fails to start
      *}
     procedure DoStart; override;
     {*
      * Stop the server.
      *
      * @note This method calls the inherited implementation and logs the server stop.
-     * @throws EWebComponentException if the server fails to stop cleanly
+     * @throws EDarajaLifecycleException if the server fails to stop cleanly
      *}
     procedure DoStop; override;
   protected

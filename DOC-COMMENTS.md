@@ -62,7 +62,7 @@ Use a Qt-style block that starts with `{*` and ends with `*}`, with a leading
  * Add a new context.
  *
  * @param Context the context handler.
- * @throws EWebComponentException if an error occurs that interferes with the component's normal operation.
+ * @throws EDarajaMappingException if an error occurs that interferes with the component's normal operation.
  *}
 procedure Add(Context: TdjWebComponentContextHandler);
 ```
@@ -119,7 +119,7 @@ conditional-section markers which use `\`. The vocabulary actually used in
 |---------|-----|
 | `@param <Name> <text>` | one per parameter; `WARN_IF_INCOMPLETE_DOC` flags any that are missing |
 | `@return <text>` | return value. `@returns` and `@result` also appear in the tree — **prefer `@return`** for new comments |
-| `@throws <Exception> <when>` | exceptions the caller may see (typically `EWebComponentException`) |
+| `@throws <Exception> <when>` | exceptions the caller may see (typically `EDarajaException` or a subclass, e.g. `EDarajaConfigException`, `EDarajaMappingException`, `EDarajaLifecycleException`) |
 | `@note <text>` | caveats, e.g. "if this method is overridden, the overriding code must also call inherited Init" |
 | `@li <text>` | bullet list item (used in the overview and class summaries) |
 | `@sa <ref>` | "see also"; may point at a URL (e.g. an RFC) |

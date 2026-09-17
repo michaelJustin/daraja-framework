@@ -173,7 +173,7 @@ begin
     Context := TdjWebAppContext.Create('folder_missing');
     Context.Add(TdjDefaultWebComponent, '/');
     Server.Add(Context);
-    // ExpectedException := EWebComponentException; there is none
+    // ExpectedException := EDarajaConfigException; there is none
     Server.Start;
   finally
     Server.Free;

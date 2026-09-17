@@ -152,7 +152,7 @@ function TdjGenericWebComponent.GetWebComponentConfig: IWebComponentConfig;
 begin
   if not Assigned(FConfig) then
   begin
-    raise EWebComponentException.Create('Component is not initialized.');
+    raise EDarajaLifecycleException.Create('Component is not initialized.');
   end;
 
   Result := FConfig;
