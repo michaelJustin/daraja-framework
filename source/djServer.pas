@@ -185,7 +185,7 @@ type
      * released when the server is destroyed. Do not free it yourself.
      *
      * @param Connector the connector
-     * @throws EWebComponentException if a connector for the same host and port
+     * @throws EDarajaMappingException if a connector for the same host and port
      *   is already registered.
      *}
     procedure AddConnector(const Connector: IConnector); overload;
@@ -195,7 +195,7 @@ type
      *
      * @param Host the connector host name
      * @param Port the connector port number
-     * @throws EWebComponentException if a connector for the same host and port
+     * @throws EDarajaMappingException if a connector for the same host and port
      *   is already registered.
      *}
     procedure AddConnector(const Host: string; Port: Integer = DEFAULT_BINDING_PORT); overload;
@@ -206,7 +206,7 @@ type
      * If the server is started, the connector is stopped before it is removed.
      *
      * @param Connector the connector to remove
-     * @throws EWebComponentException if the connector is not registered.
+     * @throws EDarajaMappingException if the connector is not registered.
      *}
     procedure RemoveConnector(const Connector: IConnector);
 
@@ -216,7 +216,7 @@ type
      *
      * @param Index zero-based position, 0 <= Index < ConnectorCount
      * @returns the connector
-     * @throws EWebComponentException if Index is out of range.
+     * @throws EDarajaMappingException if Index is out of range.
      *}
     function GetConnector(Index: Integer): IConnector;
 
@@ -226,10 +226,10 @@ type
      * Ownership: the server takes ownership of the context. It is destroyed
      * together with the server; do not free it yourself. If a context with the
      * same path is already registered, the passed context is freed and an
-     * EWebComponentException is raised.
+     * EDarajaMappingException is raised.
      *
      * @param Context the context handler.
-     * @throws EWebComponentException if the context path is already registered.
+     * @throws EDarajaMappingException if the context path is already registered.
      *}
     procedure Add(Context: TdjWebComponentContextHandler);
 
@@ -315,7 +315,7 @@ begin
 
   if FConnectorMap.ContainsKey(ConnectorName) then
   begin
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaMappingException.CreateFmt(
       'A connector for "%s" is already registered.', [ConnectorName]);
   end;
 
@@ -336,7 +336,7 @@ begin
 
   if not FConnectorMap.ContainsKey(ConnectorName) then
   begin
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaMappingException.CreateFmt(
       'No connector for "%s" is registered.', [ConnectorName]);
   end;
 
@@ -353,7 +353,7 @@ function TdjServer.GetConnector(Index: Integer): IConnector;
 begin
   if (Index < 0) or (Index >= FConnectorList.Count) then
   begin
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaMappingException.CreateFmt(
       'Connector index %d out of range (0..%d).', [Index, FConnectorList.Count - 1]);
   end;
 
@@ -387,7 +387,7 @@ begin
   end else begin
     ContextPath := Context.ContextPath; // needed for exception message
     Context.Free; // avoid leak
-    raise EWebComponentException.CreateFmt('Context path "%s" is already registered.',
+    raise EDarajaMappingException.CreateFmt('Context path "%s" is already registered.',
       [ContextPath]);
   end;
 

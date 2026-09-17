@@ -92,9 +92,9 @@ begin
     Context.Add(TExamplePage, '/qux');
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Web Component TExamplePage is already installed in context foo with URL pattern /qux');
+    ExpectException(EDarajaMappingException, 'Web Component TExamplePage is already installed in context foo with URL pattern /qux');
     {$ELSE}
-    ExpectedException := EWebComponentException;
+    ExpectedException := EDarajaMappingException;
     {$ENDIF}
 
     // same path -> error

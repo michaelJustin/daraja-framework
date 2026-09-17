@@ -120,7 +120,7 @@
         <Name Value="EIdClosedSocket"/>
       </Item8>
       <Item9>
-        <Name Value="EWebComponentException"/>
+        <Name Value="EDarajaException"/>
       </Item9>
       <Item10>
         <Name Value="EIdHTTPProtocolException"/>

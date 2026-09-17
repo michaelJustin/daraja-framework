@@ -146,7 +146,7 @@ type
      * @param ComponentClass WebComponent class
      * @param UrlPattern path specification
      *
-     * @throws EWebComponentException if the Web Component can not be added
+     * @throws EDarajaMappingException if the Web Component can not be added
      *}
     function AddWebComponent(ComponentClass: TdjWebComponentClass;
       const UrlPattern: string): TdjWebComponentHolder; overload;
@@ -307,7 +307,7 @@ begin
   try
     AddWithMapping(Result, UrlPattern);
   except
-    on E: EWebComponentException do
+    on E: EDarajaMappingException do
     begin
       {$IFDEF DARAJA_LOGGING}
       Logger.Trace(E.Message);
@@ -430,7 +430,7 @@ begin
       Logger.Trace(Msg);
       {$ENDIF DARAJA_LOGGING}
 
-      raise EWebComponentException.Create(Msg);
+      raise EDarajaMappingException.Create(Msg);
     end;
   end;
 end;
@@ -444,7 +444,7 @@ begin
   begin
     if (FH <> Holder) and (FH.Name = Holder.Name) then
     begin
-      raise EWebComponentException.CreateFmt(rsTheWebFilterSCanNotBeAdded,
+      raise EDarajaMappingException.CreateFmt(rsTheWebFilterSCanNotBeAdded,
         [Holder.Name]);
     end;
   end;
@@ -461,13 +461,13 @@ begin
   try
     FPathMap.CheckExists(UrlPattern);
   except
-    on E: EWebComponentException do
+    on E: EDarajaMappingException do
     begin
       {$IFDEF DARAJA_LOGGING}
       Logger.Trace('AddWithMapping', E);
       {$ENDIF DARAJA_LOGGING}
 
-      raise EWebComponentException.CreateFmt(
+      raise EDarajaMappingException.CreateFmt(
         'Web Component %s is already installed in context %s with URL pattern %s',
         [Holder.WebComponentClass.ClassName, Holder.GetContext.GetContextPath,
          UrlPattern]
@@ -507,7 +507,7 @@ begin
   // registration time instead of raising during request handling
   if TdjPathMap.GetSpecType(UrlPattern) = stUnknown then
   begin
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaMappingException.CreateFmt(
       rsInvalidMappingSForWebComponentS, [UrlPattern, Holder.Name]);
   end;
 
@@ -542,7 +542,7 @@ procedure TdjWebComponentHandler.ValidateMappingUrlPattern(const UrlPattern: str
 begin
   if TdjPathMap.GetSpecType(UrlPattern) = stUnknown then
   begin
-    raise EWebComponentException.CreateFmt(
+    raise EDarajaMappingException.CreateFmt(
       rsInvalidMappingSForWebComponentS, [UrlPattern, Holder.Name]);
   end;
 end;

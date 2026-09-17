@@ -84,10 +84,10 @@ type
 
     {*
      * Check if a mapping path exists.
-     * This procedure throws a EWebComponentException if the URL pattern is already registered for this context.
+     * This procedure throws a EDarajaMappingException if the URL pattern is already registered for this context.
      *
      * @param UrlPattern a single component mapping path
-     * @throws EWebComponentException
+     * @throws EDarajaMappingException
      *}
     procedure CheckExists(const UrlPattern: string);
 
@@ -96,7 +96,7 @@ type
      *
      * @param UrlPattern a single component mapping path
      * @param Value the mapped web component
-     * @throws EWebComponentException
+     * @throws EDarajaMappingException
      *}
     procedure AddUrlPattern(const UrlPattern: string; Value: TObject); overload;
 
@@ -133,7 +133,7 @@ procedure TdjPathMap.CheckExists(const UrlPattern: string);
 begin
   if IndexOf(UrlPattern) > -1 then
   begin
-    raise EWebComponentException.Create('Mapping key exists');
+    raise EDarajaMappingException.Create('Mapping key exists');
   end;
 end;
 

@@ -301,9 +301,9 @@ begin
     Context.Add(TExamplePage, '/bar2');
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, 'Context path "foo" is already registered.');
+    ExpectException(EDarajaMappingException, 'Context path "foo" is already registered.');
     {$ELSE}
-    ExpectedException := EWebComponentException;
+    ExpectedException := EDarajaMappingException;
     {$ENDIF}
 
     Server.Add(Context);
@@ -907,9 +907,9 @@ begin
     Server.AddConnector('127.0.0.1', 8080);
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, '');
+    ExpectException(EDarajaMappingException, '');
     {$ELSE}
-    ExpectedException := EWebComponentException;
+    ExpectedException := EDarajaMappingException;
     {$ENDIF}
     Server.AddConnector('127.0.0.1', 8080);
   finally
@@ -953,9 +953,9 @@ begin
     Connector.Port := 9999;
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, '');
+    ExpectException(EDarajaMappingException, '');
     {$ELSE}
-    ExpectedException := EWebComponentException;
+    ExpectedException := EDarajaMappingException;
     {$ENDIF}
     Server.RemoveConnector(Connector);
   finally
@@ -1665,9 +1665,9 @@ begin
     Context.Add(TExamplePage, '*.html');
 
     {$IFDEF FPC}
-    ExpectException(EWebComponentException, '');
+    ExpectException(EDarajaMappingException, '');
     {$ELSE}
-    ExpectedException := EWebComponentException;
+    ExpectedException := EDarajaMappingException;
     {$ENDIF}
     Context.Add(TTestFilter, 'not-a-valid-pattern');
   finally
@@ -1706,9 +1706,9 @@ begin
   Context.Add(TTestFilter, '*.html');
 
   {$IFDEF FPC}
-  ExpectException(EWebComponentException, '');
+  ExpectException(EDarajaMappingException, '');
   {$ELSE}
-  ExpectedException := EWebComponentException;
+  ExpectedException := EDarajaMappingException;
   {$ENDIF}
   try
     Context.Add(TTestFilter, '*.html');

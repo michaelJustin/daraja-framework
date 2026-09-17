@@ -207,9 +207,9 @@ begin
       Handler.AddWithMapping(H1, '/index.html');
 
       {$IFDEF FPC}
-      ExpectException(EWebComponentException);
+      ExpectException(EDarajaMappingException);
       {$ELSE}
-      ExpectedException := EWebComponentException;
+      ExpectedException := EDarajaMappingException;
       {$ENDIF}
 
       // add the same path map
@@ -245,9 +245,9 @@ begin
         H2.SetContext(Context.GetCurrentContext);
 
         {$IFDEF FPC}
-        ExpectException(EWebComponentException);
+        ExpectException(EDarajaMappingException);
         {$ELSE}
-        ExpectedException := EWebComponentException;
+        ExpectedException := EDarajaMappingException;
         {$ENDIF}
 
         // add the same path map
@@ -286,9 +286,9 @@ begin
         H2.SetContext(C2.GetCurrentContext);
 
         {$IFDEF FPC}
-        ExpectException(EWebComponentException);
+        ExpectException(EDarajaConfigException);
         {$ELSE}
-        ExpectedException := EWebComponentException;
+        ExpectedException := EDarajaConfigException;
         {$ENDIF}
 
         // different context fails
@@ -357,9 +357,9 @@ begin
         H2.SetContext(Context.GetCurrentContext);
 
         {$IFDEF FPC}
-        ExpectException(EWebComponentException);
+        ExpectException(EDarajaMappingException);
         {$ELSE}
-        ExpectedException := EWebComponentException;
+        ExpectedException := EDarajaMappingException;
         {$ENDIF}
 
         Handler.AddWithMapping(H2, '/b.html');

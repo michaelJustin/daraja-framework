@@ -91,7 +91,7 @@
         <Name Value="EIdClosedSocket"/>
       </Item>
       <Item>
-        <Name Value="EWebComponentException"/>
+        <Name Value="EDarajaException"/>
       </Item>
       <Item>
         <Name Value="EIdHTTPProtocolException"/>

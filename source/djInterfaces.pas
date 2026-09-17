@@ -79,7 +79,7 @@ type
      * @param Context Server context for this request
      * @param Request HTTP request object
      * @param Response HTTP response object to populate
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation.
+     * @throws EDarajaException if an exception occurs that interferes with the component's normal operation.
      *}
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
@@ -208,7 +208,7 @@ type
      * must also call inherited Init.
      *
      * @param Config the configuration
-     * @throws EWebComponentException if initialization failed
+     * @throws EDarajaException if initialization failed
      *}
     procedure Init(const Config: IWebComponentConfig);
 
@@ -223,7 +223,7 @@ type
      * @param Context HTTP server context
      * @param Request HTTP request
      * @param Response HTTP response
-     * @throws EWebComponentException if an exception occurs that interferes with the component's normal operation
+     * @throws EDarajaException if an exception occurs that interferes with the component's normal operation
      *}
     procedure Service(Context: TdjServerContext; Request: TdjRequest;
       Response: TdjResponse);
@@ -232,7 +232,7 @@ type
      * Returns a IWebComponentConfig object,
      * which contains initialization parameters for this component.
      *
-     * @throws EWebComponentException if the method is called before
+     * @throws EDarajaLifecycleException if the method is called before
      * the component has been initialized.
      *}
     function GetWebComponentConfig: IWebComponentConfig;
@@ -304,7 +304,7 @@ type
      * must also call inherited Init.
      *
      * @param Config the configuration
-     * @throws EWebComponentException if initialization failed
+     * @throws EDarajaException if initialization failed
      *}
     procedure Init(const Config: IWebFilterConfig);
 
@@ -339,14 +339,14 @@ type
      * Adds a key-value pair to configuration.
      * @param Key Parameter name (case-sensitive)
      * @param Value Parameter value
-     * @throws EWebComponentException if the key is already present
+     * @throws EDarajaConfigException if the key is already present
      *}
     procedure Add(const Key: string; const Value: string);
 
     {*
      * Sets the context for this configuration.
      * @param Context Context to set
-     * @throws EWebComponentException if the context is nil or if the context is already set and differs from the new context.
+     * @throws EDarajaConfigException if the context is nil or if the context is already set and differs from the new context.
      *}
     procedure SetContext(const Context: IContext);
 
