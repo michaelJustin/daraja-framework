@@ -135,6 +135,19 @@ begin
   if AException is EIdNotConnected then Exit;
 
   {$IFDEF DARAJA_LOGGING}
+  // A client sending a malformed request line, or dribbling/never finishing
+  // one (Slowloris-style), is expected adversarial input, not a server-side
+  // fault. Logging it at Warn costs nothing to trigger and scales with
+  // however many malformed requests an attacker cares to send -- a
+  // disk-space / log-pipeline DoS vector. Keep Warn for exceptions that
+  // indicate an actual problem on our side.
+  if (AException is EIdHTTPErrorParsingCommand) or (AException is EIdReadTimeout) then
+  begin
+    Logger.Debug(ClassName + ' (OnException): ' + AException.ClassName + ' '
+      + AException.Message);
+    Exit;
+  end;
+
   Logger.Warn(ClassName + ' (OnException): ' + AException.ClassName + ' '
     + AException.Message);
   {$ENDIF DARAJA_LOGGING}
