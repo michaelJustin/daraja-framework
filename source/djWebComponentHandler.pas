@@ -54,9 +54,13 @@ type
   TdjWebComponentHandler = class(TdjAbstractHandler)
   strict private
     {$IFDEF DARAJA_LOGGING}
-    Logger: ILogger;
+    // class var: TdjLoggerFactory.GetLogger is keyed by class, so every
+    // instance would get the same logger anyway. Sharing it as a class var
+    // lets the class procedure InvokeService use the logger set up in
+    // Create instead of asking the factory for a fresh one on every call.
+    class var Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
+    var
     FWebComponentContext: IContext;
     FPathMap: TdjPathMap;
 
@@ -661,7 +665,7 @@ begin
       // discloses below. This is the only place that detail is recorded;
       // by default the client never sees it.
       {$IFDEF DARAJA_LOGGING}
-      TdjLoggerFactory.GetLogger(TdjWebComponentHandler).Error(
+      Logger.Error(
         Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
           [Comp.ClassName, E.ClassName, E.Message]), E);
       {$ENDIF DARAJA_LOGGING}
