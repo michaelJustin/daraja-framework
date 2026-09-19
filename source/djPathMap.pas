@@ -196,7 +196,17 @@ begin
         Result := True;
       end
   else
-    raise Exception.CreateFmt('Unknown match %s %s', [Path, Spec]);
+    begin
+      // Unreachable in practice: registration rejects stUnknown patterns
+      // (see CHANGELOG #422), so this branch only guards against a future
+      // caller constructing a mapping directly. Assert rather than raise,
+      // so a bug here surfaces as a routing 404 (no match) instead of an
+      // uncaught exception turning into a 500.
+      {$IFDEF DEBUG}
+      Assert(False, Format('Unknown match %s %s', [Path, Spec]));
+      {$ENDIF DEBUG}
+      Result := False;
+    end;
   end;
 end;
 
