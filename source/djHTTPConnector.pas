@@ -83,7 +83,8 @@ type
 implementation /// \cond
 
 uses
-  IdSocketHandle, IdIOHandler, IdGlobal, IdException,
+  IdSocketHandle, IdIOHandler, IdGlobal, IdException, IdExceptionCore,
+  IdCustomHTTPServer,
   SysUtils, Classes;
 
 { TdjHTTPConnector }
@@ -224,7 +225,18 @@ begin
     on E: Exception do
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Error(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
+      // As in TdjHTTPServer.MyOnException: a malformed request or a client
+      // that dribbles/never finishes one is expected adversarial input, not
+      // a server-side fault, and logging it at Error scales with however
+      // many such requests an attacker cares to send -- a disk-space /
+      // log-pipeline DoS vector. Keep Error for exceptions that indicate an
+      // actual problem on our side.
+      if (E is EIdHTTPErrorParsingCommand) or (E is EIdReadTimeout) then
+      begin
+        Logger.Debug(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
+      end else begin
+        Logger.Error(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
+      end;
       {$ENDIF DARAJA_LOGGING}
     end;
   end;
