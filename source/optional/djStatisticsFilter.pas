@@ -42,6 +42,11 @@ type
   {*
    * Collects HTTP request statistics.
    *
+   * Statistics are stashed in the HTTP session, so this filter's context
+   * must be created with sessions enabled (e.g.
+   * TdjWebAppContext.Create(Path, True)). DoFilter raises
+   * EDarajaConfigException if a request arrives with no session.
+   *
    * @note This class is unsupported demonstration code.
    *}
   TdjStatisticsFilter = class(TdjWebFilter)
@@ -66,6 +71,13 @@ type
     destructor Destroy; override;
 
     procedure Init; override;
+
+    {*
+     * Records request/response statistics in the HTTP session.
+     *
+     * @throws EDarajaConfigException if Request.Session is nil, i.e. the
+     * context was not created with sessions enabled.
+     *}
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
 
@@ -153,6 +165,16 @@ end;
 procedure TdjStatisticsFilter.DoFilter;
   procedure SetSessionValue(const AKey: string; AValue: Integer);
   begin
+    // Request.Session is nil unless the client already carries a session
+    // cookie, which on a context without auto-sessions enabled is every
+    // request. An unguarded Request.Session.Content used to AV in that case
+    // (see issue #516) -- fail with a clear, actionable message instead.
+    if not Assigned(Request.Session) then
+      raise EDarajaConfigException.Create(
+        'TdjStatisticsFilter requires HTTP sessions to be enabled for its ' +
+        'context, e.g. TdjWebAppContext.Create(Path, True); Request.Session ' +
+        'is nil.');
+
     Request.Session.Content.Values['stats:' + AKey] := IntToStr(AValue);
   end;
 begin
