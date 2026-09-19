@@ -43,6 +43,15 @@ type
   {*
    * A base class which can be subclassed to create a HTTP filter component
    * for a Web site.
+   *
+   * @note Threading: as with TdjWebComponent, the framework creates exactly
+   * one instance of each registered filter, and every concurrent request
+   * runs through that same instance's DoFilter method on its own thread. Do
+   * not keep per-request state in instance fields — two requests handled at
+   * the same time will read and write the same field, corrupting each
+   * other's data. Use local variables for anything request-specific, and if
+   * state truly must be shared across requests, synchronize access to it
+   * explicitly (e.g. with a critical section).
    *}
   TdjWebFilter = class(TdjGenericWebFilter)
   strict private
