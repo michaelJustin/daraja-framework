@@ -138,6 +138,8 @@ type
 
     procedure TestOnlyAFilter;
     procedure TestFilter;
+    procedure TestPrefixFilterAppliesInNonRootContext;
+    procedure TestPrefixFilterAppliesAfterPathNormalization;
     procedure TestTwoFilters;
     procedure TestTwoFiltersReversed;
     procedure TestTwoFiltersAndTwoWebComponents;
@@ -1977,6 +1979,54 @@ begin
     Server.Start;
 
     CheckGETResponseEquals('example (filtered)', '/web/index.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestPrefixFilterAppliesInNonRootContext;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // Regression test for #530: GetFilterChain used to be matched against the
+  // raw, context-prefixed target while FindComponent matched the
+  // context-stripped path, so a prefix-pattern filter like '/secure/*'
+  // silently never fired outside a root context. Both now match the same
+  // normalized, context-relative path.
+  Context := TdjWebAppContext.Create('web');
+  Context.Add(TExamplePage, '/secure/index.html');
+  Context.Add(TTestFilter, '/secure/*');
+
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (filtered)', '/web/secure/index.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestPrefixFilterAppliesAfterPathNormalization;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // A '..' segment must not let a request dodge a prefix-pattern filter:
+  // the target is normalized before routing, so this resolves to
+  // '/web/secure/index.html' and the filter still applies.
+  Context := TdjWebAppContext.Create('web');
+  Context.Add(TExamplePage, '/secure/index.html');
+  Context.Add(TTestFilter, '/secure/*');
+
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseEquals('example (filtered)', '/web/x/../secure/index.html');
   finally
     Server.Free;
   end;

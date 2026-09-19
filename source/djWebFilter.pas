@@ -52,6 +52,15 @@ type
    * other's data. Use local variables for anything request-specific, and if
    * state truly must be shared across requests, synchronize access to it
    * explicitly (e.g. with a critical section).
+   *
+   * @note URL patterns are not authorization. A filter mapped to a prefix
+   * or suffix pattern (e.g. everything under '/admin/') is a routing rule,
+   * matched after the framework normalizes the request path (collapsing
+   * '.', '..' and repeated '/', and stripping ';'-parameters) -- but it says
+   * nothing about who the caller is. An authentication/authorization filter
+   * must still check the caller's identity itself (e.g. the session) before
+   * allowing a request through, rather than relying on the URL pattern alone to gate
+   * access.
    *}
   TdjWebFilter = class(TdjGenericWebFilter)
   strict private

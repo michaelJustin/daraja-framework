@@ -743,13 +743,30 @@ procedure TdjWebComponentHandler.Handle(const Target: string; Context:
 var
   Holder: TdjWebComponentHolder;
   Chain: IWebFilterChain;
+  NormalizedTarget: string;
+  PathInContext: string;
 begin
-  Holder := FindComponent(Target);
+  if not TdjPathMap.Normalize(Target, NormalizedTarget) then
+  begin
+    // Target carries a raw control byte or embedded NUL (encoded by the
+    // client as %00 etc, since Indy already decoded once) -- not valid path
+    // input. Reject before it ever reaches routing.
+    Response.ResponseNo := HTTP_BAD_REQUEST;
+    Exit;
+  end;
+
+  Holder := FindComponent(NormalizedTarget);
   Chain := nil;
 
   if (Holder <> nil) and (FWebFilterMappings.Count > 0) then
   begin
-    Chain := GetFilterChain(Target, Request, Holder);
+    // Same normalized, context-relative path a filter and the component it
+    // guards must both see. Using StripContext here (not the raw Target)
+    // fixes a mismatch where this used to match filters against the
+    // context-prefixed path while FindComponent matched the stripped one --
+    // silently breaking every prefix-pattern filter on a non-root context.
+    PathInContext := StripContext(NormalizedTarget);
+    Chain := GetFilterChain(PathInContext, Request, Holder);
   end;
 
   if Holder <> nil then
