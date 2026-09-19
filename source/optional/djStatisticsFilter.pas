@@ -42,10 +42,10 @@ type
   {*
    * Collects HTTP request statistics.
    *
-   * Statistics are stashed in the HTTP session. A session is created
-   * on demand for requests that do not already carry one, so this filter
-   * works regardless of whether its context was created with auto-sessions
-   * enabled.
+   * Statistics are stashed in the HTTP session, so this filter's context
+   * must be created with sessions enabled (e.g.
+   * TdjWebAppContext.Create(Path, True)). DoFilter raises
+   * EDarajaConfigException if a request arrives with no session.
    *
    * @note This class is unsupported demonstration code.
    *}
@@ -71,6 +71,13 @@ type
     destructor Destroy; override;
 
     procedure Init; override;
+
+    {*
+     * Records request/response statistics in the HTTP session.
+     *
+     * @throws EDarajaConfigException if Request.Session is nil, i.e. the
+     * context was not created with sessions enabled.
+     *}
     procedure DoFilter(Context: TdjServerContext; Request: TdjRequest; Response:
       TdjResponse; const Chain: IWebFilterChain); override;
 
@@ -89,7 +96,6 @@ uses
   djPlatform,
   {$IFDEF FPC}{$NOTES OFF}{$ENDIF}{$HINTS OFF}{$WARNINGS OFF}
   IdGlobal, // GetTickDiff64
-  IdCustomHTTPServer, // TIdHTTPSession, TIdCustomHTTPServer.CreateSession
   {$IFDEF FPC}{$ELSE}{$HINTS ON}{$WARNINGS ON}{$ENDIF}
   SysUtils;
 
@@ -158,19 +164,18 @@ end;
 
 procedure TdjStatisticsFilter.DoFilter;
   procedure SetSessionValue(const AKey: string; AValue: Integer);
-  var
-    Session: TIdHTTPSession;
   begin
     // Request.Session is nil unless the client already carries a session
-    // cookie. On a context without auto-sessions enabled that is every
-    // request, so obtain-or-create the session here instead of assuming one
-    // already exists (an unguarded Request.Session.Content used to AV -- see
-    // issue #516).
-    Session := Request.Session;
-    if not Assigned(Session) then
-      Session := (Context.Server as TIdCustomHTTPServer).CreateSession(Context, Response, Request);
+    // cookie, which on a context without auto-sessions enabled is every
+    // request. An unguarded Request.Session.Content used to AV in that case
+    // (see issue #516) -- fail with a clear, actionable message instead.
+    if not Assigned(Request.Session) then
+      raise EDarajaConfigException.Create(
+        'TdjStatisticsFilter requires HTTP sessions to be enabled for its ' +
+        'context, e.g. TdjWebAppContext.Create(Path, True); Request.Session ' +
+        'is nil.');
 
-    Session.Content.Values['stats:' + AKey] := IntToStr(AValue);
+    Request.Session.Content.Values['stats:' + AKey] := IntToStr(AValue);
   end;
 begin
   try
