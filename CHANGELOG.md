@@ -8,6 +8,23 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Security
+
+- `TdjWebComponentHandler.InvokeService`'s 500 response no longer discloses
+  the component class name, the exception class name, or the exception
+  message by default — the body is now generic
+  (`500 Internal Server Error`) unless `DARAJA_PROJECT_STAGE_DEVELOPMENT` is
+  defined, matching the existing gating of the stack-trace block. The full
+  detail (component/exception class and message, plus stack trace when
+  available) is now always logged server-side via the framework logger,
+  regardless of what the client response discloses. (#520)
+- `TdjHTTPServer.MyOnException` and `TdjHTTPConnector.OnCommand` now log a
+  malformed request line (`EIdHTTPErrorParsingCommand`) and a client that
+  dribbles or never finishes a request (`EIdReadTimeout`, e.g. Slowloris) at
+  `Debug` instead of `Warn`/`Error`, since spraying malformed requests could
+  otherwise inflate the log volume for free. Every other exception keeps its
+  existing level. (#521)
+
 ### Added
 
 - `TdjWebComponentHolder.LoadOnStartup`: an integer property, mirroring the
@@ -62,6 +79,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `if IsStarted then Stop` never reached them and they leaked for the
   lifetime of the process. `Start` now best-effort rolls back via `DoStop` on
   a `DoStart` failure before re-raising the original exception. (#498)
+- `TdjStatisticsFilter.DoFilter` dereferenced `Request.Session.Content`
+  unconditionally, so a context without auto-sessions enabled (or a client
+  with no session cookie) crashed with an access violation on every
+  request. It now raises a clear `EDarajaConfigException` explaining that
+  the filter's context must be created with sessions enabled, instead of
+  AVing. (#516)
 
 ### Internal
 
@@ -73,7 +96,19 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   on `Start`/`Handle`, and its start/stop-on-mutation behavior in
   `AddHandler`/`RemoveHandler`; `TdjContextHandler.ContextMatches`'
   path-prefix and connector-name whitelist matching. (#501)
-- Version constant set to `3.2.1-SNAPSHOT`.
+- `TdjWebComponent` and `TdjWebFilter` doc comments now spell out the
+  single-instance threading contract (one instance per registered
+  component/filter, shared across all concurrent request threads — do not
+  keep per-request state in instance fields); the getting-started guide's
+  "Web Components and multi-threading" section was fixed (a broken code
+  example) and expanded to match. (#513)
+- `TdjPathMap.Matches`'s unreachable `stUnknown` branch now asserts (debug
+  builds only, via `{$IFDEF DEBUG}`) instead of raising a bare `Exception`,
+  so a future bug here would surface as a routing 404 rather than an
+  uncaught exception turning into a 500. No behavior change: registration
+  already rejects `stUnknown` patterns (#422), so the branch stays
+  unreachable in practice. (#519)
+- Version constant set to `3.3.0-SNAPSHOT`.
 
 ## [3.2.0] - 2026-09-09
 
