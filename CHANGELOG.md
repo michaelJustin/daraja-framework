@@ -24,6 +24,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `Debug` instead of `Warn`/`Error`, since spraying malformed requests could
   otherwise inflate the log volume for free. Every other exception keeps its
   existing level. (#521)
+- `TdjHTTPConnector.OnCommand` left `ResponseNo` at `-1` when it swallowed an
+  exception from request handling, which depending on Indy's handling of an
+  invalid status could send the client an empty or malformed response
+  instead of a clean 500. It now sets `ResponseNo := 500` with the same
+  generic, detail-free body as `TdjWebComponentHandler.InvokeService`'s
+  default error page. (#517)
 
 ### Added
 
