@@ -83,6 +83,7 @@ type
 implementation /// \cond
 
 uses
+  djGlobal, djHTTPConstants,
   IdSocketHandle, IdIOHandler, IdGlobal, IdException, IdExceptionCore,
   IdCustomHTTPServer,
   SysUtils, Classes;
@@ -238,6 +239,28 @@ begin
         Logger.Error(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
       end;
       {$ENDIF DARAJA_LOGGING}
+
+      // AResponseInfo.ResponseNo was set to -1 above and Handle never got to
+      // (or failed to) set a real status. Leaving it at -1 depends on Indy's
+      // downstream handling of an invalid status and can send the client an
+      // empty or malformed response instead of a clean 500. Set a definite
+      // status and a generic body -- no exception detail, consistent with
+      // TdjWebComponentHandler.InvokeService's default (non-development)
+      // error page.
+      AResponseInfo.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
+      AResponseInfo.ContentText := '<!DOCTYPE html>' + #10
+        + '<html>' + #10
+        + '  <head>' + #10
+        + '    <title>500 Internal Error</title>' + #10
+        + '  </head>' + #10
+        + '  <body>' + #10
+        + '    <h1>500 Internal Server Error</h1>' + #10
+        + '    <hr />' + #10
+        + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
+        + '  </body>' + #10
+        + '</html>';
+      AResponseInfo.ContentType := 'text/html';
+      AResponseInfo.CharSet := 'utf-8';
     end;
   end;
 end;
