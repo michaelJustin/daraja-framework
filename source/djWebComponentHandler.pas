@@ -54,9 +54,13 @@ type
   TdjWebComponentHandler = class(TdjAbstractHandler)
   strict private
     {$IFDEF DARAJA_LOGGING}
-    Logger: ILogger;
+    // class var: TdjLoggerFactory.GetLogger is keyed by class, so every
+    // instance would get the same logger anyway. Sharing it as a class var
+    // lets the class procedure InvokeService use the logger set up in
+    // Create instead of asking the factory for a fresh one on every call.
+    class var Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
-
+    var
     FWebComponentContext: IContext;
     FPathMap: TdjPathMap;
 
@@ -642,19 +646,36 @@ end;
 
 class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
+{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 var
   ExceptionMessageHTML: string;
   Msg: string;
   Msg2: string;
+{$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 begin
   try
     // invoke service method
     Comp.Service(Context, Request, Response);
 
   except
-    // log exceptions
     on E: Exception do
     begin
+      // Always log the full detail server-side -- component, exception
+      // class and message -- regardless of what the client response
+      // discloses below. This is the only place that detail is recorded;
+      // by default the client never sees it.
+      {$IFDEF DARAJA_LOGGING}
+      Logger.Error(
+        Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
+          [Comp.ClassName, E.ClassName, E.Message]), E);
+      {$ENDIF DARAJA_LOGGING}
+
+      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
+      // Development mode: disclose the component/exception class, the
+      // exception message, and (if available) a stack trace. Exception
+      // messages routinely carry file paths, SQL fragments, connection
+      // strings or internal hostnames, so this detail must never be the
+      // default for a deployed server.
       ExceptionMessageHTML := HTMLEncode(E.Message);
 
       Msg := Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
@@ -678,7 +699,6 @@ begin
         + '    <h2>Exception message: ' + ExceptionMessageHTML + '</h2>' + #10
         + '    <p>' + Msg + '</p>' + #10
         + Msg2
-      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
       {$IFDEF DARAJA_MADEXCEPT}
         + '    <hr />' + #10
         + '    <h2>Stack trace:</h2>' + #10
@@ -693,11 +713,25 @@ begin
         + djStackTrace.GetStackList + #10
         + '    </pre>' + #10
       {$ENDIF DARAJA_JCLDEBUG}
-      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
         + '    <hr />' + #10
         + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
         + '  </body>' + #10
         + '</html>';
+      {$ELSE}
+      // Default (non-development) response: generic, discloses nothing
+      // about the component, the exception, or its message.
+      Response.ContentText := '<!DOCTYPE html>' + #10
+        + '<html>' + #10
+        + '  <head>' + #10
+        + '    <title>500 Internal Error</title>' + #10
+        + '  </head>' + #10
+        + '  <body>' + #10
+        + '    <h1>500 Internal Server Error</h1>' + #10
+        + '    <hr />' + #10
+        + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
+        + '  </body>' + #10
+        + '</html>';
+      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
       raise;
     end;
