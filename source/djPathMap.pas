@@ -83,6 +83,26 @@ type
     class function Matches(const Path, Spec: string): Boolean; overload;
 
     {*
+     * Canonicalizes a request target before routing.
+     *
+     * Collapses `.`, `..` and repeated `/` segments, and strips `;`-delimited
+     * path parameters from each segment (e.g. `/x.jsp;a=b` -> `/x.jsp`), so
+     * that a filter and the component it guards -- matched separately, but
+     * both against the result of this call -- are guaranteed to see the same
+     * path. `..` above the root is absorbed rather than rejected (it cannot
+     * escape the leading `/`). The result never has a trailing `/` unless it
+     * is the root path itself.
+     *
+     * @param Target the raw request target (already percent-decoded by Indy)
+     * @param Normalized the canonicalized path, valid only if this function
+     *        returns True
+     * @return False if Target contains an embedded NUL or another raw
+     *         control character (reject rather than normalize: this is not
+     *         valid path input)
+     *}
+    class function Normalize(const Target: string; out Normalized: string): Boolean;
+
+    {*
      * Check if a mapping path exists.
      * This procedure throws a EDarajaMappingException if the URL pattern is already registered for this context.
      *
@@ -140,6 +160,80 @@ end;
 class function TdjPathMap.Matches(const Path, Spec: string): Boolean;
 begin
   Result := Matches(Path, Spec, GetSpecType(Spec));
+end;
+
+class function TdjPathMap.Normalize(const Target: string; out Normalized: string): Boolean;
+var
+  Segments: TStringList;
+  I: Integer;
+  Ch: Char;
+  Segment: string;
+  SemicolonPos: Integer;
+begin
+  Result := True;
+  Normalized := '';
+
+  for Ch in Target do
+  begin
+    // Indy already percent-decoded Target once, so a literal NUL or other
+    // control byte here can only mean the client sent it encoded (%00 etc).
+    // Reject outright rather than trying to normalize around it.
+    if (Ch < #32) or (Ch = #127) then
+    begin
+      Result := False;
+      Exit;
+    end;
+  end;
+
+  // '*' is the special OPTIONS-only request target (RFC 7230 Section 5.3.4),
+  // not a path -- leave it alone rather than turning it into '/*'.
+  if Target = '*' then
+  begin
+    Normalized := '*';
+    Exit;
+  end;
+
+  Segments := TStringList.Create;
+  try
+    Segments.StrictDelimiter := True;
+    Segments.Delimiter := '/';
+    Segments.DelimitedText := Target;
+
+    // Segments.DelimitedText turns "/foo" into ['', 'foo'] and "//foo" into
+    // ['', '', 'foo'] -- empty entries here are exactly the leading slash
+    // and any repeated '/', so dropping them collapses '//' for free.
+    Normalized := '';
+    for I := 0 to Segments.Count - 1 do
+    begin
+      Segment := Segments[I];
+
+      // Strip a Servlet-style path parameter, e.g. '/x.jsp;a=b' -> '/x.jsp'.
+      SemicolonPos := Pos(';', Segment);
+      if SemicolonPos > 0 then
+        Segment := Copy(Segment, 1, SemicolonPos - 1);
+
+      if (Segment = '') or (Segment = '.') then
+        Continue;
+
+      if Segment = '..' then
+      begin
+        // Pop the last kept segment, if any. '..' at (or above) the root
+        // has nothing to pop -- absorb it rather than letting it escape.
+        if Pos('/', Normalized) > 0 then
+        begin
+          System.Delete(Normalized, LastDelimiter('/', Normalized), MaxInt);
+        end;
+        Continue;
+      end;
+
+      Normalized := Normalized + '/' + Segment;
+    end;
+
+    if Normalized = '' then
+      Normalized := '/';
+  finally
+    Segments.Free;
+  end;
 end;
 
 class function TdjPathMap.GetSpecType(const Spec: string): TSpecType;

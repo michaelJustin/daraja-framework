@@ -46,6 +46,9 @@ type
     procedure TestMoreUrlPattern;
 
     procedure TestDirUrlPattern;
+
+    procedure TestNormalize;
+    procedure TestNormalizeRejectsControlChars;
   end;
 
 implementation
@@ -270,6 +273,69 @@ begin
   finally
     PS.Free;
   end;
+end;
+
+procedure TdjPathMapTests.TestNormalize;
+var
+  Normalized: string;
+begin
+  CheckTrue(TdjPathMap.Normalize('/foo/bar', Normalized));
+  CheckEquals('/foo/bar', Normalized, 'plain path unchanged');
+
+  CheckTrue(TdjPathMap.Normalize('/foo//bar', Normalized));
+  CheckEquals('/foo/bar', Normalized, 'repeated slash collapsed');
+
+  CheckTrue(TdjPathMap.Normalize('/foo/./bar', Normalized));
+  CheckEquals('/foo/bar', Normalized, 'single dot segment dropped');
+
+  CheckTrue(TdjPathMap.Normalize('/foo/../bar', Normalized));
+  CheckEquals('/bar', Normalized, 'dot-dot pops the previous segment');
+
+  CheckTrue(TdjPathMap.Normalize('/foo/bar/..', Normalized));
+  CheckEquals('/foo', Normalized, 'trailing dot-dot pops the previous segment');
+
+  CheckTrue(TdjPathMap.Normalize('/../../foo', Normalized));
+  CheckEquals('/foo', Normalized, 'dot-dot above the root is absorbed, not escaped');
+
+  CheckTrue(TdjPathMap.Normalize('/x.jsp;a=b', Normalized));
+  CheckEquals('/x.jsp', Normalized, 'path parameter stripped');
+
+  CheckTrue(TdjPathMap.Normalize('/admin/x;jsessionid=123/y', Normalized));
+  CheckEquals('/admin/x/y', Normalized, 'path parameter stripped mid-path');
+
+  CheckTrue(TdjPathMap.Normalize('', Normalized));
+  CheckEquals('/', Normalized, 'empty target normalizes to root');
+
+  CheckTrue(TdjPathMap.Normalize('/', Normalized));
+  CheckEquals('/', Normalized, 'root stays root');
+
+  CheckTrue(TdjPathMap.Normalize('*', Normalized));
+  CheckEquals('*', Normalized, 'OPTIONS * request target is left alone');
+
+  // the classic filter-bypass shapes from the P2 finding: all resolve to
+  // the same canonical path a filter and its guarded component both see
+  CheckTrue(TdjPathMap.Normalize('/admin/./x', Normalized));
+  CheckEquals('/admin/x', Normalized);
+
+  CheckTrue(TdjPathMap.Normalize('//admin/x', Normalized));
+  CheckEquals('/admin/x', Normalized);
+
+  CheckTrue(TdjPathMap.Normalize('/admin/../admin/x', Normalized));
+  CheckEquals('/admin/x', Normalized);
+end;
+
+procedure TdjPathMapTests.TestNormalizeRejectsControlChars;
+var
+  Normalized: string;
+begin
+  CheckFalse(TdjPathMap.Normalize('/foo' + #0 + 'bar', Normalized),
+    'embedded NUL rejected');
+
+  CheckFalse(TdjPathMap.Normalize('/foo' + #10 + 'bar', Normalized),
+    'embedded LF rejected');
+
+  CheckFalse(TdjPathMap.Normalize('/foo' + #127 + 'bar', Normalized),
+    'embedded DEL rejected');
 end;
 
 end.
