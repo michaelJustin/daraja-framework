@@ -173,7 +173,7 @@ Hello, World!
 
 ### Getting started with Daraja
 
-[DarajaFrameworkGettingStarted.pdf](../docs/DarajaFrameworkGettingStarted.pdf) (version 3.2.0, in this repository)
+[DarajaFrameworkGettingStarted.pdf](../docs/DarajaFrameworkGettingStarted.pdf) (version 3.3.0, in this repository)
 
 ### Changelog
 

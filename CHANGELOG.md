@@ -8,6 +8,8 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-09-23
+
 ### Security
 
 - `TdjWebComponentHandler.InvokeService`'s 500 response no longer discloses
@@ -30,6 +32,16 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   instead of a clean 500. It now sets `ResponseNo := 500` with the same
   generic, detail-free body as `TdjWebComponentHandler.InvokeService`'s
   default error page. (#517)
+- The request target is now normalized once, centrally, before routing:
+  `.`, `..` and repeated `/` are collapsed by path segment, and a
+  Servlet-style `;`-parameter is stripped, before a filter's or component's
+  URL pattern is matched against it. A target carrying an embedded NUL or
+  other raw control byte is rejected with `400` instead of reaching
+  routing. This also fixes a real bypass: `TdjWebComponentHandler.Handle`
+  used to match a filter's prefix pattern against the raw,
+  context-prefixed target while matching the guarded component against the
+  context-stripped path, so a prefix-pattern filter (e.g. `/secure/*`)
+  silently never applied on any non-root context. (#530)
 
 ### Added
 
@@ -114,7 +126,7 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   uncaught exception turning into a 500. No behavior change: registration
   already rejects `stUnknown` patterns (#422), so the branch stays
   unreachable in practice. (#519)
-- Version constant set to `3.3.0-SNAPSHOT`.
+- Version constant set to `3.3.0`. (#515)
 
 ## [3.2.0] - 2026-09-09
 
@@ -312,7 +324,8 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 - Requires slf4p 1.0.8.
 - `TdjLoggerFactory.GetLogger` calls use a class reference. (#396)
 
-[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.2...v3.2.0
 [3.1.2]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.0...v3.1.1
