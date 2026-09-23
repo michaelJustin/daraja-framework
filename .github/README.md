@@ -204,6 +204,8 @@ No, this is not required.
 
 You can be released from the requirements of the AGPL license by purchasing a commercial license. The commercial license can be obtained from https://www.habarisoft.com/daraja_framework.html
 
+The commercial license terms are in [COMMERCIAL-LICENSE.txt](../COMMERCIAL-LICENSE.txt).
+
 ## Credits
 
 This software uses the following open source packages:

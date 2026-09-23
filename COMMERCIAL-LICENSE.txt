@@ -1,0 +1,180 @@
+LICENSE
+
+Daraja HTTP Framework (c) 2016 Michael Justin
+
+This copyright applies to all source code, compiled code,
+documentation, graphics and auxiliary files, except those
+parts written by other people (which are normally copyright
+their authors).
+
+In this license, "the Licensor" means Michael Justin,
+Habarisoft, and "you" means the business that purchased the
+subscription.
+
+Daraja is dual-licensed. It is available at no charge under
+the GNU Affero General Public License v3 (AGPL). This
+commercial license releases you from the AGPL's obligations,
+in particular the requirement to publish the complete source
+code of any application built with Daraja.
+
+
+GRANT OF LICENSE
+Subject to the conditions below, the Licensor grants you a
+non-exclusive, worldwide, non-transferable license, under
+which you may, for each licensed developer seat:
+
+a) use the Daraja HTTP Framework ("the Framework") to write
+   and compile your own application programs;
+
+b) modify the Framework's source code for use in your own
+   programs, without any obligation to publish those
+   modifications;
+
+c) run your programs, and make them available to others over
+   a network (including as a hosted or software-as-a-service
+   offering), on any number of servers, for any number of
+   users;
+
+d) reproduce and distribute your programs in executable
+   (compiled) form only, royalty-free and without additional
+   license fees; and
+
+e) allow the recipients of your programs to install and run
+   them on their own servers.
+
+
+TERM AND COVERED VERSIONS
+Your license covers every version of the Framework released
+while your subscription is active. The license for those
+versions is perpetual: it does not end when the subscription
+ends. After the subscription ends you may continue to use,
+modify, run and distribute programs built with those versions
+under these terms.
+
+Versions released after your subscription has ended are not
+covered by this license. They are available under the AGPL
+only, unless you renew the subscription.
+
+The Licensor may terminate this license if you materially
+breach its terms and do not remedy the breach within thirty
+(30) days of being notified of it.
+
+
+CONDITIONS
+
+1. Conditions: Your distribution of the programs must comply
+   with all conditions listed in this agreement and any
+   related agreements, including the Licensor's Terms of
+   Service (https://www.habarisoft.com/terms.html).
+
+2. Your Programs: You are solely responsible for your programs
+   and for any warranties, support or other commitments you
+   give to your own customers. Such commitments do not bind
+   the Licensor.
+
+3. Intellectual Property: You must respect the intellectual
+   property rights associated with the Framework and your
+   program.
+
+4. Limitations: The distribution of your programs must not
+   violate any applicable laws or regulations.
+
+5. Every developer who writes, modifies or maintains code that
+   uses the Framework must hold a licensed developer seat
+   covering the Framework version in use. Build servers,
+   continuous integration systems, testers and end users of
+   your programs do not need a seat.
+
+6. Your programs must add primary and substantial functionality,
+   and may not be merely a set or subset of the Framework.
+
+7. This license lets you, the developer, use the Framework to
+   build and distribute your own programs; it does not pass
+   that right on to the people who use those programs. Your
+   license does not permit the people who receive your programs
+   to use the copy of the Framework embedded in them to develop
+   separate software of their own, or to extract, redistribute
+   or otherwise pass on the Framework itself. This applies
+   regardless of any modifications you make or how you compile,
+   link, or package your programs, and does not restrict your
+   end users' ordinary use of the programs you give them.
+
+8. You may not use Habarisoft's or any of its suppliers' names,
+   logos, or trademarks to market your programs, except to state
+   that your program was written using the Framework.
+
+All Habarisoft libraries, source code, and other files remain
+Habarisoft's exclusive property. Regardless of any modifications
+that you make, you may not distribute any files of the
+Framework (particularly its source code and other
+non-executable files), except as compiled into your own
+programs.
+
+
+BUSINESS CUSTOMERS ONLY
+This commercial license is offered exclusively to businesses
+(entrepreneurs within the meaning of section 14 of the German
+Civil Code, BGB), including freelancers acting in their
+professional capacity. It is not offered to consumers.
+
+
+WARRANTY
+The complete source code of the Framework is publicly
+available, and you are able to evaluate it under the AGPL
+before purchasing this license. The Framework is therefore
+provided in its current state ("as is"). The Licensor gives
+no guarantee (Garantie) and does not warrant that the
+Framework is free of defects, will run without interruption,
+or is suitable for a particular purpose.
+
+To the extent that statutory warranty claims for defects
+nevertheless exist, the limitation period is twelve (12)
+months from the start of the subscription period in which
+the affected version was obtained. This does not apply to
+defects that the Licensor has fraudulently concealed.
+
+
+LIABILITY
+1. The Licensor is liable without limitation for damage
+   caused intentionally or by gross negligence, for injury to
+   life, body or health, for defects that the Licensor has
+   fraudulently concealed, and under the German Product
+   Liability Act (Produkthaftungsgesetz).
+
+2. For slight negligence, the Licensor is liable only for
+   breach of an essential contractual obligation, that is, an
+   obligation whose fulfilment makes proper performance of the
+   agreement possible in the first place and on which you may
+   regularly rely. In that case liability is limited to the
+   damage that was foreseeable and typical for this kind of
+   agreement at the time it was concluded, and in any event to
+   the license fees you paid in the twelve (12) months before
+   the event giving rise to the claim.
+
+3. Otherwise, the Licensor's liability is excluded.
+
+4. You are responsible for backing up your data regularly and
+   in a manner appropriate to its importance. Liability for
+   loss of data is limited to the cost of restoring it from
+   such backups.
+
+5. These limitations also apply in favor of the Licensor's
+   employees, representatives and agents.
+
+
+GOVERNING LAW AND JURISDICTION
+This license is governed by the laws of the Federal Republic
+of Germany, excluding the United Nations Convention on
+Contracts for the International Sale of Goods (CISG). If you
+are a merchant (Kaufmann), a legal entity under public law or
+a special fund under public law, the exclusive place of
+jurisdiction for all disputes arising from this license is the
+Licensor's place of business.
+
+
+SEVERABILITY
+If any provision of this license is or becomes invalid, the
+validity of the remaining provisions is not affected.
+
+License v1.0
+Last updated: 2026-09-23
