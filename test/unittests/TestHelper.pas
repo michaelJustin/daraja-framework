@@ -55,6 +55,8 @@ uses
   djWebComponentHandlerTests,
   djWebComponentHolderTests,
   djWebFilterTests,
+  djWebFilterChainTests,
+  djWebFilterMappingTests,
   djGlobal,
   TestSessions,
   djLogOverSimpleLogger,
@@ -88,6 +90,8 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHandlerTests));
   Tests.AddTest(TTestSuite.Create(TdjWebAppContextTests));
   Tests.AddTest(TTestSuite.Create(TdjWebFilterTests));
+  Tests.AddTest(TTestSuite.Create(TdjWebFilterChainTests));
+  Tests.AddTest(TTestSuite.Create(TdjWebFilterMappingTests));
   // optional feature
   Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
 
@@ -116,6 +120,8 @@ begin
   RegisterTests('', [TdjWebComponentHandlerTests.Suite]);
   RegisterTests('', [TdjWebAppContextTests.Suite]);
   RegisterTests('', [TdjWebFilterTests.Suite]);
+  RegisterTests('', [TdjWebFilterChainTests.Suite]);
+  RegisterTests('', [TdjWebFilterMappingTests.Suite]);
   // optional feature
   RegisterTests('', [TdjDefaultWebComponentTests.Suite]);
 

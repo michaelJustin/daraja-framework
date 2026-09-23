@@ -78,6 +78,8 @@ uses
   djWebComponentHandlerTests in 'djWebComponentHandlerTests.pas',
   djWebComponentHolderTests in 'djWebComponentHolderTests.pas',
   djWebFilterTests in 'djWebFilterTests.pas',
+  djWebFilterChainTests in 'djWebFilterChainTests.pas',
+  djWebFilterMappingTests in 'djWebFilterMappingTests.pas',
   HTTPTestCase in 'HTTPTestCase.pas',
   TestSessions in 'TestSessions.pas',
   UnicodeText in 'UnicodeText.pas',
