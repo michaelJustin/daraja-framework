@@ -772,28 +772,22 @@ begin
   if Holder <> nil then
   begin
     Response.ResponseNo := HTTP_OK;
-    try
-      // lazy (negative LoadOnStartup) or previously-failed components are
-      // started here, on first matching request; a failure is caught below
-      // and reported as a 500 without leaving the holder wedged
-      if not Holder.IsStarted then
-      begin
-        Holder.Start;
-      end;
 
-      if Chain <> nil then begin
-        Chain.DoFilter(Context, Request, Response);
-      end else begin
-        InvokeService(Holder.WebComponent, Context, Request, Response);
-      end;
-    except
-      on E: Exception do
-      begin
-        Response.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
-        {$IFDEF DARAJA_LOGGING}
-        // InvokeService already logged the exception
-        {$ENDIF DARAJA_LOGGING}
-      end;
+    // lazy (negative LoadOnStartup) or previously-failed components are
+    // started here, on first matching request. A failure here, in a filter,
+    // or in the component's Service method is not caught in this method:
+    // it propagates to the caller (TdjWebComponentContextHandler.DoHandle),
+    // which turns it into a response and, if one is configured, invokes the
+    // context's ErrorHandler.
+    if not Holder.IsStarted then
+    begin
+      Holder.Start;
+    end;
+
+    if Chain <> nil then begin
+      Chain.DoFilter(Context, Request, Response);
+    end else begin
+      InvokeService(Holder.WebComponent, Context, Request, Response);
     end;
   end;
 end;

@@ -163,6 +163,25 @@ type
     // properties
     property ConnectorNames: TStrings read FConnectorNames;
     property ContextPath: string read GetContextPath;
+
+    {*
+     * Optional handler invoked, in place of the framework's default generic
+     * 500 response, when a Web Component or Web Filter registered in this
+     * context raises an unhandled exception.
+     *
+     * The handler receives the same (Target, Context, Request, Response) as
+     * any other IHandler; before it is called, Context (a TdjServerContext)
+     * carries LastErrorStatusCode/LastErrorExceptionClass/
+     * LastErrorExceptionMessage describing the failure, so the handler can
+     * tailor its response. It is fully responsible for the response --
+     * Response.ResponseNo already defaults to 500, but the handler may
+     * change it.
+     *
+     * If the handler itself raises, or none is set, the framework's default
+     * generic 500 response (introduced in #520/#523) is used instead.
+     *
+     * @sa TdjServerContext.LastErrorStatusCode
+     *}
     property ErrorHandler: IHandler read FErrorHandler write SetErrorHandler;
   end;
 
@@ -344,6 +363,14 @@ procedure TdjContextHandler.DoStart;
 begin
   inherited;
 
+  // SetErrorHandler only starts it if the context is already running; the
+  // normal configure-then-start order (ErrorHandler set before Start) would
+  // otherwise leave it never started.
+  if Assigned(FErrorHandler) then
+  begin
+    FErrorHandler.Start;
+  end;
+
   {$IFDEF DARAJA_LOGGING}
   Logger.Info('Starting context ' + ContextPath);
   {$ENDIF DARAJA_LOGGING}
@@ -354,6 +381,11 @@ begin
   {$IFDEF DARAJA_LOGGING}
   Logger.Info('Stopping context ' + ContextPath);
   {$ENDIF DARAJA_LOGGING}
+
+  if Assigned(FErrorHandler) then
+  begin
+    FErrorHandler.Stop;
+  end;
 
   inherited;
 end;

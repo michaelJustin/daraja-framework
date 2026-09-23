@@ -68,6 +68,11 @@ type
 
     procedure CheckGETResponse500(URL: string = ''; msg: string = '');
 
+    // like CheckGETResponse500, but also checks the response body -- for
+    // GETs expected to return 500 with specific content (e.g. a custom
+    // ErrorHandler's page).
+    procedure CheckGETResponse500ContentEquals(Expected: string; URL: string = ''; msg: string = '');
+
     procedure CheckPOSTResponseEquals(Expected: string; URL: string = ''; msg: string = '');
 
     // for tests overriding the TdjWebComponent.OnGetLastModified method
@@ -412,6 +417,25 @@ begin
 
   IdHTTP.Get(URL, [500]);
   CheckEquals(500, IdHTTP.ResponseCode, msg);
+end;
+
+procedure THTTPTestCase.CheckGETResponse500ContentEquals(Expected: string;
+  URL: string; msg: string);
+var
+  Actual: string;
+begin
+  URL := ResolveURL(URL);
+
+  // IdHTTP.Get(URL, [500]) alone suppresses the EIdHTTPProtocolException for
+  // a 500 reply, but by design still discards the response body unless
+  // hoWantProtocolErrorContent is also set (see TIdHTTPProtocol.ProcessResponse's
+  // CheckException: LDiscardContent defaults to True for an ignored reply
+  // code, independently of the exception-suppression mechanism used).
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoWantProtocolErrorContent];
+
+  Actual := IdHTTP.Get(URL, [500]);
+  CheckEquals(500, IdHTTP.ResponseCode, msg);
+  CheckEquals(Expected, Actual, msg);
 end;
 
 procedure THTTPTestCase.CheckGETResponseContains(Expected: string; URL: string = ''; msg: string = '');
