@@ -72,6 +72,7 @@ uses
   djContextHandlerTests in 'djContextHandlerTests.pas',
   djDefaultWebComponentTests in 'djDefaultWebComponentTests.pas',
   djHandlerCollectionTests in 'djHandlerCollectionTests.pas',
+  djHandlerWrapperTests in 'djHandlerWrapperTests.pas',
   djLifeCycleTests in 'djLifeCycleTests.pas',
   djPathMapTests in 'djPathMapTests.pas',
   djWebAppContextTests in 'djWebAppContextTests.pas',
