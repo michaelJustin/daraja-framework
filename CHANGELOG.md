@@ -21,6 +21,15 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   generic response — no behavior change for contexts that don't opt in. See
   `demo/19_error_handler` for a runnable example. (#528)
 
+### Fixed
+
+- `TdjContextHandler.ContextMatches` now matches a named context's bare path
+  with no trailing slash (e.g. `/app` for a context registered as `"app"`) —
+  previously only `/app/...` matched and the bare path 404'd. This follows
+  the Servlet spec's request path matching rule (exact match, or prefix
+  followed by `/`), the same rule `TdjPathMap` already applies for `/foo/*`
+  patterns matching bare `/foo`. (#544)
+
 ### Internal
 
 - New test coverage: `TdjWebFilterChain.DoFilter`'s zero-filter, short-circuit
