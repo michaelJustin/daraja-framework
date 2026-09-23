@@ -91,8 +91,10 @@
 			<DCCReference Include="djGenericHolderTests.pas"/>
 			<DCCReference Include="djGenericWebComponentTests.pas"/>
 			<DCCReference Include="djGenericWebFilterTests.pas"/>
+			<DCCReference Include="djGlobalTests.pas"/>
 			<DCCReference Include="djHandlerCollectionTests.pas"/>
 			<DCCReference Include="djHandlerWrapperTests.pas"/>
+			<DCCReference Include="djInitParametersTests.pas"/>
 			<DCCReference Include="djPathMapTests.pas"/>
 			<DCCReference Include="djServerBaseTests.pas"/>
 			<DCCReference Include="djWebAppContextTests.pas"/>
