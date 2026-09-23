@@ -8,6 +8,26 @@ Many "high-risk" units are only reached *transitively* through `djServer`/
 (integration-style), so they get generic start/stop coverage but not targeted
 coverage of their own branches/error paths.
 
+## Status (as of 2026-09-23)
+
+Gaps 1–9 below have been closed with dedicated unit tests:
+
+1. `djWebFilterChain.pas` / `djWebFilterMapping.pas` — closed by #503.
+2. `djHandlerCollection.pas` — closed by #501 (predates this audit's own PRs).
+3. `djContextHandler.pas` — closed by #501.
+4. `djAbstractConnector.pas` / `djHTTPServer.pas` — closed by #504.
+5. `djServerBase.pas` — closed by #504.
+6. `djWebFilterMapping.pas` — closed by #503 (see 1).
+7. `djHandlerWrapper.pas` — closed by #505.
+8. `djGenericHolder.pas` / `djGenericWebComponent.pas` / `djGenericWebFilter.pas`
+   — closed by #506.
+9. `djGlobal.pas`, `djPlatform.pas`, `djHTTPConstants.pas`,
+   `djInitParameters.pas` — closed by #507 (the last three audited and
+   confirmed low-risk with nothing of their own left to test).
+
+Gap 10 (`djAbstractConfig.pas` / `djContextConfig.pas`) is open, tracked in
+#508.
+
 ## Top gaps, ranked by risk
 
 1. **djWebFilterChain.pas** (`TdjWebFilterChain.DoFilter`) — walks the filter

@@ -8,6 +8,29 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Internal
+
+- New test coverage: `TdjWebFilterChain.DoFilter`'s zero-filter, short-circuit
+  (a filter that never calls `Next.DoFilter`) and mid-chain-exception paths,
+  and `TdjWebFilterMapping.AppliesTo`'s URL-pattern matching. (#503)
+- New test coverage: connector/server lifecycle — `TdjHTTPConnector`'s
+  bind/activate on `Start`, deactivate on `Stop`, socket release on `Destroy`,
+  double-start and stop-when-never-started as no-ops, and mutating `Port`
+  while running leaving the live binding untouched; `TdjServerBase.Handle`'s
+  guard on the wrapped handler's own started state. (#504)
+- New test coverage: `TdjHandlerWrapper.GetSession`'s three branches —
+  returning an existing session as-is, returning `nil` when absent and
+  `Create` is `False`, and creating a new session via the HTTP server's
+  `CreateSession` when absent and `Create` is `True`. (#505)
+- New test coverage: the shared `TdjGenericHolder`/`TdjGenericWebComponent`/
+  `TdjGenericWebFilter` base classes reused by every web-component and
+  web-filter holder subclass — the `Init(Config)`/`Config` contract, and
+  `TdjGenericWebComponent`'s own (previously untested) `GetSession`. (#506)
+- New test coverage: `djGlobal.HTMLEncode`'s character escaping and
+  `TdjInitParameters`'s case-sensitive key contract; audited
+  `djPlatform`/`djHTTPConstants` and confirmed they're low-risk
+  constant/wrapper units with no code of their own left to test. (#507)
+
 ## [3.3.0] - 2026-09-23
 
 ### Security
