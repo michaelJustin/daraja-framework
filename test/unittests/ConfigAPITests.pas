@@ -70,6 +70,12 @@ type
     procedure TestExceptionInInitStopsComponent;
     procedure TestExceptionInServiceReturns500;
 
+    // ErrorHandler (issue #528)
+    procedure TestErrorHandlerReplacesDefault500Page;
+    procedure TestErrorHandlerRaisingFallsBackToDefault500Page;
+    procedure TestFilterExceptionReachesErrorHandler;
+    procedure TestErrorHandlerSetBeforeStartIsStartedAndStopped;
+
     // lazy (negative LoadOnStartup) load-on-startup (issue #496)
     procedure TestNegativeLoadOnStartupNotStartedAtServerStart;
     procedure TestNegativeLoadOnStartupStartsOnFirstRequest;
@@ -921,6 +927,198 @@ begin
 
     CheckGETResponse500('/ctx/exception');
 
+  finally
+    Server.Free;
+  end;
+end;
+
+// test ErrorHandler (issue #528) ---------------------------------------------
+type
+  { TTestErrorHandler }
+  TTestErrorHandler = class(TdjAbstractHandler)
+  public
+    RaiseInsteadOfHandling: Boolean;
+  protected
+    procedure Handle(const Target: string; Context: TdjServerContext;
+      Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+  { TLifecycleTrackingHandler }
+  TLifecycleTrackingHandler = class(TdjAbstractHandler)
+  public
+    WasStarted, WasStopped: Boolean;
+  protected
+    procedure DoStart; override;
+    procedure DoStop; override;
+    procedure Handle({%H-}const {%H-}Target: string; {%H-}Context: TdjServerContext;
+      {%H-}Request: TdjRequest; {%H-}Response: TdjResponse); override;
+  end;
+
+  { TExceptionFilter }
+  TExceptionFilter = class(TdjWebFilter)
+  public
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      {%H-}Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
+  { TOKComponent: a component that never raises, used to isolate a filter's
+    own exception (TestFilterExceptionReachesErrorHandler) from a component
+    exception. }
+  TOKComponent = class(TdjWebComponent)
+  public
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+{ TTestErrorHandler }
+
+procedure TTestErrorHandler.Handle(const Target: string; Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse);
+begin
+  if RaiseInsteadOfHandling then
+  begin
+    raise Exception.Create('ErrorHandler itself failed');
+  end;
+
+  Response.ContentType := 'text/plain';
+  Response.ContentText := 'custom error page: ' + Context.LastErrorExceptionClass
+    + ' / ' + Context.LastErrorExceptionMessage;
+end;
+
+{ TLifecycleTrackingHandler }
+
+procedure TLifecycleTrackingHandler.DoStart;
+begin
+  inherited;
+  WasStarted := True;
+end;
+
+procedure TLifecycleTrackingHandler.DoStop;
+begin
+  WasStopped := True;
+  inherited;
+end;
+
+procedure TLifecycleTrackingHandler.Handle(const Target: string;
+  Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse);
+begin
+  //
+end;
+
+{ TExceptionFilter }
+
+procedure TExceptionFilter.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  raise Exception.Create('filter boom');
+end;
+
+{ TOKComponent }
+
+procedure TOKComponent.OnGet(Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'ok';
+end;
+
+procedure TAPIConfigTests.TestErrorHandlerReplacesDefault500Page;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx-eh');
+    Context.AddWebComponent(TExceptionComponent, '/exception');
+    Context.ErrorHandler := TTestErrorHandler.Create;
+    Server.Add(Context);
+    Server.Start;
+
+    // the custom page, not the framework's generic 500 body, and with the
+    // failing exception's class/message populated on the context beforehand
+    CheckGETResponse500ContentEquals('custom error page: EUnitTestException / test',
+      '/ctx-eh/exception');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestErrorHandlerRaisingFallsBackToDefault500Page;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Handler: TTestErrorHandler;
+begin
+  Handler := TTestErrorHandler.Create;
+  Handler.RaiseInsteadOfHandling := True;
+
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx-eh-raises');
+    Context.AddWebComponent(TExceptionComponent, '/exception');
+    Context.ErrorHandler := Handler;
+    Server.Add(Context);
+    Server.Start;
+
+    // ErrorHandler itself raised; the request must still get a definite
+    // response (the framework's default), not crash or hang
+    CheckGETResponse500('/ctx-eh-raises/exception');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestFilterExceptionReachesErrorHandler;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx-eh-filter');
+    Context.Add(TOKComponent, '*.html');
+    Context.Add(TExceptionFilter, '/*');
+    Context.ErrorHandler := TTestErrorHandler.Create;
+    Server.Add(Context);
+    Server.Start;
+
+    // the component itself never raises -- only the filter does -- so this
+    // confirms ErrorHandler covers filter exceptions too, not just a Web
+    // Component's Service method
+    CheckGETResponse500ContentEquals('custom error page: Exception / filter boom',
+      '/ctx-eh-filter/page.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestErrorHandlerSetBeforeStartIsStartedAndStopped;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+  Handler: TLifecycleTrackingHandler;
+begin
+  Handler := TLifecycleTrackingHandler.Create;
+
+  Context := TdjWebAppContext.Create('ctx-eh-lifecycle');
+  // set before Start -- the normal configure-then-start order. SetErrorHandler
+  // only starts it immediately if the context is already running, so this is
+  // exactly the case the DoStart/DoStop fix covers.
+  Context.ErrorHandler := Handler;
+
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.Start;
+
+    CheckTrue(Handler.WasStarted,
+      'ErrorHandler set before Start must still be started with its context');
+
+    Server.Stop;
+
+    CheckTrue(Handler.WasStopped,
+      'ErrorHandler must be stopped when its context stops');
   finally
     Server.Free;
   end;

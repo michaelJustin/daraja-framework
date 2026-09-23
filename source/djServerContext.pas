@@ -43,7 +43,39 @@ type
    * future extensions.
    *}
   TdjServerContext = class(TIdServerContext)
-    // pas2dox requires the class declaration to use the end; statement
+  strict private
+    FLastErrorStatusCode: Integer;
+    FLastErrorExceptionClass: string;
+    FLastErrorExceptionMessage: string;
+  public
+    {*
+     * The HTTP status code set for the exception described by
+     * LastErrorExceptionClass/LastErrorExceptionMessage.
+     *
+     * Only meaningful while an TdjContextHandler.ErrorHandler is being
+     * invoked for the current request; not cleared afterwards, so do not
+     * read it outside of that call.
+     *}
+    property LastErrorStatusCode: Integer
+      read FLastErrorStatusCode write FLastErrorStatusCode;
+
+    {*
+     * The class name of the exception that triggered the current
+     * TdjContextHandler.ErrorHandler invocation.
+     *
+     * @sa LastErrorStatusCode
+     *}
+    property LastErrorExceptionClass: string
+      read FLastErrorExceptionClass write FLastErrorExceptionClass;
+
+    {*
+     * The message of the exception that triggered the current
+     * TdjContextHandler.ErrorHandler invocation.
+     *
+     * @sa LastErrorStatusCode
+     *}
+    property LastErrorExceptionMessage: string
+      read FLastErrorExceptionMessage write FLastErrorExceptionMessage;
   end;
 
   TdjServerContextClass = class of TdjServerContext;
