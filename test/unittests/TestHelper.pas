@@ -52,8 +52,10 @@ uses
   djGenericHolderTests,
   djGenericWebComponentTests,
   djGenericWebFilterTests,
+  djGlobalTests,
   djHandlerCollectionTests,
   djHandlerWrapperTests,
+  djInitParametersTests,
   djLifeCycleTests,
   djServerBaseTests,
   djPathMapTests,
@@ -93,6 +95,8 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjGenericHolderTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericWebComponentTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericWebFilterTests));
+  Tests.AddTest(TTestSuite.Create(TdjGlobalTests));
+  Tests.AddTest(TTestSuite.Create(TdjInitParametersTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerCollectionTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerWrapperTests));
   Tests.AddTest(TTestSuite.Create(TdjContextHandlerTests));
@@ -129,6 +133,8 @@ begin
   RegisterTests('', [TdjGenericHolderTests.Suite]);
   RegisterTests('', [TdjGenericWebComponentTests.Suite]);
   RegisterTests('', [TdjGenericWebFilterTests.Suite]);
+  RegisterTests('', [TdjGlobalTests.Suite]);
+  RegisterTests('', [TdjInitParametersTests.Suite]);
   RegisterTests('', [TdjHandlerCollectionTests.Suite]);
   RegisterTests('', [TdjHandlerWrapperTests.Suite]);
   RegisterTests('', [TdjContextHandlerTests.Suite]);

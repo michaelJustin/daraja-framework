@@ -75,6 +75,8 @@ uses
   djGenericHolderTests in 'djGenericHolderTests.pas',
   djGenericWebComponentTests in 'djGenericWebComponentTests.pas',
   djGenericWebFilterTests in 'djGenericWebFilterTests.pas',
+  djGlobalTests in 'djGlobalTests.pas',
+  djInitParametersTests in 'djInitParametersTests.pas',
   djServerBaseTests in 'djServerBaseTests.pas',
   djHandlerCollectionTests in 'djHandlerCollectionTests.pas',
   djHandlerWrapperTests in 'djHandlerWrapperTests.pas',
