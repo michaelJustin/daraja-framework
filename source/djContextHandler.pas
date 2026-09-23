@@ -123,6 +123,12 @@ type
     {*
      * Check if the Document matches this context.
      *
+     * A named context matches both its bare path (no trailing slash, e.g.
+     * "/app" for a context registered as "app") and any path below it
+     * ("/app/...") -- the same exact-match-or-prefix-plus-slash rule used
+     * by the Servlet spec for request path matching, and already mirrored
+     * by TdjPathMap for "/foo/*" patterns matching bare "/foo". See #544.
+     *
      * @param ConnectorName the connector name (like 'host:port'
      * @param Target the target URL document
      *
@@ -335,6 +341,7 @@ end;
 function TdjContextHandler.ContextMatches(const ConnectorName, Target: string): Boolean;
 begin
   Result := (Pos('/' + ContextPath + '/', Target) = 1)
+    or (Target = '/' + ContextPath)
     or ((ContextPath = ROOT_CONTEXT) and (Pos('/', Target) = 1));
 
   if Result and (ConnectorNames.Count > 0) then
