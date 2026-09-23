@@ -49,6 +49,8 @@ uses
   djWebFilterMappingTests,
   djHandlerCollectionTests,
   djContextHandlerTests,
+  djServerBaseTests,
+  djAbstractConnectorTests,
   ConfigAPITests,
   HttpsTests,
   TestHelper,
