@@ -51,6 +51,7 @@ uses
   djWebFilterChainTests,
   djWebFilterMappingTests,
   djHandlerCollectionTests,
+  djHandlerWrapperTests,
   djContextHandlerTests,
   djServerBaseTests,
   djAbstractConnectorTests,

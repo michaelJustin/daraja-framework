@@ -53,6 +53,7 @@ uses
   djGenericWebComponentTests,
   djGenericWebFilterTests,
   djHandlerCollectionTests,
+  djHandlerWrapperTests,
   djLifeCycleTests,
   djServerBaseTests,
   djPathMapTests,
@@ -93,6 +94,7 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjGenericWebComponentTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericWebFilterTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerCollectionTests));
+  Tests.AddTest(TTestSuite.Create(TdjHandlerWrapperTests));
   Tests.AddTest(TTestSuite.Create(TdjContextHandlerTests));
   Tests.AddTest(TTestSuite.Create(TdjServerBaseTests));
   Tests.AddTest(TTestSuite.Create(TdjAbstractConnectorTests));
@@ -128,6 +130,7 @@ begin
   RegisterTests('', [TdjGenericWebComponentTests.Suite]);
   RegisterTests('', [TdjGenericWebFilterTests.Suite]);
   RegisterTests('', [TdjHandlerCollectionTests.Suite]);
+  RegisterTests('', [TdjHandlerWrapperTests.Suite]);
   RegisterTests('', [TdjContextHandlerTests.Suite]);
   RegisterTests('', [TdjServerBaseTests.Suite]);
   RegisterTests('', [TdjAbstractConnectorTests.Suite]);

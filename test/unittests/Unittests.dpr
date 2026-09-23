@@ -77,6 +77,7 @@ uses
   djGenericWebFilterTests in 'djGenericWebFilterTests.pas',
   djServerBaseTests in 'djServerBaseTests.pas',
   djHandlerCollectionTests in 'djHandlerCollectionTests.pas',
+  djHandlerWrapperTests in 'djHandlerWrapperTests.pas',
   djLifeCycleTests in 'djLifeCycleTests.pas',
   djPathMapTests in 'djPathMapTests.pas',
   djWebAppContextTests in 'djWebAppContextTests.pas',
