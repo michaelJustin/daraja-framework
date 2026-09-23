@@ -10,7 +10,7 @@ coverage of their own branches/error paths.
 
 ## Status (as of 2026-09-23)
 
-Gaps 1–9 below have been closed with dedicated unit tests:
+All ten gaps below have been closed with dedicated unit tests:
 
 1. `djWebFilterChain.pas` / `djWebFilterMapping.pas` — closed by #503.
 2. `djHandlerCollection.pas` — closed by #501 (predates this audit's own PRs).
@@ -25,8 +25,9 @@ Gaps 1–9 below have been closed with dedicated unit tests:
    `djInitParameters.pas` — closed by #507 (the last three audited and
    confirmed low-risk with nothing of their own left to test).
 
-Gap 10 (`djAbstractConfig.pas` / `djContextConfig.pas`) is open, tracked in
-#508.
+10. `djAbstractConfig.pas` / `djContextConfig.pas` — closed by #508.
+
+All ten gaps from this audit are now closed.
 
 ## Top gaps, ranked by risk
 

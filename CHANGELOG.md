@@ -30,6 +30,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `TdjInitParameters`'s case-sensitive key contract; audited
   `djPlatform`/`djHTTPConstants` and confirmed they're low-risk
   constant/wrapper units with no code of their own left to test. (#507)
+- New test coverage: `TdjAbstractConfig`'s full contract — missing-key
+  lookup, case-sensitive parameter names, duplicate-key rejection,
+  `GetInitParameterNames`, `SetContext`'s nil/same-context/different-context
+  rules, and the `Name` property; `TdjContextConfig`'s inherited behavior and
+  `IContextConfig` conformance. This closes out the coverage audit from
+  #502. (#508)
 
 ## [3.3.0] - 2026-09-23
 
