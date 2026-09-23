@@ -48,6 +48,9 @@ uses
   {$ENDIF DARAJA_TEST_HTTPS}
   djContextHandlerTests,
   djDefaultWebComponentTests,
+  djGenericHolderTests,
+  djGenericWebComponentTests,
+  djGenericWebFilterTests,
   djHandlerCollectionTests,
   djLifeCycleTests,
   djPathMapTests,
@@ -82,6 +85,9 @@ begin
   Tests := TTestSuite.Create(DWF_SERVER_FULL_NAME);
   Tests.AddTest(TTestSuite.Create(TdjLifeCycleTests));
   Tests.AddTest(TTestSuite.Create(TdjPathMapTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericHolderTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericWebComponentTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericWebFilterTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerCollectionTests));
   Tests.AddTest(TTestSuite.Create(TdjContextHandlerTests));
   Tests.AddTest(TTestSuite.Create(TdjWebComponentHolderTests));
@@ -110,6 +116,9 @@ procedure RegisterUnitTests;
 begin
   RegisterTests('', [TdjLifeCycleTests.Suite]);
   RegisterTests('', [TdjPathMapTests.Suite]);
+  RegisterTests('', [TdjGenericHolderTests.Suite]);
+  RegisterTests('', [TdjGenericWebComponentTests.Suite]);
+  RegisterTests('', [TdjGenericWebFilterTests.Suite]);
   RegisterTests('', [TdjHandlerCollectionTests.Suite]);
   RegisterTests('', [TdjContextHandlerTests.Suite]);
   RegisterTests('', [TdjWebComponentHolderTests.Suite]);

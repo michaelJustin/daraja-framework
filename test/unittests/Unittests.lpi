@@ -109,7 +109,7 @@
         <PackageName Value="FCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="15">
+    <Units Count="18">
       <Unit0>
         <Filename Value="Unittests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -170,6 +170,18 @@
         <Filename Value="djContextHandlerTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
+      <Unit15>
+        <Filename Value="djGenericHolderTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="djGenericWebComponentTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="djGenericWebFilterTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
