@@ -49,6 +49,9 @@ uses
   djAbstractConnectorTests,
   djContextHandlerTests,
   djDefaultWebComponentTests,
+  djGenericHolderTests,
+  djGenericWebComponentTests,
+  djGenericWebFilterTests,
   djHandlerCollectionTests,
   djHandlerWrapperTests,
   djLifeCycleTests,
@@ -87,6 +90,9 @@ begin
   Tests := TTestSuite.Create(DWF_SERVER_FULL_NAME);
   Tests.AddTest(TTestSuite.Create(TdjLifeCycleTests));
   Tests.AddTest(TTestSuite.Create(TdjPathMapTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericHolderTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericWebComponentTests));
+  Tests.AddTest(TTestSuite.Create(TdjGenericWebFilterTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerCollectionTests));
   Tests.AddTest(TTestSuite.Create(TdjHandlerWrapperTests));
   Tests.AddTest(TTestSuite.Create(TdjContextHandlerTests));
@@ -120,6 +126,9 @@ procedure RegisterUnitTests;
 begin
   RegisterTests('', [TdjLifeCycleTests.Suite]);
   RegisterTests('', [TdjPathMapTests.Suite]);
+  RegisterTests('', [TdjGenericHolderTests.Suite]);
+  RegisterTests('', [TdjGenericWebComponentTests.Suite]);
+  RegisterTests('', [TdjGenericWebFilterTests.Suite]);
   RegisterTests('', [TdjHandlerCollectionTests.Suite]);
   RegisterTests('', [TdjHandlerWrapperTests.Suite]);
   RegisterTests('', [TdjContextHandlerTests.Suite]);
