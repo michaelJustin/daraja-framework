@@ -85,7 +85,9 @@
 			<DCCReference Include="..\..\source\djWebComponentMapping.pas"/>
 			<DCCReference Include="ConfigAPITests.pas"/>
 			<DCCReference Include="HttpsTests.pas"/>
+			<DCCReference Include="djAbstractConfigTests.pas"/>
 			<DCCReference Include="djAbstractConnectorTests.pas"/>
+			<DCCReference Include="djContextConfigTests.pas"/>
 			<DCCReference Include="djContextHandlerTests.pas"/>
 			<DCCReference Include="djDefaultWebComponentTests.pas"/>
 			<DCCReference Include="djGenericHolderTests.pas"/>

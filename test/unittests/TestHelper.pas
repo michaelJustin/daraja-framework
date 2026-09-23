@@ -46,7 +46,9 @@ uses
   {$IFDEF DARAJA_TEST_HTTPS}
   HttpsTests,
   {$ENDIF DARAJA_TEST_HTTPS}
+  djAbstractConfigTests,
   djAbstractConnectorTests,
+  djContextConfigTests,
   djContextHandlerTests,
   djDefaultWebComponentTests,
   djGenericHolderTests,
@@ -92,6 +94,8 @@ begin
   Tests := TTestSuite.Create(DWF_SERVER_FULL_NAME);
   Tests.AddTest(TTestSuite.Create(TdjLifeCycleTests));
   Tests.AddTest(TTestSuite.Create(TdjPathMapTests));
+  Tests.AddTest(TTestSuite.Create(TdjAbstractConfigTests));
+  Tests.AddTest(TTestSuite.Create(TdjContextConfigTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericHolderTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericWebComponentTests));
   Tests.AddTest(TTestSuite.Create(TdjGenericWebFilterTests));
@@ -130,6 +134,8 @@ procedure RegisterUnitTests;
 begin
   RegisterTests('', [TdjLifeCycleTests.Suite]);
   RegisterTests('', [TdjPathMapTests.Suite]);
+  RegisterTests('', [TdjAbstractConfigTests.Suite]);
+  RegisterTests('', [TdjContextConfigTests.Suite]);
   RegisterTests('', [TdjGenericHolderTests.Suite]);
   RegisterTests('', [TdjGenericWebComponentTests.Suite]);
   RegisterTests('', [TdjGenericWebFilterTests.Suite]);
