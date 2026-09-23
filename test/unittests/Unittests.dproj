@@ -94,6 +94,8 @@
 			<DCCReference Include="djWebAppContextTests.pas"/>
 			<DCCReference Include="djWebComponentHandlerTests.pas"/>
 			<DCCReference Include="djWebComponentHolderTests.pas"/>
+			<DCCReference Include="djWebFilterChainTests.pas"/>
+			<DCCReference Include="djWebFilterMappingTests.pas"/>
 			<DCCReference Include="HTTPTestCase.pas"/>
 			<DCCReference Include="TestSessions.pas"/>
 			<DCCReference Include="UnicodeText.pas"/>
