@@ -8,6 +8,19 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Added
+
+- `TdjContextHandler.ErrorHandler` now actually works: when a Web Component
+  or Web Filter raises an unhandled exception, and an `ErrorHandler` is set
+  on the context, it is invoked in place of the framework's default generic
+  500 response, with the failure detail (status code, exception class and
+  message) available via new `TdjServerContext` properties
+  (`LastErrorStatusCode`/`LastErrorExceptionClass`/`LastErrorExceptionMessage`).
+  Previously the field was stored but never invoked. No `ErrorHandler`
+  configured, or the handler itself raising, falls back to exactly today's
+  generic response — no behavior change for contexts that don't opt in. See
+  `demo/19_error_handler` for a runnable example. (#528)
+
 ### Internal
 
 - New test coverage: `TdjWebFilterChain.DoFilter`'s zero-filter, short-circuit
