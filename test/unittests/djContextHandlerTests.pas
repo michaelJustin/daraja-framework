@@ -43,7 +43,7 @@ type
     procedure TestNamedContextMatchesItsPrefix;
     procedure TestNamedContextDoesNotMatchUnrelatedPath;
     procedure TestNamedContextDoesNotMatchPrefixOfAnotherName;
-    procedure TestNamedContextRequiresTrailingSlashBoundary;
+    procedure TestNamedContextMatchesBarePathNoTrailingSlash;
     procedure TestNoConnectorNamesMatchesAnyConnector;
     procedure TestConnectorNameWhitelistRejectsUnlistedConnector;
     procedure TestConnectorNameWhitelistAcceptsListedConnector;
@@ -124,19 +124,19 @@ begin
   end;
 end;
 
-procedure TdjContextHandlerTests.TestNamedContextRequiresTrailingSlashBoundary;
+procedure TdjContextHandlerTests.TestNamedContextMatchesBarePathNoTrailingSlash;
 var
   Handler: TTestContextHandler;
 begin
-  // documents current behavior for the bare context path with no trailing
-  // slash -- worth confirming this is the intended contract, since the
-  // servlet-style bare-prefix exception exists for TdjPathMap (see
-  // djPathMapTests.TestUrlPattern, '/foo' matching '/foo/*') but
-  // ContextMatches has no equivalent special case.
+  // #544: confirmed against the Servlet spec's request path matching rule
+  // (exact match, or prefix followed by '/') -- the same rule TdjPathMap
+  // already applies for '/foo/*' patterns matching bare '/foo' (see
+  // djPathMapTests.TestUrlPattern). A context registered as "app" must
+  // match its own bare path with no trailing slash.
   Handler := TTestContextHandler.Create('app');
   try
-    CheckFalse(Handler.ContextMatches('', '/app'),
-      '/app (no trailing slash) with current Pos(''/app/'', Target) = 1 logic');
+    CheckTrue(Handler.ContextMatches('', '/app'),
+      '/app (no trailing slash) must match context "app"');
   finally
     Handler.Free;
   end;
