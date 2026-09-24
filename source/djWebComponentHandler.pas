@@ -51,7 +51,7 @@ type
    * It holds a list of web components and their path mappings,
    * and passes incoming requests to the matching web component.
    *}
-  TdjWebComponentHandler = class(TdjAbstractHandler)
+  TdjWebComponentHandler = class(TdjAbstractHandler, IStrictStartable)
   strict private
     {$IFDEF DARAJA_LOGGING}
     // class var: TdjLoggerFactory.GetLogger is keyed by class, so every
@@ -63,6 +63,7 @@ type
     var
     FWebComponentContext: IContext;
     FPathMap: TdjPathMap;
+    FStrictStart: Boolean;
 
     FWebComponentHolders: TdjWebComponentHolders;
     FWebComponentMappings: TdjWebComponentMappings;
@@ -99,6 +100,9 @@ type
      * This method is called to clean up and stop the handler.
      *}
     procedure DoStop; override;
+  protected
+    // IStrictStartable interface
+    procedure SetStrictStart(const Value: Boolean);
   protected
     {*
      * Finds a web component holder by its target identifier.
@@ -143,6 +147,16 @@ type
      * @param Context The context to be set, implementing the IContext interface.
      *}
     procedure SetContext(const Context: IContext);
+
+    {*
+     * When True, a Web Component that fails to start makes Start raise
+     * instead of logging the failure and continuing with the remaining
+     * components. Defaults to False, preserving the traditional
+     * best-effort behavior.
+     *
+     * @throws Exception if this handler is already started.
+     *}
+    property StrictStart: Boolean read FStrictStart write SetStrictStart;
 
     {*
      * Add a Web Component.
@@ -304,6 +318,13 @@ begin
   FWebComponentContext := Context;
 end;
 
+procedure TdjWebComponentHandler.SetStrictStart(const Value: Boolean);
+begin
+  CheckNotStarted;
+
+  FStrictStart := Value;
+end;
+
 function TdjWebComponentHandler.AddWebComponent(ComponentClass: TdjWebComponentClass;
   const UrlPattern: string): TdjWebComponentHolder;
 begin
@@ -377,6 +398,11 @@ begin
     except
       on E: Exception do
       begin
+        if FStrictStart then
+        begin
+          raise;
+        end;
+
         // A failing Init must not prevent the other components from
         // starting; TdjLifeCycle.Start already logged the failure, and the
         // holder is left in its "not started" state so a later request can

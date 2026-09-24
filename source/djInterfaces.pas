@@ -330,6 +330,23 @@ type
   end;
 
   /// \cond
+  // Internal: lets a handler collection push a StrictStart setting down into
+  // a child handler immediately before starting it (see TdjHandlerCollection.
+  // DoStart), without the collection unit depending on concrete handler
+  // types such as TdjWebComponentContextHandler. Not part of the
+  // application-facing API, so it is kept out of the generated documentation.
+  IStrictStartable = interface(IInterface)
+    ['{B4E3C6D1-3A5F-4E9A-8B7C-1D6F2A9E4C50}']
+    {*
+     * Sets whether a startup failure in this handler (or a handler it wraps)
+     * should propagate instead of being logged and swallowed.
+     * @param Value True to propagate startup failures.
+     *}
+    procedure SetStrictStart(const Value: Boolean);
+  end;
+  /// \endcond
+
+  /// \cond
   // Internal: used only for framework-internal casts when populating a config
   // object. Not part of the application-facing API, so it is kept out of the
   // generated documentation.

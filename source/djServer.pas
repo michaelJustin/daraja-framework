@@ -142,7 +142,14 @@ type
     FConnectorMap: TObjectDictionary<string, IConnector>;
     FConnectorList: TdjStrings;
     FContextHandlers: IHandlerContainer;
+    // Same object as FContextHandlers, kept as a strongly-typed reference so
+    // StrictStart can reach TdjContextHandlerCollection.StrictStart directly
+    // -- casting the IHandlerContainer reference back to its class type is
+    // not safe once the class implements more than one interface.
+    FContextHandlerCollection: TdjContextHandlerCollection;
     FContextNames: TStrings;
+    function GetStrictStart: Boolean;
+    procedure SetStrictStart(const Value: Boolean);
     procedure StartConnectors;
     procedure StopConnectors;
     procedure StopContextHandlers;
@@ -241,6 +248,27 @@ type
      *}
     function ConnectorCount: Integer;
 
+    {*
+     * When True, a context or Web Component that fails to start makes Start
+     * raise instead of logging the failure and continuing. Defaults to
+     * False, preserving the framework's traditional best-effort startup
+     * behavior, where a broken context (or a Web Component whose Init
+     * raised) does not prevent the others -- and the server as a whole --
+     * from starting.
+     *
+     * @note A Web Filter that fails to start has always made Start raise,
+     * regardless of this setting.
+     *
+     * @note On a failed strict Start, the server performs a best-effort
+     * rollback of whatever had already started (connectors, other contexts)
+     * before re-raising the original exception.
+     *
+     * @throws Exception if the server is already started; set this before
+     * Start, since Start reads it once for every context and component it
+     * starts.
+     *}
+    property StrictStart: Boolean read GetStrictStart write SetStrictStart;
+
   end;
 
 implementation /// \cond
@@ -266,7 +294,8 @@ begin
 
   FConnectorList := TdjStrings.Create;
 
-  FContextHandlers := TdjContextHandlerCollection.Create;
+  FContextHandlerCollection := TdjContextHandlerCollection.Create;
+  FContextHandlers := FContextHandlerCollection;
   FContextNames := TStringList.Create;
 
   AddHandler(FContextHandlers);
@@ -306,6 +335,20 @@ end;
 function TdjServer.ConnectorCount: Integer;
 begin
   Result := FConnectorList.Count;
+end;
+
+function TdjServer.GetStrictStart: Boolean;
+begin
+  Result := FContextHandlerCollection.StrictStart;
+end;
+
+procedure TdjServer.SetStrictStart(const Value: Boolean);
+begin
+  // Start already read the previous value into every context and component;
+  // changing it now would silently do nothing until the next Start.
+  CheckNotStarted;
+
+  FContextHandlerCollection.StrictStart := Value;
 end;
 
 procedure TdjServer.AddConnector(const Connector: IConnector);
