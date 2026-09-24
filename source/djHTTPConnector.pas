@@ -234,9 +234,9 @@ begin
       // actual problem on our side.
       if (E is EIdHTTPErrorParsingCommand) or (E is EIdReadTimeout) then
       begin
-        Logger.Debug(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
+        Logger.Debug('%s.OnCommand: %s %s', [ClassName, E.ClassName, E.Message]);
       end else begin
-        Logger.Error(ClassName + '.OnCommand: ' + E.ClassName + ' ' + E.Message);
+        Logger.Error('%s.OnCommand: %s %s', [ClassName, E.ClassName, E.Message]);
       end;
       {$ENDIF DARAJA_LOGGING}
 

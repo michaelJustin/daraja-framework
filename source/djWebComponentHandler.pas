@@ -233,7 +233,7 @@ resourcestring
     +'Service caused an exception of type "%s". The exception message was "%s".';
   rsInvalidMappingSForWebComponentS = 'Invalid mapping "%s" for Web Component '
     +'"%s"';
-  rsNoPathMapMatchFoundFor = 'No path map match found for ';
+  rsNoPathMapMatchFoundFor = 'No path map match found for %s';
   rsTheWebComponentSCanNotBeAddedBecauseClassSIsAlr = 'The Web Component "%s" '
     +'can not be added because class "%s" is already registered with the same '
     +'name';
@@ -633,7 +633,7 @@ begin
     if Matches.Count = 0 then
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Trace(rsNoPathMapMatchFoundFor + ATarget);
+      Logger.Trace(rsNoPathMapMatchFoundFor, [ATarget]);
       {$ENDIF DARAJA_LOGGING}
     end
     else
