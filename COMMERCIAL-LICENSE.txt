@@ -44,12 +44,14 @@ e) allow the recipients of your programs to install and run
 
 
 TERM AND COVERED VERSIONS
-Your license covers every version of the Framework released
-while your subscription is active. The license for those
-versions is perpetual: it does not end when the subscription
-ends. After the subscription ends you may continue to use,
-modify, run and distribute programs built with those versions
-under these terms.
+Your license covers the version of the Framework that is
+current when your subscription starts, and every version
+released while your subscription is active. The license for
+those versions is perpetual: it does not end when the
+subscription ends. After the subscription ends you may
+continue to develop with, use and modify those versions, and
+to run and distribute programs built with them, under these
+terms.
 
 Versions released after your subscription has ended are not
 covered by this license. They are available under the AGPL
@@ -177,4 +179,4 @@ If any provision of this license is or becomes invalid, the
 validity of the remaining provisions is not affected.
 
 License v1.0
-Last updated: 2026-09-23
+Last updated: 2026-09-24
