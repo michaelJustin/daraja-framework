@@ -162,6 +162,12 @@ type
     //procedure TestWebFilterHolderInitHavingTwoInstances;
     procedure TestCatchAllWebFilter;
     procedure TestExceptionInComponentInitWithWebFilter;
+
+    // StrictStart (issue #432)
+    procedure TestStrictStartRaisesOnComponentInitException;
+    procedure TestStrictStartOffKeepsComponentInitExceptionSwallowed;
+    procedure TestSetStrictStartAfterStartRaisesException;
+
     procedure TestExceptionInComponentServiceWithWebFilter;
     procedure TestExceptionInComponentOnGetWithWebFilter;
     procedure TestWebFilterDestroyFilter;
@@ -2475,6 +2481,92 @@ begin
     // Test the component: same as TestExceptionInInitStopsComponent, but
     // routed through a filter chain.
     CheckGETResponse500('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestStrictStartRaisesOnComponentInitException;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // Same setup as TestExceptionInComponentInitWithWebFilter -- a component
+  // whose Init raises, routed through a filter chain -- but with StrictStart
+  // enabled. Unlike the non-strict case above, the failure must now
+  // propagate out of Server.Start instead of being logged and swallowed.
+  //
+  // This is the scenario pinned by TestExceptionInComponentInitWithWebFilter:
+  // the Init failure is fully absorbed inside TdjWebComponentHandler.DoStart,
+  // before TdjHandlerCollection.DoStart (the context collection) ever sees
+  // anything to catch. So this test only passes if StrictStart reaches both
+  // swallow points.
+  Context := TdjWebAppContext.Create('web');
+  Context.Add(TTestFilter, '/*');
+  Context.Add(TExceptionInInitComponent, '*.html');
+
+  Server := TdjServer.Create;
+  try
+    Server.Add(Context);
+    Server.StrictStart := True;
+
+    {$IFDEF FPC}
+    ExpectException(EUnitTestException, 'error');
+    {$ELSE}
+    ExpectedException := EUnitTestException;
+    {$ENDIF}
+
+    Server.Start;
+  finally
+    // Start failed, so the server rolled itself back (see #498) and
+    // IsStarted is False; Free must not leak the never-started connector.
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestStrictStartOffKeepsComponentInitExceptionSwallowed;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  // StrictStart defaults to False; explicitly setting it False must behave
+  // exactly like TestExceptionInComponentInitWithWebFilter above -- Start
+  // succeeds and the failing component reports 500 on first request.
+  Context := TdjWebAppContext.Create('web');
+  Context.Add(TTestFilter, '/*');
+  Context.Add(TExceptionInInitComponent, '*.html');
+
+  Server := TdjServer.Create;
+  try
+    Server.StrictStart := False;
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponse500('/web/exception.html');
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestSetStrictStartAfterStartRaisesException;
+var
+  Server: TdjServer;
+begin
+  // Start already read StrictStart into every context and component it
+  // started; changing it afterwards would silently do nothing until the
+  // next Start, so the setter rejects it, like other configuration
+  // properties that must be set before Start (e.g. SetInitParameter).
+  Server := TdjServer.Create;
+  try
+    Server.Start;
+
+    {$IFDEF FPC}
+    ExpectException(Exception, 'Component started already!');
+    {$ELSE}
+    ExpectedException := Exception;
+    {$ENDIF}
+
+    Server.StrictStart := True;
   finally
     Server.Free;
   end;

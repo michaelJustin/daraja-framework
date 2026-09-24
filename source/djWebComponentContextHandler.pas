@@ -47,7 +47,7 @@ type
   {*
    * Context Handler for Web Components (and Web Filters).
    *}
-  TdjWebComponentContextHandler = class(TdjContextHandler)
+  TdjWebComponentContextHandler = class(TdjContextHandler, IStrictStartable)
   strict private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
@@ -58,6 +58,9 @@ type
     // IHandler interface
     procedure Handle(const Target: string; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse); override;
+  protected
+    // IStrictStartable interface
+    procedure SetStrictStart(const Value: Boolean);
   protected
     {*
      * @param Target Request target
@@ -164,6 +167,11 @@ begin
   {$IFDEF LOG_CREATE}
   Logger.Trace('Created');
   {$ENDIF}
+end;
+
+procedure TdjWebComponentContextHandler.SetStrictStart(const Value: Boolean);
+begin
+  FWebComponentHandler.StrictStart := Value;
 end;
 
 destructor TdjWebComponentContextHandler.Destroy;

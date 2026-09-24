@@ -50,16 +50,20 @@ type
    * For each request, all handler are called, regardless of
    * the response status or exceptions.
    *}
-  TdjHandlerCollection = class(TdjAbstractHandlerContainer)
+  TdjHandlerCollection = class(TdjAbstractHandlerContainer, IStrictStartable)
   strict private
     {$IFDEF DARAJA_LOGGING}
     Logger: ILogger;
     {$ENDIF DARAJA_LOGGING}
+    FStrictStart: Boolean;
   protected
      {*
       * The handler collection.
       *}
      FHandlers: TdjHandlers;
+  protected
+    // IStrictStartable interface
+    procedure SetStrictStart(const Value: Boolean);
   protected
     // TdjLifeCycle overrides
     /// \private
@@ -83,6 +87,20 @@ type
      * Destructor.
      *}
     destructor Destroy; override;
+
+    {*
+     * When True, a handler in this collection that fails to start makes
+     * Start raise instead of logging the failure and continuing with the
+     * remaining handlers. Defaults to False, preserving the collection's
+     * traditional best-effort behavior.
+     *
+     * Setting this to True also propagates it to any handler in the
+     * collection that supports strict start itself (e.g. a nested context),
+     * so the setting reaches the whole subtree below this collection.
+     *
+     * @throws Exception if this collection is already started.
+     *}
+    property StrictStart: Boolean read FStrictStart write SetStrictStart;
   end;
 
 implementation /// \cond
@@ -131,17 +149,35 @@ begin
   FHandlers.Remove(Handler);
 end;
 
+procedure TdjHandlerCollection.SetStrictStart(const Value: Boolean);
+begin
+  CheckNotStarted;
+
+  FStrictStart := Value;
+end;
+
 procedure TdjHandlerCollection.DoStart;
 var
   H: IHandler;
+  SS: IStrictStartable;
 begin
   for H in FHandlers do
   begin
+    if FStrictStart and Supports(H, IStrictStartable, SS) then
+    begin
+      SS.SetStrictStart(True);
+    end;
+
     try
       H.Start;
     except
       on E: Exception do
       begin
+        if FStrictStart then
+        begin
+          raise;
+        end;
+
         {$IFDEF DARAJA_LOGGING}
         Logger.Error(E.Message);
         {$ENDIF DARAJA_LOGGING}
