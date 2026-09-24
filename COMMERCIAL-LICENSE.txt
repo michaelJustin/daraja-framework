@@ -44,12 +44,14 @@ e) allow the recipients of your programs to install and run
 
 
 TERM AND COVERED VERSIONS
-Your license covers every version of the Framework released
-while your subscription is active. The license for those
-versions is perpetual: it does not end when the subscription
-ends. After the subscription ends you may continue to use,
-modify, run and distribute programs built with those versions
-under these terms.
+Your license covers the version of the Framework that is
+current when your subscription starts, and every version
+released while your subscription is active. The license for
+those versions is perpetual: it does not end when the
+subscription ends. After the subscription ends you may
+continue to develop with, use and modify those versions, and
+to run and distribute programs built with them, under these
+terms.
 
 Versions released after your subscription has ended are not
 covered by this license. They are available under the AGPL
@@ -62,33 +64,28 @@ breach its terms and do not remedy the breach within thirty
 
 CONDITIONS
 
-1. Conditions: Your distribution of the programs must comply
-   with all conditions listed in this agreement and any
-   related agreements, including the Licensor's Terms of
-   Service (https://www.habarisoft.com/terms.html).
+1. Your distribution of the programs must comply with all
+   conditions listed in this agreement and any related
+   agreements, including the Licensor's Terms of Service
+   (https://www.habarisoft.com/terms.html).
 
-2. Your Programs: You are solely responsible for your programs
-   and for any warranties, support or other commitments you
-   give to your own customers. Such commitments do not bind
-   the Licensor.
+2. You are solely responsible for your programs and for any
+   warranties, support or other commitments you give to your
+   own customers. Such commitments do not bind the Licensor.
 
-3. Intellectual Property: You must respect the intellectual
-   property rights associated with the Framework and your
-   program.
+3. The distribution of your programs must not violate any
+   applicable laws or regulations.
 
-4. Limitations: The distribution of your programs must not
-   violate any applicable laws or regulations.
-
-5. Every developer who writes, modifies or maintains code that
+4. Every developer who writes, modifies or maintains code that
    uses the Framework must hold a licensed developer seat
    covering the Framework version in use. Build servers,
    continuous integration systems, testers and end users of
    your programs do not need a seat.
 
-6. Your programs must add primary and substantial functionality,
+5. Your programs must add primary and substantial functionality,
    and may not be merely a set or subset of the Framework.
 
-7. This license lets you, the developer, use the Framework to
+6. This license lets you, the developer, use the Framework to
    build and distribute your own programs; it does not pass
    that right on to the people who use those programs. Your
    license does not permit the people who receive your programs
@@ -99,15 +96,16 @@ CONDITIONS
    link, or package your programs, and does not restrict your
    end users' ordinary use of the programs you give them.
 
-8. You may not use Habarisoft's or any of its suppliers' names,
-   logos, or trademarks to market your programs, except to state
-   that your program was written using the Framework.
+7. You may not use the names, logos or trademarks of the
+   Licensor (including Habarisoft) or its suppliers to market
+   your programs, except to state that your program was
+   written using the Framework.
 
-All Habarisoft libraries, source code, and other files remain
-Habarisoft's exclusive property. Regardless of any modifications
-that you make, you may not distribute any files of the
-Framework (particularly its source code and other
-non-executable files), except as compiled into your own
+The Framework, including its source code and all other
+files, remains the Licensor's exclusive property. Regardless
+of any modifications that you make, you may not distribute
+any files of the Framework (particularly its source code and
+other non-executable files), except as compiled into your own
 programs.
 
 
@@ -177,4 +175,4 @@ If any provision of this license is or becomes invalid, the
 validity of the remaining provisions is not affected.
 
 License v1.0
-Last updated: 2026-09-23
+Last updated: 2026-09-24
