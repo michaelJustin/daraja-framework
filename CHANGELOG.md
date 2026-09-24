@@ -10,6 +10,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Added
 
+- `TdjServer.StrictStart` (default `False`): an opt-in fail-fast startup
+  mode. Today, a broken context or a Web Component whose `Init` raised is
+  logged and swallowed, so `Server.Start` reports success regardless. With
+  `StrictStart` enabled, a startup failure anywhere in the handler tree now
+  raises out of `Server.Start` instead. Must be set before `Start`; setting
+  it on an already-started server raises. (#432)
 - `TdjContextHandler.ErrorHandler` now actually works: when a Web Component
   or Web Filter raises an unhandled exception, and an `ErrorHandler` is set
   on the context, it is invoked in place of the framework's default generic
