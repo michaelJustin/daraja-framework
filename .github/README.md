@@ -167,6 +167,10 @@ Hello, World!
 
 ## Documentation
 
+### How a request reaches your code
+
+[How a web request reaches your Pascal code](https://michaeljustin.github.io/daraja-framework/request-path.html) &mdash; an illustrated walk through the framework's building blocks, for developers new to HTTP.
+
 ### API docs
 
 [API reference (Doxygen)](https://michaeljustin.github.io/daraja-framework/)
