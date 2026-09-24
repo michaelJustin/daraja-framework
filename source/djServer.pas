@@ -101,6 +101,7 @@ const
    *
    * @section documentation Documentation
    *
+   * @li <a href="request-path.html">How a web request reaches your Pascal code</a>: an illustrated walk through the framework's building blocks, for developers new to HTTP.
    * @li This site is the API reference, generated from the doc comments in the source folder.
    * @li A getting started guide is available at <a target="_blank" href="https://github.com/michaelJustin/daraja-framework/blob/master/docs/DarajaFrameworkGettingStarted.pdf">DarajaFrameworkGettingStarted.pdf</a>.
    * @li The project README, on <a target="_blank" href="https://github.com/michaelJustin/daraja-framework">GitHub</a>, covers installation, dependencies and the release changelog.
