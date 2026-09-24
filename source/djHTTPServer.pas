@@ -102,7 +102,7 @@ begin
   {$ENDIF DARAJA_LOGGING}
 
   {$IFDEF DARAJA_LOGGING}
-  Logger.Info('Indy version: ' + GetIndyVersion);
+  Logger.Info('Indy version: %s', [GetIndyVersion]);
   {$ENDIF DARAJA_LOGGING}
 
   // use HTTP 1.1 keep-alive by default
@@ -143,13 +143,13 @@ begin
   // indicate an actual problem on our side.
   if (AException is EIdHTTPErrorParsingCommand) or (AException is EIdReadTimeout) then
   begin
-    Logger.Debug(ClassName + ' (OnException): ' + AException.ClassName + ' '
-      + AException.Message);
+    Logger.Debug('%s (OnException): %s %s',
+      [ClassName, AException.ClassName, AException.Message]);
     Exit;
   end;
 
-  Logger.Warn(ClassName + ' (OnException): ' + AException.ClassName + ' '
-    + AException.Message);
+  Logger.Warn('%s (OnException): %s %s',
+    [ClassName, AException.ClassName, AException.Message]);
   {$ENDIF DARAJA_LOGGING}
 end;
 
@@ -157,8 +157,8 @@ procedure TdjHTTPServer.MyOnListenException(AThread: TIdListenerThread;
   AException: Exception);
 begin
   {$IFDEF DARAJA_LOGGING}
-  Logger.Warn(ClassName + ' (OnListenException): ' + AException.ClassName + ' '
-    + AException.Message);
+  Logger.Warn('%s (OnListenException): %s %s',
+    [ClassName, AException.ClassName, AException.Message]);
   {$ENDIF DARAJA_LOGGING}
 end;
 
@@ -173,7 +173,7 @@ end;
 procedure TdjHTTPServer.DoMaxConnectionsExceeded(AIOHandler: TIdIOHandler);
 begin
   {$IFDEF DARAJA_LOGGING}
-  Logger.Warn(ClassName + ': MaxConnections exceeded');
+  Logger.Warn('%s: MaxConnections exceeded', [ClassName]);
   {$ENDIF DARAJA_LOGGING}
 end;
 

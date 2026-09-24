@@ -379,14 +379,14 @@ begin
   end;
 
   {$IFDEF DARAJA_LOGGING}
-  Logger.Info('Starting context ' + ContextPath);
+  Logger.Info('Starting context %s', [ContextPath]);
   {$ENDIF DARAJA_LOGGING}
 end;
 
 procedure TdjContextHandler.DoStop;
 begin
   {$IFDEF DARAJA_LOGGING}
-  Logger.Info('Stopping context ' + ContextPath);
+  Logger.Info('Stopping context %s', [ContextPath]);
   {$ENDIF DARAJA_LOGGING}
 
   if Assigned(FErrorHandler) then

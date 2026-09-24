@@ -186,7 +186,7 @@ begin
   Assert(FConfig.GetContext.GetContextConfig <> nil);
 
   {$IFDEF DARAJA_LOGGING}
-  Logger.Trace('Create instance of class ' + FClass.ClassName);
+  Logger.Trace('Create instance of class %s', [FClass.ClassName]);
   {$ENDIF DARAJA_LOGGING}
 
   (FConfig as IWriteableConfig).SetName(Name);
@@ -195,7 +195,7 @@ begin
 
   try
     {$IFDEF DARAJA_LOGGING}
-    Logger.Trace('Init Web Filter "' + Name + '"');
+    Logger.Trace('Init Web Filter "%s"', [Name]);
     {$ENDIF DARAJA_LOGGING}
 
     WebFilter.Init(FConfig);
@@ -208,7 +208,7 @@ begin
       {$ENDIF DARAJA_LOGGING}
 
       {$IFDEF DARAJA_LOGGING}
-      Logger.Trace('Free the Web Filter  "' + Name + '"');
+      Logger.Trace('Free the Web Filter  "%s"', [Name]);
       {$ENDIF DARAJA_LOGGING}
 
       WebFilter.Free;
