@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daraja Request Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F2F4F7;
+  --panel:#FFFFFF;
+  --ink:#15202C;
+  --muted:#5A6878;
+  --rule:#CDD5DF;
+  --navy:#2C4A6E;
+  --navy-soft:#E3EAF3;
+  --ochre:#9A5B14;
+  --ochre-soft:#F6EBDC;
+  --code-bg:#1B2633;
+  --code-ink:#E6ECF2;
+  --code-kw:#8FB7E8;
+  --code-str:#E8B87A;
+  --code-cm:#8595A6;
+  --wire:#2C4A6E;
+  --ret:#9A5B14;
+  --sans:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#10161E; --panel:#17202B; --ink:#E4EAF1; --muted:#98A6B6; --rule:#2A3746;
+    --navy:#8FB7E8; --navy-soft:#1D2D41; --ochre:#E0A560; --ochre-soft:#2E2417;
+    --code-bg:#0B1118; --wire:#8FB7E8; --ret:#E0A560;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#10161E; --panel:#17202B; --ink:#E4EAF1; --muted:#98A6B6; --rule:#2A3746;
+  --navy:#8FB7E8; --navy-soft:#1D2D41; --ochre:#E0A560; --ochre-soft:#2E2417;
+  --code-bg:#0B1118; --wire:#8FB7E8; --ret:#E0A560;
+}
+*{box-sizing:border-box}
+body{margin:0}
+.back{font-size:13px;color:var(--navy);text-decoration:none}
+.back:hover{text-decoration:underline}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 64px}
+header{display:grid;gap:10px;margin-bottom:30px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(28px,4.2vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.08;margin:0;text-wrap:balance;max-width:22ch}
+h1 em{font-style:normal;color:var(--navy)}
+.lede{max-width:66ch;color:var(--muted);margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:6px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+.sw.fw{background:var(--navy-soft);border:1.5px solid var(--navy)}
+.sw.you{background:var(--ochre-soft);border:1.5px solid var(--ochre)}
+.sw.wire{width:22px;height:0;border-top:2px solid var(--wire);border-radius:0}
+.sw.ret{width:22px;height:0;border-top:2px dashed var(--ret);border-radius:0}
+
+.lane-heads,.flow{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(0,1fr);column-gap:28px}
+.lane-head{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.lane-head.fwh{grid-column:2}
+.lane-head.youh{grid-column:3}
+.flow{position:relative}
+
+.ret-rail{grid-column:1;grid-row:1 / span 20;position:relative}
+.ret-rail::before{content:"";position:absolute;left:50%;top:22px;bottom:40px;border-left:2px dashed var(--ret);transform:translateX(-1px)}
+.ret-rail::after{content:"";position:absolute;left:50%;top:12px;transform:translateX(-6px);border:6px solid transparent;border-bottom:10px solid var(--ret);border-top:0}
+.ret-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg);background:var(--ground);padding:4px 8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ret);white-space:nowrap}
+
+.step{grid-column:2;position:relative;padding-bottom:28px}
+.step.has-next::after{content:"";position:absolute;left:28px;bottom:2px;height:26px;border-left:2px solid var(--wire)}
+.step.has-next::before{content:"";position:absolute;left:23px;bottom:0;border:6px solid transparent;border-top:8px solid var(--wire);border-bottom:0;z-index:1}
+.code{grid-column:3;padding-bottom:28px;position:relative}
+.code::before{content:"";position:absolute;left:-28px;top:24px;width:22px;border-top:1.5px dotted var(--muted)}
+
+.block{background:var(--navy-soft);border:1.5px solid var(--navy);border-radius:6px;padding:14px 16px;position:relative}
+.block.client{background:var(--panel);border-style:dashed}
+.block.you{background:var(--ochre-soft);border-color:var(--ochre)}
+.block.optional{border-style:dashed}
+.role{font-weight:700;font-size:17px;line-height:1.25;margin:0;text-wrap:balance}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px}
+.tag{font-family:var(--mono);font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--panel);color:var(--navy);border:1px solid var(--rule)}
+.you .tag{color:var(--ochre)}
+.tag.opt{color:var(--muted);border-style:dashed}
+.block p{margin:0;font-size:14.5px;max-width:60ch}
+.block .aside{margin-top:8px;font-size:13.5px;color:var(--muted)}
+
+.snip{background:var(--code-bg);color:var(--code-ink);border-radius:6px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;line-height:1.6;overflow-x:auto;margin:0;white-space:pre}
+.snip.none{background:transparent;border:1px dashed var(--rule);color:var(--muted);white-space:normal;font-family:var(--sans);font-size:13.5px}
+.code .note{font-size:13px;color:var(--muted);margin-top:6px}
+.code .note code{font-family:var(--mono);font-size:12px}
+.kw{color:var(--code-kw)}.st{color:var(--code-str)}.cm{color:var(--code-cm)}
+
+.packet{position:absolute;left:79px;width:10px;height:10px;border-radius:50%;background:var(--wire);animation:travel 8s linear infinite;z-index:2;pointer-events:none}
+@keyframes travel{0%{top:40px;opacity:0}6%{opacity:1}90%{opacity:1}100%{top:calc(100% - 190px);opacity:0}}
+@media (prefers-reduced-motion: reduce){.packet{display:none}}
+
+.response{grid-column:2 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:28px;align-items:start}
+.resp-box{border:1.5px dashed var(--ret);border-radius:6px;padding:14px 16px;background:var(--panel)}
+.resp-box h3{margin:0 0 6px;font-size:17px;color:var(--ret)}
+.resp-box p{margin:0;font-size:14.5px}
+
+.glossary{margin-top:44px;display:grid;gap:14px}
+.glossary h2{font-size:20px;margin:0}
+.terms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px;margin:0}
+.terms div{border-top:1px solid var(--rule);padding-top:10px}
+.terms dt{font-weight:700}
+.terms dd{margin:2px 0 0;color:var(--muted);font-size:14px}
+.terms .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+footer{margin-top:40px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}
+footer code{font-family:var(--mono)}
+
+@media (max-width:760px){
+  .lane-heads{display:none}
+  .flow{grid-template-columns:22px minmax(0,1fr);column-gap:14px}
+  .step{padding-bottom:10px}
+  .step.has-next::after,.step.has-next::before,.code::before,.packet{display:none}
+  .code{grid-column:2;padding-bottom:30px}
+  .response{grid-column:2;grid-template-columns:minmax(0,1fr);row-gap:10px}
+  .terms{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="index.html">&larr; API reference</a>
+    <div class="eyebrow">Daraja HTTP Framework · for Delphi and Free Pascal</div>
+    <h1>How a web request reaches <em>your Pascal code</em></h1>
+    <p class="lede">When someone opens a URL served by your Daraja program, the request passes through a few building blocks before your code runs, and the answer travels back the same way. The left column shows what each block does for you. The right column shows the line of Pascal that sets it up.</p>
+    <div class="legend">
+      <span><i class="sw fw"></i>Daraja does this for you</span>
+      <span><i class="sw you"></i>You write this</span>
+      <span><i class="sw wire"></i>Request going in</span>
+      <span><i class="sw ret"></i>Answer coming back</span>
+    </div>
+  </header>
+
+  <div class="lane-heads">
+    <div class="lane-head fwh">What happens</div>
+    <div class="lane-head youh">Your Pascal code</div>
+  </div>
+
+  <div class="flow">
+    <div class="ret-rail" aria-hidden="true"><span class="ret-label">answer</span></div>
+    <span class="packet" aria-hidden="true"></span>
+
+    <div class="step has-next">
+      <div class="block client">
+        <h3 class="role">Someone opens a URL</h3>
+        <p>A browser, a script or another program asks for <b>http://127.0.0.1/tutorial/hello</b>.</p>
+      </div>
+    </div>
+    <div class="code">
+      <pre class="snip">curl http://127.0.0.1/tutorial/hello</pre>
+      <div class="note">Try it from the command line, or open the address in a browser.</div>
+    </div>
+
+    <div class="step has-next">
+      <div class="block">
+        <h3 class="role">Listens for requests</h3>
+        <div class="meta"><span class="tag">TdjHTTPServer</span><span class="tag">TdjHTTPConnector</span></div>
+        <p>Waits on a network port, receives each request and reads it. This part is built on Indy, the networking library that Daraja uses under the hood.</p>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip">Server := <span class="kw">TdjServer</span>.Create(80);</pre>
+      <div class="note">80 is the port. Use another number, such as 8080, if 80 is taken.</div>
+    </div>
+
+    <div class="step has-next">
+      <div class="block">
+        <h3 class="role">Finds the right app</h3>
+        <div class="meta"><span class="tag">TdjServer</span></div>
+        <p>One server can host several apps side by side. The first part of the path, <b>/tutorial</b>, decides which app gets the request.</p>
+        <div class="aside">No app for that path? The visitor gets “404 Not Found”.</div>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip">Server.Add(Context);
+Server.Start;</pre>
+    </div>
+
+    <div class="step has-next">
+      <div class="block">
+        <h3 class="role">An app, called a context</h3>
+        <div class="meta"><span class="tag">TdjWebAppContext</span></div>
+        <p>Groups everything that lives under one path, here <b>/tutorial</b>: which URL goes to which piece of your code, and settings the app shares, such as visitor sessions.</p>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip">Context := <span class="kw">TdjWebAppContext</span>.Create(<span class="st">'tutorial'</span>);</pre>
+    </div>
+
+    <div class="step has-next">
+      <div class="block">
+        <h3 class="role">Picks your class for the URL</h3>
+        <div class="meta"><span class="tag">TdjWebComponentHandler</span></div>
+        <p>Looks at the rest of the path, <b>/hello</b>, and finds the class you registered for it. Patterns can be an exact path, a whole folder such as <code>/api/*</code>, or a file type such as <code>*.html</code>.</p>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip">Context.Add(<span class="kw">THelloWorldResource</span>, <span class="st">'/hello'</span>);</pre>
+      <div class="note">This one line connects the URL to your class.</div>
+    </div>
+
+    <div class="step has-next">
+      <div class="block optional">
+        <h3 class="role">Filters: extra steps before and after</h3>
+        <div class="meta"><span class="tag opt">optional</span><span class="tag">TdjWebFilter</span></div>
+        <p>A filter wraps around your code, so it can do something first (check a login, write a log line) and something afterwards (change the page it produced). Filters apply to many URLs at once.</p>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip">Context.Add(<span class="kw">TResponseHtmlFilter</span>, <span class="st">'*.html'</span>);
+
+<span class="kw">procedure</span> TResponseHtmlFilter.DoFilter;
+<span class="kw">begin</span>
+  <span class="cm">// before: runs first</span>
+  Chain.DoFilter(Context, Request, Response);
+  <span class="cm">// after: change the answer here</span>
+<span class="kw">end</span>;</pre>
+    </div>
+
+    <div class="step">
+      <div class="block you">
+        <h3 class="role">Your code runs</h3>
+        <div class="meta"><span class="tag">your TdjWebComponent subclass</span></div>
+        <p>A request always has a type, called its method. Opening a page is <b>GET</b>; submitting a form is usually <b>POST</b>. Daraja calls the matching procedure, <b>OnGet</b> or <b>OnPost</b>, and you fill in the answer.</p>
+        <div class="aside">You only write the procedures you need. Requests of any other type get a standard “not allowed” answer (405).</div>
+      </div>
+    </div>
+    <div class="code">
+<pre class="snip"><span class="kw">type</span>
+  THelloWorldResource = <span class="kw">class</span>(<span class="kw">TdjWebComponent</span>)
+  <span class="kw">public</span>
+    <span class="kw">procedure</span> OnGet(Request: TdjRequest;
+      Response: TdjResponse); <span class="kw">override</span>;
+  <span class="kw">end</span>;
+
+<span class="kw">procedure</span> THelloWorldResource.OnGet(...);
+<span class="kw">begin</span>
+  Response.ContentText := <span class="st">'Hello, World!'</span>;
+  Response.ContentType := <span class="st">'text/plain'</span>;
+<span class="kw">end</span>;</pre>
+    </div>
+
+    <div class="response">
+      <div class="resp-box">
+        <h3>The answer goes back the same way</h3>
+        <p>Whatever you put into <b>Response</b> travels back through any filters and is sent to the visitor. You never deal with the network yourself.</p>
+      </div>
+<pre class="snip">HTTP/1.1 200 OK
+Content-Type: text/plain
+
+Hello, World!</pre>
+    </div>
+  </div>
+
+  <section class="glossary" aria-labelledby="terms-h">
+    <h2 id="terms-h">A few words you will meet</h2>
+    <dl class="terms">
+      <div><dt>Request and response</dt><dd>The question a visitor sends (“give me /hello”) and the answer your program sends back.</dd></div>
+      <div><dt>Context</dt><dd>One app inside your server, reached through its own path, such as <b>/tutorial</b>.</dd></div>
+      <div><dt>Web component</dt><dd>Your class that produces the answer for one or more URLs.</dd></div>
+      <div><dt>Filter</dt><dd>Code that runs before and after your web components, for many URLs at once.</dd></div>
+      <div><dt>Status code</dt><dd>A number that tells the visitor how it went: <span class="num">200</span> OK, <span class="num">404</span> not found, <span class="num">405</span> not allowed, <span class="num">500</span> something failed on the server.</dd></div>
+      <div><dt>Method</dt><dd>The type of request. <b>GET</b> reads something, <b>POST</b> sends data, and there are a few more.</dd></div>
+    </dl>
+  </section>
+
+  <footer>The complete example is in <code>demo/01_helloworld</code>, and the filter example is in <code>demo/05_filter</code>.</footer>
+</div>
+</body>
+</html>
