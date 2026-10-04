@@ -20,6 +20,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
+			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<DCC_Define>DARAJA_LOGGING;$(DCC_Define)</DCC_Define>
 			<DCC_UnitSearchPath>..\..\source;..\..\source\optional;..\..\..\slf4p\src\main;..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\Protocols;..\..\..\Indy\Lib\System;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_IncludePath>..\..\..\Indy\Lib\Core;..\..\..\Indy\Lib\System;$(DCC_IncludePath)</DCC_IncludePath>
@@ -94,14 +95,16 @@
 			<DCCReference Include="djGenericWebComponentTests.pas"/>
 			<DCCReference Include="djGenericWebFilterTests.pas"/>
 			<DCCReference Include="djGlobalTests.pas"/>
+			<DCCReference Include="djInitParametersTests.pas"/>
+			<DCCReference Include="djServerBaseTests.pas"/>
 			<DCCReference Include="djHandlerCollectionTests.pas"/>
 			<DCCReference Include="djHandlerWrapperTests.pas"/>
-			<DCCReference Include="djInitParametersTests.pas"/>
+			<DCCReference Include="djLifeCycleTests.pas"/>
 			<DCCReference Include="djPathMapTests.pas"/>
-			<DCCReference Include="djServerBaseTests.pas"/>
 			<DCCReference Include="djWebAppContextTests.pas"/>
 			<DCCReference Include="djWebComponentHandlerTests.pas"/>
 			<DCCReference Include="djWebComponentHolderTests.pas"/>
+			<DCCReference Include="djWebFilterTests.pas"/>
 			<DCCReference Include="djWebFilterChainTests.pas"/>
 			<DCCReference Include="djWebFilterMappingTests.pas"/>
 			<DCCReference Include="HTTPTestCase.pas"/>
