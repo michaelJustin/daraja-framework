@@ -22,7 +22,7 @@ The example code uses response_mode=form_post to receive the access token. Unlik
 
 When you sign in for the first time, Microsoft asks you to grant the requested permissions:
 
-![Microsoft consent dialog listing the requested Graph permissions](images/consent-popup.png)
+<img src="images/consent-popup.png" alt="Microsoft consent dialog" width="400">
 
 ## Configure your own Microsoft Entra app registration
 
