@@ -18,6 +18,12 @@ You may configure it to use a different App, by modifying the constants in unit 
 ## Security considerations
 The example code uses response_mode=form_post to receive the access token. Unlike with response_mode=fragment (or query), the browser does not receive the access_token parameter in the redirect request URI. Therefore, the access_token is not accessible within the browser's memory.
 
+## Consent screen
+
+When you sign in for the first time, Microsoft asks you to grant the requested permissions:
+
+![Microsoft consent dialog listing the requested Graph permissions](images/consent-popup.png)
+
 ## Configure your own Microsoft Entra app registration
 
 1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) and go to
