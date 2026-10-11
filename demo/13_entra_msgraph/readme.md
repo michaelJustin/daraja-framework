@@ -18,3 +18,21 @@ You may configure it to use a different App, by modifying the constants in unit 
 ## Security considerations
 The example code uses response_mode=form_post to receive the access token. Unlike with response_mode=fragment (or query), the browser does not receive the access_token parameter in the redirect request URI. Therefore, the access_token is not accessible within the browser's memory.
 
+## Configure your own Microsoft Entra app registration
+
+1. Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com) and go to
+   **Entra ID > App registrations > New registration**.
+2. Enter a name (for example `Daraja OAuth demo`). The demo uses the `consumers`
+   endpoints, so choose **Personal Microsoft accounts only** as the supported account type.
+3. Under **Redirect URI**, select the platform **Mobile and desktop applications**
+   (public client) and enter `http://127.0.0.1/auth-response`.
+   This must match `REDIRECT_URI` in `MainUnit.pas`. Click **Register**.
+4. On the **Overview** page, copy the **Application (client) ID**.
+5. Open **Authentication** and make sure **Allow public client flows** is enabled.
+   No client secret is needed: public clients can't keep secrets, so the app does not send one.
+6. Go to **API permissions > Add a permission > Microsoft Graph > Delegated permissions**
+   and add `User.Read` and `Mail.Send`.
+7. In `MainUnit.pas`, replace `CLIENT_ID` with your Application (client) ID.
+8. Run the demo, open the local URL in a browser, sign in with a personal Microsoft
+   account and accept the consent prompt.
+
