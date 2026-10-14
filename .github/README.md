@@ -183,6 +183,10 @@ Hello, World!
 
 See [CHANGELOG.md](../CHANGELOG.md) for the release history.
 
+### Security and hardening
+
+Before exposing a Daraja server to untrusted clients, read [SECURITY.md](../SECURITY.md).
+
 ## Licensing
 
 Daraja HTTP Framework is dual licensed under the GNU Affero General Public License and a commercial license. The GNU Affero General Public License is a free, copyleft license for software and other kinds of works, specifically designed to ensure cooperation with the community in the case of network server software.

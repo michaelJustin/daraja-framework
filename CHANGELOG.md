@@ -56,6 +56,11 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Documentation
 
+- New `SECURITY.md`: a hardening guide for running Daraja where untrusted
+  clients can reach it — resource limits through the connector's Indy
+  server, session growth, URL patterns vs. authorization, the
+  single-instance threading rule, error-page verbosity, and the caveats of
+  the optional units.
 - Added `COMMERCIAL-LICENSE.txt`, the commercial license text (v1.0), next
   to the AGPL `LICENSE`, so the dual licensing is visible in the
   repository.
