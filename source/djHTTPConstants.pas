@@ -35,6 +35,16 @@ const
   HTTP_BAD_REQUEST = 400;
   HTTP_INTERNAL_SERVER_ERROR = 500;
 
+  {*
+   * Sentinel ResponseNo meaning "no handler has produced a response yet".
+   *
+   * This is not an Indy value: TdjHTTPConnector.OnCommand sets
+   * Response.ResponseNo to it before dispatching a request, so that
+   * TdjHandlerList and TdjDefaultHandler can tell whether an earlier handler
+   * already handled the request.
+   *}
+  HTTP_NOT_HANDLED = -1;
+
 implementation /// \cond
 
 end. /// \endcond
