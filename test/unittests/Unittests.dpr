@@ -38,6 +38,7 @@ uses
   djContextHandlerCollection in '..\..\source\djContextHandlerCollection.pas',
   djDefaultHandler in '..\..\source\optional\djDefaultHandler.pas',
   djDefaultWebComponent in '..\..\source\optional\djDefaultWebComponent.pas',
+  djErrorResponse in '..\..\source\djErrorResponse.pas',
   djGenericHolder in '..\..\source\djGenericHolder.pas',
   djGenericWebComponent in '..\..\source\djGenericWebComponent.pas',
   djGenericWebFilter in '..\..\source\djGenericWebFilter.pas',

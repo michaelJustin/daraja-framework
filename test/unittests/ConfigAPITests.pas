@@ -76,6 +76,11 @@ type
     procedure TestFilterExceptionReachesErrorHandler;
     procedure TestErrorHandlerSetBeforeStartIsStartedAndStopped;
 
+    // partial response on exception (issue #564)
+    procedure TestPartialComponentResponseReplacedBy500Page;
+    procedure TestPartialFilterResponseReplacedBy500Page;
+    procedure TestErrorHandlerStartsFromCleanResponse;
+
     // lazy (negative LoadOnStartup) load-on-startup (issue #496)
     procedure TestNegativeLoadOnStartupNotStartedAtServerStart;
     procedure TestNegativeLoadOnStartupStartsOnFirstRequest;
@@ -1125,6 +1130,128 @@ begin
 
     CheckTrue(Handler.WasStopped,
       'ErrorHandler must be stopped when its context stops');
+  finally
+    Server.Free;
+  end;
+end;
+
+// test partial response on exception (issue #564) ---------------------------
+type
+  { TPartialResponseComponent: starts a JSON response -- content type, a
+    Content-Length shorter than any error page, a custom header and part of
+    the body -- and then raises. }
+  TPartialResponseComponent = class(TdjWebComponent)
+  public
+    procedure OnGet({%H-}Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+  { TPartialResponseFilter: the same, in a filter. }
+  TPartialResponseFilter = class(TdjWebFilter)
+  public
+    procedure DoFilter({%H-}Context: TdjServerContext; {%H-}Request: TdjRequest;
+      Response: TdjResponse; const {%H-}Chain: IWebFilterChain); override;
+  end;
+
+  { TContentOnlyErrorHandler: sets only the body, so any content type,
+    length or header it sends must have come from somewhere else. }
+  TContentOnlyErrorHandler = class(TdjAbstractHandler)
+  protected
+    procedure Handle({%H-}const Target: string; {%H-}Context: TdjServerContext;
+      {%H-}Request: TdjRequest; Response: TdjResponse); override;
+  end;
+
+procedure StartPartialResponse(Response: TdjResponse);
+begin
+  Response.ContentType := 'application/json';
+  Response.ContentLength := 5;
+  Response.CustomHeaders.Values['X-Leaked'] := 'yes';
+  Response.ContentText := '{"partial":';
+end;
+
+{ TPartialResponseComponent }
+
+procedure TPartialResponseComponent.OnGet(Request: TdjRequest;
+  Response: TdjResponse);
+begin
+  StartPartialResponse(Response);
+  raise EUnitTestException.Create('component failed half way');
+end;
+
+{ TPartialResponseFilter }
+
+procedure TPartialResponseFilter.DoFilter(Context: TdjServerContext;
+  Request: TdjRequest; Response: TdjResponse; const Chain: IWebFilterChain);
+begin
+  StartPartialResponse(Response);
+  raise EUnitTestException.Create('filter failed half way');
+end;
+
+{ TContentOnlyErrorHandler }
+
+procedure TContentOnlyErrorHandler.Handle(const Target: string;
+  Context: TdjServerContext; Request: TdjRequest; Response: TdjResponse);
+begin
+  Response.ContentText := 'clean error page';
+end;
+
+procedure TAPIConfigTests.TestPartialComponentResponseReplacedBy500Page;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Context.Add(TPartialResponseComponent, '/partial');
+    Server.Add(Context);
+    Server.Start;
+
+    CheckGETResponseIsCleanError('', '/ctx/partial');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestPartialFilterResponseReplacedBy500Page;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Context.Add(TOKComponent, '*.html');
+    Context.Add(TPartialResponseFilter, '/*');
+    Server.Add(Context);
+    Server.Start;
+
+    // the filter, not a component, raises -- the framework's own page must
+    // replace what the filter wrote, not only a component's output
+    CheckGETResponseIsCleanError('', '/ctx/page.html');
+
+  finally
+    Server.Free;
+  end;
+end;
+
+procedure TAPIConfigTests.TestErrorHandlerStartsFromCleanResponse;
+var
+  Server: TdjServer;
+  Context: TdjWebAppContext;
+begin
+  Server := TdjServer.Create;
+  try
+    Context := TdjWebAppContext.Create('ctx');
+    Context.Add(TPartialResponseComponent, '/partial');
+    Context.ErrorHandler := TContentOnlyErrorHandler.Create;
+    Server.Add(Context);
+    Server.Start;
+
+    // the full body arrives (no stale Content-Length of 5), labelled with
+    // Indy's default content type rather than the component's JSON type
+    CheckGETResponseIsCleanError('clean error page', '/ctx/partial');
+
   finally
     Server.Free;
   end;

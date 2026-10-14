@@ -55,6 +55,7 @@
 			<DCCReference Include="..\..\source\djContextHandlerCollection.pas"/>
 			<DCCReference Include="..\..\source\optional\djDefaultHandler.pas"/>
 			<DCCReference Include="..\..\source\optional\djDefaultWebComponent.pas"/>
+			<DCCReference Include="..\..\source\djErrorResponse.pas"/>
 			<DCCReference Include="..\..\source\djGenericHolder.pas"/>
 			<DCCReference Include="..\..\source\djGenericWebComponent.pas"/>
 			<DCCReference Include="..\..\source\djGenericWebFilter.pas"/>

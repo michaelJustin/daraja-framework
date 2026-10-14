@@ -16,6 +16,20 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   with `TdjServer.ShowBanner := False`. The text is available via
   `djGlobal.GetServerBanner`. (#554)
 
+### Fixed
+
+- When a Web Component or Web Filter raised an exception after it had
+  started writing its response, the 500 response kept what it had already
+  set: a stale `Content-Length` (so the error page arrived truncated, or the
+  client waited for bytes that never came), its `Content-Type` (e.g. an HTML
+  error page labelled `application/json`), its custom headers, and, for a
+  filter, its partial body. The response is now reset before the 500 page is
+  written, and a context's `ErrorHandler` also starts from a clean response.
+  If the headers were already sent (a streaming component), the connection
+  is closed instead of appending an error page to the partial body. The new
+  unit `djErrorResponse` holds the shared reset and 500-page code, also used
+  by `TdjHTTPConnector`. (#564)
+
 ### Internal
 
 - Version constant set to `3.5.0-SNAPSHOT`.
