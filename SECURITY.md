@@ -157,10 +157,10 @@ available) goes to the server log.
 
 ## Output encoding
 
-Daraja doesn't encode your output. `djGlobal.HTMLEncode` escapes only
-`<`, `>`, `&` and `"`. It's safe for HTML element text and double-quoted
-attributes, but not for single-quoted attributes, JavaScript, CSS or URLs.
-For those, use an encoder made for the context.
+Daraja doesn't encode your output. `djGlobal.HTMLEncode` escapes `<`, `>`,
+`&`, `"` and `'`. It's safe for HTML element text and quoted attribute
+values (single or double quotes), but not for unquoted attributes,
+JavaScript, CSS or URLs. For those, use an encoder made for the context.
 
 Daraja doesn't add security response headers (`Content-Security-Policy`,
 `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`).

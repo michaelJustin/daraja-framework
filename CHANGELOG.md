@@ -19,6 +19,13 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `"` → `\"`, `\` → `\\`, control characters → `\xHH`. The line is built by
   the new `FormatNCSALogLine`, the escaping is available as `NCSAEscape`,
   and both are covered by the new `djNCSALogFilterTests` suite. (#563)
+- `djGlobal.HTMLEncode` now also escapes `'` (as `&#39;`). It escaped only
+  `<`, `>`, `&` and `"`, so application code that used it for a
+  single-quoted attribute value (`value='...'`) could be broken out of with
+  a `'` (cross-site scripting). The framework's own uses were element text
+  and unaffected. It also sizes its result exactly instead of allocating six
+  times the input, and returns the input unchanged when there is nothing to
+  escape. Its doc comment now says which contexts it is safe for. (#562)
 
 ### Added
 

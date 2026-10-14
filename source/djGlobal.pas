@@ -45,6 +45,17 @@ const
  *}
 function GetServerBanner: string;
 
+{*
+ * Escapes text for HTML: '<', '>', '&', '"' and ''' become &lt;, &gt;,
+ * &amp;, &quot; and &#39;.
+ *
+ * The result is safe in HTML element text and in a quoted attribute value,
+ * single- or double-quoted. It is not safe in an unquoted attribute, or in
+ * a JavaScript, CSS or URL context; those need an encoder made for them.
+ *
+ * @param AData the text to escape
+ * @return the escaped text; AData itself if nothing needed escaping
+ *}
 function HTMLEncode(const AData: string): string;
 
 implementation /// \cond
@@ -73,33 +84,53 @@ begin
   Result := Result + 'HTTP server framework ' + DWF_SERVER_VERSION + sLineBreak;
 end;
 
-// http://stackoverflow.com/a/2971923/80901
+// based on http://stackoverflow.com/a/2971923/80901
 function HTMLEncode(const AData: string): string;
 var
-  Pos, I: Integer;
+  P, I, Len: Integer;
 
   procedure Encode(const AStr: string);
   begin
-    Move(AStr[1], Result[Pos], Length(AStr) * SizeOf(Char));
-    Inc(Pos, Length(AStr));
+    Move(AStr[1], Result[P], Length(AStr) * SizeOf(Char));
+    Inc(P, Length(AStr));
   end;
 
 begin
-  SetLength(Result{%H-}, Length(AData) * 6);
-  Pos := 1;
-  for I := 1 to length(AData) do
+  // first pass: the exact length of the result
+  Len := 0;
+  for I := 1 to Length(AData) do
+  begin
+    case AData[I] of
+      '<', '>': Inc(Len, 4); // &lt; &gt;
+      '&', '''': Inc(Len, 5); // &amp; &#39;
+      '"': Inc(Len, 6); // &quot;
+    else
+      Inc(Len);
+    end;
+  end;
+
+  if Len = Length(AData) then
+  begin
+    // nothing to escape
+    Result := AData;
+    Exit;
+  end;
+
+  SetLength(Result{%H-}, Len);
+  P := 1;
+  for I := 1 to Length(AData) do
   begin
     case AData[I] of
       '<': Encode('&lt;');
       '>': Encode('&gt;');
       '&': Encode('&amp;');
       '"': Encode('&quot;');
+      '''': Encode('&#39;');
     else
-      Result[Pos] := AData[I];
-      Inc(Pos);
+      Result[P] := AData[I];
+      Inc(P);
     end;
   end;
-  SetLength(Result, Pos - 1);
 end;
 
 end. /// \endcond
