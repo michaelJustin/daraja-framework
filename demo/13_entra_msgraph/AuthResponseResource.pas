@@ -100,11 +100,20 @@ var
   CodeVerifier: string;
   TokenResponse: string;
   AccessToken: string;
+  ExpectedState: string;
   {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
   P: string;
   {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 begin
-  if Request.Params.Values['state'] <> Request.Session.Content.Values['state'] then
+  // state and code verifier are single-use: take them out of the session
+  // before validating, so a replayed or forged callback finds nothing
+  ExpectedState := Request.Session.Content.Values['state'];
+  CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
+  Request.Session.Content.Values['state'] := '';
+  Request.Session.Content.Values['CodeVerifier'] := '';
+
+  // an empty expected state means no authorization request is pending
+  if (ExpectedState = '') or (Request.Params.Values['state'] <> ExpectedState) then
   begin
     Response.ResponseNo := 401;
     WriteLn('Invalid state parameter.');
@@ -122,7 +131,6 @@ begin
 
   if AuthorizationCode <> '' then
   begin
-    CodeVerifier := Request.Session.Content.Values['CodeVerifier'];
     TokenResponse := GetAuthToken(AuthorizationCode, CodeVerifier);
     AccessToken := ParseResponse(TokenResponse);
     Response.Session.Content.Values['access_token'] := AccessToken;
@@ -134,11 +142,13 @@ end;
 function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
 var
   Data: TJSONData;
-  Obj : TJSONObject;
 begin
   Data := GetJSON(TokenResponse);
-  Obj := TJSONObject(Obj);
-  Result := Obj.Get('access_token');
+  try
+    Result := (Data as TJSONObject).Get('access_token', '');
+  finally
+    Data.Free;
+  end;
 end;
 {$ELSE}
 function TAuthResponseResource.ParseResponse(const TokenResponse: string): string;
@@ -146,7 +156,11 @@ var
   Obj: TJsonObject;
 begin
   Obj := TJsonObject.Parse(TokenResponse) as TJsonObject;
-  Result := Obj.S['access_token'];
+  try
+    Result := Obj.S['access_token'];
+  finally
+    Obj.Free;
+  end;
 end;
 {$ENDIF}
 

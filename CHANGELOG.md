@@ -8,6 +8,19 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Security
+
+- `demo/13_entra_msgraph` (Entra ID / Microsoft Graph sign-in) hardened its
+  PKCE and `state` handling. The code verifier is now 32 bytes from
+  OpenSSL's random generator, 43 characters (the RFC 7636 minimum), instead
+  of 12 characters cut from a GUID string, and `state` is 128 random bits.
+  The redirect handler now rejects a callback when no authorization request
+  is pending (previously a missing `state` parameter matched the empty
+  session value), and removes `state` and the code verifier from the
+  session once used. The authorize request's query values are URL-encoded,
+  and OpenSSL is loaded once at startup instead of on every request.
+  (#557)
+
 ### Added
 
 - `TdjServer.StrictStart` (default `False`): an opt-in fail-fast startup
@@ -35,6 +48,24 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   the Servlet spec's request path matching rule (exact match, or prefix
   followed by `/`), the same rule `TdjPathMap` already applies for `/foo/*`
   patterns matching bare `/foo`. (#544)
+- `demo/13_entra_msgraph`: the Free Pascal build read the access token
+  through an uninitialized variable instead of the parsed JSON, and both
+  builds leaked the parsed JSON object. (#557)
+
+### Documentation
+
+- Added `COMMERCIAL-LICENSE.txt`, the commercial license text (v1.0), next
+  to the AGPL `LICENSE`, so the dual licensing is visible in the
+  repository.
+- New illustrated page, [How a web request reaches your Pascal
+  code](https://michaeljustin.github.io/daraja-framework/request-path.html),
+  that follows one request through the framework's building blocks, for
+  developers new to HTTP. Linked from the README and the API reference.
+- The Getting Started guide is updated for 3.4.0: Indy 10.6.3, Lazarus 4.x
+  / FPC 3.2.2 named as a supported environment, and the
+  `demo/commons` → `demo/common` path typo fixed.
+- `demo/13_entra_msgraph/readme.md` now covers configuring the Microsoft
+  Entra app registration and shows the consent dialog.
 
 ### Internal
 
@@ -64,6 +95,16 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   rules, and the `Name` property; `TdjContextConfig`'s inherited behavior and
   `IContextConfig` conformance. This closes out the coverage audit from
   #502. (#508)
+- 13 log calls in five units built their message by string concatenation
+  even when the level was disabled; they now use `ILogger`'s
+  `(AFormat, AArgs)` overloads. `rsNoPathMapMatchFoundFor` gains a `%s`
+  placeholder. Five calls that also pass an `Exception` are still
+  eager-built, because `ILogger` has no overload for format arguments
+  plus an exception; that is tracked in #559. (#552)
+- The Delphi unit-test project (`Unittests.dproj`) is built with range
+  checks enabled, and its unit references are fixed.
+- Removed the manual-only Linux Doxygen CI workflow.
+- Version constant set to `3.4.0-SNAPSHOT`.
 
 ## [3.3.0] - 2026-09-23
 

@@ -58,14 +58,40 @@ type
 implementation
 
 uses
-  IdCoderMIME, IdGlobal, IdSSLOpenSSL, IdHashSHA;
+  IdCoderMIME, IdGlobal, IdSSLOpenSSL, IdHashSHA, IdURI,
+  IdSSLOpenSSLHeaders;
 
-function CreateGUIDString: string;
 var
-  Guid: TGUID;
+  OpenSSLLoaded: Boolean = False;
+
+function SecureRandomBytes(Count: Integer): TIdBytes;
 begin
-  CreateGUID(Guid);
-  Result := GUIDToString(Guid);
+  if not OpenSSLLoaded then
+    raise Exception.Create('OpenSSL could not be loaded');
+
+  SetLength(Result, Count);
+  if RAND_bytes(PIdAnsiChar(@Result[0]), Count) <> 1 then
+    raise Exception.Create('RAND_bytes failed');
+end;
+
+// ---------------------------------------------------------------------------
+// Base64url without padding, built on Indy's MIME encoder
+// ---------------------------------------------------------------------------
+function Base64UrlEncode(const Data: TIdBytes): string;
+begin
+  Result := TIdEncoderMIME.EncodeBytes(Data);
+  Result := StringReplace(Result, '+', '-', [rfReplaceAll]);
+  Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
+  Result := StringReplace(Result, '=', '',  [rfReplaceAll]);
+end;
+
+// ---------------------------------------------------------------------------
+// PKCE
+// ---------------------------------------------------------------------------
+function BuildCodeVerifier: string;
+begin
+  // 32 random bytes -> 43 URL-safe characters (RFC 7636 minimum)
+  Result := Base64UrlEncode(SecureRandomBytes(32));
 end;
 
 { TAuthFilter }
@@ -75,6 +101,11 @@ begin
   AuthorizeEndpoint := Config.GetContext.GetInitParameter('AuthorizeEndpoint');
   ClientID := Config.GetContext.GetInitParameter('ClientID');
   RedirectURI := Config.GetContext.GetInitParameter('RedirectURI');
+end;
+
+function Q(const S: string): string;
+begin
+  Result := TIdURI.ParamsEncode(S);
 end;
 
 procedure TAuthFilter.DoFilter(Context: TdjServerContext; Request: TdjRequest;
@@ -88,18 +119,19 @@ begin
   AccessToken := Request.Session.Content.Values['access_token'];
   if AccessToken = '' then
   begin
-    CodeVerifier := Copy(CreateGUIDString, 2, 12);
+    CodeVerifier := BuildCodeVerifier;
     Response.Session.Content.Values['CodeVerifier'] := CodeVerifier;
 
     CodeChallenge := BuildCodeChallenge(CodeVerifier);
 
-    State := CreateGUIDString;
+    State := Base64UrlEncode(SecureRandomBytes(16));  // 128 bits, 22 URL-safe chars
     Response.Session.Content.Values['state'] := State;
+
     Response.Redirect(AuthorizeEndpoint
-     + '?client_id=' + ClientID          // Your app registration's Application (client) ID
-     + '&response_type=code'             // Request an auth code
-     + '&redirect_uri=' + RedirectURI
-     + '&scope=User.Read Mail.Send'      // Request read profile and send mail permission
+     + '?client_id=' + Q(ClientID)          // Your app registration's Application (client) ID
+     + '&response_type=code'                // Request an auth code
+     + '&redirect_uri=' + Q(RedirectURI)
+     + '&scope=' + Q('User.Read Mail.Send') // Request read profile and send mail permission
      + '&response_mode=form_post'
      + '&state=' + State
      + '&code_challenge=' + CodeChallenge
@@ -115,24 +147,22 @@ end;
 function TAuthFilter.BuildCodeChallenge(const ACodeVerifier: string): string;
 var
   IdHashSHA256: TIdHashSHA256;
-  SHA256Bytes: TIdBytes;
-  SHA256: string;
 begin
-  IdSSLOpenSSL.LoadOpenSSLLibrary;
+  // S256: BASE64URL(SHA256(ASCII(code_verifier)))
   IdHashSHA256 := TIdHashSHA256.Create;
   try
-    SHA256Bytes := IdHashSHA256.HashString(ACodeVerifier, IndyTextEncoding_ASCII);
-    SHA256 := TIdEncoderMIME.EncodeBytes(SHA256Bytes);
+    Result := Base64UrlEncode(IdHashSHA256.HashString(ACodeVerifier, IndyTextEncoding_ASCII));
   finally
     IdHashSHA256.Free;
   end;
-  IdSSLOpenSSL.UnLoadOpenSSLLibrary;
 
-  Result := StringReplace(SHA256, '+', '-', [rfReplaceAll]);
-  Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
-  Result := StringReplace(Result, '=', '',  [rfReplaceAll]);
-
-//  Assert(Length(Result) = 43);
+  Assert(Length(Result) = 43); // 32-byte digest
 end;
+
+initialization
+  OpenSSLLoaded := IdSSLOpenSSL.LoadOpenSSLLibrary;
+
+finalization
+  IdSSLOpenSSL.UnLoadOpenSSLLibrary;
 
 end.
