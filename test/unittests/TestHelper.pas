@@ -58,6 +58,7 @@ uses
   djHandlerCollectionTests,
   djHandlerWrapperTests,
   djInitParametersTests,
+  djNCSALogFilterTests,
   djLifeCycleTests,
   djServerBaseTests,
   djPathMapTests,
@@ -112,8 +113,9 @@ begin
   Tests.AddTest(TTestSuite.Create(TdjWebFilterTests));
   Tests.AddTest(TTestSuite.Create(TdjWebFilterChainTests));
   Tests.AddTest(TTestSuite.Create(TdjWebFilterMappingTests));
-  // optional feature
+  // optional features
   Tests.AddTest(TTestSuite.Create(TdjDefaultWebComponentTests));
+  Tests.AddTest(TTestSuite.Create(TdjNCSALogFilterTests));
 
   // Integration suites: these start a real HTTP server on the loopback
   // interface. They run in every runner (console and GUI). Set the
@@ -152,8 +154,9 @@ begin
   RegisterTests('', [TdjWebFilterTests.Suite]);
   RegisterTests('', [TdjWebFilterChainTests.Suite]);
   RegisterTests('', [TdjWebFilterMappingTests.Suite]);
-  // optional feature
+  // optional features
   RegisterTests('', [TdjDefaultWebComponentTests.Suite]);
+  RegisterTests('', [TdjNCSALogFilterTests.Suite]);
 
   // Integration suites: these start a real HTTP server on the loopback
   // interface. They run in every runner (text and GUI). Set the

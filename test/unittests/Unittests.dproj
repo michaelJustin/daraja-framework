@@ -69,6 +69,7 @@
 			<DCCReference Include="..\..\source\djInitParameters.pas"/>
 			<DCCReference Include="..\..\source\djInterfaces.pas"/>
 			<DCCReference Include="..\..\source\djLifeCycle.pas"/>
+			<DCCReference Include="..\..\source\optional\djNCSALogFilter.pas"/>
 			<DCCReference Include="..\..\source\djPathMap.pas"/>
 			<DCCReference Include="..\..\source\djPlatform.pas"/>
 			<DCCReference Include="..\..\source\djServer.pas"/>
@@ -97,6 +98,7 @@
 			<DCCReference Include="djGenericWebFilterTests.pas"/>
 			<DCCReference Include="djGlobalTests.pas"/>
 			<DCCReference Include="djInitParametersTests.pas"/>
+			<DCCReference Include="djNCSALogFilterTests.pas"/>
 			<DCCReference Include="djServerBaseTests.pas"/>
 			<DCCReference Include="djHandlerCollectionTests.pas"/>
 			<DCCReference Include="djHandlerWrapperTests.pas"/>
