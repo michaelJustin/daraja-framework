@@ -35,6 +35,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   with `TdjServer.ShowBanner := False`. The text is available via
   `djGlobal.GetServerBanner`. (#554)
 
+### Changed
+
+- Requires slf4p 1.2.0, for its `ILogger` overloads that take format
+  arguments and an exception
+  ([slf4p#97](https://github.com/michaelJustin/slf4p/issues/97)).
+
 ### Fixed
 
 - When a Web Component or Web Filter raised an exception after it had
@@ -57,6 +63,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
   `TdjHTTPConnector`, `TdjHandlerList` and `TdjDefaultHandler`.
   `TdjHandlerList` previously tested `> 0` / `< 0` for the same value. No
   behavior change. (#555)
+- Parametrized logging for the five log calls that also pass an exception
+  (`TdjWebComponentHandler`, `TdjWebComponentContextHandler`,
+  `TdjWebComponentHolder` and `TdjWebFilterHolder`). They built the message
+  before the logger checked the level; they now use slf4p's
+  format-arguments-plus-exception overloads. The logged text is unchanged.
+  (#559)
 - Version constant set to `3.5.0-SNAPSHOT`.
 
 ## [3.4.0] - 2026-10-14

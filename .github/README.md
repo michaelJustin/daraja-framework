@@ -53,7 +53,7 @@ The minimum requirements are:
  - Delphi 2009 or higher _or_
  - Lazarus 4.x / Free Pascal 3.2.x
  - [Indy - Internet Direct](https://github.com/IndySockets/Indy) 10.6.2 or 10.6.3
- - [slf4p - Simple Logging Facade for Pascal](https://github.com/michaelJustin/slf4p)
+ - [slf4p - Simple Logging Facade for Pascal](https://github.com/michaelJustin/slf4p) 1.2.0 or higher
 
   Optional dependencies for some code examples and logging:
  - [JsonDataObjects](https://github.com/ahausladen/JsonDataObjects)

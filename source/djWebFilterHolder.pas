@@ -228,7 +228,7 @@ begin
       on E: Exception do
       begin
         {$IFDEF DARAJA_LOGGING}
-        Logger.Warn('TdjWebFilterHolder.Stop: ' + E.Message, E);
+        Logger.Warn('TdjWebFilterHolder.Stop: %s', [E.Message], E);
         {$ENDIF DARAJA_LOGGING}
       end;
     end;
@@ -239,7 +239,7 @@ begin
     on E: Exception do
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Warn('TdjWebFilterHolder.Stop: ' + E.Message, E);
+      Logger.Warn('TdjWebFilterHolder.Stop: %s', [E.Message], E);
       {$ENDIF DARAJA_LOGGING}
       // Swallowed on purpose: TdjLifeCycle.Stop logs and continues so a
       // failing stop cannot leave the filter half-started.

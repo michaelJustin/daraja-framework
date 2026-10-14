@@ -277,9 +277,9 @@ begin
             on E2: Exception do
             begin
               {$IFDEF DARAJA_LOGGING}
-              Logger.Error('ErrorHandler raised ' + E2.ClassName
-                + ' while handling ' + E.ClassName
-                + '; falling back to the default error response', E2);
+              Logger.Error('ErrorHandler raised %s while handling %s;'
+                + ' falling back to the default error response',
+                [E2.ClassName, E.ClassName], E2);
               {$ENDIF DARAJA_LOGGING}
               // discard whatever the ErrorHandler wrote before it failed
               SetErrorResponse(Response, E);

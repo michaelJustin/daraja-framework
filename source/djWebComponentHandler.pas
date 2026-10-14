@@ -682,9 +682,8 @@ begin
       // class and message. By default the client never sees it: the error
       // response is built further up, in Handle (see SetErrorResponse).
       {$IFDEF DARAJA_LOGGING}
-      Logger.Error(
-        Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
-          [Comp.ClassName, E.ClassName, E.Message]), E);
+      Logger.Error(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
+        [Comp.ClassName, E.ClassName, E.Message], E);
       {$ENDIF DARAJA_LOGGING}
 
       raise;
