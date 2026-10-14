@@ -78,15 +78,8 @@ end;
 // Base64url without padding, built on Indy's MIME encoder
 // ---------------------------------------------------------------------------
 function Base64UrlEncode(const Data: TIdBytes): string;
-var
-  Enc: TIdEncoderMIME;
 begin
-  Enc := TIdEncoderMIME.Create(nil);
-  try
-    Result := Enc.EncodeBytes(Data);
-  finally
-    Enc.Free;
-  end;
+  Result := TIdEncoderMIME.EncodeBytes(Data);
   Result := StringReplace(Result, '+', '-', [rfReplaceAll]);
   Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
   Result := StringReplace(Result, '=', '',  [rfReplaceAll]);
@@ -154,22 +147,16 @@ end;
 function TAuthFilter.BuildCodeChallenge(const ACodeVerifier: string): string;
 var
   IdHashSHA256: TIdHashSHA256;
-  SHA256Bytes: TIdBytes;
-  SHA256: string;
 begin
+  // S256: BASE64URL(SHA256(ASCII(code_verifier)))
   IdHashSHA256 := TIdHashSHA256.Create;
   try
-    SHA256Bytes := IdHashSHA256.HashString(ACodeVerifier, IndyTextEncoding_ASCII);
-    SHA256 := TIdEncoderMIME.EncodeBytes(SHA256Bytes);
+    Result := Base64UrlEncode(IdHashSHA256.HashString(ACodeVerifier, IndyTextEncoding_ASCII));
   finally
     IdHashSHA256.Free;
   end;
 
-  Result := StringReplace(SHA256, '+', '-', [rfReplaceAll]);
-  Result := StringReplace(Result, '/', '_', [rfReplaceAll]);
-  Result := StringReplace(Result, '=', '',  [rfReplaceAll]);
-
-  // Assert(Length(Result) = 43);
+  Assert(Length(Result) = 43); // 32-byte digest
 end;
 
 initialization
