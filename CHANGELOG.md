@@ -8,6 +8,18 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Security
+
+- `TdjNCSALogFilter` (optional) wrote the client-controlled request values
+  into its access-log line unescaped. The user name from an
+  `Authorization: Basic` header can contain line breaks, so a client could
+  forge log entries. A `"` could shift the line's fields, and an ESC could
+  start a terminal escape sequence for whoever reads the console. The user
+  name, method, URI and version are now escaped the way Apache httpd does:
+  `"` → `\"`, `\` → `\\`, control characters → `\xHH`. The line is built by
+  the new `FormatNCSALogLine`, the escaping is available as `NCSAEscape`,
+  and both are covered by the new `djNCSALogFilterTests` suite. (#563)
+
 ### Added
 
 - Start-up banner: on `Server.Start`, console applications now print "daraja"

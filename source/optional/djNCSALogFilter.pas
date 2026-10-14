@@ -61,6 +61,43 @@ type
       TdjResponse; const Chain: IWebFilterChain); override;
   end;
 
+{*
+ * Escapes a request-derived value for an access-log line, the way Apache
+ * httpd escapes its access log: a double quote becomes \", a backslash
+ * becomes \\, and a control character (#0..#31 and #127, including CR, LF
+ * and ESC) becomes \xHH. Other characters are kept as they are.
+ *
+ * This keeps a client from forging log lines (with CR/LF), shifting the
+ * quoted fields (with a double quote), or sending terminal escape
+ * sequences to whoever reads the log.
+ *
+ * @param Value the value to escape
+ * @return the escaped value
+ *}
+function NCSAEscape(const Value: string): string;
+
+{*
+ * Formats one Common Log Format line:
+ * host - user [timestamp] "method uri version" status length
+ *
+ * The user name, method, URI and version come from the client and are
+ * escaped with NCSAEscape. An empty user name is written as '-', and so is
+ * a negative length.
+ *
+ * @param RemoteIP the client address
+ * @param AuthUsername the user name from the Authorization header
+ * @param Command the request method
+ * @param URI the request URI
+ * @param Version the HTTP version
+ * @param Timestamp the time, already formatted
+ * @param ResponseNo the response status code
+ * @param ContentLength the response body length, or -1 if unknown
+ * @return the log line, without a line break
+ *}
+function FormatNCSALogLine(const RemoteIP, AuthUsername, Command, URI,
+  Version, Timestamp: string; ResponseNo: Integer;
+  ContentLength: Int64): string;
+
 implementation
 
 uses
@@ -94,6 +131,58 @@ begin
   end;
 end;
 
+function NCSAEscape(const Value: string): string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := 1 to Length(Value) do
+  begin
+    case Value[I] of
+      '"': Result := Result + '\"';
+      '\': Result := Result + '\\';
+      #0..#31, #127: Result := Result + '\x' + IntToHex(Ord(Value[I]), 2);
+    else
+      Result := Result + Value[I];
+    end;
+  end;
+end;
+
+function FormatNCSALogLine(const RemoteIP, AuthUsername, Command, URI,
+  Version, Timestamp: string; ResponseNo: Integer;
+  ContentLength: Int64): string;
+var
+  User: string;
+  Size: string;
+begin
+  if Trim(AuthUsername) = '' then
+  begin
+    User := '-';
+  end
+  else
+  begin
+    User := NCSAEscape(AuthUsername);
+  end;
+
+  if ContentLength < 0 then
+  begin
+    Size := '-';
+  end
+  else
+  begin
+    Size := IntToStr(ContentLength);
+  end;
+
+  Result := RemoteIP + ' '
+    + '- '
+    + User + ' '
+    + '[' + Timestamp + '] '
+    + '"' + NCSAEscape(Command) + ' ' + NCSAEscape(URI) + ' '
+    + NCSAEscape(Version) + '" '
+    + IntToStr(ResponseNo) + ' '
+    + Size;
+end;
+
 { TdjNCSALogFilter }
 
 procedure TdjNCSALogFilter.Init;
@@ -115,42 +204,14 @@ end;
 procedure TdjNCSALogFilter.DoFilter;
 var
   LogMsg: string;
-
-  function IfEmpty(const AParam: string): string;
-  begin
-    if Trim(AParam) = '' then
-    begin
-      Result := '-';
-    end
-    else
-    begin
-      Result := AParam;
-    end;
-  end;
-
-  function IfNegative(const AParam: Int64): string;
-  begin
-    if AParam < 0 then
-    begin
-      Result := '-';
-    end
-    else
-    begin
-      Result := IntToStr(AParam);
-    end;
-  end;
-
 begin
   try
     Chain.DoFilter(Context, Request, Response);
   finally
-    LogMsg := Request.RemoteIP + ' '
-      + '- '
-      + IfEmpty(Request.AuthUsername) + ' '
-      + '[' + DateTimeToNCSATime(Now, FS) + '] '
-      + '"' + Request.Command + ' ' + Request.URI + ' ' + Request.Version + '" '
-      + IntToStr(Response.ResponseNo) + ' '
-      + IfNegative(Response.ContentLength);
+    LogMsg := FormatNCSALogLine(Request.RemoteIP, Request.AuthUsername,
+      Request.Command, Request.URI, Request.Version,
+      DateTimeToNCSATime(Now, FS), Response.ResponseNo,
+      Response.ContentLength);
 
     if IsConsole then
     begin

@@ -175,8 +175,11 @@ before relying on them:
   that the resolved path stays inside the content folder. It doesn't
   resolve symbolic links, so a link inside the folder can point outside it.
 - `TdjNCSALogFilter` writes the request line and the user name from the
-  `Authorization` header to the access log without escaping. A client can
-  put line breaks in those values and forge log lines. Don't feed its
-  output to anything that trusts the line structure.
+  `Authorization` header to the access log. Both come from the client, so
+  it escapes them the way Apache httpd does: `"` and `\` are
+  backslash-escaped, and control characters (including line breaks and
+  ESC) are written as `\xHH`. A client can't forge log lines or start a
+  terminal escape sequence. Characters outside ASCII are written as they
+  are. It writes to the console only (`IsConsole`).
 - `TdjStatisticsFilter` needs a context with sessions enabled. Without
   sessions it raises a configuration error.

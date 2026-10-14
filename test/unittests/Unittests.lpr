@@ -57,6 +57,7 @@ uses
   djAbstractConnectorTests,
   djGlobalTests,
   djInitParametersTests,
+  djNCSALogFilterTests,
   djAbstractConfigTests,
   djContextConfigTests,
   ConfigAPITests,
