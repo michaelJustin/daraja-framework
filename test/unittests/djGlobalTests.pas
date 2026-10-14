@@ -54,6 +54,9 @@ type
     procedure TestEncodesMixedContent;
     procedure TestEncodesStringOfOnlyTheWidestEscape;
     procedure TestConsecutiveSpecialCharactersAreAllEncoded;
+    procedure TestEncodesSingleQuote;
+    procedure TestSingleQuotedAttributeValueCannotEndEarly;
+    procedure TestTextWithoutSpecialCharactersIsUnchanged;
     procedure TestServerBannerEndsWithVersionLine;
   end;
 
@@ -103,14 +106,36 @@ end;
 procedure TdjGlobalTests.TestEncodesStringOfOnlyTheWidestEscape;
 begin
   // '&quot;' (6 characters) is the longest replacement HTMLEncode produces;
-  // the implementation sizes its buffer as Length(AData) * 6, so a string of
-  // nothing but quotes is the tightest possible fit for that arithmetic.
+  // the implementation sizes its result exactly in a first pass, so a
+  // string of nothing but quotes checks that arithmetic at its maximum.
   CheckEquals('&quot;&quot;&quot;', HTMLEncode('"""'));
 end;
 
 procedure TdjGlobalTests.TestConsecutiveSpecialCharactersAreAllEncoded;
 begin
-  CheckEquals('&lt;&gt;&amp;&quot;', HTMLEncode('<>&"'));
+  CheckEquals('&lt;&gt;&amp;&quot;&#39;', HTMLEncode('<>&"'''));
+end;
+
+procedure TdjGlobalTests.TestEncodesSingleQuote;
+begin
+  CheckEquals('&#39;', HTMLEncode(''''));
+end;
+
+procedure TdjGlobalTests.TestSingleQuotedAttributeValueCannotEndEarly;
+begin
+  // the attack from issue #562: without escaping ', this value closes the
+  // single-quoted attribute and adds an event handler
+  CheckEquals('&#39; autofocus onfocus=&#39;alert(1)',
+    HTMLEncode(''' autofocus onfocus=''alert(1)'));
+end;
+
+procedure TdjGlobalTests.TestTextWithoutSpecialCharactersIsUnchanged;
+const
+  // includes a character outside ASCII, written as a character code so the
+  // test does not depend on the source file's encoding
+  Text = 'J' + #$00FC + 'rgen, 100% (ok)';
+begin
+  CheckEquals(Text, HTMLEncode(Text));
 end;
 
 procedure TdjGlobalTests.TestServerBannerEndsWithVersionLine;
