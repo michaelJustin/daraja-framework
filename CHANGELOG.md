@@ -8,6 +8,14 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+### Added
+
+- Start-up banner: on `Server.Start`, console applications now print "daraja"
+  as ASCII art followed by `HTTP server framework <version>`. It is written at
+  most once per process and only when `System.IsConsole` is true. Disable it
+  with `TdjServer.ShowBanner := False`. The text is available via
+  `djGlobal.GetServerBanner`. (#554)
+
 ### Internal
 
 - Version constant set to `3.5.0-SNAPSHOT`.

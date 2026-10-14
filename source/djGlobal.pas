@@ -35,9 +35,43 @@ const
   DWF_SERVER_FULL_NAME = 'Daraja HTTP Framework ' + DWF_SERVER_VERSION;
   DWF_SERVER_COPYRIGHT = 'Copyright (c) 2016 Michael Justin';
 
+{*
+ * Returns the start-up banner: the word "daraja" as ASCII art, followed by
+ * a line with the framework description and DWF_SERVER_VERSION.
+ *
+ * Lines are separated by sLineBreak; the result ends with a line break.
+ *
+ * @return the banner text
+ *}
+function GetServerBanner: string;
+
 function HTMLEncode(const AData: string): string;
 
 implementation /// \cond
+
+const
+  // "daraja" in the FIGlet "standard" font. Note the doubled quote on the
+  // third line: it is a single apostrophe in the output.
+  BANNER_ART: array[0..5] of string = (
+    '     _                  _       ',
+    '  __| | __ _ _ __ __ _ (_) __ _ ',
+    ' / _` |/ _` | ''__/ _` || |/ _` |',
+    '| (_| | (_| | | | (_| || | (_| |',
+    ' \__,_|\__,_|_|  \__,_|/ |\__,_|',
+    '                     |__/       '
+  );
+
+function GetServerBanner: string;
+var
+  I: Integer;
+begin
+  Result := '';
+  for I := Low(BANNER_ART) to High(BANNER_ART) do
+  begin
+    Result := Result + BANNER_ART[I] + sLineBreak;
+  end;
+  Result := Result + 'HTTP server framework ' + DWF_SERVER_VERSION + sLineBreak;
+end;
 
 // http://stackoverflow.com/a/2971923/80901
 function HTMLEncode(const AData: string): string;

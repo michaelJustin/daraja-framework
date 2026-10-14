@@ -54,12 +54,13 @@ type
     procedure TestEncodesMixedContent;
     procedure TestEncodesStringOfOnlyTheWidestEscape;
     procedure TestConsecutiveSpecialCharactersAreAllEncoded;
+    procedure TestServerBannerEndsWithVersionLine;
   end;
 
 implementation
 
 uses
-  djGlobal;
+  djGlobal, SysUtils;
 
 { TdjGlobalTests }
 
@@ -110,6 +111,16 @@ end;
 procedure TdjGlobalTests.TestConsecutiveSpecialCharactersAreAllEncoded;
 begin
   CheckEquals('&lt;&gt;&amp;&quot;', HTMLEncode('<>&"'));
+end;
+
+procedure TdjGlobalTests.TestServerBannerEndsWithVersionLine;
+var
+  Banner, Expected: string;
+begin
+  Banner := GetServerBanner;
+  Expected := 'HTTP server framework ' + DWF_SERVER_VERSION + sLineBreak;
+  CheckEquals(Expected,
+    Copy(Banner, Length(Banner) - Length(Expected) + 1, Length(Expected)));
 end;
 
 end.
