@@ -44,6 +44,12 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Internal
 
+- The `ResponseNo` value that marks a request no handler has answered yet
+  (`-1`, a Daraja convention rather than an Indy one) is now the named
+  constant `HTTP_NOT_HANDLED` in `djHTTPConstants`. It's used by
+  `TdjHTTPConnector`, `TdjHandlerList` and `TdjDefaultHandler`.
+  `TdjHandlerList` previously tested `> 0` / `< 0` for the same value. No
+  behavior change. (#555)
 - Version constant set to `3.5.0-SNAPSHOT`.
 
 ## [3.4.0] - 2026-10-14

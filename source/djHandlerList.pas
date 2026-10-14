@@ -69,7 +69,7 @@ type
 implementation /// \cond
 
 uses
-  djInterfaces, djGlobal,
+  djInterfaces, djGlobal, djHTTPConstants,
   SysUtils;
 
 { TdjHandlerList }
@@ -97,7 +97,7 @@ begin
   begin
     H.Handle(Target, Context, Request, Response);
 
-    if (Response.ResponseNo > 0) then
+    if Response.ResponseNo <> HTTP_NOT_HANDLED then
     begin
       {$IFDEF DARAJA_LOGGING}
       Logger.Trace('Handled %s', [Target]);
@@ -108,7 +108,7 @@ begin
   end;
 
   // 404 if no context matches
-  if Response.ResponseNo < 0 then
+  if Response.ResponseNo = HTTP_NOT_HANDLED then
   begin
     {$IFDEF DARAJA_LOGGING}
     Logger.Trace('Not handled %s. Set ResponseNo to 404', [Target]);

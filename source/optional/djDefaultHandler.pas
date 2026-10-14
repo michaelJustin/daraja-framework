@@ -131,7 +131,7 @@ end;
 procedure TdjDefaultHandler.Handle(const Target: string; Context: TdjServerContext;
   Request: TdjRequest; Response: TdjResponse);
 begin
-  if (Response.ResponseNo = -1) then
+  if Response.ResponseNo = HTTP_NOT_HANDLED then
   begin
     {$IFDEF DARAJA_LOGGING}
     Logger.Trace('Unhandled request.');

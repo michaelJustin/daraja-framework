@@ -83,7 +83,7 @@ type
 implementation /// \cond
 
 uses
-  djErrorResponse,
+  djErrorResponse, djHTTPConstants,
   IdSocketHandle, IdIOHandler, IdGlobal, IdException, IdExceptionCore,
   IdCustomHTTPServer,
   SysUtils, Classes;
@@ -200,7 +200,7 @@ begin
     Logger.Trace('OnCommand %s', [ARequestInfo.Document]);
     {$ENDIF DARAJA_LOGGING}
 
-    AResponseInfo.ResponseNo := -1;
+    AResponseInfo.ResponseNo := HTTP_NOT_HANDLED;
 
     // Handle the request
     Handler.Handle(ARequestInfo.Document, AContext as TdjServerContext,
@@ -240,10 +240,11 @@ begin
       end;
       {$ENDIF DARAJA_LOGGING}
 
-      // AResponseInfo.ResponseNo was set to -1 above and Handle never got to
-      // (or failed to) set a real status. Leaving it at -1 depends on Indy's
-      // downstream handling of an invalid status and can send the client an
-      // empty or malformed response instead of a clean 500. Replace
+      // AResponseInfo.ResponseNo was set to HTTP_NOT_HANDLED (-1) above and
+      // Handle never got to (or failed to) set a real status. Leaving it at
+      // -1 depends on Indy's downstream handling of an invalid status and
+      // can send the client an empty or malformed response instead of a
+      // clean 500. Replace
       // whatever the failing handler left on the response with the same
       // 500 page the Web Component handler uses -- no exception detail
       // unless DARAJA_PROJECT_STAGE_DEVELOPMENT is defined.
