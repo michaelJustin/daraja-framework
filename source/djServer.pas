@@ -148,11 +148,13 @@ type
     // not safe once the class implements more than one interface.
     FContextHandlerCollection: TdjContextHandlerCollection;
     FContextNames: TStrings;
+    FShowBanner: Boolean;
     function GetStrictStart: Boolean;
     procedure SetStrictStart(const Value: Boolean);
     procedure StartConnectors;
     procedure StopConnectors;
     procedure StopContextHandlers;
+    procedure WriteBanner;
   protected
     // TdjLifeCycle overrides
     /// \private
@@ -269,12 +271,26 @@ type
      *}
     property StrictStart: Boolean read GetStrictStart write SetStrictStart;
 
+    {*
+     * Write the start-up banner (see GetServerBanner in djGlobal) to the
+     * console when the server starts. Default: True.
+     *
+     * @note The banner is only written if the application has a console
+     * (System.IsConsole), and at most once per process, so restarting a
+     * server or running several servers does not repeat it.
+     *}
+    property ShowBanner: Boolean read FShowBanner write FShowBanner;
+
   end;
 
 implementation /// \cond
 
 uses
+  djGlobal,
   Generics.Defaults, SysUtils;
+
+var
+  BannerWritten: Boolean = False;
 
 { TdjServer }
 
@@ -297,6 +313,8 @@ begin
   FContextHandlerCollection := TdjContextHandlerCollection.Create;
   FContextHandlers := FContextHandlerCollection;
   FContextNames := TStringList.Create;
+
+  FShowBanner := True;
 
   AddHandler(FContextHandlers);
 end;
@@ -485,9 +503,20 @@ begin
   FContextHandlers.Stop;
 end;
 
+procedure TdjServer.WriteBanner;
+begin
+  if FShowBanner and System.IsConsole and not BannerWritten then
+  begin
+    BannerWritten := True;
+    Write(GetServerBanner);
+  end;
+end;
+
 procedure TdjServer.DoStart;
 begin
   CheckNotStarted;
+
+  WriteBanner;
 
   // add default connector
   if FConnectorList.Count = 0 then
