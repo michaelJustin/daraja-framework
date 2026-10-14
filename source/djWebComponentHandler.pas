@@ -202,10 +202,17 @@ type
     {*
      * Invokes a service for the specified web component.
      *
+     * An exception raised by the component's Service method is logged
+     * (component, exception class and message) and re-raised. The error
+     * response itself is built by the caller.
+     *
      * @param Comp The web component instance to handle.
      * @param Context The server context in which the service is invoked.
      * @param Request The incoming request to be processed.
      * @param Response The outgoing response to be sent.
+     *
+     * @throws Exception any exception raised by the component's Service
+     *         method, after logging it
      *}
     class procedure InvokeService(Comp: TdjWebComponent; Context: TdjServerContext;
       Request: TdjRequest; Response: TdjResponse);
@@ -214,16 +221,7 @@ type
 implementation /// \cond
 
 uses
-  djContextHandler, djGlobal, djHTTPConstants, djWebFilterChain,
-  {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-  {$IFDEF DARAJA_MADEXCEPT}
-  djStacktrace, madStackTrace,
-  {$ENDIF}
-  {$IFDEF DARAJA_JCLDEBUG}
-  djStacktrace, JclDebug,
-  {$ENDIF}
-  {$ENDIF}
-  IdHTTP,
+  djContextHandler, djErrorResponse, djHTTPConstants, djWebFilterChain,
   SysUtils, Classes;
 
 resourcestring
@@ -672,12 +670,6 @@ end;
 
 class procedure TdjWebComponentHandler.InvokeService(Comp: TdjWebComponent; Context:
   TdjServerContext; Request: TdjRequest; Response: TdjResponse);
-{$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-var
-  ExceptionMessageHTML: string;
-  Msg: string;
-  Msg2: string;
-{$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 begin
   try
     // invoke service method
@@ -687,77 +679,13 @@ begin
     on E: Exception do
     begin
       // Always log the full detail server-side -- component, exception
-      // class and message -- regardless of what the client response
-      // discloses below. This is the only place that detail is recorded;
-      // by default the client never sees it.
+      // class and message. By default the client never sees it: the error
+      // response is built further up, in Handle (see SetErrorResponse).
       {$IFDEF DARAJA_LOGGING}
       Logger.Error(
         Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
           [Comp.ClassName, E.ClassName, E.Message]), E);
       {$ENDIF DARAJA_LOGGING}
-
-      {$IFDEF DARAJA_PROJECT_STAGE_DEVELOPMENT}
-      // Development mode: disclose the component/exception class, the
-      // exception message, and (if available) a stack trace. Exception
-      // messages routinely carry file paths, SQL fragments, connection
-      // strings or internal hostnames, so this detail must never be the
-      // default for a deployed server.
-      ExceptionMessageHTML := HTMLEncode(E.Message);
-
-      Msg := Format(rsExecutionOfMethodSServiceCausedAnExceptionOfTyp,
-               [Comp.ClassName, E.ClassName, ExceptionMessageHTML]);
-
-      if E is EIdHTTPProtocolException
-      then
-      begin
-        Msg2 := '<p>'
-          + HTMLEncode(EIdHTTPProtocolException(E).ErrorMessage)
-          + '</p>';
-      end;
-
-      Response.ContentText := '<!DOCTYPE html>' + #10
-        + '<html>' + #10
-        + '  <head>' + #10
-        + '    <title>500 Internal Error</title>' + #10
-        + '  </head>' + #10
-        + '  <body>' + #10
-        + '    <h1>' + Comp.ClassName + ' caused ' + E.ClassName + '</h1>' + #10
-        + '    <h2>Exception message: ' + ExceptionMessageHTML + '</h2>' + #10
-        + '    <p>' + Msg + '</p>' + #10
-        + Msg2
-      {$IFDEF DARAJA_MADEXCEPT}
-        + '    <hr />' + #10
-        + '    <h2>Stack trace:</h2>' + #10
-        + '    <pre>' + #10
-        + string(madStackTrace.StackTrace) + #10
-        + '    </pre>' + #10
-      {$ENDIF DARAJA_MADEXCEPT}
-      {$IFDEF DARAJA_JCLDEBUG}
-        + '    <hr />' + #10
-        + '    <h2>Stack trace:</h2>' + #10
-        + '    <pre>' + #10
-        + djStackTrace.GetStackList + #10
-        + '    </pre>' + #10
-      {$ENDIF DARAJA_JCLDEBUG}
-        + '    <hr />' + #10
-        + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
-        + '  </body>' + #10
-        + '</html>';
-      {$ELSE}
-      // Default (non-development) response: generic, discloses nothing
-      // about the component, the exception, or its message.
-      Response.ContentText := '<!DOCTYPE html>' + #10
-        + '<html>' + #10
-        + '  <head>' + #10
-        + '    <title>500 Internal Error</title>' + #10
-        + '  </head>' + #10
-        + '  <body>' + #10
-        + '    <h1>500 Internal Server Error</h1>' + #10
-        + '    <hr />' + #10
-        + '    <p><small>' + DWF_SERVER_FULL_NAME + '</small></p>' + #10
-        + '  </body>' + #10
-        + '</html>';
-      {$ENDIF DARAJA_PROJECT_STAGE_DEVELOPMENT}
 
       raise;
     end;
@@ -799,21 +727,32 @@ begin
   begin
     Response.ResponseNo := HTTP_OK;
 
-    // lazy (negative LoadOnStartup) or previously-failed components are
-    // started here, on first matching request. A failure here, in a filter,
-    // or in the component's Service method is not caught in this method:
-    // it propagates to the caller (TdjWebComponentContextHandler.DoHandle),
-    // which turns it into a response and, if one is configured, invokes the
-    // context's ErrorHandler.
-    if not Holder.IsStarted then
-    begin
-      Holder.Start;
-    end;
+    try
+      // lazy (negative LoadOnStartup) or previously-failed components are
+      // started here, on first matching request
+      if not Holder.IsStarted then
+      begin
+        Holder.Start;
+      end;
 
-    if Chain <> nil then begin
-      Chain.DoFilter(Context, Request, Response);
-    end else begin
-      InvokeService(Holder.WebComponent, Context, Request, Response);
+      if Chain <> nil then begin
+        Chain.DoFilter(Context, Request, Response);
+      end else begin
+        InvokeService(Holder.WebComponent, Context, Request, Response);
+      end;
+    except
+      on E: Exception do
+      begin
+        // A failure while starting the component, in a filter, or in the
+        // component's Service method: whatever the failing code already
+        // put on the response (content type and length, headers, a partial
+        // body) is discarded and replaced with the 500 page. The exception
+        // still propagates to the caller (TdjWebComponentContextHandler.
+        // DoHandle), which invokes the context's ErrorHandler if one is
+        // configured.
+        SetErrorResponse(Response, E, Holder.WebComponentClass.ClassName);
+        raise;
+      end;
     end;
   end;
 end;

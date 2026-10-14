@@ -73,6 +73,16 @@ type
     // ErrorHandler's page).
     procedure CheckGETResponse500ContentEquals(Expected: string; URL: string = ''; msg: string = '');
 
+    // GETs expected to return a clean 500 after a handler raised half way
+    // through its response (issue #564): checks the status, a text/html
+    // content type, and that no X-Leaked header -- set by the test
+    // component or filter before it raised -- survived. With an empty
+    // ExpectedBody, also checks that the framework's complete 500 page
+    // arrived (so Content-Length matched it); otherwise that the body
+    // equals ExpectedBody.
+    procedure CheckGETResponseIsCleanError(const ExpectedBody: string = '';
+      URL: string = ''; msg: string = '');
+
     procedure CheckPOSTResponseEquals(Expected: string; URL: string = ''; msg: string = '');
 
     // for tests overriding the TdjWebComponent.OnGetLastModified method
@@ -436,6 +446,34 @@ begin
   Actual := IdHTTP.Get(URL, [500]);
   CheckEquals(500, IdHTTP.ResponseCode, msg);
   CheckEquals(Expected, Actual, msg);
+end;
+
+procedure THTTPTestCase.CheckGETResponseIsCleanError(const ExpectedBody: string;
+  URL: string; msg: string);
+var
+  Actual: string;
+begin
+  URL := ResolveURL(URL);
+
+  // see CheckGETResponse500ContentEquals
+  IdHTTP.HTTPOptions := IdHTTP.HTTPOptions + [hoWantProtocolErrorContent];
+
+  Actual := IdHTTP.Get(URL, [500]);
+  CheckEquals(500, IdHTTP.ResponseCode, msg);
+  CheckEquals('text/html', IdHTTP.Response.ContentType, msg + ' (content type)');
+  CheckEquals('', IdHTTP.Response.RawHeaders.Values['X-Leaked'],
+    msg + ' (stale header)');
+
+  if ExpectedBody = '' then
+  begin
+    CheckTrue(Pos('<h1>500 Internal Server Error</h1>', Actual) > 0,
+      msg + ' (error page heading)');
+    CheckTrue(Pos('</html>', Actual) > 0, msg + ' (complete page)');
+  end
+  else
+  begin
+    CheckEquals(ExpectedBody, Actual, msg + ' (body)');
+  end;
 end;
 
 procedure THTTPTestCase.CheckGETResponseContains(Expected: string; URL: string = ''; msg: string = '');

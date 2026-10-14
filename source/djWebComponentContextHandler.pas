@@ -141,7 +141,7 @@ type
 implementation /// \cond
 
 uses
-  djHTTPConstants,
+  djErrorResponse, djHTTPConstants,
   Classes, SysUtils;
 
 { TdjWebComponentContextHandler }
@@ -255,28 +255,41 @@ begin
   except
     on E: Exception do
     begin
-      Response.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
-
-      if Assigned(ErrorHandler) then
+      // TdjWebComponentHandler.Handle has normally replaced the response
+      // with the framework's 500 page already -- or, if the headers were
+      // already sent, abandoned it (see SetErrorResponse). Once the headers
+      // are out, neither the status nor the body can change any more, so
+      // the ErrorHandler is not invoked either.
+      if not Response.HeaderHasBeenWritten then
       begin
-        Context.LastErrorStatusCode := HTTP_INTERNAL_SERVER_ERROR;
-        Context.LastErrorExceptionClass := E.ClassName;
-        Context.LastErrorExceptionMessage := E.Message;
-        try
-          ErrorHandler.Handle(Target, Context, Request, Response);
-        except
-          on E2: Exception do
-          begin
-            {$IFDEF DARAJA_LOGGING}
-            Logger.Error('ErrorHandler raised ' + E2.ClassName
-              + ' while handling ' + E.ClassName
-              + '; falling back to the default error response', E2);
-            {$ENDIF DARAJA_LOGGING}
-            // Response already carries the generic body InvokeService set
-            // (component case) or nothing (filter case, same as today) --
-            // swallow and let that stand, exactly like today's behavior
-            // when no ErrorHandler is configured.
+        if Assigned(ErrorHandler) then
+        begin
+          // the ErrorHandler starts from a clean response with status 500
+          ResetResponse(Response);
+          Response.ResponseNo := HTTP_INTERNAL_SERVER_ERROR;
+
+          Context.LastErrorStatusCode := HTTP_INTERNAL_SERVER_ERROR;
+          Context.LastErrorExceptionClass := E.ClassName;
+          Context.LastErrorExceptionMessage := E.Message;
+          try
+            ErrorHandler.Handle(Target, Context, Request, Response);
+          except
+            on E2: Exception do
+            begin
+              {$IFDEF DARAJA_LOGGING}
+              Logger.Error('ErrorHandler raised ' + E2.ClassName
+                + ' while handling ' + E.ClassName
+                + '; falling back to the default error response', E2);
+              {$ENDIF DARAJA_LOGGING}
+              // discard whatever the ErrorHandler wrote before it failed
+              SetErrorResponse(Response, E);
+            end;
           end;
+        end
+        else if Response.ResponseNo <> HTTP_INTERNAL_SERVER_ERROR then
+        begin
+          // raised before Handle reached the component dispatch
+          SetErrorResponse(Response, E);
         end;
       end;
 
