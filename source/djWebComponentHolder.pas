@@ -239,7 +239,7 @@ begin
     on E: Exception do
     begin
       {$IFDEF DARAJA_LOGGING}
-      Logger.Warn('TdjWebComponentHolder.Stop: ' + E.Message, E);
+      Logger.Warn('TdjWebComponentHolder.Stop: %s', [E.Message], E);
       {$ENDIF DARAJA_LOGGING}
       // Swallowed on purpose: TdjLifeCycle.Stop logs and continues so a
       // failing stop cannot leave the component half-started.
