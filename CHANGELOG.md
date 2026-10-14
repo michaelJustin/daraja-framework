@@ -8,6 +8,8 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-10-14
+
 ### Security
 
 - `demo/13_entra_msgraph` (Entra ID / Microsoft Graph sign-in) hardened its
@@ -54,6 +56,11 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 
 ### Documentation
 
+- New `SECURITY.md`: a hardening guide for running Daraja where untrusted
+  clients can reach it — resource limits through the connector's Indy
+  server, session growth, URL patterns vs. authorization, the
+  single-instance threading rule, error-page verbosity, and the caveats of
+  the optional units.
 - Added `COMMERCIAL-LICENSE.txt`, the commercial license text (v1.0), next
   to the AGPL `LICENSE`, so the dual licensing is visible in the
   repository.
@@ -104,7 +111,7 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 - The Delphi unit-test project (`Unittests.dproj`) is built with range
   checks enabled, and its unit references are fixed.
 - Removed the manual-only Linux Doxygen CI workflow.
-- Version constant set to `3.4.0-SNAPSHOT`.
+- Version constant set to `3.4.0`.
 
 ## [3.3.0] - 2026-09-23
 
@@ -422,7 +429,8 @@ Releases are tagged `vMAJOR.MINOR.PATCH` and published at
 - Requires slf4p 1.0.8.
 - `TdjLoggerFactory.GetLogger` calls use a class reference. (#396)
 
-[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.3.0...HEAD
+[Unreleased]: https://github.com/michaelJustin/daraja-framework/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.2...v3.2.0
 [3.1.2]: https://github.com/michaelJustin/daraja-framework/compare/v3.1.1...v3.1.2

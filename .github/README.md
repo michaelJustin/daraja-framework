@@ -177,11 +177,15 @@ Hello, World!
 
 ### Getting started with Daraja
 
-[DarajaFrameworkGettingStarted.pdf](../docs/DarajaFrameworkGettingStarted.pdf) (version 3.3.0, in this repository)
+[DarajaFrameworkGettingStarted.pdf](../docs/DarajaFrameworkGettingStarted.pdf) (version 3.4.0, in this repository)
 
 ### Changelog
 
 See [CHANGELOG.md](../CHANGELOG.md) for the release history.
+
+### Security and hardening
+
+Before exposing a Daraja server to untrusted clients, read [SECURITY.md](../SECURITY.md).
 
 ## Licensing
 
